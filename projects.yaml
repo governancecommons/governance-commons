@@ -74,8 +74,8 @@ projects:
       p0_gaps: 0
       notes: "v1.3.0 shipped — GC-1-C-01/02/04 complete; GC-1-C-03 cluster reg protocol queued"
 
-  - name: project-orchestrator-agent
-    path: project-orchestrator-agent
+  - name: agent-project-orchestrator
+    path: agent-project-orchestrator
     group: specs
     description: "Runtime execution contract for project-level orchestrators — task graph, dispatch, handoff, audit"
     status: active
@@ -85,11 +85,11 @@ projects:
       agent_dossier: ">=1.0.0"
       agent_matrix: ">=1.0.0"
     planning:
-      devpath: project-orchestrator-agent/DEVPATH.md
-      devplan: project-orchestrator-agent/DEVPLAN.md
-      tracks: project-orchestrator-agent/TRACKS.md
-      passchangelog: project-orchestrator-agent/passchangelog.md
-      changelog: project-orchestrator-agent/CHANGELOG.md
+      devpath: agent-project-orchestrator/DEVPATH.md
+      devplan: agent-project-orchestrator/DEVPLAN.md
+      tracks: agent-project-orchestrator/TRACKS.md
+      passchangelog: agent-project-orchestrator/passchangelog.md
+      changelog: agent-project-orchestrator/CHANGELOG.md
     pass_status:
       p0_gaps: 3
       p1_gaps: 3
@@ -143,7 +143,7 @@ projects:
     status: scaffold
     version: ~
     branch: ~
-    sdk_for: [agent-dossier, agent-matrix, ons, project-orchestrator-agent]
+    sdk_for: [agent-dossier, agent-matrix, ons, agent-project-orchestrator]
     planning:
       notes: "No git repo yet. Track E — starts at PASS-3. First deliverable: Python validator CLI."
     pass_status:

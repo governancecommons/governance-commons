@@ -12,9 +12,9 @@ Format: GC-PASS-YYYY-NNNN (year, 4-digit sequence). Newest first.
 **pass_id**: GC-PASS-2026-0002
 **change_type**: governance
 **authority_level**: AL:2
-**summary**: Established unified per-repo planning structure across all four core spec repos. Each spec (agent-dossier, agent-matrix, ons, project-orchestrator-agent) now has DEVPATH.md, DEVPLAN.md, TRACKS.md, and passchangelog.md under AL:1 authority. Stale planning files in project-orchestrator-agent (DevPath-v1.0.md, DevPlan-v1.0.md, Tracks.md) replaced with canonical-format equivalents. ROADMAP.md in agent-dossier retired; deferred items carried forward in agent-dossier DEVPLAN.md.
+**summary**: Established unified per-repo planning structure across all four core spec repos. Each spec (agent-dossier, agent-matrix, ons, agent-project-orchestrator) now has DEVPATH.md, DEVPLAN.md, TRACKS.md, and passchangelog.md under AL:1 authority. Stale planning files in agent-project-orchestrator (DevPath-v1.0.md, DevPlan-v1.0.md, Tracks.md) replaced with canonical-format equivalents. ROADMAP.md in agent-dossier retired; deferred items carried forward in agent-dossier DEVPLAN.md.
 **status**: ACCEPTED
-**affected_specs**: agent-dossier, agent-matrix, ons, project-orchestrator-agent
+**affected_specs**: agent-dossier, agent-matrix, ons, agent-project-orchestrator
 
 ---
 

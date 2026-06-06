@@ -22,7 +22,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 ## CURRENT EXECUTION POSITION
 
 **Active PASS:** PASS-0 (Ecosystem Planning Baseline)
-**Primary active tracks:** Track C (ONS) + Track D (project-orchestrator-agent) — P0 fixes first
+**Primary active tracks:** Track C (ONS) + Track D (agent-project-orchestrator) — P0 fixes first
 **Secondary active track:** Track A (agent-dossier) — P0/P1 gap closure
 **Next milestone:** PASS-1 (Spec Correctness and Validation)
 
@@ -107,7 +107,7 @@ AL:3 = ecosystem charter (founder). AL:2 = this file (GC maintainer). AL:1 = ind
 | GC Release | Status | Requires |
 |------------|--------|---------|
 | GC v1.0.0 | Implied (current) | Current published versions of each spec |
-| GC v1.2.0 | Planned (M2) | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + POA >=1.1.0 |
+| GC v1.2.0 | Planned (M2) | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1.1.0 |
 | GC v1.3.0 | Planned (M3) | agent-dossier >=1.2.0 + agent-matrix >=1.4.0 + ONS >=1.3.0 |
 | GC v2.0.0 | Planned (M4) | Major version — breaking changes allowed |
 
@@ -122,7 +122,7 @@ Current cross-repo version constraints. Updated when breaking changes are declar
 | agent-dossier | 1.0.x | ONS | ONS naming grammar for PASS IDs | No open conflicts |
 | agent-matrix | 1.x | agent-dossier | dossier schema for capability profiles | No open conflicts |
 | ONS | 1.2.0 | — | No upstream deps | No open conflicts |
-| project-orchestrator-agent | 1.x | agent-dossier, agent-matrix | runtime-contract.yaml schema | No open conflicts |
+| agent-project-orchestrator | 1.x | agent-dossier, agent-matrix | runtime-contract.yaml schema | No open conflicts |
 | agent-team-protocol | 0.1.0 | agent-matrix >=1.4.0, agent-dossier >=1.0.0 | fleet governance consumes per-agent primitives | No open conflicts |
 
 No current `compat-hold` items.
@@ -175,7 +175,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 98-G15 | No named workflow pattern library | Medium | PASS-1 / GC-2-B-05 | O |
 | 98-G16 | No multi-orchestrator topology spec | Medium | PASS-6 / GC-4-B-02 | O |
 
-### Source 99 — project-orchestrator-agent runtime gaps
+### Source 99 — agent-project-orchestrator runtime gaps
 
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|

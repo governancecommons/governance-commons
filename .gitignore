@@ -3,7 +3,8 @@ agent-dossier/
 agent-matrix/
 agent-team-protocol/
 ons/
-project-orchestrator-agent/
+agent-project-orchestrator/
+agent-roster/
 governance-commons-www/
 governance-commons-code/
 agent-dossier-www/

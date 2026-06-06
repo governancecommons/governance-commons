@@ -11,7 +11,7 @@
 `DEVPATH.md` owns: ecosystem phases, authority model, design decision record.
 `DEVPLAN.md` owns: current execution state, release train, compatibility matrix, gap checklist.
 
-Sub-repo planning files (`agent-dossier/ROADMAP.md`, `project-orchestrator-agent/DevPath-v1.0.md`, etc.)
+Sub-repo planning files (`agent-dossier/ROADMAP.md`, `agent-project-orchestrator/DevPath-v1.0.md`, etc.)
 are **AL:1** — they govern their own repos and do not supersede this file.
 This file does not contain per-repo task lists. It sets ecosystem structure and phase gates only.
 
@@ -95,7 +95,7 @@ Normative language is unambiguous. Stale documentation corrected. No spec contra
 - ONS: cluster registration protocol defined and registry file exists
 - Agent Dossier: package metadata present; JSON Schema validation wired into tooling; PASS ID enforced
 - Agent Matrix: formal SLA/SLO schema; MCP alignment stub; multi-provider SKU fields
-- POA: DevPath + Tracks reflect actual implementation state; level-2 escalation reachable; runtime-contract.yaml compiles deterministically
+- APO: DevPath + Tracks reflect actual implementation state; level-2 escalation reachable; runtime-contract.yaml compiles deterministically
 - All specs: valid and invalid test vectors exist for all schemas
 
 **Status:** ⬜ Not started — begins after PASS-0 exits

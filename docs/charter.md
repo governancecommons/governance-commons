@@ -45,7 +45,7 @@ The canonical project name is **Governance Commons**. The canonical domain is **
 
 ## GC-CHARTER-004 — Standard Independence
 
-Each Governance Commons standard (agent-dossier, agent-matrix, ONS, project-orchestrator-agent)
+Each Governance Commons standard (agent-dossier, agent-matrix, ONS, agent-project-orchestrator)
 is independently versioned and independently releasable. No standard requires another to
 release in lock-step.
 
