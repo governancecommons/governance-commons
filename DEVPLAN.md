@@ -157,18 +157,18 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
-| 98-G1 | No MCP server/client model | Critical | PASS-2 / GC-1-B-03 | O |
-| 98-G2 | No A2A protocol binding | Critical | PASS-2 / GC-3-B-02 | O |
-| 98-G3 | No CloudEvents envelope binding | Critical | PASS-2 / GC-3-B-03 | O |
-| 98-G4 | No compliance framework mapping (NIST AI RMF, EU AI Act) | Critical | PASS-1 / GC-1-B-05 | O |
-| 98-G5 | SKU model Anthropic-only, no multi-provider routing | Critical | PASS-1 / GC-1-B-04 | O |
-| 98-G6 | No matrix overlays/fragments (monolithic YAML) | High | PASS-1 / GC-2-B-01 | O |
-| 98-G7 | No named profiles (minimal, data-engineering) | High | PASS-1 / GC-2-B-02 | O |
-| 98-G8 | No matrix inheritance (extends: with override semantics) | High | PASS-1 / GC-2-B-03 | O |
+| 98-G1 | No MCP server/client model | Critical | PASS-2 / GC-1-B-03 | C |
+| 98-G2 | No A2A protocol binding | Critical | PASS-2 / GC-3-B-02 | C |
+| 98-G3 | No CloudEvents envelope binding | Critical | PASS-2 / GC-3-B-03 | C |
+| 98-G4 | No compliance framework mapping (NIST AI RMF, EU AI Act) | Critical | PASS-1 / GC-1-B-05 | C |
+| 98-G5 | SKU model Anthropic-only, no multi-provider routing | Critical | PASS-1 / GC-1-B-04 | C |
+| 98-G6 | No matrix overlays/fragments (monolithic YAML) | High | PASS-1 / GC-2-B-01 | C |
+| 98-G7 | No named profiles (minimal, data-engineering) | High | PASS-1 / GC-2-B-02 | C |
+| 98-G8 | No matrix inheritance (extends: with override semantics) | High | PASS-1 / GC-2-B-03 | C |
 | 98-G9 | No runtime agent discovery or registry | High | PASS-2 / GC-3-B-01 | O |
 | 98-G10 | No cryptographic agent identity | High | PASS-2 / GC-3-A-02 | O |
-| 98-G11 | No formal SLO/SLI definitions per profile | High | PASS-1 / GC-1-B-01 | O |
-| 98-G12 | No checkpoint format schema | Medium | PASS-1 / GC-1-B-02 | O |
+| 98-G11 | No formal SLO/SLI definitions per profile | High | PASS-1 / GC-1-B-01 | C |
+| 98-G12 | No checkpoint format schema | Medium | PASS-1 / GC-1-B-02 | C |
 | 98-G13 | No streaming output schema | Medium | PASS-2 / GC-3-B-04 | O |
 | 98-G14 | No prompt injection defense spec | Medium | PASS-2 / GC-3-B-05 | O |
 | 98-G15 | No named workflow pattern library | Medium | PASS-1 / GC-2-B-05 | O |
@@ -244,8 +244,7 @@ Work registered but not yet active. Execute after active PASS-0 priorities clear
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
 | GC-1-A-07 | OpenTelemetry adapter for agent-dossier | A | PASS-4 | PASS-4 observability |
-| GC-1-B-01 | Formal SLA schema in agent-matrix | B | PASS-1 | GC v1.2.0 milestone |
-| GC-1-B-03 | MCP alignment stub in agent-matrix | B | PASS-2 | enterprise adoption |
+| GC-1-B-03 | Multi-provider SKU routing test vectors (agent-matrix) | B | PASS-1 | GC v1.2.0 milestone |
 | GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
 | GC-2-E-01 | governance-commons-py to PyPI | E | PASS-3 | zero-friction adoption |
 | GC-2-E-02 | governance-commons-js to npm | E | PASS-3 | zero-friction adoption |
