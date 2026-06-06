@@ -36,7 +36,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 1. ~~GC-1-C-01 — Fix stale ons.yaml header~~ ✅ DONE (PASS-2026-0005)
 2. ~~GC-1-C-02 — Fix ons-conformance.schema.json divergence~~ ✅ DONE (PASS-2026-0006)
-3. GC-1-D-02 — Fix compile-dossier.js non-determinism (P0)
+3. ~~GC-1-D-02 — CHANGELOG missing Python rewrite entry~~ ✅ DONE
 4. GC-1-D-01 — Fix unreachable level-2 escalation in orchestrator (P0)
 5. GC-1-A-01 through GC-1-A-06 — agent-dossier P0 fixes
 
@@ -179,7 +179,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
 | 99-G1 | DevPath + Tracks stale (PASS-1/2/3 marked PENDING, code exists) | P0 | PASS-0 / GC-1-D-01 | O |
-| 99-G2 | CHANGELOG missing Python rewrite entry (PASS-2026-0002) | P0 | PASS-0 / GC-1-D-02 | O |
+| 99-G2 | CHANGELOG missing Python rewrite entry (PASS-2026-0002) | P0 | PASS-0 / GC-1-D-02 | C |
 | 99-G3 | Level-2 escalation (operator_clarification) unreachable in escalation.py:27-31 | P0 | PASS-1 / GC-1-D-03 | O |
 | 99-G4 | Agents never call telemetry.emit() (all traces from dispatcher only) | P1 | PASS-4 / GC-1-D-04 | O |
 | 99-G5 | runtime-contract.yaml non-deterministic (timestamp in trace_id) | P1 | PASS-1 / GC-1-D-05 | O |
@@ -198,12 +198,12 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 100-S3 | No cluster registration protocol or registry | High | PASS-1 / GC-1-C-05 | O |
 | 100-S4 | ons-conformance.schema.json diverges from ons.yaml | High | PASS-1 / GC-1-C-02 | C |
 | 100-S5 | No rule soft-deprecation mechanism | Medium | PASS-1 | O |
-| 100-S6 | No RFC 2119 normative language | High | PASS-1 / GC-1-C-04 | O |
+| 100-S6 | No RFC 2119 normative language | High | PASS-1 / GC-1-C-04 | C |
 | 100-T1 | FAST rules in catalog but no validator implements them | — | PASS-1 | O |
 | 100-T2 | No pytest suite for tools/validate.py | — | PASS-1 / GC-1-C-07 | O |
 | 100-T3 | No rules.json export for LSP/linter authors | — | PASS-1 / GC-1-C-06 | O |
 | 100-T4 | VALIDATOR_VERSION hardcoded 1.0.0 | — | PASS-3 | O |
-| 100-A1 | RFC 2119 normative language (table stakes for citation) | Table stakes | PASS-1 / GC-1-C-04 | O |
+| 100-A1 | RFC 2119 normative language (table stakes for citation) | Table stakes | PASS-1 / GC-1-C-04 | C |
 | 100-A2 | Conformance test suite with test vectors | Medium | PASS-3 / GC-2-C-01 | O |
 | 100-A3 | TypeScript reference implementation | High | PASS-3 / GC-2-C-02 | O |
 | 100-A4 | pip install + npm package | Low-medium | PASS-3 | O |
