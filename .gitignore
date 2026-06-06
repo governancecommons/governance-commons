@@ -1,6 +1,7 @@
 # Sub-repos — each has its own .git, managed independently
 agent-dossier/
 agent-matrix/
+agent-team-protocol/
 ons/
 project-orchestrator-agent/
 governance-commons-www/
