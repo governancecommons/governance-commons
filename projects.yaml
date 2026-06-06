@@ -1,0 +1,170 @@
+version: "1.0"
+updated: "2026-06-05"
+root: "c:/dev/governance-commons"
+
+# Status values: active | stable | wip | scaffold | planned | archive
+# Group values: specs | runtime | sdk | sites
+# Relationship keys: site_for | sdk_for | implements | depends_on
+
+# ── DESIGN DECISION DDR-1 ────────────────────────────────────────────────────
+# compat: fields declare minimum required peer spec versions.
+# When a BREAKING: change is declared in any spec, update the affected compat:
+# entries below and record the coordinated update in DEVPLAN.md > COMPATIBILITY MATRIX.
+# ─────────────────────────────────────────────────────────────────────────────
+
+projects:
+
+  # ─── SPECS ───────────────────────────────────────────────────────────────────
+  # The four independently versioned, project-neutral standards.
+
+  - name: agent-dossier
+    path: agent-dossier
+    group: specs
+    description: "Per-agent identity, authority, handoff, telemetry, and audit contract spec"
+    status: active
+    version: "1.0.x"
+    branch: main
+    compat:
+      ons: ">=1.1.0"
+    planning:
+      devpath: agent-dossier/DEVPATH.md
+      devplan: agent-dossier/DEVPLAN.md
+      tracks: agent-dossier/TRACKS.md
+      passchangelog: agent-dossier/passchangelog.md
+      changelog: agent-dossier/CHANGELOG.md
+    pass_status:
+      p0_gaps: 6
+      p1_gaps: 3
+      notes: "PASS-1 gap closure active — see DEVPLAN.md Track A"
+
+  - name: agent-matrix
+    path: agent-matrix
+    group: specs
+    description: "Multi-agent capability, routing, trust, safety, and coordination model"
+    status: active
+    version: "1.x"
+    branch: main
+    compat:
+      agent_dossier: ">=1.0.0"
+    planning:
+      devpath: agent-matrix/DEVPATH.md
+      devplan: agent-matrix/DEVPLAN.md
+      tracks: agent-matrix/TRACKS.md
+      passchangelog: agent-matrix/passchangelog.md
+      changelog: agent-matrix/CHANGELOG.md
+    pass_status:
+      p0_gaps: 0
+      critical_gaps: 4
+      high_gaps: 6
+      notes: "PASS-1 gap closure queued — MCP stub + SLA schema first"
+
+  - name: ons
+    path: ons
+    group: specs
+    description: "Ontic Namespace Structure — naming grammar, namespace identity, collision rules, and validation rule IDs"
+    status: stable
+    version: "1.2.0"
+    branch: main
+    compat: {}
+    planning:
+      devpath: ons/DEVPATH.md
+      devplan: ons/DEVPLAN.md
+      tracks: ons/TRACKS.md
+      passchangelog: ons/passchangelog.md
+      changelog: ons/CHANGELOG.md
+      notes: "v1.2.0 tag exists locally — blocked on GitHub org for push and release"
+    pass_status:
+      p0_gaps: 2
+      notes: "Fix stale header + conformance schema before push — see GC-1-C-01/02"
+
+  - name: project-orchestrator-agent
+    path: project-orchestrator-agent
+    group: specs
+    description: "Runtime execution contract for project-level orchestrators — task graph, dispatch, handoff, audit"
+    status: active
+    version: "1.x"
+    branch: main
+    compat:
+      agent_dossier: ">=1.0.0"
+      agent_matrix: ">=1.0.0"
+    planning:
+      devpath: project-orchestrator-agent/DEVPATH.md
+      devplan: project-orchestrator-agent/DEVPLAN.md
+      tracks: project-orchestrator-agent/TRACKS.md
+      passchangelog: project-orchestrator-agent/passchangelog.md
+      changelog: project-orchestrator-agent/CHANGELOG.md
+    pass_status:
+      p0_gaps: 3
+      p1_gaps: 3
+      notes: "P0: stale docs, unreachable level-2 escalation — fix before any new work"
+
+  # ─── SDK / CODE ──────────────────────────────────────────────────────────────
+  # Code-level implementations: validators, CLI tools, CI templates.
+
+  - name: governance-commons-code
+    path: governance-commons-code
+    group: sdk
+    description: "Code-level implementation of Governance Commons standards — validators, CLI, CI templates"
+    status: scaffold
+    version: ~
+    branch: ~
+    sdk_for: [agent-dossier, agent-matrix, ons, project-orchestrator-agent]
+    planning:
+      notes: "No git repo yet. Track E — starts at PASS-3. First deliverable: Python validator CLI."
+    pass_status:
+      notes: "Not started — begins at GC-2-E-01 (PyPI) and GC-2-E-02 (npm)"
+
+  # ─── SITES ───────────────────────────────────────────────────────────────────
+  # Public-facing web presence and tooling surfaces.
+
+  - name: governance-commons-www
+    path: governance-commons-www
+    group: sites
+    description: "Public web presence for Governance Commons"
+    status: active
+    branch: main
+    site_for: governance-commons
+    planning:
+      notes: "Active site. Direction follows DEVPLAN Track F. Blocked on org creation for domain."
+
+  - name: agent-dossier-www
+    path: agent-dossier-www
+    group: sites
+    description: "Public web presence for Agent Dossier spec"
+    status: active
+    branch: main
+    site_for: agent-dossier
+    planning:
+      notes: "Active site."
+
+  - name: agent-dossier-vscode
+    path: agent-dossier-vscode
+    group: sites
+    description: "VS Code extension surface for Agent Dossier"
+    status: active
+    branch: main
+    site_for: agent-dossier
+    depends_on:
+      ons_typescript: "Blocked until ONS TypeScript reference implementation exists (GC-2-C-02)"
+    planning:
+      notes: "Track F. ONS TypeScript impl required before VS Code extension path is unblocked."
+
+  # ─── PLANNED (aspirational) ──────────────────────────────────────────────────
+  # Listed here to prevent confusion with established peers.
+  # DO NOT include in architecture diagrams as active until repos exist.
+
+  - name: hbl
+    path: ~
+    group: ~
+    description: "Aspirational peer ecosystem — not yet started"
+    status: planned
+    planning:
+      notes: "Do not diagram as established peer. (Source 102, DDR-4)"
+
+  - name: osprey
+    path: ~
+    group: ~
+    description: "Aspirational peer ecosystem — not yet started"
+    status: planned
+    planning:
+      notes: "Do not diagram as established peer. (Source 102, DDR-4)"

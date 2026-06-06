@@ -1,0 +1,16 @@
+# Sub-repos — each has its own .git, managed independently
+agent-dossier/
+agent-matrix/
+ons/
+project-orchestrator-agent/
+governance-commons-www/
+governance-commons-code/
+agent-dossier-www/
+agent-dossier-vscode/
+
+# Editor
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

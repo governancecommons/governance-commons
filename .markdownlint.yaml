@@ -1,0 +1,12 @@
+# Markdownlint configuration for governance-commons root planning docs
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+MD013: false   # line-length: not enforced; table cells and spec prose vary
+MD033: false   # no-inline-html: not needed
+MD041: false   # first-line-heading: not all files start with a heading
+MD060: false   # table-column-style: not enforced; tables use spaced style throughout
+
+MD055:         # table-pipe-style: require leading and trailing pipes
+  style: leading_and_trailing
+
+MD056: true    # table-column-count: all rows must have the same column count
