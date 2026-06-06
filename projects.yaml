@@ -1,5 +1,5 @@
 version: "1.0"
-updated: "2026-06-05"
+updated: "2026-06-06"
 root: "c:/dev/governance-commons"
 
 # Status values: active | stable | wip | scaffold | planned | archive
@@ -63,7 +63,7 @@ projects:
     group: specs
     description: "Ontic Namespace Structure — naming grammar, namespace identity, collision rules, and validation rule IDs"
     status: stable
-    version: "1.2.0"
+    version: "1.3.0"
     branch: main
     compat: {}
     planning:
@@ -72,10 +72,9 @@ projects:
       tracks: ons/TRACKS.md
       passchangelog: ons/passchangelog.md
       changelog: ons/CHANGELOG.md
-      notes: "v1.2.0 tag exists locally — blocked on GitHub org for push and release"
     pass_status:
-      p0_gaps: 2
-      notes: "Fix stale header + conformance schema before push — see GC-1-C-01/02"
+      p0_gaps: 0
+      notes: "v1.3.0 shipped — GC-1-C-01/02/04 complete; GC-1-C-03 cluster reg protocol queued"
 
   - name: project-orchestrator-agent
     path: project-orchestrator-agent
@@ -97,6 +96,26 @@ projects:
       p0_gaps: 3
       p1_gaps: 3
       notes: "P0: stale docs, unreachable level-2 escalation — fix before any new work"
+
+  # ─── DATA PRODUCTS ───────────────────────────────────────────────────────────
+  # Populated instances of spec schemas — curated data, not normative standards.
+
+  - name: agent-roster
+    path: agent-roster
+    group: data
+    description: "Curated list of 16 paid + 16 free AI agents, top-4 per role category, with monthly automated review"
+    status: active
+    version: "1.0.0"
+    branch: main
+    spec_reference: agent-matrix
+    planning:
+      devpath: agent-roster/DEVPATH.md
+      devplan: agent-roster/DEVPLAN.md
+      tracks: agent-roster/TRACKS.md
+      passchangelog: agent-roster/passchangelog.md
+      changelog: agent-roster/CHANGELOG.md
+    pass_status:
+      notes: "v1.0.0 bootstrapped — AR-1-04 (create roster-review label) is first action"
 
   # ─── SDK / CODE ──────────────────────────────────────────────────────────────
   # Code-level implementations: validators, CLI tools, CI templates.
