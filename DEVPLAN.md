@@ -123,6 +123,7 @@ Current cross-repo version constraints. Updated when breaking changes are declar
 | agent-matrix | 1.x | agent-dossier | dossier schema for capability profiles | No open conflicts |
 | ONS | 1.2.0 | — | No upstream deps | No open conflicts |
 | project-orchestrator-agent | 1.x | agent-dossier, agent-matrix | runtime-contract.yaml schema | No open conflicts |
+| agent-team-protocol | 0.1.0 | agent-matrix >=1.4.0, agent-dossier >=1.0.0 | fleet governance consumes per-agent primitives | No open conflicts |
 
 No current `compat-hold` items.
 
@@ -246,6 +247,8 @@ Work registered but not yet active. Execute after active PASS-0 priorities clear
 | GC-1-A-07 | OpenTelemetry adapter for agent-dossier | A | PASS-4 | PASS-4 observability |
 | GC-1-B-03 | Multi-provider SKU routing test vectors (agent-matrix) | B | PASS-1 | GC v1.2.0 milestone |
 | GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
+| GC-1-F-01 | agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02) | F | PASS-1 | GC v1.2.0 fleet governance |
+| GC-1-F-02 | agent-team-protocol: pytest test vectors for all 5 sections (ATP-1-03–05) | F | PASS-1 | GC v1.2.0 fleet governance |
 | GC-2-E-01 | governance-commons-py to PyPI | E | PASS-3 | zero-friction adoption |
 | GC-2-E-02 | governance-commons-js to npm | E | PASS-3 | zero-friction adoption |
 | GC-3-E-01 | observability-contract.yaml (gc.agent.* OTEL conventions) | E | PASS-4 | compliance evidence |

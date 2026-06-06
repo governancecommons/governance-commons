@@ -54,9 +54,7 @@ projects:
       changelog: agent-matrix/CHANGELOG.md
     pass_status:
       p0_gaps: 0
-      critical_gaps: 4
-      high_gaps: 6
-      notes: "PASS-1 gap closure queued — MCP stub + SLA schema first"
+      notes: "Phase 5 P0 done (GC-1-B-01 escalation, GC-1-B-02 SLA/SLO tests, GC-1-B-04 pyproject); remaining: GC-1-B-03 SKU routing tests, GC-1-B-05 compliance export, GC-1-B-06 MCP audit"
 
   - name: ons
     path: ons
@@ -99,6 +97,24 @@ projects:
 
   # ─── DATA PRODUCTS ───────────────────────────────────────────────────────────
   # Populated instances of spec schemas — curated data, not normative standards.
+
+  - name: agent-team-protocol
+    path: agent-team-protocol
+    group: specs
+    description: "Fleet-level governance spec — delegation, trust topology, shared audit trail, fleet escalation, team lifecycle"
+    status: wip
+    version: "0.1.0"
+    branch: main
+    compat:
+      agent_matrix: ">=1.4.0"
+      agent_dossier: ">=1.0.0"
+    planning:
+      devpath: agent-team-protocol/DEVPATH.md
+      devplan: agent-team-protocol/DEVPLAN.md
+      changelog: agent-team-protocol/CHANGELOG.md
+    pass_status:
+      p0_gaps: 5
+      notes: "v0.1.0 bootstrapped (ATP-2026-0001) — Phase 1 queued: fleet-escalation + team-lifecycle schemas, test vectors, CLI validator"
 
   - name: agent-roster
     path: agent-roster
