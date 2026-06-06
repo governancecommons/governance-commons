@@ -37,7 +37,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 1. ~~GC-1-C-01 — Fix stale ons.yaml header~~ ✅ DONE (PASS-2026-0005)
 2. ~~GC-1-C-02 — Fix ons-conformance.schema.json divergence~~ ✅ DONE (PASS-2026-0006)
 3. ~~GC-1-D-02 — CHANGELOG missing Python rewrite entry~~ ✅ DONE
-4. GC-1-D-01 — Fix unreachable level-2 escalation in orchestrator (P0)
+4. ~~GC-1-D-01 — Fix unreachable level-2 escalation + stale Tracks docs~~ ✅ DONE
 5. GC-1-A-01 through GC-1-A-06 — agent-dossier P0 fixes
 
 ---
@@ -178,9 +178,9 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
-| 99-G1 | DevPath + Tracks stale (PASS-1/2/3 marked PENDING, code exists) | P0 | PASS-0 / GC-1-D-01 | O |
+| 99-G1 | DevPath + Tracks stale (PASS-1/2/3 marked PENDING, code exists) | P0 | PASS-0 / GC-1-D-01 | C |
 | 99-G2 | CHANGELOG missing Python rewrite entry (PASS-2026-0002) | P0 | PASS-0 / GC-1-D-02 | C |
-| 99-G3 | Level-2 escalation (operator_clarification) unreachable in escalation.py:27-31 | P0 | PASS-1 / GC-1-D-03 | O |
+| 99-G3 | Level-2 escalation (operator_clarification) unreachable in escalation.py:27-31 | P0 | PASS-1 / GC-1-D-03 | C |
 | 99-G4 | Agents never call telemetry.emit() (all traces from dispatcher only) | P1 | PASS-4 / GC-1-D-04 | O |
 | 99-G5 | runtime-contract.yaml non-deterministic (timestamp in trace_id) | P1 | PASS-1 / GC-1-D-05 | O |
 | 99-G6 | models/task.py unused; raw dicts used instead | P1 | PASS-1 / GC-1-D-06 | O |
