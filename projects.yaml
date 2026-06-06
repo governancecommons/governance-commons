@@ -33,9 +33,9 @@ projects:
       passchangelog: agent-dossier/passchangelog.md
       changelog: agent-dossier/CHANGELOG.md
     pass_status:
-      p0_gaps: 6
+      p0_gaps: 0
       p1_gaps: 3
-      notes: "PASS-1 gap closure active — see DEVPLAN.md Track A"
+      notes: "GC-1-A-01 through GC-1-A-06 closed in agent-dossier PASS-2026-0025; P1 gap closure remains queued"
 
   - name: agent-matrix
     path: agent-matrix

@@ -38,7 +38,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 2. ~~GC-1-C-02 — Fix ons-conformance.schema.json divergence~~ ✅ DONE (PASS-2026-0006)
 3. ~~GC-1-D-02 — CHANGELOG missing Python rewrite entry~~ ✅ DONE
 4. ~~GC-1-D-01 — Fix unreachable level-2 escalation + stale Tracks docs~~ ✅ DONE
-5. GC-1-A-01 through GC-1-A-06 — agent-dossier P0 fixes
+5. ~~GC-1-A-01 through GC-1-A-06 — agent-dossier P0 fixes~~ ✅ DONE (agent-dossier PASS-2026-0025)
 
 ---
 
@@ -137,12 +137,12 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
-| 97-G1 | No package.json (js-yaml undeclared) | P0 | PASS-1 / GC-1-A-01 | O |
-| 97-G2 | No .gitignore | P0 | PASS-1 / GC-1-A-02 | O |
-| 97-G3 | JSON Schema validation declared but never wired | P0 | PASS-1 / GC-1-A-03 | O |
-| 97-G4 | task-queue.json hand-written (must be compiled artifact) | P0 | PASS-1 / GC-1-A-04 | O |
-| 97-G5 | No environment abstraction (paths/IDs/timeouts are literals) | P0 | PASS-1 / GC-1-A-05 | O |
-| 97-G6 | Hardcoded Windows paths in source comments | P0 | PASS-1 / GC-1-A-06 | O |
+| 97-G1 | No package.json (js-yaml undeclared) | P0 | PASS-1 / GC-1-A-01 | C |
+| 97-G2 | No .gitignore | P0 | PASS-1 / GC-1-A-02 | C |
+| 97-G3 | JSON Schema validation declared but never wired | P0 | PASS-1 / GC-1-A-03 | C |
+| 97-G4 | task-queue.json hand-written (must be compiled artifact) | P0 | PASS-1 / GC-1-A-04 | C |
+| 97-G5 | No environment abstraction (paths/IDs/timeouts are literals) | P0 | PASS-1 / GC-1-A-05 | C |
+| 97-G6 | Hardcoded Windows paths in source comments | P0 | PASS-1 / GC-1-A-06 | C |
 | 97-G7 | Custom telemetry (not OpenTelemetry) | P1 | PASS-4 / GC-1-A-07 | O |
 | 97-G8 | PASS-YYYY-NNNN ID format not validated or generated | P1 | PASS-1 / GC-1-A-08 | O |
 | 97-G9 | Handoff envelope defined in spec, never emitted in code | P1 | PASS-1 / GC-1-A-09 | O |

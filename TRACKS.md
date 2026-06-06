@@ -9,7 +9,7 @@
 
 | Track | Repo | Goal | Status | Next Milestone |
 |-------|------|------|--------|----------------|
-| [A](agent-dossier/) | agent-dossier | Per-agent identity, authority, handoff, telemetry, audit contract | 🔵 Active — P0 gaps open | GC-1-A: P0 gap closure |
+| [A](agent-dossier/) | agent-dossier | Per-agent identity, authority, handoff, telemetry, audit contract | 🔵 Active — P0 gaps closed | GC-1-A: P1 gap closure |
 | [B](agent-matrix/) | agent-matrix | Multi-agent capability, routing, trust, safety, coordination | 🔵 Active — SKU/MCP/SLA gaps open | GC-1-B: SLA schema + MCP stub |
 | [C](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟡 v1.2.0 pending publish | GC-1-C: stale header + schema fix |
 | [D](project-orchestrator-agent/) | project-orchestrator-agent | Runtime execution contract — task graph, dispatch, handoff, audit | 🔵 Active — stale docs + P0 bugs | GC-1-D: stale docs + escalation fix |
@@ -29,7 +29,7 @@
 **Scope:** Per-agent identity, authority, handoff, telemetry, and audit contract spec.
 **Current version:** 1.0.x
 **PASS:** PASS-1 (Spec Correctness)
-**Open P0 gaps:** 6 (package.json, .gitignore, schema wiring, compiled task-queue, env abstraction, path literals)
+**Open P0 gaps:** 0 (GC-1-A-01 through GC-1-A-06 closed in PASS-2026-0025)
 **Open P1 gaps:** 3 (OTel adapter, PASS ID enforcement, handoff envelope emission)
 **Key links:** `agent-dossier/ROADMAP.md`, `agent-dossier/CHANGELOG.md`
 
