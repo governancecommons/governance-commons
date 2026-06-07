@@ -46,7 +46,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 4. ~~GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling~~ ✅ DONE (APO PASS-2026-0005)
 5. ~~GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`~~ ✅ DONE (ONS PASS-2026-0010)
 6. ~~GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`~~ ✅ DONE (ONS PASS-2026-0011)
-7. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
+7. ~~GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors~~ ✅ DONE (agent-matrix PASS-2026-0009)
 
 ---
 
@@ -243,7 +243,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
 | 101-G1a | A2A binding is surface mention only | Critical | PASS-2 / GC-3-B-02 | O |
-| 101-G1b | MCP not a first-class governance primitive | Critical | PASS-2 / GC-1-B-03 | O |
+| 101-G1b | MCP not a first-class governance primitive | Critical | PASS-2 / GC-1-B-03 | C |
 | 101-G1c | No transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka) | Critical | PASS-2 | O |
 | 101-G2a | No cryptographic integrity (handoffs can be replayed/forged) | Critical | PASS-2 / GC-3-A-01 | O |
 | 101-G2b | Agent identity is string-only (no cryptographic binding) | Critical | PASS-2 / GC-3-A-02 | O |
@@ -284,7 +284,6 @@ Work registered but not yet active. Items are promoted to "Immediate next tasks"
 | GC-1-D-TL-01 | APO: enforce `time_loc` as required key in every `telemetry.emit()` call; reject emission without it | D | PASS-2 | DDR-6 L4 enforcement |
 | GC-1-A-07 | OpenTelemetry adapter for agent-dossier | A | PASS-4 | PASS-4 observability |
 | GC-1-A-10 | agent-dossier: dossier revocation and expiry model | A | PASS-1 | agent identity lifecycle |
-| GC-1-B-03 | Multi-provider SKU routing test vectors (agent-matrix) | B | PASS-1 | GC v1.2.0 milestone |
 | GC-1-F-01 | agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02) | F | PASS-1 | GC v1.2.0 fleet governance |
 | GC-1-F-02 | agent-team-protocol: pytest test vectors for all 5 sections (ATP-1-03–05) | F | PASS-1 | GC v1.2.0 fleet governance |
 | GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
