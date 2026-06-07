@@ -1,6 +1,6 @@
 # TRACKS — Governance Commons Portfolio Overview
 
-**Last updated:** 2026-06-06T00:00:00Z
+**Last updated:** 2026-06-07T00:00:00Z
 **Authority:** Master spec/project portfolio view. For PASS governance history see `DEVPATH.md`; for active execution priorities see `DEVPLAN.md`.
 
 ---
@@ -9,22 +9,25 @@
 
 | Track | Repo | Goal | Status | Next Milestone |
 |-------|------|------|--------|----------------|
-| [A](agent-dossier/) | agent-dossier | Per-agent identity, authority, handoff, telemetry, audit contract | 🔵 Active — P0 gaps closed | GC-1-A: P1 gap closure |
-| [B](agent-matrix/) | agent-matrix | Multi-agent capability, routing, trust, safety, coordination | 🔵 Active — SKU/MCP/SLA gaps open | GC-1-B: SLA schema + MCP stub |
-| [C](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟢 Stable — v1.3.0 shipped | GC-1-C-03: cluster registration protocol |
-| [D](agent-project-orchestrator/) | agent-project-orchestrator | Runtime execution contract — task graph, dispatch, handoff, audit | 🟢 Stable — PASS-2 runtime governance + budgets enforced | PASS-2 backlog clear |
-| [E](governance-commons-code/) | governance-commons-code | SDK layer — Python/TypeScript validators, CLI, CI templates | 🔴 Not started | GC-2-E: PyPI + npm publish |
-| [F](governance-commons-www/) | governance-commons-www | Public web presence for Governance Commons | 🔵 Active | Org creation + domain live |
-| [F](agent-dossier-www/) | agent-dossier-www | Public web presence for Agent Dossier spec | 🔵 Active | — |
-| [F](agent-dossier-vscode/) | agent-dossier-vscode | VS Code extension for Agent Dossier | 🔵 Active | ONS TypeScript impl needed |
+| [Alpha](agent-dossier/) | agent-dossier | Per-agent identity, authority, handoff, telemetry, audit contract | 🔵 Active — P0 gaps closed | GC-1-A: P1 gap closure |
+| [Bravo](agent-matrix/) | agent-matrix | Multi-agent capability, routing, trust, safety, coordination | 🔵 Active — SKU/MCP/SLA gaps open | GC-1-B: SLA schema + MCP stub |
+| [Charlie](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟢 Stable — v1.3.0 shipped | GC-1-C-08/09: FAST rules + soft-deprecation |
+| [Delta](agent-project-orchestrator/) | agent-project-orchestrator | Runtime execution contract — task graph, dispatch, handoff, audit | 🟢 Stable — PASS-2 runtime governance + budgets enforced | PASS-2 backlog clear |
+| [Echo](governance-commons-code/) | governance-commons-code | SDK layer — Python/TypeScript validators, CLI, CI templates | 🟡 Release prep — v0.1.0 scaffolded | GC-2-E: PyPI + npm publish |
+| [Foxtrot](governance-commons-www/) | governance-commons-www | Public web presence for Governance Commons | 🔵 Active | Org creation + domain live |
+| [Foxtrot](agent-dossier-www/) | agent-dossier-www | Public web presence for Agent Dossier spec | 🔵 Active | — |
+| [Foxtrot](agent-dossier-vscode/) | agent-dossier-vscode | VS Code extension for Agent Dossier | 🔵 Active | ONS TypeScript impl needed |
+| [Golf](projects.yaml) | ecosystem infrastructure | GitHub org, domain, npm org, PyPI namespace, conformance program | 🔴 Deferred | Start when PASS-2 is in flight |
 
 **Status key:** 🟢 Shipped · 🟡 Release prep · 🔵 Active dev · 🔴 Not started / planning
+
+**Naming note:** NATO call signs are display titles for the canonical track letters only: A/Alpha through G/Golf. They do not rename task namespaces or imply a separate planning taxonomy.
 
 ---
 
 ## Track Detail
 
-### Track A — agent-dossier
+### Track Alpha — agent-dossier
 
 **Scope:** Per-agent identity, authority, handoff, telemetry, and audit contract spec.
 **Current version:** 1.0.x
@@ -33,7 +36,7 @@
 **Open P1 gaps:** 3 (OTel adapter, PASS ID enforcement, handoff envelope emission)
 **Key links:** `agent-dossier/ROADMAP.md`, `agent-dossier/CHANGELOG.md`
 
-### Track B — agent-matrix
+### Track Bravo — agent-matrix
 
 **Scope:** Multi-agent capability, routing, trust, safety, and coordination model spec.
 **Current version:** 1.x
@@ -42,7 +45,7 @@
 **Open High gaps:** 6 (SKU multi-provider, matrix composition, agent registry, identity, SLA, SLO)
 **Key links:** `agent-matrix/CHANGELOG.md`, `agent-matrix/agent-matrix.yaml`
 
-### Track C — ONS
+### Track Charlie — ONS
 
 **Scope:** Ontic Namespace Structure — naming grammar, namespace identity, collision rules, validation IDs.
 **Current version:** 1.3.0
@@ -51,7 +54,7 @@
 **Open High gaps:** 0 (cluster registration protocol closed — registry/clusters.yaml created, PASS-2026-0009)
 **Key links:** `ons/ons.yaml`, `ons/CHANGELOG.md`
 
-### Track D — agent-project-orchestrator
+### Track Delta — agent-project-orchestrator
 
 **Scope:** Runtime execution contract for project-level orchestrators.
 **Current version:** 1.0.x (renamed to agent-project-orchestrator; PASS-1 P0 closure complete)
@@ -60,15 +63,15 @@
 **Open P1/P2 runtime gaps:** 0
 **Key links:** `agent-project-orchestrator/DEVPATH.md`, `agent-project-orchestrator/DEVPLAN.md`, `agent-project-orchestrator/TRACKS.md`
 
-### Track E — governance-commons-code (SDK)
+### Track Echo — governance-commons-code (SDK)
 
 **Scope:** Code-level implementation — Python/TypeScript/Go validators, CLI tooling, CI templates.
-**Current version:** Not started
+**Current version:** 0.1.0 scaffold
 **PASS:** PASS-3 (Tooling, SDKs, Packaging)
 **Key deliverables:** governance-commons-py (PyPI), governance-commons-js (npm), GitHub Actions templates
-**Key links:** `governance-commons-code/` (empty)
+**Key links:** `governance-commons-code/`
 
-### Track F — Web Presence
+### Track Foxtrot — Web Presence
 
 **Scope:** All public-facing sites and extensions.
 **Repos:** governance-commons-www, agent-dossier-www, agent-dossier-vscode
@@ -76,7 +79,7 @@
 **Blocked by:** GitHub org creation (GC-2-G-01)
 **Key links:** `governance-commons-www/`, `agent-dossier-www/`
 
-### Track G — Ecosystem Infrastructure
+### Track Golf — Ecosystem Infrastructure
 
 **Scope:** GitHub org, domain, npm org, PyPI namespace, conformance program.
 **Current state:** All deferred — no org, no domain, no package accounts
@@ -88,45 +91,46 @@
 ## Dependency Map
 
 ```text
-Track A (agent-dossier)
+Track Alpha (agent-dossier)
   └── GC-1-A: P0 gap closure ──► GC v1.2.0 milestone
         └── GC-2-A: capability profiles / installable SDK
 
-Track B (agent-matrix)
+Track Bravo (agent-matrix)
   └── GC-1-B: SLA schema + MCP stub ──► GC v1.2.0 milestone
         └── GC-2-B: matrix composition + workflow patterns
               └── GC-3-B: A2A binding + registry + identity
 
-Track C (ONS)
+Track Charlie (ONS)
   └── GC-1-C: P0 fixes + RFC 2119 ──► ONS v1.2.0 published
         └── GC-2-C: TypeScript impl + conformance tests
               └── GC-4-C: LSP implementation
 
-Track D (agent-project-orchestrator)
+Track Delta (agent-project-orchestrator)
   └── GC-1-D: P0/P1 runtime correctness + overlay roster + runtime governance + resource budgets closed
 
-Track E (SDK layer)
+Track Echo (SDK layer)
   └── PASS-3 ──► governance-commons-py (PyPI) + governance-commons-js (npm)
                 └── GitHub Actions templates
 
-Track F (web presence)
-  └── Track G org creation ──► governancecommons.org live
-                             └── GitHub Releases for all specs
+Track Foxtrot (web presence)
+  └── Track Golf org creation ──► governancecommons.org live
+                               └── GitHub Releases for all specs
 
-Track G (infrastructure)
-  └── GitHub org ──► Track C ONS v1.2.0 GitHub Release
-                  └── Track F site deployment
+Track Golf (infrastructure)
+  └── GitHub org ──► Track Charlie ONS v1.2.0 GitHub Release
+                  └── Track Foxtrot site deployment
 ```
 
 ---
 
 ## Cross-Track Notes
 
-- **Track C (ONS) is stable at v1.3.0.** Remaining PASS-1 work is cluster registration protocol and validator/test hardening.
-- **Track D (agent-project-orchestrator) P1 runtime correctness, overlay roster support, multi-agent governance runtime loading, and resource-budget enforcement are closed.**
-- **Track E (SDK) is a multiplier.** Nothing in Track E is a prerequisite for PASS-1 work, but it unblocks every adoption path for PASS-3+. Identify a starting point (Python validator CLI) and begin scaffolding in parallel with PASS-1.
-- **Track F and Track G are coupled.** Web presence work is blocked on org creation. Do not invest in Track F beyond maintenance until the GitHub org exists.
-- **CNCF/W3C analogy (source 102):** These ecosystems have formal charters, WG structures, RFC processes, and IP agreements. Governance Commons currently has none of these. Track G owns all of them. They are prerequisites for any enterprise conformance claims.
+- **Track Charlie (ONS) is stable at v1.3.0.** Remaining PASS-1 work: GC-1-C-08 (FAST rule enforcement) and GC-1-C-09 (rule soft-deprecation).
+- **Track Delta (agent-project-orchestrator) P1 runtime correctness, overlay roster support, multi-agent governance runtime loading, and resource-budget enforcement are closed.**
+- **Track Echo (SDK) is in release prep.** Python and TypeScript package scaffolds exist locally; PyPI/npm publication is still pending.
+- **agent-team-protocol has its PASS-1 schema/test batch closed.** It is tracked as a project/work area in `projects.yaml`, not as a portfolio track call sign.
+- **Track Foxtrot and Track Golf are coupled.** Web presence work is blocked on org creation. Do not invest in Track Foxtrot beyond maintenance until the GitHub org exists.
+- **CNCF/W3C analogy (source 102):** These ecosystems have formal charters, WG structures, RFC processes, and IP agreements. Governance Commons currently has none of these. Track Golf owns all of them. They are prerequisites for any enterprise conformance claims.
 - **hbl and osprey are NOT listed here.** They are aspirational peer ecosystems. They will appear in TRACKS.md only when real repos exist.
 
 ---

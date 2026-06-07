@@ -113,8 +113,9 @@ projects:
       devplan: agent-team-protocol/DEVPLAN.md
       changelog: agent-team-protocol/CHANGELOG.md
     pass_status:
-      p0_gaps: 5
-      notes: "v0.1.0 bootstrapped (ATP-2026-0001) — Phase 1 queued: fleet-escalation + team-lifecycle schemas, test vectors, CLI validator"
+      p0_gaps: 0
+      p1_gaps: 2
+      notes: "PASS-1 schema/test batch closed. Remaining P1 work: CLI validator + CI workflow."
 
   - name: agent-roster
     path: agent-roster
@@ -139,15 +140,15 @@ projects:
   - name: governance-commons-code
     path: governance-commons-code
     group: sdk
-    description: "Code-level implementation of Governance Commons standards — validators, CLI, CI templates"
-    status: scaffold
-    version: ~
-    branch: ~
+    description: "Code-level implementation of Governance Commons standards — ONS TypeScript/Python validators, npm + PyPI package scaffolds"
+    status: wip
+    version: "0.1.0"
+    branch: main
     sdk_for: [agent-dossier, agent-matrix, ons, agent-project-orchestrator]
     planning:
-      notes: "No git repo yet. Track E — starts at PASS-3. First deliverable: Python validator CLI."
+      notes: "Track Echo — GC-2-C-02/E-01/E-02 scaffolds complete. Python + TypeScript ONS reference implementations live here; PyPI/npm publication is pending."
     pass_status:
-      notes: "Not started — begins at GC-2-E-01 (PyPI) and GC-2-E-02 (npm)"
+      notes: "v0.1.0 scaffolded (2026-06-06): governance_commons Python package (115 tests) + TypeScript ESM/CJS dual-mode package. This is the SDK repo, not the VS Code extension. Next: GH org creation, publish to PyPI + npm."
 
   # ─── SITES ───────────────────────────────────────────────────────────────────
   # Public-facing web presence and tooling surfaces.
@@ -160,7 +161,7 @@ projects:
     branch: main
     site_for: governance-commons
     planning:
-      notes: "Active site. Direction follows DEVPLAN Track F. Blocked on org creation for domain."
+      notes: "Active site. Direction follows Track Foxtrot. Blocked on Track Golf org creation for domain."
 
   - name: agent-dossier-www
     path: agent-dossier-www
@@ -180,9 +181,9 @@ projects:
     branch: main
     site_for: agent-dossier
     depends_on:
-      ons_typescript: "Blocked until ONS TypeScript reference implementation exists (GC-2-C-02)"
+      ons_typescript: "governance-commons-code/src/ons.ts — GC-2-C-02 complete (2026-06-06)"
     planning:
-      notes: "Track F. ONS TypeScript impl required before VS Code extension path is unblocked."
+      notes: "Track Foxtrot. ONS TypeScript impl required before VS Code extension path is unblocked."
 
   # ─── PLANNED (aspirational) ──────────────────────────────────────────────────
   # Listed here to prevent confusion with established peers.

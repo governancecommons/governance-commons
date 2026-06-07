@@ -2,7 +2,7 @@
 
 **AUTHORITY LEVEL: AL:2**
 **Status:** ACTIVE — canonical execution and release planning source
-**time.loc:** 2026-06-05T00:00:00Z
+**time.loc:** 2026-06-07T00:00:00Z
 **Canonical pair:** `DEVPATH.md` + `DEVPLAN.md`
 
 ---
@@ -21,10 +21,11 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 ## CURRENT EXECUTION POSITION
 
-**Active PASS:** PASS-0 (Ecosystem Planning Baseline) — transitioning to PASS-1
-**Primary active tracks:** Track A (agent-dossier) P1 gap closure · Track C (ONS) PASS-1 backlog
-**Completed track:** Track D (agent-project-orchestrator) — PASS-1 and PASS-2 backlog fully closed
-**Next milestone:** PASS-1 (Spec Correctness and Validation)
+**Active PASS:** PASS-1 (Spec Correctness and Validation)
+**Primary active tracks:** Track Charlie (ONS) PASS-1 remaining items
+**Completed tracks:** Track Alpha (agent-dossier) PASS-1 fully closed · Track Delta (agent-project-orchestrator) PASS-1 and PASS-2 fully closed
+**Completed work areas:** agent-team-protocol PASS-1 schema/test batch closed
+**Next milestone:** PASS-1 close-out → PASS-2 (Security and Identity)
 
 **Recently completed:**
 
@@ -32,7 +33,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 - Three source_102 design decisions answered in DEVPATH.md (DDR-1 through DDR-5)
 - Ecosystem planning infrastructure created (DEVPATH, DEVPLAN, TRACKS, projects.yaml, tools/gc-status.ps1)
 - agent-project-orchestrator renamed from project-orchestrator-agent and pushed to governancecommons/agent-project-orchestrator
-- Track A, C, and D P0 gap closure reconciled across source gap checklist and project registry
+- Track Alpha, Charlie, and Delta P0 gap closure reconciled across source gap checklist and project registry
 - GC-1-D-04 through GC-1-D-08: APO P1 runtime correctness batch (telemetry, typed tasks, handoff envelopes, tests)
 - GC-1-D-10 / GC-1-D-11: APO PASS-2 runtime governance loading + per-agent resource budget enforcement
 - GC-1-C-05: ONS cluster registration protocol defined (PASS-2026-0008) + registry/clusters.yaml created (PASS-2026-0009)
@@ -52,6 +53,13 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 10. ~~GC-1-A-10 — agent-dossier: dossier revocation and expiry model~~ ✅ DONE (agent-dossier PASS-2026-0026)
 11. ~~GC-1-A-07 — agent-dossier: OpenTelemetry adapter (PASS-4)~~ ✅ DONE (agent-dossier PASS-2026-0026)
 12. ~~GC-3-E-01 — observability-contract.yaml: `gc.agent.*` OTel conventions + mandatory `time_loc` (PASS-4)~~ ✅ DONE (GC-PASS-2026-0003)
+13. ~~GC-1-F-01 — agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02)~~ ✅ DONE (ATP schemas/sections/)
+14. ~~GC-1-F-02 — agent-team-protocol: pytest test vectors for all 5 sections (147 tests, 147 passed)~~ ✅ DONE (ATP tests/)
+15. ~~GC-2-C-02 — ONS TypeScript reference implementation: all 12 casing domains, separator grammar, governance ID grammar~~ ✅ DONE (governance-commons-code/src/ons.ts scaffold)
+16. ~~GC-2-E-01 — governance-commons-py packaging scaffold: pyproject.toml + governance_commons package (115 tests passing)~~ ✅ DONE (governance-commons-code/pyproject.toml)
+17. ~~GC-2-E-02 — governance-commons-js packaging scaffold: package.json + TypeScript ESM/CJS dual-mode build scaffold~~ ✅ DONE (governance-commons-code/package.json)
+18. GC-1-C-08 — ONS: implement FAST rule enforcement in `tools/validate.py` (100-T1); each FAST rule in `ons.yaml` catalog MUST be evaluated and reported by the validator
+19. GC-1-C-09 — ONS: add rule soft-deprecation mechanism to `ons.yaml` and validator (100-S5); deprecated rules MUST produce warnings, not errors, and carry a `deprecated_since` version
 
 ---
 
@@ -229,15 +237,15 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 100-S2 | No casing rule for colon (qualification) domain | Medium | PASS-1 / GC-1-C-03 | C |
 | 100-S3 | No cluster registration protocol or registry | High | PASS-1 / GC-1-C-05 | C |
 | 100-S4 | ons-conformance.schema.json diverges from ons.yaml | High | PASS-1 / GC-1-C-02 | C |
-| 100-S5 | No rule soft-deprecation mechanism | Medium | PASS-1 | O |
+| 100-S5 | No rule soft-deprecation mechanism | Medium | PASS-1 / GC-1-C-09 | O |
 | 100-S6 | No RFC 2119 normative language | High | PASS-1 / GC-1-C-04 | C |
-| 100-T1 | FAST rules in catalog but no validator implements them | — | PASS-1 | O |
+| 100-T1 | FAST rules in catalog but no validator implements them | — | PASS-1 / GC-1-C-08 | O |
 | 100-T2 | No pytest suite for tools/validate.py | — | PASS-1 / GC-1-C-07 | C |
-| 100-T3 | No rules.json export for LSP/linter authors | — | PASS-1 / GC-1-C-06 | O |
+| 100-T3 | No rules.json export for LSP/linter authors | — | PASS-1 / GC-1-C-06 | C |
 | 100-T4 | VALIDATOR_VERSION hardcoded 1.0.0 | — | PASS-3 | O |
 | 100-A1 | RFC 2119 normative language (table stakes for citation) | Table stakes | PASS-1 / GC-1-C-04 | C |
 | 100-A2 | Conformance test suite with test vectors | Medium | PASS-3 / GC-2-C-01 | O |
-| 100-A3 | TypeScript reference implementation | High | PASS-3 / GC-2-C-02 | O |
+| 100-A3 | TypeScript reference implementation | High | PASS-3 / GC-2-C-02 | C |
 | 100-A4 | pip install + npm package | Low-medium | PASS-3 | O |
 | 100-N1 | LSP implementation (highest-leverage long-term move) | High effort | PASS-6 / GC-4-C-01 | O |
 | 100-N2 | Global cluster registry as governed service | Low-medium | PASS-1 / GC-1-C-05 | O |
@@ -253,7 +261,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 101-G2a | No cryptographic integrity (handoffs can be replayed/forged) | Critical | PASS-2 / GC-3-A-01 | O |
 | 101-G2b | Agent identity is string-only (no cryptographic binding) | Critical | PASS-2 / GC-3-A-02 | O |
 | 101-G2c | No zero-trust establishment/verification/revocation spec | Critical | PASS-2 | O |
-| 101-G3a | OTel listed in alignment but not specified (no span names, metric names) | High | PASS-4 / GC-3-E-01 | O |
+| 101-G3a | OTel listed in alignment but not specified (no span names, metric names) | High | PASS-4 / GC-3-E-01 | C |
 | 101-G3b | No structured agent lifecycle event schema | High | PASS-4 | O |
 | 101-G4a | NIST AI RMF surface mapping only, no control evidence generation | High | PASS-4 / GC-3-E-02 | O |
 | 101-G4b | ISO 42001 missing entirely | High | PASS-4 / GC-3-E-03 | O |
@@ -261,7 +269,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 101-G5 | Python-only (TypeScript, Go, Rust adopters have no path) | High | PASS-3 | O |
 | 101-G6a | No RFC/proposal process | Medium | PASS-5 / GC-3-G-02 | O |
 | 101-G6b | No conformance certification mechanism | Medium | PASS-5 / GC-3-G-03 | O |
-| 101-G7a | No dossier revocation/expiry model | Medium | PASS-1 / GC-1-A-10 | O |
+| 101-G7a | No dossier revocation/expiry model | Medium | PASS-1 / GC-1-A-10 | C |
 | 101-G7b | No versioned capability claims for audit replay | Medium | PASS-4 | O |
 | 101-AC1 | Constitutional governance layer (constitution.yaml) | Ahead-of-curve | PASS-6 / GC-4-A-01 | O |
 | 101-AC2 | Federated Agent Trust Network | Ahead-of-curve | PASS-6 / GC-4-B-01 | O |
@@ -275,7 +283,7 @@ Gaps created by the AL:2 timestamp requirement (DDR-6). Spec additions to agent-
 |-----|-------------|----------|------|--------|
 | GC-1-A-TL-01 | agent-dossier: emit handoff envelopes with `emitted_at` populated at transmission time; verify all emission sites in APO `escalation.py` and any future emitters | P1 | PASS-1 | C |
 | GC-1-A-TL-02 | agent-dossier: emit telemetry events using the seven new lifecycle `event_type` values (`pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated`) from relevant agent execution paths | P1 | PASS-1 | C |
-| GC-1-D-TL-01 | agent-project-orchestrator: enforce `time_loc` as a required key in every `telemetry.emit()` call; runtime validation MUST reject emission without it | P2 | PASS-2 | O |
+| GC-1-D-TL-01 | agent-project-orchestrator: enforce `time_loc` as a required key in every `telemetry.emit()` call; runtime validation MUST reject emission without it | P2 | PASS-2 | C |
 
 ---
 
@@ -283,13 +291,13 @@ Gaps created by the AL:2 timestamp requirement (DDR-6). Spec additions to agent-
 
 Work registered but not yet active. Items are promoted to "Immediate next tasks" when the preceding batch clears.
 
-| ID | Task | Track | PASS | Blocks |
-|----|------|-------|------|--------|
-| GC-1-F-01 | agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02) | F | PASS-1 | GC v1.2.0 fleet governance |
-| GC-1-F-02 | agent-team-protocol: pytest test vectors for all 5 sections (ATP-1-03–05) | F | PASS-1 | GC v1.2.0 fleet governance |
-| GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
-| GC-2-E-01 | governance-commons-py to PyPI | E | PASS-3 | zero-friction adoption |
-| GC-2-E-02 | governance-commons-js to npm | E | PASS-3 | zero-friction adoption |
+| ID | Task | Track / Area | PASS | Blocks | Status |
+|----|------|--------------|------|--------|--------|
+| ~~GC-1-F-01~~ | ~~agent-team-protocol: fleet-escalation + team-lifecycle schemas~~ | agent-team-protocol | PASS-1 | GC v1.2.0 fleet governance | ✅ Done |
+| ~~GC-1-F-02~~ | ~~agent-team-protocol: pytest test vectors for all 5 sections~~ | agent-team-protocol | PASS-1 | GC v1.2.0 fleet governance | ✅ Done |
+| ~~GC-2-C-02~~ | ~~TypeScript reference implementation for ONS~~ | Charlie | PASS-3 | VS Code extension path | ✅ Done |
+| ~~GC-2-E-01~~ | ~~governance-commons-py packaging scaffold~~ | Echo | PASS-3 | zero-friction adoption | ✅ Done |
+| ~~GC-2-E-02~~ | ~~governance-commons-js packaging scaffold~~ | Echo | PASS-3 | zero-friction adoption | ✅ Done |
 
 ---
 
