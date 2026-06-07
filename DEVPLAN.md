@@ -43,7 +43,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 1. ~~GC-1-A-09 — handoff envelope emission in APO `escalation.py` with `emitted_at`, uuid ID, `verification`, JSONL persistence~~ ✅ DONE (APO PASS-2026-0004)
 2. ~~GC-1-A-TL-01 — `emitted_at` populated and asserted at all emission sites~~ ✅ DONE (APO PASS-2026-0004)
 3. ~~GC-1-A-TL-02 — seven lifecycle event types registered in `telemetry.py` EventType~~ ✅ DONE (APO PASS-2026-0004)
-4. GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling
+4. ~~GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling~~ ✅ DONE (APO PASS-2026-0005)
 5. GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`
 6. GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`
 7. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
@@ -171,7 +171,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 97-G5 | No environment abstraction (paths/IDs/timeouts are literals) | P0 | PASS-1 / GC-1-A-05 | C |
 | 97-G6 | Hardcoded Windows paths in source comments | P0 | PASS-1 / GC-1-A-06 | C |
 | 97-G7 | Custom telemetry (not OpenTelemetry) | P1 | PASS-4 / GC-1-A-07 | O |
-| 97-G8 | PASS-YYYY-NNNN ID format not validated or generated | P1 | PASS-1 / GC-1-A-08 | O |
+| 97-G8 | PASS-YYYY-NNNN ID format not validated or generated | P1 | PASS-1 / GC-1-A-08 | C |
 | 97-G9 | Handoff envelope defined in spec, never emitted in code | P1 | PASS-1 / GC-1-A-09 | C |
 | 97-G10 | Orchestrator monolith (no module split) | P2 | PASS-3 / GC-2-A-01 | O |
 | 97-G11 | Agents hardcoded via require() (no plugin interface) | P2 | PASS-3 / GC-2-A-02 | O |
@@ -280,7 +280,6 @@ Work registered but not yet active. Items are promoted to "Immediate next tasks"
 
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
-| GC-1-A-08 | agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling | A | PASS-1 | PASS ID integrity |
 | GC-1-C-03 | ONS: add casing rule for colon (qualification) domain to `ons.yaml` | C | PASS-1 | naming conformance completeness |
 | GC-1-C-06 | ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers | C | PASS-1 | Track E SDK + VS Code extension |
 | GC-1-C-07 | ONS: write pytest suite for `tools/validate.py` | C | PASS-1 | validator correctness |
