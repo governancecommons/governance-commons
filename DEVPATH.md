@@ -59,6 +59,30 @@ established peers until they exist. They are recorded as `status: planned` in `p
 Repos reference each other by git tag pin or semver range declared in `compat:` fields.
 Prose references in specs use schema URIs. No repo inherits from another — reference only.
 
+**DDR-6 — Timestamp requirement.**
+All governance artifacts — PASS records, handoff envelopes, telemetry events, registry entries,
+governance documents, and agent-produced scaffolding or implementation outputs — MUST carry a
+machine-readable timestamp at the point of creation or emission. No governance artifact is
+audit-complete without a timestamp. Timestamps MUST use ISO 8601 / RFC3339 UTC
+(`YYYY-MM-DDTHH:MM:SSZ`). This is an AL:2 requirement effective 2026-06-06. The requirement is
+implemented across five layers, each scoped to the PASS where it becomes enforceable.
+
+**Canonical field naming (per ONS separator semantics):**
+
+- Document level: `time.loc:` (colon-qualified key, human-readable metadata block)
+- Schema level: `*_at` suffix — `created_at`, `emitted_at`, `accepted_at`, `authored_at`
+- Telemetry level: `timestamp` (existing field in telemetry_trace_schema) + `time_loc` key in APO telemetry.emit() calls
+
+**Five-layer implementation scope:**
+
+| Layer | Artifact / system | Required field(s) | PASS | Gap / item |
+|-------|-------------------|-------------------|------|------------|
+| L1 | DEVPLAN, DEVPATH, registry files, ONS CHANGELOG entries | `time.loc:` header field | PASS-0 — done | Convention |
+| L2 | agent-dossier handoff envelopes; telemetry lifecycle events | `emitted_at` (REQUIRED), `accepted_at` (OPTIONAL); event types: `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated` | PASS-1 | GC-1-A-TL-01, GC-1-A-TL-02 |
+| L3 | observability-contract.yaml gc.agent.* event schema | `time_loc` required field on every gc.agent.* event | PASS-4 | GC-3-E-01 (existing) |
+| L4 | agent-project-orchestrator telemetry.emit() | `time_loc` required key in every emit call; runtime validation rejects emission without it | PASS-2 | GC-1-D-TL-01 |
+| L5 | GC release milestone review gate | All specs in the milestone declare timestamp conformance at their declared profile level | PASS-0 — this DDR | AL:2 rule |
+
 ---
 
 ## ECOSYSTEM PHASES
@@ -94,6 +118,8 @@ Normative language is unambiguous. Stale documentation corrected. No spec contra
 - ONS: RFC 2119 normative language throughout; stale header fixed; conformance schema aligned
 - ONS: cluster registration protocol defined and registry file exists
 - Agent Dossier: package metadata present; JSON Schema validation wired into tooling; PASS ID enforced
+- Agent Dossier: handoff envelope `emitted_at` field (REQUIRED) and `accepted_at` field (OPTIONAL) defined in spec and schema — Layer 2 timestamp requirement (DDR-6)
+- Agent Dossier: telemetry_trace_schema extended with lifecycle event types: `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated` — Layer 2 timestamp requirement (DDR-6)
 - Agent Matrix: formal SLA/SLO schema; MCP alignment stub; multi-provider SKU fields
 - APO: DevPath + Tracks reflect actual implementation state; level-2 escalation reachable; runtime-contract.yaml compiles deterministically
 - All specs: valid and invalid test vectors exist for all schemas
@@ -117,6 +143,7 @@ Major interoperability protocols (A2A, MCP, CloudEvents) have explicit governanc
 - CloudEvents binding spec for lifecycle and audit events defined
 - STRIDE-style threat model for multi-agent systems published
 - Trust establishment, rotation, and revocation rules defined
+- APO runtime: `time_loc` is a required key in every `telemetry.emit()` call; runtime rejects emission without it — Layer 4 timestamp requirement (DDR-6, gap GC-1-D-TL-01)
 
 **Status:** ⬜ Not started
 
@@ -148,6 +175,7 @@ signed, and exportable to external audit systems.
 **Exit criteria:**
 
 - observability-contract.yaml defines gc.agent.* OTEL semantic conventions (span names for task start/handoff/escalation/completion, metric names, log body schema)
+- observability-contract.yaml: all gc.agent.* events carry mandatory `time_loc` field; canonical lifecycle event types (`gc.agent.pass.written`, `gc.agent.scaffold.started`, `gc.agent.scaffold.completed`, `gc.agent.implementation.started`, `gc.agent.implementation.completed`, `gc.agent.doc.written`, `gc.agent.registry.updated`) are defined with required fields — Layer 3 timestamp requirement (DDR-6, gap GC-3-E-01)
 - Agent lifecycle events have a canonical structured event schema
 - Tamper-evident audit log hash chaining spec defined
 - Signed compliance evidence export format defined

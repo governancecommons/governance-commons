@@ -21,24 +21,31 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 ## CURRENT EXECUTION POSITION
 
-**Active PASS:** PASS-0 (Ecosystem Planning Baseline)
-**Primary active tracks:** Track C (ONS) + Track D (agent-project-orchestrator) — P0 fixes first
-**Secondary active track:** Track A (agent-dossier) — P0/P1 gap closure
+**Active PASS:** PASS-0 (Ecosystem Planning Baseline) — transitioning to PASS-1
+**Primary active tracks:** Track A (agent-dossier) P1 gap closure · Track C (ONS) PASS-1 backlog
+**Completed track:** Track D (agent-project-orchestrator) — PASS-1 and PASS-2 backlog fully closed
 **Next milestone:** PASS-1 (Spec Correctness and Validation)
 
 **Recently completed:**
 
 - Source 97–102 gap analysis series read and synthesized
-- Three source_102 design decisions answered in DEVPATH.md
+- Three source_102 design decisions answered in DEVPATH.md (DDR-1 through DDR-5)
 - Ecosystem planning infrastructure created (DEVPATH, DEVPLAN, TRACKS, projects.yaml, tools/gc-status.ps1)
+- agent-project-orchestrator renamed from project-orchestrator-agent and pushed to governancecommons/agent-project-orchestrator
+- Track A, C, and D P0 gap closure reconciled across source gap checklist and project registry
+- GC-1-D-04 through GC-1-D-08: APO P1 runtime correctness batch (telemetry, typed tasks, handoff envelopes, tests)
+- GC-1-D-10 / GC-1-D-11: APO PASS-2 runtime governance loading + per-agent resource budget enforcement
+- GC-1-C-05: ONS cluster registration protocol defined (PASS-2026-0008) + registry/clusters.yaml created (PASS-2026-0009)
+- DDR-6: AL:2 timestamp requirement established; 5-layer implementation scope written into DEVPLAN, DEVPATH, agent-dossier spec, and handoff-envelope schema
 
 **Immediate next tasks (in priority order):**
 
-1. ~~GC-1-C-01 — Fix stale ons.yaml header~~ ✅ DONE (PASS-2026-0005)
-2. ~~GC-1-C-02 — Fix ons-conformance.schema.json divergence~~ ✅ DONE (PASS-2026-0006)
-3. ~~GC-1-D-02 — CHANGELOG missing Python rewrite entry~~ ✅ DONE
-4. ~~GC-1-D-01 — Fix unreachable level-2 escalation + stale Tracks docs~~ ✅ DONE
-5. ~~GC-1-A-01 through GC-1-A-06 — agent-dossier P0 fixes~~ ✅ DONE (agent-dossier PASS-2026-0025)
+1. GC-1-A-09 — agent-dossier / APO: implement handoff envelope emission in `escalation.py` peer-handoff path; envelopes MUST include `emitted_at` per DDR-6
+2. GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling
+3. GC-1-A-TL-01 — agent-dossier: verify `emitted_at` is populated in all handoff envelope emission sites (implementation follow-through for DDR-6 L2)
+4. GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`
+5. GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`
+6. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
 
 ---
 
@@ -84,6 +91,24 @@ mapping task start through completion. This is the PASS-4 exit criterion.
 
 **Steering committee / WG structure.** Not established yet. Required before enterprise procurement
 claims. Record here when roles are assigned.
+
+**Timestamp requirement (AL:2 — effective 2026-06-06).** All governance artifacts produced by
+agents or humans MUST carry a machine-readable timestamp at the point of creation or emission.
+Artifacts without a timestamp MUST be treated as incomplete governance records and MUST NOT
+be accepted as audit evidence. This requirement is implemented across five layers — each scoped
+to the PASS where it becomes enforceable:
+
+| Layer | Scope | Enforcement point | PASS |
+|-------|-------|-------------------|------|
+| L1 | `time.loc:` field in DEVPLAN/DEVPATH/registry headers | Convention — current | PASS-0 (done) |
+| L2 | `emitted_at` (REQUIRED) + `accepted_at` (OPTIONAL) in handoff envelopes; `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written` event types in agent-dossier telemetry_trace_schema | agent-dossier spec + schema | PASS-1 |
+| L3 | `gc.agent.*` structured event schema with mandatory `time_loc` field in `observability-contract.yaml` | observability-contract.yaml (GC-3-E-01) | PASS-4 |
+| L4 | `time_loc` required key in every `telemetry.emit()` call in agent-project-orchestrator | Runtime enforcement in APO | PASS-2 |
+| L5 | This AL:2 rule — binding cross-spec requirement enforced at GC release milestone review | DEVPLAN gating | PASS-0 (this entry) |
+
+The canonical field name is `time.loc` at the document level (colon-qualified key per ONS separator
+semantics) and `*_at` at the schema level (`created_at`, `emitted_at`, `accepted_at`). Both forms
+MUST use ISO 8601 / RFC3339 UTC format (`YYYY-MM-DDTHH:MM:SSZ`). See DEVPATH DDR-6 for rationale.
 
 ---
 
@@ -182,13 +207,13 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 99-G1 | DevPath + Tracks stale (PASS-1/2/3 marked PENDING, code exists) | P0 | PASS-0 / GC-1-D-01 | C |
 | 99-G2 | CHANGELOG missing Python rewrite entry (PASS-2026-0002) | P0 | PASS-0 / GC-1-D-02 | C |
 | 99-G3 | Level-2 escalation (operator_clarification) unreachable in escalation.py:27-31 | P0 | PASS-1 / GC-1-D-03 | C |
-| 99-G4 | Agents never call telemetry.emit() (all traces from dispatcher only) | P1 | PASS-4 / GC-1-D-04 | O |
-| 99-G5 | runtime-contract.yaml non-deterministic (timestamp in trace_id) | P1 | PASS-1 / GC-1-D-05 | O |
-| 99-G6 | models/task.py unused; raw dicts used instead | P1 | PASS-1 / GC-1-D-06 | O |
-| 99-G7 | governance/multi-agent.yaml never read at runtime | P3 | PASS-2 | O |
-| 99-G8 | Handoff envelopes not implemented (level-1 escalation logs warning, no envelope) | P2 | PASS-1 / GC-1-D-07 | O |
-| 99-G9 | Zero test coverage for agents and orchestrator | P2 | PASS-1 / GC-1-D-08 | O |
-| 99-G10 | Per-agent resource budgets not enforced (time_limit, tool_call_limit unused) | P3 | PASS-2 | O |
+| 99-G4 | Agents never call telemetry.emit() (all traces from dispatcher only) | P1 | PASS-4 / GC-1-D-04 | C |
+| 99-G5 | runtime-contract.yaml non-deterministic (timestamp in trace_id) | P1 | PASS-1 / GC-1-D-05 | C |
+| 99-G6 | models/task.py unused; raw dicts used instead | P1 | PASS-1 / GC-1-D-06 | C |
+| 99-G7 | governance/multi-agent.yaml never read at runtime | P3 | PASS-2 / GC-1-D-10 | C |
+| 99-G8 | Handoff envelopes not implemented (level-1 escalation logs warning, no envelope) | P2 | PASS-1 / GC-1-D-07 | C |
+| 99-G9 | Zero test coverage for agents and orchestrator | P2 | PASS-1 / GC-1-D-08 | C |
+| 99-G10 | Per-agent resource budgets not enforced (time_limit, tool_call_limit unused) | P3 | PASS-2 / GC-1-D-11 | C |
 
 ### Source 100 — ONS v1.2.0 gaps
 
@@ -196,7 +221,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 |-----|-------------|----------|------|--------|
 | 100-S1 | Stale header comment (v1.1.0/2026-06-03 vs body v1.2.0/2026-06-04) | Low | PASS-1 / GC-1-C-01 | C |
 | 100-S2 | No casing rule for colon (qualification) domain | Medium | PASS-1 / GC-1-C-03 | O |
-| 100-S3 | No cluster registration protocol or registry | High | PASS-1 / GC-1-C-05 | O |
+| 100-S3 | No cluster registration protocol or registry | High | PASS-1 / GC-1-C-05 | C |
 | 100-S4 | ons-conformance.schema.json diverges from ons.yaml | High | PASS-1 / GC-1-C-02 | C |
 | 100-S5 | No rule soft-deprecation mechanism | Medium | PASS-1 | O |
 | 100-S6 | No RFC 2119 normative language | High | PASS-1 / GC-1-C-04 | C |
@@ -236,22 +261,41 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 101-AC2 | Federated Agent Trust Network | Ahead-of-curve | PASS-6 / GC-4-B-01 | O |
 | 101-AC3 | Temporal authority windows | Ahead-of-curve | PASS-6 / GC-4-A-02 | O |
 
+### DDR-6 — Timestamp requirement (registered 2026-06-06)
+
+Gaps created by the AL:2 timestamp requirement (DDR-6). Spec additions to agent-dossier.yaml and handoff-envelope.schema.json are complete; the items below track implementation and enforcement.
+
+| Gap | Description | Priority | PASS | Status |
+|-----|-------------|----------|------|--------|
+| GC-1-A-TL-01 | agent-dossier: emit handoff envelopes with `emitted_at` populated at transmission time; verify all emission sites in APO `escalation.py` and any future emitters | P1 | PASS-1 | O |
+| GC-1-A-TL-02 | agent-dossier: emit telemetry events using the seven new lifecycle `event_type` values (`pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated`) from relevant agent execution paths | P1 | PASS-1 | O |
+| GC-1-D-TL-01 | agent-project-orchestrator: enforce `time_loc` as a required key in every `telemetry.emit()` call; runtime validation MUST reject emission without it | P2 | PASS-2 | O |
+
 ---
 
 ## NEAR-TERM QUEUED WORK
 
-Work registered but not yet active. Execute after active PASS-0 priorities clear.
+Work registered but not yet active. Items are promoted to "Immediate next tasks" when the preceding batch clears.
 
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
+| GC-1-A-09 | agent-dossier / APO: implement handoff envelope emission in `escalation.py` peer-handoff path; envelopes MUST carry `emitted_at` (DDR-6) | A | PASS-1 | audit-ready handoff evidence |
+| GC-1-A-08 | agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling | A | PASS-1 | PASS ID integrity |
+| GC-1-A-TL-01 | agent-dossier: verify `emitted_at` populated at all handoff emission sites; add assertion to test suite | A | PASS-1 | DDR-6 L2 enforcement |
+| GC-1-A-TL-02 | agent-dossier: emit lifecycle telemetry events (`pass_written`, `scaffold_*`, `implementation_*`, `doc_written`, `registry_updated`) from relevant agent execution paths | A | PASS-1 | DDR-6 L2 enforcement |
+| GC-1-C-03 | ONS: add casing rule for colon (qualification) domain to `ons.yaml` | C | PASS-1 | naming conformance completeness |
+| GC-1-C-06 | ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers | C | PASS-1 | Track E SDK + VS Code extension |
+| GC-1-C-07 | ONS: write pytest suite for `tools/validate.py` | C | PASS-1 | validator correctness |
+| GC-1-D-TL-01 | APO: enforce `time_loc` as required key in every `telemetry.emit()` call; reject emission without it | D | PASS-2 | DDR-6 L4 enforcement |
 | GC-1-A-07 | OpenTelemetry adapter for agent-dossier | A | PASS-4 | PASS-4 observability |
+| GC-1-A-10 | agent-dossier: dossier revocation and expiry model | A | PASS-1 | agent identity lifecycle |
 | GC-1-B-03 | Multi-provider SKU routing test vectors (agent-matrix) | B | PASS-1 | GC v1.2.0 milestone |
-| GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
 | GC-1-F-01 | agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02) | F | PASS-1 | GC v1.2.0 fleet governance |
 | GC-1-F-02 | agent-team-protocol: pytest test vectors for all 5 sections (ATP-1-03–05) | F | PASS-1 | GC v1.2.0 fleet governance |
+| GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
 | GC-2-E-01 | governance-commons-py to PyPI | E | PASS-3 | zero-friction adoption |
 | GC-2-E-02 | governance-commons-js to npm | E | PASS-3 | zero-friction adoption |
-| GC-3-E-01 | observability-contract.yaml (gc.agent.* OTEL conventions) | E | PASS-4 | compliance evidence |
+| GC-3-E-01 | observability-contract.yaml (gc.agent.\* OTEL conventions + mandatory `time_loc` on all gc.agent.\* events) | E | PASS-4 | DDR-6 L3 + compliance evidence |
 
 ---
 

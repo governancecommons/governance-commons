@@ -1,6 +1,6 @@
 # TRACKS — Governance Commons Portfolio Overview
 
-**Last updated:** 2026-06-05T00:00:00Z
+**Last updated:** 2026-06-06T00:00:00Z
 **Authority:** Master spec/project portfolio view. For PASS governance history see `DEVPATH.md`; for active execution priorities see `DEVPLAN.md`.
 
 ---
@@ -11,8 +11,8 @@
 |-------|------|------|--------|----------------|
 | [A](agent-dossier/) | agent-dossier | Per-agent identity, authority, handoff, telemetry, audit contract | 🔵 Active — P0 gaps closed | GC-1-A: P1 gap closure |
 | [B](agent-matrix/) | agent-matrix | Multi-agent capability, routing, trust, safety, coordination | 🔵 Active — SKU/MCP/SLA gaps open | GC-1-B: SLA schema + MCP stub |
-| [C](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟡 v1.2.0 pending publish | GC-1-C: stale header + schema fix |
-| [D](agent-project-orchestrator/) | agent-project-orchestrator | Runtime execution contract — task graph, dispatch, handoff, audit | 🔵 Active — stale docs + P0 bugs | GC-1-D: stale docs + escalation fix |
+| [C](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟢 Stable — v1.3.0 shipped | GC-1-C-03: cluster registration protocol |
+| [D](agent-project-orchestrator/) | agent-project-orchestrator | Runtime execution contract — task graph, dispatch, handoff, audit | 🟢 Stable — PASS-2 runtime governance + budgets enforced | PASS-2 backlog clear |
 | [E](governance-commons-code/) | governance-commons-code | SDK layer — Python/TypeScript validators, CLI, CI templates | 🔴 Not started | GC-2-E: PyPI + npm publish |
 | [F](governance-commons-www/) | governance-commons-www | Public web presence for Governance Commons | 🔵 Active | Org creation + domain live |
 | [F](agent-dossier-www/) | agent-dossier-www | Public web presence for Agent Dossier spec | 🔵 Active | — |
@@ -45,20 +45,20 @@
 ### Track C — ONS
 
 **Scope:** Ontic Namespace Structure — naming grammar, namespace identity, collision rules, validation IDs.
-**Current version:** 1.2.0 (local tag — NOT yet pushed; blocked on org creation)
-**PASS:** PASS-1 (Spec Correctness) — P0 fixes first
-**Open P0 gaps:** 2 (stale header, conformance schema divergence)
-**Open High gaps:** 2 (cluster registration protocol, RFC 2119 normative language)
+**Current version:** 1.3.0
+**PASS:** PASS-1 (Spec Correctness) — P0 fixes closed
+**Open P0 gaps:** 0
+**Open High gaps:** 0 (cluster registration protocol closed — registry/clusters.yaml created, PASS-2026-0009)
 **Key links:** `ons/ons.yaml`, `ons/CHANGELOG.md`
 
 ### Track D — agent-project-orchestrator
 
 **Scope:** Runtime execution contract for project-level orchestrators.
-**Current version:** Python rewrite (PASS-2026-0002) — docs still reflect old state
-**PASS:** PASS-0 immediate + PASS-1
-**Open P0 gaps:** 3 (stale DevPath/Tracks, missing CHANGELOG entry, unreachable level-2 escalation)
-**Open P1 gaps:** 3 (agent telemetry, deterministic compilation, models/task.py unused)
-**Key links:** `agent-project-orchestrator/DevPath-v1.0.md`, `agent-project-orchestrator/Tracks.md`
+**Current version:** 1.0.x (renamed to agent-project-orchestrator; PASS-1 P0 closure complete)
+**PASS:** PASS-1 (runtime correctness) — P1 batch closed
+**Open P0 gaps:** 0
+**Open P1/P2 runtime gaps:** 0
+**Key links:** `agent-project-orchestrator/DEVPATH.md`, `agent-project-orchestrator/DEVPLAN.md`, `agent-project-orchestrator/TRACKS.md`
 
 ### Track E — governance-commons-code (SDK)
 
@@ -103,8 +103,7 @@ Track C (ONS)
               └── GC-4-C: LSP implementation
 
 Track D (agent-project-orchestrator)
-  └── GC-1-D: stale docs + P0 bugs ──► PASS-1 clean
-        └── GC-1-D-07/08: handoff envelopes + integration tests
+  └── GC-1-D: P0/P1 runtime correctness + overlay roster + runtime governance + resource budgets closed
 
 Track E (SDK layer)
   └── PASS-3 ──► governance-commons-py (PyPI) + governance-commons-js (npm)
@@ -123,8 +122,8 @@ Track G (infrastructure)
 
 ## Cross-Track Notes
 
-- **Track C (ONS) is the first to publish.** ONS v1.2.0 exists locally; it just needs P0 fixes and a GitHub org to push to.
-- **Track D (agent-project-orchestrator) has the most urgent P0 bugs.** The level-2 escalation bug (escalation.py:27-31) is a code correctness issue affecting the governance contract — fix before any other Track D work.
+- **Track C (ONS) is stable at v1.3.0.** Remaining PASS-1 work is cluster registration protocol and validator/test hardening.
+- **Track D (agent-project-orchestrator) P1 runtime correctness, overlay roster support, multi-agent governance runtime loading, and resource-budget enforcement are closed.**
 - **Track E (SDK) is a multiplier.** Nothing in Track E is a prerequisite for PASS-1 work, but it unblocks every adoption path for PASS-3+. Identify a starting point (Python validator CLI) and begin scaffolding in parallel with PASS-1.
 - **Track F and Track G are coupled.** Web presence work is blocked on org creation. Do not invest in Track F beyond maintenance until the GitHub org exists.
 - **CNCF/W3C analogy (source 102):** These ecosystems have formal charters, WG structures, RFC processes, and IP agreements. Governance Commons currently has none of these. Track G owns all of them. They are prerequisites for any enterprise conformance claims.

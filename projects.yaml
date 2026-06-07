@@ -91,9 +91,9 @@ projects:
       passchangelog: agent-project-orchestrator/passchangelog.md
       changelog: agent-project-orchestrator/CHANGELOG.md
     pass_status:
-      p0_gaps: 3
-      p1_gaps: 3
-      notes: "P0: stale docs, unreachable level-2 escalation — fix before any new work"
+      p0_gaps: 0
+      p1_gaps: 0
+      notes: "P0/P1 runtime correctness, overlay roster support, multi-agent governance runtime loading, and resource-budget enforcement closed"
 
   # ─── DATA PRODUCTS ───────────────────────────────────────────────────────────
   # Populated instances of spec schemas — curated data, not normative standards.

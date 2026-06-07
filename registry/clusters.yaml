@@ -1,0 +1,92 @@
+# ONS Cluster Registry
+# Canonical global namespace registry for ONS governance clusters.
+# Specification: ons/ons.yaml § cluster_registration_protocol
+# Schema: registry/clusters.schema.json (pending — see gap GC-1-C-05)
+#
+# All clusters MUST be registered here before issuing governance records.
+# Registry consumers MUST reject unregistered clusters and colliding cluster names.
+# Deprecated and retired clusters MUST remain in this file to prevent reuse.
+#
+# time.loc: 2026-06-06T00:00:00Z
+
+---
+
+meta:
+  registry: ONS Global Cluster Registry
+  ons_version: "1.3.0"
+  registry_version: "1.0.0"
+  registry_file: registry/clusters.yaml
+  maintainer: Governance Commons (jj-ervin)
+  created_at: "2026-06-06T00:00:00Z"
+  updated_at: "2026-06-06T00:00:00Z"
+  description: >
+    Global registry of all accepted ONS governance clusters. A cluster must appear
+    here with status active before it may issue governance records of the form
+    CLUSTER.SEQ. Proposed clusters reserve the name but MUST NOT issue records.
+    Deprecated and retired entries remain permanently to prevent name reuse.
+
+clusters:
+
+  - cluster: ONS
+    name: Ontic Namespace Structure
+    namespace_domain: governance
+    owner: Governance Commons — jj-ervin
+    status: active
+    registry_record: PASS-2026-0008
+    opened_by: ONS.00
+    created_at: "2026-06-03T00:00:00Z"
+    description: >
+      Founding cluster for the Ontic Namespace Structure specification. Governs
+      naming grammar, separator semantics, casing rules, governance ID grammar,
+      and namespace domain definitions. ONS.00 and ONS.01 were extracted from
+      the eco project and establish the canonical naming rules for all GC specs.
+    notes:
+      - ONS.00 extracted naming grammar and separator semantics from eco governance record ONS.00.
+      - ONS.01 promoted Python AST rules and established eco conformance profile.
+      - ONS.02 accepted by eco for strict-mode naming validation.
+      - This cluster also owns the cluster_registration_protocol (PASS-2026-0008).
+
+  - cluster: GC
+    name: Governance Commons Ecosystem
+    namespace_domain: governance
+    owner: Governance Commons — jj-ervin
+    status: active
+    registry_record: DEVPLAN.md (ecosystem devplan — AL:2)
+    opened_by: GC.00
+    created_at: "2026-06-05T00:00:00Z"
+    description: >
+      Cluster for cross-spec ecosystem governance records. GC records govern
+      compatibility constraints, release milestones, coordinated breaking changes,
+      and ecosystem-level design decisions that cannot be scoped to a single spec.
+    notes:
+      - GC task IDs (GC-1-C-05, GC-1-A-07 etc.) are gap-tracking labels, not CLUSTER.SEQ records.
+      - CLUSTER.SEQ records under GC (GC.00, GC.01 …) are reserved for formal ecosystem governance entries.
+      - GC.00 is the founding ecosystem charter record (docs/charter.md).
+
+  - cluster: APO
+    name: Agent Project Orchestrator
+    namespace_domain: governance
+    owner: Governance Commons — jj-ervin
+    status: active
+    registry_record: agent-project-orchestrator/DEVPATH.md
+    opened_by: APO.00
+    created_at: "2026-06-05T00:00:00Z"
+    description: >
+      Cluster for runtime execution contract governance records. Covers task graph,
+      dispatch, handoff, telemetry, and per-agent resource budget specifications.
+    notes:
+      - Renamed from project-orchestrator-agent; cluster name reflects current canonical repo name.
+
+  - cluster: ATP
+    name: Agent Team Protocol
+    namespace_domain: governance
+    owner: Governance Commons — jj-ervin
+    status: active
+    registry_record: agent-team-protocol v0.1.0 (registered 2026-06-05)
+    opened_by: ATP.00
+    created_at: "2026-06-05T00:00:00Z"
+    description: >
+      Cluster for fleet governance records. Covers team lifecycle, fleet escalation,
+      multi-agent coordination primitives, and team-scoped authority delegation.
+    notes:
+      - Depends on agent-matrix >=1.4.0 and agent-dossier >=1.0.0 per compat matrix.
