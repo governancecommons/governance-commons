@@ -45,7 +45,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 3. ~~GC-1-A-TL-02 — seven lifecycle event types registered in `telemetry.py` EventType~~ ✅ DONE (APO PASS-2026-0004)
 4. ~~GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling~~ ✅ DONE (APO PASS-2026-0005)
 5. ~~GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`~~ ✅ DONE (ONS PASS-2026-0010)
-6. GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`
+6. ~~GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`~~ ✅ DONE (ONS PASS-2026-0011)
 7. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
 
 ---
@@ -227,7 +227,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 100-S5 | No rule soft-deprecation mechanism | Medium | PASS-1 | O |
 | 100-S6 | No RFC 2119 normative language | High | PASS-1 / GC-1-C-04 | C |
 | 100-T1 | FAST rules in catalog but no validator implements them | — | PASS-1 | O |
-| 100-T2 | No pytest suite for tools/validate.py | — | PASS-1 / GC-1-C-07 | O |
+| 100-T2 | No pytest suite for tools/validate.py | — | PASS-1 / GC-1-C-07 | C |
 | 100-T3 | No rules.json export for LSP/linter authors | — | PASS-1 / GC-1-C-06 | O |
 | 100-T4 | VALIDATOR_VERSION hardcoded 1.0.0 | — | PASS-3 | O |
 | 100-A1 | RFC 2119 normative language (table stakes for citation) | Table stakes | PASS-1 / GC-1-C-04 | C |
@@ -281,7 +281,6 @@ Work registered but not yet active. Items are promoted to "Immediate next tasks"
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
 | GC-1-C-06 | ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers | C | PASS-1 | Track E SDK + VS Code extension |
-| GC-1-C-07 | ONS: write pytest suite for `tools/validate.py` | C | PASS-1 | validator correctness |
 | GC-1-D-TL-01 | APO: enforce `time_loc` as required key in every `telemetry.emit()` call; reject emission without it | D | PASS-2 | DDR-6 L4 enforcement |
 | GC-1-A-07 | OpenTelemetry adapter for agent-dossier | A | PASS-4 | PASS-4 observability |
 | GC-1-A-10 | agent-dossier: dossier revocation and expiry model | A | PASS-1 | agent identity lifecycle |
