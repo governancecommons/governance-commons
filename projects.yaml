@@ -137,8 +137,8 @@ projects:
   # ─── SDK / CODE ──────────────────────────────────────────────────────────────
   # Code-level implementations: validators, CLI tools, CI templates.
 
-  - name: governance-commons-code
-    path: governance-commons-code
+  - name: governance-commons-sdk
+    path: governance-commons-sdk
     group: sdk
     description: "Code-level implementation of Governance Commons standards — ONS TypeScript/Python validators, npm + PyPI package scaffolds"
     status: wip
@@ -173,15 +173,15 @@ projects:
     planning:
       notes: "Active site."
 
-  - name: agent-dossier-vscode
-    path: agent-dossier-vscode
+  - name: governance-commons-vscode
+    path: governance-commons-vscode
     group: sites
-    description: "VS Code extension surface for Agent Dossier"
+    description: "VS Code extension surface for Governance Commons standards"
     status: active
     branch: main
-    site_for: agent-dossier
+    site_for: governance-commons
     depends_on:
-      ons_typescript: "governance-commons-code/src/ons.ts — GC-2-C-02 complete (2026-06-06)"
+      ons_typescript: "governance-commons-sdk/src/ons.ts — GC-2-C-02 complete (2026-06-06)"
     planning:
       notes: "Track Foxtrot. ONS TypeScript impl required before VS Code extension path is unblocked."
 

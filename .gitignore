@@ -6,9 +6,9 @@ ons/
 agent-project-orchestrator/
 agent-roster/
 governance-commons-www/
-governance-commons-code/
+governance-commons-sdk/
 agent-dossier-www/
-agent-dossier-vscode/
+governance-commons-vscode/
 
 # Editor
 .vscode/

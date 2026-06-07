@@ -55,9 +55,9 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 12. ~~GC-3-E-01 — observability-contract.yaml: `gc.agent.*` OTel conventions + mandatory `time_loc` (PASS-4)~~ ✅ DONE (GC-PASS-2026-0003)
 13. ~~GC-1-F-01 — agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02)~~ ✅ DONE (ATP schemas/sections/)
 14. ~~GC-1-F-02 — agent-team-protocol: pytest test vectors for all 5 sections (147 tests, 147 passed)~~ ✅ DONE (ATP tests/)
-15. ~~GC-2-C-02 — ONS TypeScript reference implementation: all 12 casing domains, separator grammar, governance ID grammar~~ ✅ DONE (governance-commons-code/src/ons.ts scaffold)
-16. ~~GC-2-E-01 — governance-commons-py packaging scaffold: pyproject.toml + governance_commons package (115 tests passing)~~ ✅ DONE (governance-commons-code/pyproject.toml)
-17. ~~GC-2-E-02 — governance-commons-js packaging scaffold: package.json + TypeScript ESM/CJS dual-mode build scaffold~~ ✅ DONE (governance-commons-code/package.json)
+15. ~~GC-2-C-02 — ONS TypeScript reference implementation: all 12 casing domains, separator grammar, governance ID grammar~~ ✅ DONE (governance-commons-sdk/src/ons.ts scaffold)
+16. ~~GC-2-E-01 — governance-commons-py packaging scaffold: pyproject.toml + governance_commons package (115 tests passing)~~ ✅ DONE (governance-commons-sdk/pyproject.toml)
+17. ~~GC-2-E-02 — governance-commons-js packaging scaffold: package.json + TypeScript ESM/CJS dual-mode build scaffold~~ ✅ DONE (governance-commons-sdk/package.json)
 18. GC-1-C-08 — ONS: implement FAST rule enforcement in `tools/validate.py` (100-T1); each FAST rule in `ons.yaml` catalog MUST be evaluated and reported by the validator
 19. GC-1-C-09 — ONS: add rule soft-deprecation mechanism to `ons.yaml` and validator (100-S5); deprecated rules MUST produce warnings, not errors, and carry a `deprecated_since` version
 

@@ -13,10 +13,10 @@
 | [Bravo](agent-matrix/) | agent-matrix | Multi-agent capability, routing, trust, safety, coordination | 🔵 Active — SKU/MCP/SLA gaps open | GC-1-B: SLA schema + MCP stub |
 | [Charlie](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟢 Stable — v1.3.0 shipped | GC-1-C-08/09: FAST rules + soft-deprecation |
 | [Delta](agent-project-orchestrator/) | agent-project-orchestrator | Runtime execution contract — task graph, dispatch, handoff, audit | 🟢 Stable — PASS-2 runtime governance + budgets enforced | PASS-2 backlog clear |
-| [Echo](governance-commons-code/) | governance-commons-code | SDK layer — Python/TypeScript validators, CLI, CI templates | 🟡 Release prep — v0.1.0 scaffolded | GC-2-E: PyPI + npm publish |
+| [Echo](governance-commons-sdk/) | governance-commons-sdk | SDK layer — Python/TypeScript validators, CLI, CI templates | 🟡 Release prep — v0.1.0 scaffolded | GC-2-E: PyPI + npm publish |
 | [Foxtrot](governance-commons-www/) | governance-commons-www | Public web presence for Governance Commons | 🔵 Active | Org creation + domain live |
 | [Foxtrot](agent-dossier-www/) | agent-dossier-www | Public web presence for Agent Dossier spec | 🔵 Active | — |
-| [Foxtrot](agent-dossier-vscode/) | agent-dossier-vscode | VS Code extension for Agent Dossier | 🔵 Active | ONS TypeScript impl needed |
+| [Foxtrot](governance-commons-vscode/) | governance-commons-vscode | VS Code extension for Governance Commons standards | 🔵 Active | ONS TypeScript impl needed |
 | [Golf](projects.yaml) | ecosystem infrastructure | GitHub org, domain, npm org, PyPI namespace, conformance program | 🔴 Deferred | Start when PASS-2 is in flight |
 
 **Status key:** 🟢 Shipped · 🟡 Release prep · 🔵 Active dev · 🔴 Not started / planning
@@ -63,18 +63,18 @@
 **Open P1/P2 runtime gaps:** 0
 **Key links:** `agent-project-orchestrator/DEVPATH.md`, `agent-project-orchestrator/DEVPLAN.md`, `agent-project-orchestrator/TRACKS.md`
 
-### Track Echo — governance-commons-code (SDK)
+### Track Echo — governance-commons-sdk (SDK)
 
 **Scope:** Code-level implementation — Python/TypeScript/Go validators, CLI tooling, CI templates.
 **Current version:** 0.1.0 scaffold
 **PASS:** PASS-3 (Tooling, SDKs, Packaging)
 **Key deliverables:** governance-commons-py (PyPI), governance-commons-js (npm), GitHub Actions templates
-**Key links:** `governance-commons-code/`
+**Key links:** `governance-commons-sdk/`
 
 ### Track Foxtrot — Web Presence
 
 **Scope:** All public-facing sites and extensions.
-**Repos:** governance-commons-www, agent-dossier-www, agent-dossier-vscode
+**Repos:** governance-commons-www, agent-dossier-www, governance-commons-vscode
 **Current state:** Sites active; governancecommons.org not yet live; org not yet created
 **Blocked by:** GitHub org creation (GC-2-G-01)
 **Key links:** `governance-commons-www/`, `agent-dossier-www/`
