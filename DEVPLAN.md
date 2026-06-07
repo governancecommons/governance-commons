@@ -44,7 +44,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 2. ~~GC-1-A-TL-01 — `emitted_at` populated and asserted at all emission sites~~ ✅ DONE (APO PASS-2026-0004)
 3. ~~GC-1-A-TL-02 — seven lifecycle event types registered in `telemetry.py` EventType~~ ✅ DONE (APO PASS-2026-0004)
 4. ~~GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling~~ ✅ DONE (APO PASS-2026-0005)
-5. GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`
+5. ~~GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`~~ ✅ DONE (ONS PASS-2026-0010)
 6. GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`
 7. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
 
@@ -221,7 +221,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
 | 100-S1 | Stale header comment (v1.1.0/2026-06-03 vs body v1.2.0/2026-06-04) | Low | PASS-1 / GC-1-C-01 | C |
-| 100-S2 | No casing rule for colon (qualification) domain | Medium | PASS-1 / GC-1-C-03 | O |
+| 100-S2 | No casing rule for colon (qualification) domain | Medium | PASS-1 / GC-1-C-03 | C |
 | 100-S3 | No cluster registration protocol or registry | High | PASS-1 / GC-1-C-05 | C |
 | 100-S4 | ons-conformance.schema.json diverges from ons.yaml | High | PASS-1 / GC-1-C-02 | C |
 | 100-S5 | No rule soft-deprecation mechanism | Medium | PASS-1 | O |
@@ -280,7 +280,6 @@ Work registered but not yet active. Items are promoted to "Immediate next tasks"
 
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
-| GC-1-C-03 | ONS: add casing rule for colon (qualification) domain to `ons.yaml` | C | PASS-1 | naming conformance completeness |
 | GC-1-C-06 | ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers | C | PASS-1 | Track E SDK + VS Code extension |
 | GC-1-C-07 | ONS: write pytest suite for `tools/validate.py` | C | PASS-1 | validator correctness |
 | GC-1-D-TL-01 | APO: enforce `time_loc` as required key in every `telemetry.emit()` call; reject emission without it | D | PASS-2 | DDR-6 L4 enforcement |
