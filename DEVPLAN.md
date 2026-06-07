@@ -40,12 +40,13 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 **Immediate next tasks (in priority order):**
 
-1. GC-1-A-09 — agent-dossier / APO: implement handoff envelope emission in `escalation.py` peer-handoff path; envelopes MUST include `emitted_at` per DDR-6
-2. GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling
-3. GC-1-A-TL-01 — agent-dossier: verify `emitted_at` is populated in all handoff envelope emission sites (implementation follow-through for DDR-6 L2)
-4. GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`
-5. GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`
-6. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
+1. ~~GC-1-A-09 — handoff envelope emission in APO `escalation.py` with `emitted_at`, uuid ID, `verification`, JSONL persistence~~ ✅ DONE (APO PASS-2026-0004)
+2. ~~GC-1-A-TL-01 — `emitted_at` populated and asserted at all emission sites~~ ✅ DONE (APO PASS-2026-0004)
+3. ~~GC-1-A-TL-02 — seven lifecycle event types registered in `telemetry.py` EventType~~ ✅ DONE (APO PASS-2026-0004)
+4. GC-1-A-08 — agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling
+5. GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`
+6. GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`
+7. GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors
 
 ---
 
@@ -171,7 +172,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 97-G6 | Hardcoded Windows paths in source comments | P0 | PASS-1 / GC-1-A-06 | C |
 | 97-G7 | Custom telemetry (not OpenTelemetry) | P1 | PASS-4 / GC-1-A-07 | O |
 | 97-G8 | PASS-YYYY-NNNN ID format not validated or generated | P1 | PASS-1 / GC-1-A-08 | O |
-| 97-G9 | Handoff envelope defined in spec, never emitted in code | P1 | PASS-1 / GC-1-A-09 | O |
+| 97-G9 | Handoff envelope defined in spec, never emitted in code | P1 | PASS-1 / GC-1-A-09 | C |
 | 97-G10 | Orchestrator monolith (no module split) | P2 | PASS-3 / GC-2-A-01 | O |
 | 97-G11 | Agents hardcoded via require() (no plugin interface) | P2 | PASS-3 / GC-2-A-02 | O |
 | 97-G12 | No Dockerfile or cloud deployment targets | P2 | PASS-3 | O |
@@ -267,8 +268,8 @@ Gaps created by the AL:2 timestamp requirement (DDR-6). Spec additions to agent-
 
 | Gap | Description | Priority | PASS | Status |
 |-----|-------------|----------|------|--------|
-| GC-1-A-TL-01 | agent-dossier: emit handoff envelopes with `emitted_at` populated at transmission time; verify all emission sites in APO `escalation.py` and any future emitters | P1 | PASS-1 | O |
-| GC-1-A-TL-02 | agent-dossier: emit telemetry events using the seven new lifecycle `event_type` values (`pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated`) from relevant agent execution paths | P1 | PASS-1 | O |
+| GC-1-A-TL-01 | agent-dossier: emit handoff envelopes with `emitted_at` populated at transmission time; verify all emission sites in APO `escalation.py` and any future emitters | P1 | PASS-1 | C |
+| GC-1-A-TL-02 | agent-dossier: emit telemetry events using the seven new lifecycle `event_type` values (`pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated`) from relevant agent execution paths | P1 | PASS-1 | C |
 | GC-1-D-TL-01 | agent-project-orchestrator: enforce `time_loc` as a required key in every `telemetry.emit()` call; runtime validation MUST reject emission without it | P2 | PASS-2 | O |
 
 ---
@@ -279,10 +280,7 @@ Work registered but not yet active. Items are promoted to "Immediate next tasks"
 
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
-| GC-1-A-09 | agent-dossier / APO: implement handoff envelope emission in `escalation.py` peer-handoff path; envelopes MUST carry `emitted_at` (DDR-6) | A | PASS-1 | audit-ready handoff evidence |
 | GC-1-A-08 | agent-dossier: enforce and generate `PASS-YYYY-NNNN` ID format in validator and changelog tooling | A | PASS-1 | PASS ID integrity |
-| GC-1-A-TL-01 | agent-dossier: verify `emitted_at` populated at all handoff emission sites; add assertion to test suite | A | PASS-1 | DDR-6 L2 enforcement |
-| GC-1-A-TL-02 | agent-dossier: emit lifecycle telemetry events (`pass_written`, `scaffold_*`, `implementation_*`, `doc_written`, `registry_updated`) from relevant agent execution paths | A | PASS-1 | DDR-6 L2 enforcement |
 | GC-1-C-03 | ONS: add casing rule for colon (qualification) domain to `ons.yaml` | C | PASS-1 | naming conformance completeness |
 | GC-1-C-06 | ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers | C | PASS-1 | Track E SDK + VS Code extension |
 | GC-1-C-07 | ONS: write pytest suite for `tools/validate.py` | C | PASS-1 | validator correctness |
