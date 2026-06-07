@@ -1,0 +1,210 @@
+schema:
+  name: Governance Commons Observability Contract
+  version: 0.1.0
+  pass: PASS-4
+  status: draft
+  authority: AL:2
+  purpose: >
+    Defines the gc.agent.* OpenTelemetry semantic conventions for Governance Commons
+    runtime events. All conforming agents and orchestrators that emit structured
+    telemetry MUST use these conventions when publishing to OTel-compatible backends.
+
+  references:
+    - name: OpenTelemetry Specification
+      url: https://opentelemetry.io/docs/specs/
+      version: "1.x"
+    - name: DDR-6 (AL:2 timestamp requirement)
+      ref: DEVPATH.md#DDR-6
+    - name: agent-dossier telemetry_trace_schema
+      ref: agent-dossier/agent-dossier.yaml#telemetry_trace_schema
+
+  normative_language: RFC 2119
+
+# ── Mandatory time_loc field (DDR-6 Layer 3) ────────────────────────────────
+
+time_loc_requirement:
+  authority: AL:2
+  effective: 2026-06-06
+  rule: >
+    Every gc.agent.* event MUST carry the time_loc attribute at the point of
+    emission. Implementations MUST reject or quarantine any gc.agent.* event
+    that lacks time_loc. This is the DDR-6 L3 enforcement layer.
+  format: ISO 8601 / RFC3339 UTC — YYYY-MM-DDTHH:MM:SSZ (whole-second precision)
+  field_name: gc.time_loc
+
+# ── Span conventions ─────────────────────────────────────────────────────────
+
+spans:
+  namespace: gc.agent
+  description: >
+    All OTel spans produced by Governance Commons agents and orchestrators MUST
+    use the gc.agent.* namespace. Span names follow the pattern
+    gc.agent.<agent_class>.<event_type>.
+  naming_pattern: "gc.agent.<agent_class>.<event_type>"
+  examples:
+    - gc.agent.orchestration.task_acceptance
+    - gc.agent.review.action
+    - gc.agent.implementation.handoff
+    - gc.agent.orchestration.escalation
+
+  required_attributes:
+    - name: gc.agent.id
+      type: string
+      description: Stable kebab-case agent identifier matching the dossier identity.agent_id.
+      example: "example-review-agent"
+    - name: gc.agent.class
+      type: string
+      description: Agent class from dossier identity.agent_class.
+      values: [authoring, planning, implementation, review, testing, orchestration, research, operations, compliance]
+    - name: gc.agent.dossier_version
+      type: string
+      description: Semantic version of the agent dossier in use.
+      example: "1.0.0"
+    - name: gc.agent.event_type
+      type: string
+      description: Governance event type from agent-dossier telemetry_trace_schema.
+      values:
+        - handshake
+        - task_acceptance
+        - action
+        - decision
+        - tool_call
+        - verification
+        - handoff
+        - escalation
+        - failure
+        - completion
+        - pass_written
+        - scaffold_started
+        - scaffold_completed
+        - implementation_started
+        - implementation_completed
+        - doc_written
+        - registry_updated
+    - name: gc.trace_id
+      type: string
+      description: Governance trace ID from the agent-dossier telemetry event. MAY equal the OTel trace_id.
+    - name: gc.event_id
+      type: string
+      description: Unique event identifier within the governance trace.
+    - name: gc.time_loc
+      type: string
+      description: >
+        RFC3339 UTC timestamp at the moment of emission (DDR-6 L3 enforcement).
+        REQUIRED on every gc.agent.* span. Implementations MUST reject emissions without this field.
+      format: "YYYY-MM-DDTHH:MM:SSZ"
+    - name: gc.severity
+      type: string
+      description: Governance severity level.
+      values: [debug, info, warning, error, critical]
+    - name: gc.summary
+      type: string
+      description: Human-readable summary of the governance event.
+
+  optional_attributes:
+    - name: gc.agent.parent_event_id
+      type: string
+      description: event_id of the parent event for causal chain reconstruction.
+    - name: gc.agent.evidence
+      type: string[]
+      description: Evidence strings supporting the governance event.
+    - name: gc.agent.task_id
+      type: string
+      description: Task identifier associated with the event.
+    - name: gc.agent.pass_id
+      type: string
+      description: PASS-YYYY-NNNN identifier if the event is part of a recorded PASS.
+      pattern: "^PASS-[0-9]{4}-[0-9]{4}$"
+    - name: gc.agent.handoff_envelope_id
+      type: string
+      description: Handoff envelope identifier for handoff events.
+
+# ── Log record conventions ───────────────────────────────────────────────────
+
+log_records:
+  description: >
+    When agent-dossier telemetry events are exported as OTel log records
+    (rather than spans), they MUST conform to these field mappings.
+  severity_mapping:
+    debug: TRACE (1)
+    info: INFO (9)
+    warning: WARN (13)
+    error: ERROR (17)
+    critical: FATAL (21)
+  body: gc.summary attribute value
+  attributes: same as span required_attributes above
+  timestamp_source: gc.time_loc (DDR-6 L3)
+
+# ── Metric conventions ───────────────────────────────────────────────────────
+
+metrics:
+  namespace: gc.agent
+  description: >
+    Governance Commons defines the following OTel metrics for agent runtime
+    observability. These are informative; implementations MAY expose a subset.
+  counters:
+    - name: gc.agent.task.started
+      unit: "{task}"
+      description: Number of tasks accepted by the agent.
+      attributes: [gc.agent.id, gc.agent.class]
+    - name: gc.agent.task.completed
+      unit: "{task}"
+      description: Number of tasks completed successfully.
+      attributes: [gc.agent.id, gc.agent.class]
+    - name: gc.agent.task.failed
+      unit: "{task}"
+      description: Number of tasks that failed (all attempts exhausted).
+      attributes: [gc.agent.id, gc.agent.class]
+    - name: gc.agent.escalation
+      unit: "{escalation}"
+      description: Number of escalation events by level.
+      attributes: [gc.agent.id, gc.agent.class, escalation_level]
+    - name: gc.agent.handoff
+      unit: "{handoff}"
+      description: Number of handoff envelopes emitted.
+      attributes: [gc.agent.id, gc.agent.class]
+  histograms:
+    - name: gc.agent.task.duration
+      unit: ms
+      description: Wall-clock duration from task_acceptance to completion or failure.
+      attributes: [gc.agent.id, gc.agent.class]
+
+# ── Compliance rules ─────────────────────────────────────────────────────────
+
+compliance:
+  rules:
+    - id: obs-1
+      severity: MUST
+      rule: >
+        Every gc.agent.* span and log record MUST include the gc.time_loc attribute
+        set to a valid RFC3339 UTC timestamp at emission time. (DDR-6 L3)
+    - id: obs-2
+      severity: MUST
+      rule: >
+        Implementations MUST NOT emit gc.agent.* spans or log records without gc.time_loc.
+        Missing gc.time_loc constitutes an incomplete governance record under DDR-6.
+    - id: obs-3
+      severity: MUST
+      rule: >
+        The gc.agent.id attribute MUST match the agent_id in the agent's active dossier.
+    - id: obs-4
+      severity: MUST
+      rule: >
+        The gc.agent.event_type attribute MUST be one of the event type values defined
+        in agent-dossier telemetry_trace_schema.event_type.
+    - id: obs-5
+      severity: SHOULD
+      rule: >
+        Implementations SHOULD set gc.trace_id to the same value as the OTel trace_id
+        when operating in a distributed trace context, to enable cross-reference.
+    - id: obs-6
+      severity: SHOULD
+      rule: >
+        Governance spans SHOULD NOT be mixed with performance spans in the same OTel
+        span tree. Governance events are audit records; they SHOULD be exported to
+        a dedicated audit sink rather than a performance monitoring backend.
+    - id: obs-7
+      severity: MAY
+      rule: >
+        Implementations MAY export gc.agent.* events as OTel log records instead of
+        spans when the runtime context does not support distributed tracing.

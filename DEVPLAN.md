@@ -47,6 +47,11 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 5. ~~GC-1-C-03 — ONS: add casing rule for colon (qualification) domain to `ons.yaml`~~ ✅ DONE (ONS PASS-2026-0010)
 6. ~~GC-1-C-07 — ONS: write pytest suite for `tools/validate.py`~~ ✅ DONE (ONS PASS-2026-0011)
 7. ~~GC-1-B-03 — agent-matrix: multi-provider SKU routing test vectors~~ ✅ DONE (agent-matrix PASS-2026-0009)
+8. ~~GC-1-D-TL-01 — APO: enforce `time_loc` as required key in every `telemetry.emit()` call; runtime MUST reject emission without it (DDR-6 L4)~~ ✅ DONE (APO PASS-2026-0006)
+9. ~~GC-1-C-06 — ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers~~ ✅ DONE (ONS PASS-2026-0012)
+10. ~~GC-1-A-10 — agent-dossier: dossier revocation and expiry model~~ ✅ DONE (agent-dossier PASS-2026-0026)
+11. ~~GC-1-A-07 — agent-dossier: OpenTelemetry adapter (PASS-4)~~ ✅ DONE (agent-dossier PASS-2026-0026)
+12. ~~GC-3-E-01 — observability-contract.yaml: `gc.agent.*` OTel conventions + mandatory `time_loc` (PASS-4)~~ ✅ DONE (GC-PASS-2026-0003)
 
 ---
 
@@ -280,16 +285,11 @@ Work registered but not yet active. Items are promoted to "Immediate next tasks"
 
 | ID | Task | Track | PASS | Blocks |
 |----|------|-------|------|--------|
-| GC-1-C-06 | ONS: export `rules.json` from `tools/validate.py` for LSP/linter consumers | C | PASS-1 | Track E SDK + VS Code extension |
-| GC-1-D-TL-01 | APO: enforce `time_loc` as required key in every `telemetry.emit()` call; reject emission without it | D | PASS-2 | DDR-6 L4 enforcement |
-| GC-1-A-07 | OpenTelemetry adapter for agent-dossier | A | PASS-4 | PASS-4 observability |
-| GC-1-A-10 | agent-dossier: dossier revocation and expiry model | A | PASS-1 | agent identity lifecycle |
 | GC-1-F-01 | agent-team-protocol: fleet-escalation + team-lifecycle schemas (ATP-1-01, ATP-1-02) | F | PASS-1 | GC v1.2.0 fleet governance |
 | GC-1-F-02 | agent-team-protocol: pytest test vectors for all 5 sections (ATP-1-03–05) | F | PASS-1 | GC v1.2.0 fleet governance |
 | GC-2-C-02 | TypeScript reference implementation for ONS | C | PASS-3 | VS Code extension path |
 | GC-2-E-01 | governance-commons-py to PyPI | E | PASS-3 | zero-friction adoption |
 | GC-2-E-02 | governance-commons-js to npm | E | PASS-3 | zero-friction adoption |
-| GC-3-E-01 | observability-contract.yaml (gc.agent.\* OTEL conventions + mandatory `time_loc` on all gc.agent.\* events) | E | PASS-4 | DDR-6 L3 + compliance evidence |
 
 ---
 
