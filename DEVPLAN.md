@@ -393,6 +393,50 @@ Gaps created by the AL:2 timestamp requirement (DDR-6). Spec additions to agent-
 
 ---
 
+## SYNTHESIS-DERIVED QUEUED WORK
+
+Registered 2026-06-09 from 2-agent synthesis (Claude + ChatGPT, 102 sources). These items are not yet active batches. Full rationale in `docs/sessions/2026-06-09-combined-synthesis.md` and `DEV-RELEASE.md`.
+
+### Regulatory Deadlines (time-bound — do not defer past stated dates)
+
+| Regulation | Jurisdiction | Deadline | Relevant GC Work |
+| --- | --- | --- | --- |
+| EU AI Act — general applicability | EU | **August 2, 2026** | `control_frameworks` EU-AI-Act reference in `gc-compliance-evidence.schema.json`; four-tier risk labeling; conformance evidence export |
+| Colorado SB26-189 ADMT regime | Colorado, USA | **January 1, 2027** | ADM transparency output in compliance evidence; jurisdiction-adaptive policy compiler (eco's responsibility, GC provides the evidence schema) |
+| GDPR Article 17 right to erasure | EU | Active now | Governance record schema must support data-subject-rights audit trail |
+
+### PASS-5 Open Items (not yet in near-term queued work)
+
+| ID | Task | PASS | Status |
+| --- | --- | --- | --- |
+| 97-G15 | SLSA Level 1+ build provenance — add provenance attestation to PyPI and npm publish workflows; workflows exist but provenance not yet added | PASS-5 | O |
+| 101-G6b | Conformance certification mechanism — beyond self-declare; verifier registry so "GC-conformant" has a verifiable meaning | PASS-5 | O |
+| 100-N2 | Global cluster registry as a governed service | PASS-5 | O |
+| 101-G5 | TypeScript + Go SDKs — Python-only blocks enterprise teams; TypeScript ONS impl done; full SDK parity open | PASS-3 | O |
+
+### PASS-6 Items from Synthesis (not yet registered in gap checklist)
+
+| ID | Task | Synthesis Ref | PASS | Notes |
+| --- | --- | --- | --- | --- |
+| SYN-GC-HAT | Human-Agent Teaming Protocol — formal spec for human principals entering/exiting agentic loops; `human_in_the_loop` states; decision authority tokens; escalation SLAs | J2 | PASS-6 | No existing governance framework has this; complements constitutional governance layer |
+| SYN-GC-GDPR | GDPR/privacy rights compliance mapping — data-subject rights (access, erasure, portability) mapped to GC governance record schema | Tier 1 standards | PASS-6 | Required for EU enterprise procurement |
+| SYN-GC-A2A-V2 | A2A protocol full binding v2 — task lifecycle states, streaming responses, push notification contracts beyond current 5/5 depth spec (Google A2A April 2025 evolution) | E5 strategic | PASS-6 | Current A2A binding is comprehensive; this tracks evolution of the standard |
+
+### Anti-Patterns (from synthesis Section F — what governance-commons must not become)
+
+These are documented as constraints on the standards process:
+
+| Anti-Pattern | Risk |
+| --- | --- |
+| Governance rules with no runtime enforcement path | Governance-as-documentation-theater; spec items must have a tested runtime path |
+| Static compliance declarations without machine-readable evidence generation | Evidence must be generated and signed, not declared |
+| No RFC/proposal process | Enterprises cannot list GC as a dependency without a WG structure; RFC process exists but must be public-facing |
+| Spec growth without a conformance certification program | "Conformant" has no verifiable meaning without a verifier registry (101-G6b) |
+| Capability claims without versioning | Audit replay is impossible without `declared_at` versioning; this is now spec-complete |
+| Single-principal authority | Agents self-declaring their own authority have no external accountability anchor |
+
+---
+
 ## NEAR-TERM QUEUED WORK
 
 Work registered but deferred past the active batch. Items are promoted to "Immediate next tasks" when the preceding batch clears.
@@ -414,5 +458,5 @@ Work registered but deferred past the active batch. Items are promoted to "Immed
 
 ---
 
-*This document is the single authority for Governance Commons execution planning.*
-*Do not create alternate execution plan documents — update this one.*
+_This document is the single authority for Governance Commons execution planning._
+_Do not create alternate execution plan documents — update this one._
