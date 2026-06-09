@@ -2,7 +2,7 @@
 
 **AUTHORITY LEVEL: AL:2**
 **Status:** ACTIVE — canonical execution and release planning source
-**time.loc:** 2026-06-08T00:00:00Z
+**time.loc:** 2026-06-09T00:00:00Z
 **Canonical pair:** `DEVPATH.md` + `DEVPLAN.md`
 
 ---
@@ -25,9 +25,12 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 **Primary active tracks:** Track Foxtrot (PyPI + npm publish, release train manifest, GitHub Releases) · Track Golf (GitHub org, governancecommons.org, release notes) · Track Hotel (RFC process, ADOPTERS.md, conformance badge criteria)
 **Completed tracks:** Track Alpha PASS-1 + PASS-2 + PASS-4 closed · Track Bravo PASS-2 + PASS-4 closed · Track Charlie PASS-1 + PASS-3 closed · Track Delta PASS-1 + PASS-2 closed · Track Echo PASS-3 + PASS-4 closed
 **Next milestone:** PASS-5 close-out → GC v1.2.0 declaration → PASS-6 (Category-Defining Profile)
+**OSS baseline:** FROZEN as of 2026-06-09 after PASS-5 Batch 2. PASS-5 may finish release/site/publish mechanics and fix baseline defects; new category-defining capability scope moves to PASS-6 optional profiles.
+**Product path:** governancecommons.org first → PASS-6 optional profiles → VS Code extension/control-plane adoption surface. No fork now; version at the GC release-manifest boundary.
 
 **Recently completed:**
 
+- OSS core baseline freeze decision recorded (2026-06-09): PASS-5 Batch 2 is the frozen open-source baseline for the first public GC release; no new baseline scope before release close-out; PASS-6 owns optional category-defining profiles and commercial-capability paths; forking deferred.
 - PASS-4 gate review passed (2026-06-08, GC-PASS-2026-0015): all 7 exit criteria met; PASS-5 open. EU AI Act coverage satisfied via `control_frameworks` reference in `schemas/gc-compliance-evidence.schema.json`.
 - GC-3-E-03 closed (2026-06-08): `governance/iso-42001-mapping.yaml` v1.0.0 — ISO/IEC 42001:2023 AIMS full mapping; Sections 4–10 + Annex A controls A.2–A.10; coverage levels (full/partial/planned/out_of_scope); all GC artifacts cross-referenced per clause
 - GC-3-E-02 closed (2026-06-08): `governance/nist-ai-rmf-mapping.yaml` v1.0.0 — NIST AI RMF 1.0 full mapping; all four functions (GOVERN, MAP, MEASURE, MANAGE); 22 subcategory outcomes mapped to GC artifacts; coverage levels and gap notes included
@@ -116,6 +119,7 @@ spec surface required for a credible v1.0 public release.
 
 1. GC-5-G-02 — GitHub Releases: create tagged releases for agent-dossier v1.1.0 and APO v1.1.0; release notes for all four v1.2.0 specs — **O** _(agent-dossier + APO tags exist; releases held pending LLC filing)_
 2. GC-5-G-03 — governancecommons.org: live ecosystem landing page with per-standard pages; links to spec repos, validator packages, and conformance badge instructions — **O**
+3. GC-5-G-04 — OSS baseline freeze notice: document the frozen OSS core scope on governancecommons.org and in release notes; clarify that PASS-6 profiles are optional extensions, not baseline requirements — **O**
 
 **PASS-5 Batch 4 — End-game publish (final; gated on Batch 2 complete + LLC filing):**
 
@@ -123,7 +127,7 @@ spec surface required for a credible v1.0 public release.
 2. GC-5-F-03 — governance-commons-js: publish to npm via provenance workflow — **O**
 3. GC-5-F-04 — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — **O**
 
-> **Release strategy note (2026-06-08):** PASS-6 dev work begins after Batch 2 is complete — it does NOT wait for the end-game publish sequence. The public v1.0 launch and PASS-6 development run in parallel. Open question: whether the first public release is labeled GC v1.2.0 or renamed GC v1.0.0 for public clarity — requires maintainer decision before Batch 4.
+> **Release strategy note (updated 2026-06-09):** PASS-5 Batch 2 completion freezes the OSS baseline. PASS-6 dev work may begin from that frozen baseline and does NOT wait for the end-game publish sequence. The public launch and PASS-6 development run in parallel. Open question: whether the first public release is labeled GC v1.2.0 or renamed GC v1.0.0 for public clarity — requires maintainer decision before Batch 4. No fork is planned at this point; versioning happens at the GC release-manifest boundary.
 
 ---
 
@@ -161,6 +165,17 @@ spec version. Conformance is self-declared until a certification program exists 
 **What a release includes.** A GC release is a named manifest that pins the minimum compatible
 version of each included spec. It is not a monorepo tag. Each spec can still patch independently
 after a GC release is declared. The release manifest format is a PASS-5 exit criterion.
+
+**What the OSS baseline freeze means.** The PASS-5 Batch 2 surface is the public OSS core
+baseline. Until the first public release declaration, baseline work is restricted to release
+mechanics, website publication, schema/static asset publication, bug fixes, documentation
+corrections, release notes, compatibility cleanup, and conformance/public process polish.
+New ahead-of-industry capabilities move to PASS-6 as optional, versioned profiles.
+
+**What paid-tier work may include.** Paid or commercial value should sit around PASS-6 profile
+implementation and operations: VS Code extension pro features, managed registry/trust network,
+audit replay UI, governance diff UI, policy packs, team dashboards, hosted control plane,
+conformance evidence automation, and enterprise templates. The OSS standards remain the core.
 
 **What evidence proves governance happened.** An audit-ready governance record must include:
 a machine-readable compliance evidence export (signed, structured), a PASS audit trail with
@@ -202,6 +217,12 @@ Each spec ships on its own cadence. GC milestones are informational pinning cont
 
 **DDR-3 — Authority Model:**
 AL:3 = ecosystem charter (founder). AL:2 = this file (GC maintainer). AL:1 = individual repo devpaths (spec owners). Ecosystem devplan sets compatibility constraints and milestones only — cannot dictate implementation within a repo's AL:1 scope.
+
+**DDR-7 — OSS Baseline Freeze / Fork Posture:**
+PASS-5 Batch 2 is the frozen OSS core baseline. New baseline scope is closed until the first
+public release is declared. PASS-6 owns optional category-defining profiles and commercial
+capability paths. Do not fork now; defer any fork decision until a concrete licensing, IP, or
+operational boundary requires it.
 
 ---
 

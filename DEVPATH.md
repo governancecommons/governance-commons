@@ -69,6 +69,21 @@ There are two go-to-market tracks. Both draw from the same underlying stack.
 
 The starter track is the doorway. The full dev track is the engine. They share the same brand and domain.
 
+### OSS Core Baseline Freeze
+
+Founder direction recorded 2026-06-09: the PASS-5 Batch 2 specification surface is the
+open-source Governance Commons core baseline. From this point until the first public GC
+release declaration, baseline work is limited to release polish, website publication,
+schema/static asset publication, bug fixes, documentation corrections, compatibility cleanup,
+and public release mechanics. New category-defining capability work belongs in PASS-6 as
+optional profiles, not in the frozen OSS baseline.
+
+This is a freeze, not a fork. Governance Commons remains the open standard core. Commercial
+or paid-tier value should be implemented around optional PASS-6 profiles, hosted services,
+developer tooling, evidence automation, managed registries, audit replay, policy packs, and
+control-plane UX. Forking is deferred unless a future licensing, IP, or operational boundary
+requires it.
+
 ---
 
 ## THREE DESIGN DECISIONS
@@ -123,6 +138,13 @@ implemented across five layers, each scoped to the PASS where it becomes enforce
 | L3 | observability-contract.yaml gc.agent.* event schema | `time_loc` required field on every gc.agent.* event | PASS-4 | GC-3-E-01 (existing) |
 | L4 | agent-project-orchestrator telemetry.emit() | `time_loc` required key in every emit call; runtime validation rejects emission without it | PASS-2 | GC-1-D-TL-01 |
 | L5 | GC release milestone review gate | All specs in the milestone declare timestamp conformance at their declared profile level | PASS-0 — this DDR | AL:2 rule |
+
+**DDR-7 — OSS baseline freeze, version boundary, and fork posture.**
+The PASS-5 Batch 2 surface is the frozen OSS core baseline for the first public Governance
+Commons release. PASS-5 completion work may prepare and publish that baseline, but MUST NOT
+add new baseline scope. Versioning should happen at the GC release-manifest boundary soon;
+forking should not happen now. PASS-6 is the proper home for optional category-defining
+profiles and commercial-capability implementation paths.
 
 ---
 
