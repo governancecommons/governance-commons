@@ -105,11 +105,11 @@ All 19 PASS-1 immediate tasks closed. See CHANGELOG entries PASS-2026-0004 throu
 These deferred gaps MUST be closed before the end-game publish sequence. They complete the
 spec surface required for a credible v1.0 public release.
 
-1. 101-G1c — Transport binding spec: HTTP/2 SSE, WebSocket, gRPC, and Kafka governance positions; delivery guarantees, backpressure, and session lifecycle rules per transport — `governance/transport-binding.yaml` — **O**
+1. ~~101-G1c~~ — Transport binding spec: HTTP/2 SSE, WebSocket, gRPC, and Kafka governance positions; delivery guarantees, backpressure, and session lifecycle rules per transport — DONE: `governance/transport-binding.yaml` v1.0.0 — **C**
 2. ~~101-G4c~~ — SOC 2 Type II mapping: machine-readable control mapping for Trust Services Criteria (Security, Availability, Confidentiality); coverage levels and GC artifact cross-references — DONE: `governance/soc2-mapping.yaml` v1.0.0 — Security Common Criteria (CC1–CC9), Availability (A1.1–A1.3), Confidentiality (C1.1–C1.2), coverage levels and GC artifact cross-references — **C**
-3. 98-G9 — Runtime agent discovery registry: ONS cluster-based agent advertisement and discovery protocol; requires ONS cluster infra (GC-1-C-05 ✅) — agent-matrix spec section + registry schema — **O**
-4. 97-G7 — OTel migration in APO: replace custom telemetry with OpenTelemetry SDK calls; `time_loc` key maps to OTel span attribute; existing `telemetry.emit()` interface preserved as thin wrapper — **O**
-5. 98-G15 — Named workflow pattern library: canonical workflow patterns (fan-out, pipeline, saga, critic-loop, etc.) defined as named, versioned, reusable profiles in agent-matrix — **O**
+3. ~~98-G9~~ — Runtime agent discovery registry: ONS cluster-based agent advertisement and discovery protocol; requires ONS cluster infra (GC-1-C-05 ✅) — DONE: agent-matrix `agent_registry` cluster_advertisement + discovery_protocol; `schemas/sections/agent-registry.schema.json`; tests — **C**
+4. ~~97-G7~~ — OTel migration in APO: replace custom telemetry with OpenTelemetry SDK calls; `time_loc` key maps to OTel span attribute; existing `telemetry.emit()` interface preserved as thin wrapper — DONE: APO `orchestrator/telemetry.py` uses OpenTelemetry SDK spans and preserves JSON audit log — **C**
+5. ~~98-G15~~ — Named workflow pattern library: canonical workflow patterns (fan-out, pipeline, saga, critic-loop, etc.) defined as named, versioned, reusable profiles in agent-matrix — DONE: agent-matrix `workflow_patterns` + `schemas/sections/workflow-patterns.schema.json`; tests — **C**
 6. ~~101-G7b~~ — Versioned capability claims for audit replay: agent capability declarations carry a `declared_at` version stamp so audit replays can reconstruct the capability state at the time of any task — DONE: `agent-dossier/agent-dossier.yaml` v1.4.0 `identity_block.capability_claims[]`; `agent-dossier/schemas/agent-dossier-instance.schema.json` validates required `declared_at`; valid and invalid fixtures added — **C**
 
 **PASS-5 Batch 3 (parallel — after Batch 2):**
@@ -247,7 +247,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 97-G4 | task-queue.json hand-written (must be compiled artifact) | P0 | PASS-1 / GC-1-A-04 | C |
 | 97-G5 | No environment abstraction (paths/IDs/timeouts are literals) | P0 | PASS-1 / GC-1-A-05 | C |
 | 97-G6 | Hardcoded Windows paths in source comments | P0 | PASS-1 / GC-1-A-06 | C |
-| 97-G7 | Custom telemetry (not OpenTelemetry) | P1 | PASS-4 / GC-1-A-07 | O — active (PASS-5 Batch 2) |
+| 97-G7 | Custom telemetry (not OpenTelemetry) | P1 | PASS-4 / GC-1-A-07 | C |
 | 97-G8 | PASS-YYYY-NNNN ID format not validated or generated | P1 | PASS-1 / GC-1-A-08 | C |
 | 97-G9 | Handoff envelope defined in spec, never emitted in code | P1 | PASS-1 / GC-1-A-09 | C |
 | 97-G10 | Orchestrator monolith (no module split) | P2 | PASS-3 / GC-2-A-01 | O |
@@ -269,13 +269,13 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 | 98-G6 | No matrix overlays/fragments (monolithic YAML) | High | PASS-1 / GC-2-B-01 | C |
 | 98-G7 | No named profiles (minimal, data-engineering) | High | PASS-1 / GC-2-B-02 | C |
 | 98-G8 | No matrix inheritance (extends: with override semantics) | High | PASS-1 / GC-2-B-03 | C |
-| 98-G9 | No runtime agent discovery or registry | High | PASS-2 / GC-3-B-01 | O — active (PASS-5 Batch 2) |
+| 98-G9 | No runtime agent discovery or registry | High | PASS-2 / GC-3-B-01 | C |
 | 98-G10 | No cryptographic agent identity | High | PASS-2 / GC-3-A-02 | C |
 | 98-G11 | No formal SLO/SLI definitions per profile | High | PASS-1 / GC-1-B-01 | C |
 | 98-G12 | No checkpoint format schema | Medium | PASS-1 / GC-1-B-02 | C |
 | 98-G13 | No streaming output schema | Medium | PASS-2 / GC-3-B-04 | C |
 | 98-G14 | No prompt injection defense spec | Medium | PASS-2 / GC-3-B-05 | C |
-| 98-G15 | No named workflow pattern library | Medium | PASS-1 / GC-2-B-05 | O — active (PASS-5 Batch 2) |
+| 98-G15 | No named workflow pattern library | Medium | PASS-1 / GC-2-B-05 | C |
 | 98-G16 | No multi-orchestrator topology spec | Medium | PASS-6 / GC-4-B-02 | O |
 
 ### Source 99 — agent-project-orchestrator runtime gaps
@@ -321,7 +321,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 |-----|-------------|----------|------|--------|
 | 101-G1a | A2A binding is surface mention only — stub exists, 5/5 depth required | Critical | PASS-2 / GC-3-B-02 | C |
 | 101-G1b | MCP not a first-class governance primitive | Critical | PASS-2 / GC-1-B-03 | C |
-| 101-G1c | No transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka) | Critical | PASS-4 / GC-4-B-03 | O — active (PASS-5 Batch 2) |
+| 101-G1c | No transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka) | Critical | PASS-4 / GC-4-B-03 | C |
 | 101-G2a | No cryptographic integrity (handoffs can be replayed/forged) | Critical | PASS-2 / GC-3-A-01 | C |
 | 101-G2b | Agent identity is string-only (no cryptographic binding) | Critical | PASS-2 / GC-3-A-02 | C |
 | 101-G2c | No zero-trust establishment/verification/revocation spec | Critical | PASS-2 / GC-3-A-03 | C |
@@ -378,13 +378,13 @@ Work registered but deferred past the active batch. Items are promoted to "Immed
 
 | ID | Task | Track / Area | PASS | Blocks | Status |
 |----|------|--------------|------|--------|--------|
-| GC-3-B-01 | Runtime agent discovery registry | Bravo | PASS-3 | GC v1.3.0 | O — active (PASS-5 Batch 2); GitHub org ✅, ONS clusters ✅ — unblocked |
-| 101-G1c | Transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka) | Bravo | PASS-4 | cross-spec interop | O — active (PASS-5 Batch 2) |
+| ~~GC-3-B-01~~ | ~~Runtime agent discovery registry~~ | Bravo | PASS-3 | GC v1.3.0 | ✅ Done |
+| ~~101-G1c~~ | ~~Transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka)~~ | Bravo | PASS-4 | cross-spec interop | ✅ Done |
 | ~~GC-3-E-02~~ | ~~NIST AI RMF control evidence generation~~ | Echo | PASS-4 | GC v2.0.0 | ✅ Done |
 | ~~GC-3-E-03~~ | ~~ISO 42001 mapping~~ | Echo | PASS-4 | GC v2.0.0 | ✅ Done |
 | GC-2-A-01 | agent-dossier: orchestrator module split | Alpha | PASS-3 | PASS-3 packaging | O |
 | GC-2-A-02 | agent-dossier: plugin interface (no hardcoded require()) | Alpha | PASS-3 | PASS-3 packaging | O |
-| GC-2-B-05 | agent-matrix: named workflow pattern library | Bravo | PASS-1 | GC v1.3.0 | O |
+| ~~GC-2-B-05~~ | ~~agent-matrix: named workflow pattern library~~ | Bravo | PASS-1 | GC v1.3.0 | ✅ Done |
 | ~~GC-1-F-01~~ | ~~agent-team-protocol: fleet-escalation + team-lifecycle schemas~~ | ATP | PASS-1 | GC v1.2.0 | ✅ Done |
 | ~~GC-1-F-02~~ | ~~agent-team-protocol: pytest test vectors for all 5 sections~~ | ATP | PASS-1 | GC v1.2.0 | ✅ Done |
 | ~~GC-2-C-02~~ | ~~TypeScript reference implementation for ONS~~ | Charlie | PASS-3 | VS Code extension | ✅ Done |

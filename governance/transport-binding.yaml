@@ -1,0 +1,185 @@
+schema:
+  name: Governance Commons — Transport Binding Specification
+  version: 1.0.0
+  pass: PASS-5
+  gap_id: 101-G1c
+  authority: AL:2
+  status: stable
+  time.loc: "2026-06-09T00:00:00Z"
+  purpose: >
+    Defines Governance Commons transport bindings for HTTP/2 Server-Sent
+    Events, WebSocket, gRPC, and Kafka. Each binding states the governance
+    position, delivery guarantee, backpressure rules, and session lifecycle
+    requirements for multi-agent task exchange, streaming output, handoff, and
+    audit events.
+
+  conformance_profiles:
+    advisory: Implementers SHOULD document which transports are enabled.
+    standard: Implementers MUST satisfy the selected transport binding rules.
+    strict: Implementers MUST emit conformance evidence for every transport session.
+
+common_requirements:
+  required_fields:
+    - trace_id
+    - session_id
+    - source_agent_id
+    - target_agent_id
+    - transport
+    - emitted_at
+    - time_loc
+  rules:
+    - All transport messages MUST carry a GC trace_id or W3C traceparent mapped to a GC trace_id.
+    - All transport messages MUST carry time_loc using RFC3339 UTC whole-second format.
+    - Handoff-bearing messages MUST carry or reference an agent-dossier handoff envelope.
+    - Receivers MUST reject messages from agents whose dossier is revoked, expired, or outside authority scope.
+    - Transport-level retry MUST preserve idempotency keys and MUST NOT duplicate terminal task completion events.
+
+bindings:
+  - transport: http2_sse
+    status: canonical_for_unidirectional_streaming
+    use_cases:
+      - streaming task output from agent to orchestrator
+      - lifecycle event fan-out to observers
+    delivery_guarantee: at_least_once_with_reconnect
+    ordering: per_stream_sequence_order
+    session_lifecycle:
+      open: >
+        Client opens an HTTP/2 stream with trace context, authorization, and
+        accepted content type text/event-stream.
+      active: >
+        Producer emits chunk events using agent-matrix streaming_output sequence
+        numbering. Consumers track last_event_id and sequence.
+      terminal: >
+        Producer MUST emit a terminal chunk before closing a successful stream.
+        Unexpected close without terminal chunk is treated as retryable until
+        retry budget is exhausted.
+    backpressure:
+      mechanism: consumer_ack_or_window_signal
+      rules:
+        - Producers MUST pause when consumer backpressure is signaled.
+        - Producers MUST respect max_buffered_chunks from agent-matrix streaming_output.
+        - Consumers SHOULD use Last-Event-ID or equivalent resume cursor on reconnect.
+    governance_evidence:
+      required_events:
+        - gc.agent.lifecycle.event
+        - gc.agent.task.completed
+      required_attributes:
+        - gc.transport.name=http2_sse
+        - gc.transport.session_id
+        - gc.transport.sequence
+
+  - transport: websocket
+    status: canonical_for_bidirectional_interactive_sessions
+    use_cases:
+      - interactive task negotiation
+      - bidirectional agent collaboration
+      - low-latency control messages
+    delivery_guarantee: at_least_once_application_ack
+    ordering: ordered_per_connection_with_application_sequence
+    session_lifecycle:
+      open: >
+        Initiator opens a TLS WebSocket session after zero-trust verification
+        and sends a signed session_init message.
+      active: >
+        Both peers exchange sequenced frames with application-level ack and
+        idempotency keys.
+      terminal: >
+        Either peer may request close, but task-bearing sessions MUST close with
+        a terminal frame containing final task_state and evidence references.
+    backpressure:
+      mechanism: explicit_pause_resume_frames
+      rules:
+        - Peers MUST support pause, resume, and drain control frames.
+        - A sender MUST stop sending non-terminal data frames after pause until resume or close.
+        - A receiver MAY close with policy_violation if pause is ignored.
+    governance_evidence:
+      required_events:
+        - gc.agent.task.started
+        - gc.agent.handoff.created
+        - gc.agent.task.completed
+      required_attributes:
+        - gc.transport.name=websocket
+        - gc.transport.session_id
+        - gc.transport.frame_id
+
+  - transport: grpc
+    status: canonical_for_typed_service_boundaries
+    use_cases:
+      - typed orchestrator to agent task dispatch
+      - internal service-to-service governance APIs
+      - streaming RPC with typed envelopes
+    delivery_guarantee: application_defined_with_status_codes
+    ordering: rpc_stream_order
+    session_lifecycle:
+      open: >
+        Client starts unary, client-streaming, server-streaming, or bidirectional
+        RPC with mTLS or signed identity metadata.
+      active: >
+        RPC metadata carries trace context, dossier reference, capability claim
+        version, and idempotency key. Streaming RPC messages carry sequence.
+      terminal: >
+        RPC status MUST map to GC task_state and error_retry_semantics. Non-OK
+        terminal statuses MUST emit failure or escalation telemetry.
+    backpressure:
+      mechanism: grpc_flow_control_plus_deadlines
+      rules:
+        - Implementations MUST set per-RPC deadlines from SLA timeout policy.
+        - Streaming methods MUST honor HTTP/2 flow control.
+        - Deadline exceeded MUST map to retryable or terminal according to agent-matrix error_retry_semantics.
+    governance_evidence:
+      required_events:
+        - gc.agent.task.started
+        - gc.agent.task.failed
+        - gc.agent.task.completed
+      required_attributes:
+        - gc.transport.name=grpc
+        - rpc.method
+        - rpc.grpc.status_code
+
+  - transport: kafka
+    status: canonical_for_durable_event_streams
+    use_cases:
+      - durable audit log streams
+      - asynchronous task queues
+      - cross-service lifecycle event distribution
+    delivery_guarantee: at_least_once_with_idempotent_consumer
+    ordering: partition_order_by_governance_key
+    session_lifecycle:
+      open: >
+        Producer publishes to a governed topic with schema version, trace_id,
+        partition key, and evidence metadata.
+      active: >
+        Consumers commit offsets only after schema validation, identity checks,
+        and idempotency evaluation succeed.
+      terminal: >
+        Terminal task events MUST be compact-safe and carry final task_state,
+        completion/failure reason, and evidence references.
+    backpressure:
+      mechanism: consumer_lag_and_quota_policy
+      rules:
+        - Producers SHOULD monitor consumer lag and emit anomaly events when lag exceeds policy.
+        - Consumers MUST use idempotency keys to tolerate replay.
+        - Dead-letter topics MUST preserve original trace_id and event_id.
+    governance_evidence:
+      required_events:
+        - gc.agent.lifecycle.event
+        - gc.agent.anomaly.detected
+      required_attributes:
+        - gc.transport.name=kafka
+        - messaging.system=kafka
+        - messaging.destination
+        - messaging.kafka.consumer_group
+
+transport_selection:
+  rules:
+    - Use http2_sse for unidirectional streaming output unless bidirectional control is required.
+    - Use websocket for bidirectional low-latency sessions requiring pause/resume control frames.
+    - Use grpc for typed internal APIs with strict service contracts.
+    - Use kafka for durable asynchronous events and audit streams.
+    - A deployment MAY support multiple transports, but each session MUST declare exactly one active transport binding.
+
+audit_notes:
+  - >
+    This file defines governance semantics, not wire-level protocol
+    implementations. Protocol-specific schemas may be added by SDKs or runtime
+    repos while preserving these binding rules.
