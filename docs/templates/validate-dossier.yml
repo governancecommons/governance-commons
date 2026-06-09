@@ -1,0 +1,92 @@
+# validate-dossier.yml — Governance Commons conformance check template
+#
+# USAGE
+#   Copy this file to .github/workflows/validate-dossier.yml in your repo.
+#   Adjust the paths under "Configure" to match your project layout.
+#
+# WHAT IT CHECKS
+#   1. ONS naming conformance — validates names in your gc-names.json manifest
+#      against the ONS casing rules using the gc-validate CLI.
+#   2. (Planned) Agent-dossier schema conformance — validates your agent-dossier
+#      YAML against the agent-dossier JSON Schema. Uncomment section below once
+#      gc-validate adds --spec agent-dossier support (GC PASS-3).
+#
+# EXIT CODES
+#   gc-validate exits 0 (pass), 1 (fail), 2 (usage error).
+#   The workflow step fails on any non-zero exit, blocking PR merge.
+#
+# REPORT ARTIFACT
+#   A machine-readable ConformanceReport JSON is uploaded as a workflow artifact
+#   on every run (pass or fail) for audit trail purposes.
+
+name: GC Conformance Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-dossier:
+    name: Governance Commons conformance
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # ── Install the Governance Commons SDK ───────────────────────────────────
+      - name: Install governance-commons
+        run: pip install governance-commons==0.1.0
+        # Pin to a specific version to keep CI reproducible.
+        # Check for new releases at: https://pypi.org/project/governance-commons/
+
+      # ── Configure ────────────────────────────────────────────────────────────
+      # Set GC_NAMES_MANIFEST to the path of your ONS name checks file.
+      # See docs/conformance/conformance-report.schema.json for the format.
+      # Example manifest (gc-names.json):
+      #   { "checks": [
+      #       { "domain": "python_identifier", "name": "my_module" },
+      #       { "domain": "governance_cluster", "name": "MYPROJ" }
+      #   ] }
+      - name: Validate ONS naming (standard profile)
+        env:
+          GC_NAMES_MANIFEST: gc-names.json   # ← change this path
+        run: |
+          gc-validate \
+            --spec ons \
+            --profile standard \
+            --output json \
+            "$GC_NAMES_MANIFEST" \
+            | tee gc-conformance-report.json
+          # gc-validate exits 1 if any rule fails; this step fails the workflow.
+
+      # ── (Planned) Agent-dossier schema validation ─────────────────────────
+      # Uncomment once gc-validate --spec agent-dossier is available.
+      #
+      # - name: Validate agent-dossier (standard profile)
+      #   env:
+      #     DOSSIER_FILE: agent-dossier.yaml   # ← change this path
+      #   run: |
+      #     gc-validate \
+      #       --spec agent-dossier \
+      #       --profile standard \
+      #       --output json \
+      #       "$DOSSIER_FILE" \
+      #       | tee gc-dossier-report.json
+
+      # ── Upload conformance report as artifact ────────────────────────────────
+      - name: Upload conformance report
+        if: always()   # upload even on failure so the report is accessible
+        uses: actions/upload-artifact@v4
+        with:
+          name: gc-conformance-report
+          path: gc-conformance-report.json
+          retention-days: 90

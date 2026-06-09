@@ -1,9 +1,10 @@
 schema:
   name: Governance Commons Observability Contract
-  version: 0.1.0
+  version: 1.0.0
   pass: PASS-4
-  status: draft
+  status: stable
   authority: AL:2
+  time.loc: "2026-06-08T00:00:00Z"
   purpose: >
     Defines the gc.agent.* OpenTelemetry semantic conventions for Governance Commons
     runtime events. All conforming agents and orchestrators that emit structured
@@ -17,6 +18,8 @@ schema:
       ref: DEVPATH.md#DDR-6
     - name: agent-dossier telemetry_trace_schema
       ref: agent-dossier/agent-dossier.yaml#telemetry_trace_schema
+    - name: Structured event JSON Schema
+      ref: schemas/gc-agent-event.schema.json
 
   normative_language: RFC 2119
 
@@ -26,26 +29,148 @@ time_loc_requirement:
   authority: AL:2
   effective: 2026-06-06
   rule: >
-    Every gc.agent.* event MUST carry the time_loc attribute at the point of
+    Every gc.agent.* event MUST carry the gc.time_loc attribute at the point of
     emission. Implementations MUST reject or quarantine any gc.agent.* event
-    that lacks time_loc. This is the DDR-6 L3 enforcement layer.
+    that lacks gc.time_loc. This is the DDR-6 L3 enforcement layer.
   format: ISO 8601 / RFC3339 UTC — YYYY-MM-DDTHH:MM:SSZ (whole-second precision)
   field_name: gc.time_loc
 
-# ── Span conventions ─────────────────────────────────────────────────────────
+# ── Canonical lifecycle event spans ─────────────────────────────────────────
+#
+# These seven span names are stable identifiers for governance lifecycle events.
+# They MUST be emitted exactly as named. Implementations MUST NOT substitute
+# synonyms or abbreviations. Each span MUST include all listed required_attributes.
+
+lifecycle_events:
+  description: >
+    Canonical gc.agent.* span names for the seven governance lifecycle event types
+    defined by DDR-6 Layer 3. These are the only span names that satisfy the
+    DDR-6 L3 enforcement requirement for lifecycle-level governance records.
+  spans:
+
+    - span_name: gc.agent.pass.written
+      description: A PASS record has been written to the governance registry.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.agent.pass_id
+        - gc.summary
+      optional_attributes:
+        - gc.agent.task_id
+        - gc.agent.evidence
+      notes: >
+        gc.agent.pass_id MUST match the PASS-YYYY-NNNN format. Emit once per
+        PASS record creation, not once per item within the PASS.
+
+    - span_name: gc.agent.scaffold.started
+      description: An agent has begun scaffolding an implementation artifact.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.agent.task_id
+        - gc.summary
+      optional_attributes:
+        - gc.agent.pass_id
+        - gc.agent.evidence
+      notes: >
+        MUST be paired with gc.agent.scaffold.completed or gc.agent.task.failed.
+        gc.agent.task_id MUST be stable across the started/completed pair.
+
+    - span_name: gc.agent.scaffold.completed
+      description: An agent has successfully completed scaffolding an implementation artifact.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.agent.task_id
+        - gc.summary
+      optional_attributes:
+        - gc.agent.pass_id
+        - gc.agent.evidence
+      notes: >
+        gc.agent.task_id MUST match the corresponding gc.agent.scaffold.started event.
+
+    - span_name: gc.agent.implementation.started
+      description: An agent has begun implementing a task.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.agent.task_id
+        - gc.summary
+      optional_attributes:
+        - gc.agent.pass_id
+        - gc.agent.evidence
+      notes: >
+        MUST be paired with gc.agent.implementation.completed or gc.agent.task.failed.
+
+    - span_name: gc.agent.implementation.completed
+      description: An agent has successfully completed implementing a task.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.agent.task_id
+        - gc.summary
+      optional_attributes:
+        - gc.agent.pass_id
+        - gc.agent.evidence
+      notes: >
+        gc.agent.task_id MUST match the corresponding gc.agent.implementation.started event.
+
+    - span_name: gc.agent.doc.written
+      description: An agent has produced a governance document or specification artifact.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+      optional_attributes:
+        - gc.agent.task_id
+        - gc.agent.pass_id
+        - gc.agent.evidence
+      notes: >
+        gc.summary SHOULD identify the document produced (e.g. "DEVPLAN.md updated
+        with PASS-3 Batch 2 closure"). Use gc.agent.evidence to list artifact paths.
+
+    - span_name: gc.agent.registry.updated
+      description: An agent has updated a machine-readable registry file.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+      optional_attributes:
+        - gc.agent.task_id
+        - gc.agent.pass_id
+        - gc.agent.evidence
+      notes: >
+        Covers updates to projects.yaml, registry/, clusters.yaml, and any other
+        machine-readable registry artefact. gc.agent.evidence SHOULD list the
+        registry paths modified.
+
+# ── General span conventions ─────────────────────────────────────────────────
 
 spans:
   namespace: gc.agent
   description: >
     All OTel spans produced by Governance Commons agents and orchestrators MUST
-    use the gc.agent.* namespace. Span names follow the pattern
+    use the gc.agent.* namespace. Lifecycle event spans use the names defined
+    in lifecycle_events above. Operational event spans follow the pattern
     gc.agent.<agent_class>.<event_type>.
-  naming_pattern: "gc.agent.<agent_class>.<event_type>"
+  naming_patterns:
+    lifecycle: "gc.agent.<event_type>"
+    operational: "gc.agent.<agent_class>.<event_type>"
   examples:
-    - gc.agent.orchestration.task_acceptance
-    - gc.agent.review.action
-    - gc.agent.implementation.handoff
-    - gc.agent.orchestration.escalation
+    lifecycle:
+      - gc.agent.pass.written
+      - gc.agent.scaffold.started
+      - gc.agent.scaffold.completed
+      - gc.agent.implementation.started
+      - gc.agent.implementation.completed
+      - gc.agent.doc.written
+      - gc.agent.registry.updated
+    operational:
+      - gc.agent.orchestration.task_acceptance
+      - gc.agent.orchestration.escalation
+      - gc.agent.implementation.handoff
+      - gc.agent.review.action
+      - gc.agent.compliance.verification
 
   required_attributes:
     - name: gc.agent.id
@@ -119,6 +244,33 @@ spans:
       type: string
       description: Handoff envelope identifier for handoff events.
 
+# ── Structured event schema ──────────────────────────────────────────────────
+#
+# The canonical machine-readable schema for a gc.agent.* event as a standalone
+# JSON document (e.g. for audit log storage, evidence export, or batch replay).
+# Full JSON Schema definition: schemas/gc-agent-event.schema.json
+
+structured_event_schema:
+  schema_ref: schemas/gc-agent-event.schema.json
+  description: >
+    When gc.agent.* events are stored as standalone JSON documents (audit logs,
+    evidence bundles, batch exports), they MUST conform to gc-agent-event.schema.json.
+    The schema mirrors the span required_attributes above and adds an envelope
+    with gc_schema_version and event_category fields.
+  required_top_level_fields:
+    - gc_schema_version   # "1.0.0" — version of this event schema
+    - event_category      # "lifecycle" | "operational"
+    - span_name           # canonical span name as defined in lifecycle_events or spans
+    - gc_agent_id         # snake_case mapping of gc.agent.id
+    - gc_agent_class
+    - gc_agent_dossier_version
+    - gc_event_type
+    - gc_trace_id
+    - gc_event_id
+    - gc_time_loc         # DDR-6 L3 — REQUIRED, RFC3339 UTC
+    - gc_severity
+    - gc_summary
+
 # ── Log record conventions ───────────────────────────────────────────────────
 
 log_records:
@@ -163,10 +315,22 @@ metrics:
       unit: "{handoff}"
       description: Number of handoff envelopes emitted.
       attributes: [gc.agent.id, gc.agent.class]
+    - name: gc.agent.lifecycle.event
+      unit: "{event}"
+      description: Count of canonical lifecycle events emitted, by type.
+      attributes: [gc.agent.id, gc.agent.class, gc.agent.event_type]
   histograms:
     - name: gc.agent.task.duration
       unit: ms
       description: Wall-clock duration from task_acceptance to completion or failure.
+      attributes: [gc.agent.id, gc.agent.class]
+    - name: gc.agent.scaffold.duration
+      unit: ms
+      description: Wall-clock duration from scaffold.started to scaffold.completed.
+      attributes: [gc.agent.id, gc.agent.class]
+    - name: gc.agent.implementation.duration
+      unit: ms
+      description: Wall-clock duration from implementation.started to implementation.completed.
       attributes: [gc.agent.id, gc.agent.class]
 
 # ── Compliance rules ─────────────────────────────────────────────────────────
@@ -193,18 +357,314 @@ compliance:
         The gc.agent.event_type attribute MUST be one of the event type values defined
         in agent-dossier telemetry_trace_schema.event_type.
     - id: obs-5
+      severity: MUST
+      rule: >
+        Lifecycle events (pass_written, scaffold_started, scaffold_completed,
+        implementation_started, implementation_completed, doc_written, registry_updated)
+        MUST use the canonical span names defined in lifecycle_events. Substituting
+        operational span name patterns for lifecycle events is non-conformant.
+    - id: obs-6
+      severity: MUST
+      rule: >
+        Each lifecycle span MUST include all required_attributes listed for that
+        span name in lifecycle_events. Emitting a lifecycle span without its
+        required attributes constitutes an incomplete governance record.
+    - id: obs-7
+      severity: MUST
+      rule: >
+        scaffold.started MUST be followed by either scaffold.completed or a failure
+        event with the same gc.agent.task_id. Unpaired started events constitute
+        an incomplete governance record.
+    - id: obs-8
+      severity: MUST
+      rule: >
+        implementation.started MUST be followed by either implementation.completed
+        or a failure event with the same gc.agent.task_id.
+    - id: obs-9
       severity: SHOULD
       rule: >
         Implementations SHOULD set gc.trace_id to the same value as the OTel trace_id
         when operating in a distributed trace context, to enable cross-reference.
-    - id: obs-6
+    - id: obs-10
       severity: SHOULD
       rule: >
         Governance spans SHOULD NOT be mixed with performance spans in the same OTel
         span tree. Governance events are audit records; they SHOULD be exported to
         a dedicated audit sink rather than a performance monitoring backend.
-    - id: obs-7
+    - id: obs-11
       severity: MAY
       rule: >
         Implementations MAY export gc.agent.* events as OTel log records instead of
         spans when the runtime context does not support distributed tracing.
+    - id: obs-12
+      severity: MAY
+      rule: >
+        Implementations MAY store gc.agent.* events as standalone JSON documents
+        conforming to schemas/gc-agent-event.schema.json for audit log persistence
+        and compliance evidence export.
+
+# ── Audit log hash chaining ──────────────────────────────────────────────────
+#
+# Tamper-evident chaining for audit log sequences. Each event in a chain commits
+# to the previous event's content via SHA-256, forming a hash-linked list.
+# Verification of the chain detects any post-hoc insertion, deletion, or mutation
+# of events. This section defines the canonical rules for construction and
+# verification; the schema fields are in schemas/gc-agent-event.schema.json.
+
+audit_log_chain:
+  authority: AL:2
+  status: stable
+  pass: PASS-4
+
+  purpose: >
+    Define a tamper-evident audit log chain for gc.agent.* event sequences.
+    Conforming implementations that store audit logs SHOULD chain events so
+    that any mutation, deletion, or reordering of events is detectable.
+
+  fields:
+    gc_chain_id:
+      type: string
+      required: false
+      description: >
+        Stable identifier for the chain this event belongs to. Chains are
+        logically scoped to a single agent run or governance session.
+        Recommended format: gc-chain-<agent_id>-<YYYY-MM-DD>-<random-suffix>
+      example: "gc-chain-project-orchestrator-2026-06-08-a3f9"
+
+    gc_chain_seq:
+      type: integer
+      minimum: 0
+      required: false
+      description: >
+        Zero-based sequence position of this event within its chain.
+        The genesis event has gc_chain_seq = 0. MUST increase monotonically.
+        Gaps in sequence numbers are permitted (events may be filtered) but
+        a gap MUST be noted in the chain verification report.
+
+    gc_prev_event_hash:
+      type: string | null
+      required: false
+      description: >
+        SHA-256 hash (lowercase hex, 64 characters) of the canonical JSON
+        serialization of the immediately preceding event in the chain.
+        MUST be null or absent for the genesis event (gc_chain_seq = 0).
+        MUST be present and non-null for all subsequent chain events.
+      format: "lowercase hex SHA-256 — 64 characters"
+      example: "a3f9c2b1e4d708f6a2b5c9e1d0f3a6b8c2d4e7f0a1b3c5d8e2f4a6b9c1d3e5f7"
+
+  canonical_serialization:
+    description: >
+      The canonical form of an event for hash computation is the JSON
+      serialization of the event document with all keys sorted alphabetically
+      (recursively), no whitespace outside string values, and UTF-8 encoding.
+      The gc_prev_event_hash field MUST be included as-is (with its actual
+      value) when hashing the event for reference by its successor.
+    algorithm: SHA-256
+    encoding: lowercase hexadecimal, 64 characters
+    note: >
+      To compute event N's hash: serialize event N in canonical form
+      (including gc_prev_event_hash pointing to event N-1), then
+      SHA-256(UTF-8(canonical_json)). Store this value in event N+1's
+      gc_prev_event_hash field.
+
+  verification:
+    steps:
+      - "Sort events by gc_chain_seq ascending."
+      - "For the genesis event (seq=0): confirm gc_prev_event_hash is null or absent."
+      - "For each subsequent event at seq=N: compute SHA-256 of event N-1's canonical JSON."
+      - "Assert computed hash equals event N's gc_prev_event_hash field."
+      - "Report any mismatch as a chain integrity failure (emit gc.agent.chain.integrity_failure)."
+    on_gap: >
+      If gc_chain_seq values are non-contiguous, record the gap in the
+      verification report. A gap is suspicious but not automatically a
+      chain break — some events may legitimately be filtered before storage.
+    on_failure: >
+      A hash mismatch constitutes a chain integrity failure. Implementations
+      MUST emit a gc.agent.chain.integrity_failure event and MUST NOT treat
+      affected events as valid audit evidence.
+
+  compliance_rules:
+    - id: chain-1
+      severity: SHOULD
+      rule: >
+        Implementations that persist gc.agent.* events as an audit log SHOULD
+        populate gc_chain_id, gc_chain_seq, and gc_prev_event_hash on every
+        stored event to enable tamper detection.
+    - id: chain-2
+      severity: MUST
+      rule: >
+        When gc_chain_id is present, gc_chain_seq MUST be a non-negative integer
+        that is strictly greater than the previous event's gc_chain_seq within
+        the same gc_chain_id.
+    - id: chain-3
+      severity: MUST
+      rule: >
+        When gc_prev_event_hash is present and gc_chain_seq > 0, the value MUST
+        be the lowercase hex SHA-256 of the canonical JSON of the preceding event.
+        A value that does not match constitutes a chain integrity failure.
+    - id: chain-4
+      severity: MUST
+      rule: >
+        The genesis event (gc_chain_seq = 0) MUST have gc_prev_event_hash set to
+        null. A genesis event with a non-null gc_prev_event_hash is non-conformant.
+    - id: chain-5
+      severity: MUST
+      rule: >
+        Chain verification tools MUST emit a gc.agent.chain.integrity_failure
+        event when any hash mismatch is detected. The failure event MUST include
+        gc_agent_evidence listing the gc_event_id values of the affected events.
+
+# ── Security and anomaly detection events ───────────────────────────────────
+#
+# These spans cover behavioral anomalies, policy violations, authority constraint
+# breaches, authentication failures, and chain integrity failures. They are
+# distinct from operational lifecycle spans and MUST be treated as high-severity
+# audit records.
+
+security_events:
+  authority: AL:2
+  status: stable
+  pass: PASS-4
+  description: >
+    Canonical gc.agent.* span names for security and anomaly detection events.
+    These events are emitted when an agent or verifier detects an abnormal or
+    policy-violating condition. All security events are gc_severity: error or
+    critical unless noted otherwise.
+  spans:
+
+    - span_name: gc.agent.anomaly.detected
+      description: >
+        A behavioral anomaly was detected in agent operation — unexpected tool
+        call sequence, anomalous response pattern, out-of-bounds resource use,
+        or deviation from declared capability profile.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+        - gc.agent.anomaly_category
+      optional_attributes:
+        - gc.agent.task_id
+        - gc.agent.pass_id
+        - gc.agent.evidence
+        - gc.agent.parent_event_id
+      notes: >
+        gc.agent.anomaly_category MUST be one of: tool_sequence, resource_overrun,
+        capability_deviation, output_anomaly, timing_anomaly, unknown.
+        gc_severity SHOULD be warning, error, or critical.
+
+    - span_name: gc.agent.policy.violation
+      description: >
+        An agent action violated a declared governance policy. Cross-references
+        governance/agent-constraints.yaml AC-001 through AC-007.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+        - gc.agent.policy_id
+      optional_attributes:
+        - gc.agent.task_id
+        - gc.agent.pass_id
+        - gc.agent.evidence
+        - gc.agent.parent_event_id
+      notes: >
+        gc.agent.policy_id SHOULD reference the constraint ID from
+        agent-constraints.yaml (e.g., "AC-003"). gc_severity MUST be
+        error or critical.
+
+    - span_name: gc.agent.constraint.breach
+      description: >
+        An agent breached an authority constraint — performed a prohibited action
+        or exceeded its declared authority level. See agent-constraints.yaml AC-001
+        through AC-007 for the prohibited action catalog.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+        - gc.agent.constraint_id
+      optional_attributes:
+        - gc.agent.task_id
+        - gc.agent.evidence
+        - gc.agent.parent_event_id
+      notes: >
+        gc.agent.constraint_id MUST reference the AC-NNN code from
+        governance/agent-constraints.yaml. gc_severity MUST be critical.
+        Implementations MUST halt the offending agent action and escalate.
+
+    - span_name: gc.agent.auth.failure
+      description: >
+        An authentication or zero-trust verification step failed — invalid
+        handoff envelope signature, failed DID verification, key rotation
+        mismatch, or revoked agent identity.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+        - gc.agent.auth_failure_reason
+      optional_attributes:
+        - gc.agent.handoff_envelope_id
+        - gc.agent.evidence
+        - gc.agent.parent_event_id
+      notes: >
+        gc.agent.auth_failure_reason MUST be one of: invalid_signature,
+        did_verification_failed, key_rotation_mismatch, identity_revoked,
+        envelope_replay, unknown. gc_severity MUST be error or critical.
+        Cross-references governance/zero-trust.yaml revocation section.
+
+    - span_name: gc.agent.chain.integrity_failure
+      description: >
+        Audit log chain verification detected a tampered, missing, or
+        reordered event. The chain at or after the failure point is
+        NOT valid audit evidence.
+      required_attributes:
+        - gc.agent.id
+        - gc.time_loc
+        - gc.summary
+        - gc.agent.chain_id
+        - gc.agent.chain_seq_failed
+      optional_attributes:
+        - gc.agent.evidence
+        - gc.agent.parent_event_id
+      notes: >
+        gc.agent.chain_id references the gc_chain_id of the affected chain.
+        gc.agent.chain_seq_failed is the gc_chain_seq of the first event
+        where verification failed. gc_severity MUST be critical.
+        gc.agent.evidence SHOULD list the gc_event_id values of affected events.
+
+  security_event_types:
+    - anomaly_detected
+    - policy_violation
+    - constraint_breach
+    - auth_failure
+    - chain_integrity_failure
+
+  compliance_rules:
+    - id: sec-1
+      severity: MUST
+      rule: >
+        gc.agent.constraint.breach events MUST have gc_severity: critical.
+        Implementations MUST NOT downgrade a constraint breach to a lower severity.
+    - id: sec-2
+      severity: MUST
+      rule: >
+        gc.agent.auth.failure events MUST result in rejection of the triggering
+        operation. An auth failure MUST NOT allow the associated handoff, task
+        acceptance, or agent action to proceed.
+    - id: sec-3
+      severity: MUST
+      rule: >
+        gc.agent.chain.integrity_failure events MUST be emitted by any chain
+        verification implementation that detects a hash mismatch or unexpected
+        chain gap. The events after the integrity failure point MUST be flagged
+        as unverified in any evidence export.
+    - id: sec-4
+      severity: SHOULD
+      rule: >
+        Implementations SHOULD include security event spans (gc.agent.anomaly.*,
+        gc.agent.policy.*, gc.agent.constraint.*, gc.agent.auth.*, gc.agent.chain.*)
+        in a dedicated security audit sink, separate from operational telemetry.
+    - id: sec-5
+      severity: SHOULD
+      rule: >
+        gc.agent.policy.violation and gc.agent.constraint.breach events SHOULD
+        include gc.agent.evidence referencing the specific constraint or policy
+        document (e.g., "governance/agent-constraints.yaml#AC-003").

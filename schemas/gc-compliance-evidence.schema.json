@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-compliance-evidence/v1.json",
+  "title": "GC Compliance Evidence Bundle",
+  "description": "Signed, machine-readable compliance evidence export for a Governance Commons audit period. Bundles gc.agent.* events with a cryptographic signature and control framework mappings to produce a self-contained compliance record. Schema version: 1.0.0. Defined in PASS-4 (GC-3-E-02, GC-3-E-03).",
+  "type": "object",
+  "required": [
+    "gc_schema_version",
+    "bundle_id",
+    "created_at",
+    "signing_agent_id",
+    "evidence_period",
+    "events",
+    "event_count",
+    "bundle_hash",
+    "signature"
+  ],
+  "additionalProperties": false,
+  "properties": {
+
+    "gc_schema_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Version of this evidence bundle schema."
+    },
+
+    "bundle_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable unique identifier for this evidence bundle. Recommended format: gc-evidence-<YYYY-MM-DD>-<random-suffix>.",
+      "examples": ["gc-evidence-2026-06-08-b7c3e1"]
+    },
+
+    "created_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "description": "RFC3339 UTC timestamp of bundle creation. DDR-6 L3 enforcement field.",
+      "examples": ["2026-06-08T00:00:00Z"]
+    },
+
+    "signing_agent_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "agent_id of the agent that produced and signed this bundle. MUST match the dossier identity.agent_id of the signing agent.",
+      "examples": ["project-orchestrator"]
+    },
+
+    "signing_agent_dossier_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of the signing agent's dossier at the time of signing.",
+      "examples": ["1.0.0"]
+    },
+
+    "evidence_period": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "description": "The time window covered by this evidence bundle.",
+      "properties": {
+        "start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+          "description": "Inclusive start of the evidence window (RFC3339 UTC)."
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+          "description": "Inclusive end of the evidence window (RFC3339 UTC)."
+        }
+      }
+    },
+
+    "control_frameworks": {
+      "type": "array",
+      "description": "Control frameworks this bundle provides evidence for. Each entry names a framework and the specific control IDs it covers.",
+      "items": {
+        "type": "object",
+        "required": ["framework", "version", "controls_evidenced"],
+        "additionalProperties": false,
+        "properties": {
+          "framework": {
+            "type": "string",
+            "enum": ["NIST-AI-RMF", "ISO-42001", "SOC2-TypeII", "EU-AI-Act"],
+            "description": "Control framework identifier."
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Version or edition of the framework (e.g., '2023' for NIST AI RMF, '2023' for ISO 42001)."
+          },
+          "controls_evidenced": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "description": "List of control IDs from the framework that this bundle provides evidence for.",
+            "examples": [["GOVERN.1.1", "MAP.1.5", "MEASURE.2.2"], ["4.4", "6.1", "9.2"]]
+          },
+          "mapping_ref": {
+            "type": "string",
+            "description": "Path or URI to the GC control mapping file for this framework.",
+            "examples": ["governance/nist-ai-rmf-mapping.yaml", "governance/iso-42001-mapping.yaml"]
+          }
+        }
+      }
+    },
+
+    "pass_records": {
+      "type": "array",
+      "description": "PASS-YYYY-NNNN identifiers included in this evidence bundle. Each PASS record provides governance audit trail coverage.",
+      "items": {
+        "type": "string",
+        "pattern": "^PASS-[0-9]{4}-[0-9]{4}$"
+      },
+      "examples": [["PASS-2026-0001", "PASS-2026-0014"]]
+    },
+
+    "chain_ids": {
+      "type": "array",
+      "description": "gc_chain_id values of audit log chains whose events are included in this bundle. Chain integrity MUST be verified before signing.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+
+    "chain_verified": {
+      "type": "boolean",
+      "description": "True if all included chain events passed hash chain verification at bundle creation time. MUST be false if any chain integrity failure was detected.",
+      "default": false
+    },
+
+    "events": {
+      "type": "array",
+      "description": "The gc.agent.* event documents included as evidence. Each element MUST conform to schemas/gc-agent-event.schema.json.",
+      "items": {
+        "type": "object",
+        "required": ["gc_schema_version", "gc_event_id", "gc_time_loc"],
+        "description": "A gc.agent.* event document (gc-agent-event.schema.json conformant)."
+      }
+    },
+
+    "event_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of events in the events array. MUST equal events.length. Verifiers MUST reject bundles where event_count != events.length."
+    },
+
+    "bundle_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 hash (lowercase hex) of the canonical JSON serialization of the bundle with the signature field set to null. Used to verify bundle integrity independently of the signature. Canonical form: all keys sorted alphabetically, no whitespace, UTF-8.",
+      "examples": ["d4e7f0a1b3c5d8e2f4a6b9c1d3e5f7a3f9c2b1e4d708f6a2b5c9e1d0f3a6b8c2"]
+    },
+
+    "signature": {
+      "type": ["object", "null"],
+      "description": "JWS detached-payload signature over the bundle_hash. Null if the bundle is unsigned (advisory mode). A signed bundle MUST have a non-null signature.",
+      "required": ["algorithm", "key_id", "jws"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": ["EdDSA"],
+          "description": "Signature algorithm. MUST be EdDSA (Ed25519) matching GC-3-A-01 handoff envelope signature scheme."
+        },
+        "key_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Key identifier for the signing key. MUST resolve to a public key in the signing agent's dossier crypto_identity block.",
+          "examples": ["did:key:z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9y84SB5elDFn223SP2"]
+        },
+        "jws": {
+          "type": "string",
+          "minLength": 1,
+          "description": "JWS compact serialization (detached payload). The payload is the bundle_hash value (UTF-8 encoded). Verifiers MUST reconstruct the payload from bundle_hash before verifying.",
+          "examples": ["eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDprZXk6ejZNa2Y1..."]
+        },
+        "signed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+          "description": "RFC3339 UTC timestamp when the signature was produced."
+        }
+      }
+    },
+
+    "gc_pass_id": {
+      "type": ["string", "null"],
+      "pattern": "^(PASS-[0-9]{4}-[0-9]{4})?$",
+      "description": "PASS-YYYY-NNNN of the governance session that produced this bundle, if applicable."
+    },
+
+    "notes": {
+      "type": "string",
+      "description": "Optional human-readable notes about this evidence bundle."
+    }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "chain_ids": { "type": "array", "minItems": 1 }
+        },
+        "required": ["chain_ids"]
+      },
+      "then": {
+        "required": ["chain_verified"],
+        "description": "When chain_ids is present, chain_verified MUST be explicitly set."
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+name: Publish governance-commons (npm) to npm registry
+
+on:
+  push:
+    tags:
+      - "sdk-v*"
+
+permissions:
+  contents: read
+  id-token: write  # required for npm provenance attestation
+
+jobs:
+  build-and-publish:
+    name: Build, test, and publish to npm
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: governance-commons-sdk
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck and build
+        run: npm test
+
+      - name: Publish to npm (with provenance)
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # NPM_TOKEN must be set in repo secrets as a granular access token
+          # scoped to the governance-commons package with publish permission.
+          # See: https://docs.npmjs.com/creating-and-viewing-access-tokens

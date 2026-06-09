@@ -1,0 +1,483 @@
+schema:
+  name: Governance Commons — NIST AI RMF Control Mapping
+  version: 1.0.0
+  pass: PASS-4
+  gap_id: GC-3-E-02
+  authority: AL:2
+  status: stable
+  time.loc: "2026-06-08T00:00:00Z"
+  framework: NIST AI Risk Management Framework (AI RMF 1.0, January 2023)
+  framework_url: https://airc.nist.gov/Home
+  purpose: >
+    Maps Governance Commons specifications and artifacts to NIST AI RMF
+    subcategory outcomes. Each entry names the GC artifact(s) that provide
+    evidence for the NIST control, describes coverage quality, and identifies
+    gaps. Intended for use in compliance evidence bundles
+    (schemas/gc-compliance-evidence.schema.json) and audit reports.
+
+  coverage_levels:
+    full: GC artifact directly satisfies the control outcome.
+    partial: GC artifact partially satisfies the outcome; gaps noted.
+    planned: Coverage is a planned deliverable in a future PASS.
+    out_of_scope: Control is outside GC's governance layer scope.
+
+# ── GOVERN ───────────────────────────────────────────────────────────────────
+# Policies, processes, and accountability for responsible AI risk governance.
+
+govern:
+  description: >
+    Policies, processes, and accountability for responsible AI risk governance
+    culture are established and maintained.
+
+  subcategories:
+
+    - id: GOVERN.1.1
+      outcome: >
+        Policies, processes, procedures, and practices across the organization
+        related to the mapping, measuring, and managing of AI risks are in place,
+        transparent, and implemented effectively.
+      coverage: full
+      gc_artifacts:
+        - path: governance/agent-constraints.yaml
+          note: >
+            Defines 7 prohibited agent actions (AC-001 through AC-007) with
+            remediation rules. Provides the binding policy layer for agent
+            operations.
+        - path: DEVPATH.md
+          note: >
+            Authority model (AL:1/AL:2/AL:3) establishes transparent governance
+            hierarchy. GC-PASS process provides auditable implementation trail.
+        - path: governance/zero-trust.yaml
+          note: >
+            Zero-trust establishment, rotation, and revocation procedures —
+            operative policy for agent-to-agent trust.
+        - path: governance/threat-model.md
+          note: >
+            STRIDE threat model (T-001 through T-006) with mitigations —
+            operative risk mapping policy.
+
+    - id: GOVERN.1.2
+      outcome: >
+        Accountability for AI risk is clear and communicated across the
+        organization.
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            AL:2 decisions require GC-PASS entry (founder maintainer Jess Ervin).
+            AL:3 decisions require founder sign-off. Responsibility is explicit
+            and traceable via PASS-YYYY-NNNN audit trail.
+        - path: DEVPLAN.md
+          note: Charter section names founding maintainer and authority levels.
+
+    - id: GOVERN.1.3
+      outcome: >
+        Organizational teams are committed to a culture that considers and
+        communicates AI risk.
+      coverage: partial
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: STRIDE analysis documented and cross-referenced across specs.
+        - path: governance/agent-constraints.yaml
+          note: Constraint breach protocol defines escalation path.
+      gaps: >
+        Steering committee and working group structure not yet established
+        (required before enterprise procurement claims — PASS-5 item).
+
+    - id: GOVERN.1.5
+      outcome: >
+        Organizational teams document the roles, responsibilities, and decision-
+        making authority for AI risk management.
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            Authority model documents AL:1/AL:2/AL:3 roles, who holds each
+            level, and what decisions each level controls.
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            identity.agent_class and capability declarations define each agent's
+            role boundary. identity.crypto_identity provides cryptographic binding
+            to prevent role spoofing.
+
+    - id: GOVERN.2.1
+      outcome: >
+        Organizational teams are committed to a culture that considers and
+        communicates AI risk, including risk tolerance.
+      coverage: partial
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Residual risks documented per STRIDE category.
+        - path: governance/zero-trust.yaml
+          note: residual_risks section documents accepted trust assumptions.
+      gaps: >
+        Formal risk tolerance statements and approval process not yet
+        established. PASS-5 prerequisite for enterprise deployment.
+
+    - id: GOVERN.2.2
+      outcome: >
+        The risk or impact of the AI is reviewed as part of due diligence for
+        organizational decisions.
+      coverage: full
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            capability_profile declares what each agent can and cannot do.
+            Conformance profiles (advisory/standard/strict) gate deployment
+            readiness.
+        - path: governance/agent-constraints.yaml
+          note: >
+            Prohibited actions are reviewed at agent design time. Constraint
+            breach events feed into evidence bundles.
+
+    - id: GOVERN.4.1
+      outcome: >
+        Organizational teams are committed to a culture that considers and
+        communicates AI risk — including through training and awareness.
+      coverage: partial
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: Capability declarations serve as the agent's declared competence record.
+        - path: agent-matrix/agent-matrix.yaml
+          note: Named profiles (minimal, standard, data-engineering) define expected competency tiers.
+      gaps: Human-facing training and awareness materials are out of scope for this PASS.
+
+    - id: GOVERN.5.1
+      outcome: >
+        Organizational policies and practices are regularly reviewed and updated
+        based on AI risk findings and lessons learned.
+      coverage: full
+      gc_artifacts:
+        - path: DEVPLAN.md
+          note: >
+            PASS progression (PASS-1 through PASS-5) is the operative review
+            cycle. Each PASS gate review incorporates gap analysis findings from
+            prior passes.
+        - path: passchangelog.md
+          note: Timestamped PASS audit trail provides the lessons-learned record.
+
+    - id: GOVERN.6.1
+      outcome: >
+        Policies and procedures are in place for AI risk management across
+        the organization and its stakeholders.
+      coverage: full
+      gc_artifacts:
+        - path: governance/
+          note: >
+            governance/ directory contains zero-trust.yaml, threat-model.md,
+            agent-constraints.yaml, and control mappings — the operative
+            policy corpus.
+        - path: docs/observability-contract.yaml
+          note: >
+            Compliance rules (obs-1 through obs-12, chain-1 through chain-5,
+            sec-1 through sec-5) are the enforceable policy layer for telemetry.
+
+# ── MAP ──────────────────────────────────────────────────────────────────────
+# Categorize AI risk context and AI system characteristics.
+
+map:
+  description: >
+    AI risks, impacts, and relevant context are identified and prioritized.
+
+  subcategories:
+
+    - id: MAP.1.1
+      outcome: >
+        Context is established for the AI risk assessment, including the
+        potential beneficial uses and harms associated with the AI system.
+      coverage: full
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            agent_class, capabilities, and conformance_profile establish
+            deployment context. Handoff envelope schema establishes the
+            inter-agent trust context.
+        - path: agent-matrix/agent-matrix.yaml
+          note: SKU routing and capability profiles define operational boundaries.
+
+    - id: MAP.1.5
+      outcome: >
+        Organizational risk tolerances are communicated and informed by the
+        AI system's properties and risk likelihood and impact assessments.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: >
+            T-001 through T-006 STRIDE threats with likelihood, impact, and
+            mitigation per category. Residual risks documented.
+        - path: governance/zero-trust.yaml
+          note: >
+            residual_risks section documents accepted assumptions about trust
+            model limitations.
+
+    - id: MAP.2.1
+      outcome: >
+        Scientific findings and organizational factors inform the risk assessment.
+      coverage: partial
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: STRIDE methodology applied; mitigations grounded in established security practice.
+        - path: agent-dossier/agent-dossier.yaml
+          note: Capability declarations constrain the risk surface.
+      gaps: >
+        No formal literature review or external AI safety research integration.
+        Out of scope for GC governance layer.
+
+    - id: MAP.2.3
+      outcome: >
+        AI system impacts are assessed using risk impact metrics and
+        qualitative analysis.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Each STRIDE category includes impact assessment and severity rating.
+        - path: governance/agent-constraints.yaml
+          note: >
+            AC-001 through AC-007 define actions that carry unacceptable impact
+            (prohibited) vs. accepted risk (permitted with oversight).
+
+    - id: MAP.3.1
+      outcome: >
+        Potential benefits and costs, including harm, are evaluated and the AI
+        system's impacts on people, systems, and governance are identified.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Mitigations documented for all six STRIDE categories.
+        - path: governance/zero-trust.yaml
+          note: >
+            Key rotation and revocation procedures address the cost/risk of
+            continued trust after a compromise event.
+
+    - id: MAP.5.1
+      outcome: >
+        Likelihood and magnitude of each identified impact is estimated,
+        documented, and prioritized.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: >
+            T-001 through T-006 include severity classifications (High/Medium/Low).
+            Multi-agent.yaml cross-references provide machine-readable threat index.
+
+    - id: MAP.5.2
+      outcome: >
+        Risk assessments, rankings of harms, benefits, and impacts are
+        documented and available for use in risk management decisions.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Full STRIDE analysis with threat severity and mitigations documented.
+        - path: governance/zero-trust.yaml
+          note: Residual risks with explicit acceptance criteria documented.
+
+# ── MEASURE ──────────────────────────────────────────────────────────────────
+# Analyze, assess, benchmark, and monitor AI risk.
+
+measure:
+  description: >
+    AI risks are analyzed, assessed, benchmarked, and monitored and managed.
+
+  subcategories:
+
+    - id: MEASURE.1.1
+      outcome: >
+        Approaches for evaluating and assessing AI system performance are
+        identified and documented.
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            Canonical gc.agent.* span names, required attributes, and compliance
+            rules define the measurement contract for agent telemetry.
+        - path: schemas/gc-agent-event.schema.json
+          note: Machine-readable schema for all audit events — the measurement artifact format.
+        - path: docs/conformance/conformance-report.schema.json
+          note: >
+            Conformance report format for machine-readable pass/fail assessment
+            against GC specifications (GC-2-C-01).
+
+    - id: MEASURE.2.2
+      outcome: >
+        AI system performance, impact, and risks are evaluated with quantitative
+        and qualitative measurements.
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            OTel metrics (gc.agent.task.started, completed, failed, escalation,
+            handoff, lifecycle.event, task.duration, scaffold.duration,
+            implementation.duration) provide quantitative runtime measurement.
+        - path: agent-dossier/agent-dossier.yaml
+          note: telemetry_trace_schema defines the qualitative event record.
+
+    - id: MEASURE.2.7
+      outcome: >
+        AI system risks or impacts are classified, tracked, and shared,
+        including near misses and lessons learned.
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            Security event spans (gc.agent.anomaly.detected, policy.violation,
+            constraint.breach, auth.failure, chain.integrity_failure) provide
+            structured incident classification.
+        - path: passchangelog.md
+          note: Lessons-learned record via PASS audit trail.
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: Evidence bundles package incidents for sharing with auditors.
+
+    - id: MEASURE.2.8
+      outcome: >
+        Risks or impacts associated with a deployed AI system are monitored
+        and the deployment state is validated.
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            obs-10 recommends dedicated audit sink for gc.agent.* events.
+            Metrics counters provide real-time deployment state signals.
+        - path: governance/agent-constraints.yaml
+          note: >
+            Constraint validation at runtime provides continuous monitoring
+            against declared policy.
+
+    - id: MEASURE.3.1
+      outcome: >
+        Test, evaluation, validation, and verification (TEVV) techniques are
+        identified and applied to evaluate AI system performance and risks.
+      coverage: full
+      gc_artifacts:
+        - path: docs/conformance/conformance-report.schema.json
+          note: >
+            Machine-readable conformance report is the TEVV output format.
+            gc-validate CLI produces conformance reports for any GC spec.
+        - path: agent-dossier/tests/
+          note: pytest suites for handoff envelope, dossier validation, telemetry.
+        - path: agent-matrix/tests/
+          note: pytest suites for A2A, CloudEvents, streaming, prompt injection.
+
+    - id: MEASURE.4.1
+      outcome: >
+        Measurement results including performance, impacts, and risks are
+        shared with relevant AI actors.
+      coverage: full
+      gc_artifacts:
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: >
+            Signed evidence bundles are the sharing artifact — structured,
+            machine-readable, and cryptographically authenticated.
+        - path: docs/conformance/conformance-report.schema.json
+          note: Conformance reports are shareable TEVV artifacts.
+
+# ── MANAGE ───────────────────────────────────────────────────────────────────
+# Prioritize, respond to, and monitor AI risks.
+
+manage:
+  description: >
+    AI risks based on assessments and other analytical output from the MAP
+    and MEASURE functions are prioritized, responded to, and managed.
+
+  subcategories:
+
+    - id: MANAGE.1.1
+      outcome: >
+        A risk treatment plan and a plan for periodic review of the plan are
+        in place including response to harms or near misses.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Mitigation per STRIDE category documents the treatment plan.
+        - path: governance/zero-trust.yaml
+          note: Revocation procedures (6-step, 5 triggers) are the harm-response plan.
+        - path: governance/agent-constraints.yaml
+          note: Remediation rules for constraint breaches (AC-001 through AC-007).
+        - path: DEVPLAN.md
+          note: PASS gate reviews are the periodic review mechanism.
+
+    - id: MANAGE.1.3
+      outcome: >
+        Responses to the AI risks or impacts are prioritized, implemented,
+        and managed.
+      coverage: full
+      gc_artifacts:
+        - path: governance/zero-trust.yaml
+          note: >
+            Revocation section provides a prioritized response protocol:
+            detect → emit auth.failure event → revoke identity → halt agent →
+            notify orchestrator → update registry.
+        - path: governance/agent-constraints.yaml
+          note: >
+            Remediation rules define ordered response steps for each constraint
+            category (AC-001 through AC-007).
+
+    - id: MANAGE.2.1
+      outcome: >
+        Resources required to manage AI risk have been allocated and applied.
+      coverage: full
+      gc_artifacts:
+        - path: agent-project-orchestrator/runtime-contract.yaml
+          note: >
+            Per-agent resource budgets (time_limit, tool_call_limit) are
+            enforced at runtime (GC-1-D-10, GC-1-D-11). Resource overruns
+            emit gc.agent.anomaly.detected with category resource_overrun.
+        - path: agent-matrix/agent-matrix.yaml
+          note: SKU routing controls model/cost allocation per agent.
+
+    - id: MANAGE.2.2
+      outcome: >
+        Mechanisms are in place and tested to maintain and improve the
+        performance and behavior of deployed AI systems.
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            OTel metrics and lifecycle spans provide continuous behavioral
+            monitoring. Compliance rules (obs-1 through obs-12) define pass/fail
+            gates for monitoring correctness.
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            dossier revocation/expiry model (GC-1-A-10) enables decommissioning
+            misbehaving agents without disrupting the fleet.
+
+    - id: MANAGE.3.1
+      outcome: >
+        Risk treatment plans are implemented according to established policies,
+        practices, and procedures.
+      coverage: full
+      gc_artifacts:
+        - path: passchangelog.md
+          note: >
+            Each PASS-YYYY-NNNN record shows that governance actions were
+            executed and time-stamped, providing the implementation trail.
+        - path: governance/zero-trust.yaml
+          note: Step-by-step protocols for establishment, rotation, and revocation.
+
+    - id: MANAGE.3.2
+      outcome: >
+        AI risk and performance information, and related processes, are
+        documented and shared with relevant organizational teams.
+      coverage: full
+      gc_artifacts:
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: >
+            Signed evidence bundles are the sharing mechanism. bundle_id,
+            created_at, and signing_agent_id fields provide provenance.
+            control_frameworks array links to specific NIST AI RMF subcategories.
+        - path: passchangelog.md
+          note: PASS audit trail with timestamps and responsible agent IDs.
+
+    - id: MANAGE.4.1
+      outcome: >
+        Post-deployment AI system risks and impacts, including potential
+        residual risks or near misses, are documented and reported.
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Residual risks documented per STRIDE category.
+        - path: governance/zero-trust.yaml
+          note: residual_risks section with explicit acceptance criteria.
+        - path: docs/observability-contract.yaml
+          note: >
+            Security event spans (gc.agent.anomaly.detected, auth.failure, etc.)
+            capture near-misses as structured audit records in real time.

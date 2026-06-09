@@ -1,0 +1,122 @@
+id: GC-CONSTRAINT-001
+title: Agent Authority Constraints
+authority_level: "AL:2"
+effective: "2026-06-08T00:00:00Z"
+time.loc: "2026-06-08T00:00:00Z"
+rationale: >
+  During PASS-1 through PASS-3, agents wrote PASS exit criteria and made
+  publish timing decisions without explicit maintainer or founder approval.
+  Both are AL:2+ decisions. This document formalizes what agents operating
+  in the Governance Commons ecosystem may and may not do, and how proposals
+  for AL:2+ decisions must be surfaced before being recorded as decided.
+
+# ── Prohibited without explicit approval ──────────────────────────────────────
+
+prohibited:
+
+  - id: AC-001
+    category: devpath_devplan
+    action: Write or modify PASS exit criteria
+    required_approval: AL:2
+    rationale: >
+      Exit criteria determine what constitutes a release gate. Recording them
+      as decided without maintainer sign-off binds the project to criteria the
+      maintainer never agreed to. Agents may PROPOSE exit criteria; they may
+      not record proposals as decided.
+
+  - id: AC-002
+    category: devpath_devplan
+    action: Open or close a PASS gate
+    required_approval: AL:2
+    rationale: >
+      PASS transitions are ecosystem milestones that affect all active tracks.
+      Agents may surface that all exit criteria appear to be met and recommend
+      a gate review; they may not record the PASS as closed without maintainer
+      confirmation.
+
+  - id: AC-003
+    category: devpath_devplan
+    action: Declare a DevPath or DevPlan decision final
+    required_approval: AL:2
+    rationale: >
+      Design Decision Records (DDR-*) and compatibility constraints in DEVPLAN
+      are binding at AL:2. Agents may draft decisions and present options; they
+      may not write a decision into DEVPATH/DEVPLAN as final without sign-off.
+
+  - id: AC-004
+    category: publishing
+    action: Publish assets to any public registry (PyPI, npm, GitHub Packages, container registries)
+    required_approval: AL:3
+    rationale: >
+      Public publication is irreversible, represents the project publicly, and
+      affects external adopters. Only the founder may authorise a publish action.
+      Agents may build, verify, and prepare packages; they may not execute publish
+      commands or trigger publish workflows.
+
+  - id: AC-005
+    category: publishing
+    action: Set, schedule, or modify publish timing
+    required_approval: AL:3
+    rationale: >
+      Publish timing determines when the project is visible to the public. This
+      is a founder-level decision. Agents must not embed publish timing decisions
+      in exit criteria, workflows, or plans without explicit founder authorisation.
+
+  - id: AC-006
+    category: release
+    action: Declare a GC release milestone ready or ship a release manifest
+    required_approval: AL:2
+    rationale: >
+      Release milestones pin multi-spec versions and signal ecosystem stability
+      to adopters. Premature or unilateral milestone declarations undermine the
+      compatibility guarantee.
+
+  - id: AC-007
+    category: release
+    action: Create or push git tags that trigger publish workflows
+    required_approval: AL:3
+    rationale: >
+      Tags such as sdk-v* trigger CI publish jobs. Creating them is equivalent
+      to initiating a publish and requires the same founder approval.
+
+# ── Permitted within AL:1 scope ───────────────────────────────────────────────
+
+permitted:
+  - Implement tasks within a PASS item that is already scoped and approved
+  - Propose exit criteria — flagged as PROPOSED, not recorded as decided
+  - Draft DevPath / DevPlan edits for maintainer review before committing
+  - Create, modify, and delete files within a repo's AL:1 scope
+  - Run tests, builds, linters, and type checks
+  - Write CHANGELOG and passchangelog entries for completed items
+  - Register gap IDs and update gap status (O → C) for completed items
+  - Propose new gap items — flagged as PROPOSED until maintainer approves
+  - Update the NEAR-TERM QUEUED WORK table with deferred items
+  - Surface AL:2+ decisions as explicit questions before acting on them
+
+# ── Proposal protocol ─────────────────────────────────────────────────────────
+
+proposal_protocol:
+  flag_format: "PROPOSED — requires AL:2 sign-off"
+  rules:
+    - Agents proposing AL:2+ changes MUST include the flag_format string in any
+      draft before the maintainer has responded.
+    - A proposal is not recorded in DEVPLAN or DEVPATH as decided until the
+      maintainer gives explicit sign-off (verbal, written, or PR approval).
+    - Retroactive sign-off is valid — a maintainer may ratify an already-recorded
+      decision by explicitly confirming it. Ratification should be noted with a
+      GC-PASS entry if the decision is AL:2.
+    - If an agent is uncertain whether a change requires AL:2+ approval, it MUST
+      ask before writing the change into a canonical document.
+
+# ── Violation remediation ─────────────────────────────────────────────────────
+
+remediation:
+  - When a prohibited action is discovered after the fact, the maintainer may
+    ratify or revert it. Both outcomes are valid; the choice is AL:2.
+  - Ratified violations do not require re-implementation — the existing work
+    stands, but a GC-PASS entry should note the ratification and corrected scope.
+  - >
+    Example: PASS-3 exit criteria "published to PyPI/npm" were written by an
+    agent without sign-off (AC-001, AC-005 violations). Ratified 2026-06-08 as:
+    criteria corrected to "publish-ready"; actual publish moved to PASS-5
+    (GC-PASS-2026-0013 reflects this correction).

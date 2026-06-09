@@ -1,0 +1,510 @@
+# governance/zero-trust.yaml
+# Zero-Trust Security Specification for Governance Commons Multi-Agent Systems
+# Authority level: AL:2
+# Status: active
+# Issued: 2026-06-07T00:00:00Z
+# Closes: GC-3-A-03
+
+specification:
+  name: Governance Commons Zero-Trust Security Specification
+  version: 1.0.0
+  status: active
+  authority_level: AL:2
+  issued_at: "2026-06-07T00:00:00Z"
+  canonical_file: governance/zero-trust.yaml
+  closes: GC-3-A-03
+  normative_refs:
+    - agent-dossier/agent-dossier.yaml — identity_block.crypto_identity, handoff_protocol.signature_block, dossier_lifecycle
+    - agent-dossier/schemas/handoff-envelope-signature.schema.json
+    - agent-dossier/schemas/agent-dossier-instance.schema.json
+    - governance/threat-model.md — S-01, S-02, T-01, R-01
+    - RFC 8032 — Edwards-Curve Digital Signature Algorithm (Ed25519)
+    - RFC 8037 — CFRG Elliptic Curves for JOSE (EdDSA / JWK)
+    - W3C DID Core 1.0 — Decentralized Identifiers
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ZERO-TRUST PRINCIPLES
+# ─────────────────────────────────────────────────────────────────────────────
+
+principles:
+  statement: >
+    No agent, orchestrator, or runtime system MUST be trusted by default,
+    regardless of network location, prior successful verification, or session
+    history. Every inter-agent interaction MUST be authenticated against a
+    declared cryptographic identity. Trust is established per-interaction and
+    continuously re-evaluated, not assumed from prior state.
+  axioms:
+    - id: verify-explicitly
+      requirement: >
+        Every handoff envelope, capability claim, and governance action MUST be
+        authenticated against the from_agent's declared crypto_identity before
+        it is accepted. Receivers MUST NOT accept unauthenticated work in strict
+        conformance profile.
+    - id: least-privilege
+      requirement: >
+        Agents MUST operate exclusively within their declared authority_scope and
+        tool_permissions. No implicit capability escalation is permitted. A
+        receiving agent MUST NOT grant the sender authority beyond what is
+        declared in the sender's dossier.
+    - id: assume-breach
+      requirement: >
+        All inter-agent protocols MUST be designed as if the communication
+        channel is compromised. Handoff envelopes MUST be integrity-protected via
+        Ed25519 signatures. Receivers MUST NOT assume envelope integrity without
+        cryptographic verification.
+    - id: continuous-verification
+      requirement: >
+        Verification MUST be performed on every handoff, not only at session
+        start. A valid prior exchange does NOT confer trust for subsequent
+        exchanges. Cached verification results MUST be discarded when a
+        dossier's status changes or the cache TTL expires.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ESTABLISHMENT — KEY EXCHANGE AND TRUST SETUP
+# ─────────────────────────────────────────────────────────────────────────────
+
+establishment:
+  purpose: >
+    Defines the protocol by which two agents establish mutual cryptographic trust
+    before exchanging handoff envelopes or delegating work. Establishment does not
+    create a persistent session; it is a per-interaction verification procedure.
+
+  pre_conditions:
+    - Each agent MUST have a dossier with a populated crypto_identity block
+      (either did or public_key MUST be present).
+    - Each agent MUST have the ability to locate a peer's dossier given the
+      peer's agent_id.
+    - Key material MUST be stored outside the dossier — the dossier carries
+      only the public component (did or public_key.value).
+
+  phases:
+    - id: dossier-retrieval
+      name: Peer Dossier Retrieval
+      required: true
+      description: >
+        The receiving agent (verifier) MUST retrieve the sending agent's (prover's)
+        current dossier before accepting any envelope or work delegation.
+      rules:
+        - The verifier MUST obtain the prover's dossier from a trusted source
+          (local registry, cluster registry at registry/clusters.yaml, or the
+          governing orchestrator).
+        - The verifier MUST NOT accept a dossier supplied by the prover itself
+          as the sole source of truth.
+        - Dossiers retrieved from untrusted or unauthenticated sources MUST be
+          treated as advisory and MUST NOT be used as the basis for verification
+          without an out-of-band integrity check.
+
+    - id: dossier-validation
+      name: Dossier Status and Expiry Check
+      required: true
+      description: >
+        Before extracting key material, the verifier MUST confirm the prover's
+        dossier is in a valid lifecycle state.
+      rules:
+        - The verifier MUST check that dossier_metadata.status is active.
+        - The verifier MUST check that valid_until, if present, is in the future.
+        - The verifier MUST NOT proceed with a dossier whose status is revoked,
+          expired, suspended, or retired.
+        - If the dossier cannot be retrieved, the verifier MUST treat the sender
+          as unauthenticated and MUST NOT accept the envelope.
+
+    - id: key-extraction
+      name: Public Key Extraction
+      required: true
+      description: >
+        The verifier extracts the prover's public key from the validated dossier.
+      rules:
+        - If identity.crypto_identity.did is present, the verifier MUST resolve
+          the DID to a verification method containing the Ed25519 public key.
+          For did:key, resolution is local and deterministic per the W3C DID Key
+          specification — no network call is required.
+        - If identity.crypto_identity.public_key is present and did is absent,
+          the verifier MUST decode the base58btc value field (multibase prefix z)
+          to recover the raw 32-byte Ed25519 public key.
+        - If both did and public_key are present, the verifier SHOULD prefer did
+          and MAY use public_key as a consistency cross-check.
+        - The verifier MUST NOT use key material from any source other than
+          the validated dossier's crypto_identity block.
+
+    - id: signature-verification
+      name: Envelope Signature Verification
+      required: true
+      description: >
+        The verifier checks the cryptographic integrity of the received handoff
+        envelope using the extracted public key.
+      rules:
+        - The verifier MUST verify the signature field of the handoff envelope
+          per the procedure defined in agent-dossier.yaml handoff_protocol.signature_block.
+        - >
+          Verification procedure: 1. Extract BASE64URL(protected_header) and
+          BASE64URL(signature). 2. Decode the protected_header to confirm alg is
+          EdDSA and kid matches key_hint and the from_agent's dossier key
+          material. 3. Reconstruct the canonical signing input:
+          ASCII(BASE64URL(protected_header)) || '.' ||
+          BASE64URL(canonical_payload), where canonical_payload is the envelope
+          serialized as JSON with keys sorted lexicographically and signature
+          field excluded. 4. Verify the 64-byte Ed25519 signature against the
+          canonical input using the extracted public key.
+        - If verification fails, the verifier MUST reject the envelope and MUST
+          emit a telemetry event with event_type escalation and severity error.
+        - If the signature field is absent in strict conformance profile, the
+          verifier MUST reject the envelope as non-conforming.
+        - If the signature field is absent in advisory or standard conformance
+          profile, the verifier SHOULD log a warning but MAY proceed.
+
+    - id: key-hint-binding
+      name: Key Hint to Identity Binding
+      required: true
+      description: >
+        The verifier confirms that the key_hint in the signature block names the
+        same key as the from_agent's declared crypto_identity.
+      rules:
+        - The verifier MUST confirm that key_hint resolves to the same public key
+          as extracted from the from_agent's crypto_identity.
+        - A signature whose key_hint references a key not found in the from_agent's
+          current dossier MUST be rejected, even if the signature itself is
+          mathematically valid (the signing key may be unauthorized or stale).
+
+  caching:
+    description: >
+      Verifiers MAY cache resolved dossiers and extracted public keys to reduce
+      lookup latency. Caching MUST respect the following constraints.
+    rules:
+      - A cached dossier MUST be re-validated (status + expiry check) before
+        each use. A cache hit does NOT skip validation.
+      - The maximum cache TTL for an active dossier is 300 seconds. After TTL
+        expiry the verifier MUST re-fetch the dossier from the authoritative source.
+      - Any out-of-band revocation signal MUST immediately invalidate all cached
+        dossier entries for the revoked agent_id.
+      - Verifiers MUST NOT cache a dossier with status other than active.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ROTATION — RE-KEY EVENTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+rotation:
+  purpose: >
+    Defines when and how an agent rotates its Ed25519 signing key. Rotation
+    replaces an existing key with a new one without revoking the agent's dossier.
+    Rotation MUST be used for scheduled key refresh or when a key reaches its
+    maximum age. Rotation MUST NOT be used when a key is compromised —
+    use revocation instead.
+
+  triggers:
+    - id: scheduled
+      description: >
+        The agent's key has reached its maximum age (rotation_interval_days).
+        Scheduled rotation is proactive and SHOULD complete before expiry.
+    - id: operator-directed
+      description: >
+        The dossier owner or a governance actor with authority over the dossier
+        owner explicitly requests key rotation (e.g., after an infrastructure
+        change or as a compliance measure).
+    - id: algorithm-deprecation
+      description: >
+        The declared algorithm (Ed25519 / EdDSA) is deprecated by a future
+        AL:2 decision. All agents MUST rotate to the successor algorithm within
+        the deprecation window.
+
+  rotation_interval:
+    recommendation: 90 days
+    maximum: 365 days
+    rule: >
+      An agent SHOULD NOT use the same Ed25519 key pair for more than 365 days.
+      Agents with a rotation_interval_days value in their dossier MUST initiate
+      rotation before that interval expires.
+
+  procedure:
+    steps:
+      - step: 1
+        name: Generate new key pair
+        description: >
+          Generate a new Ed25519 key pair. The private key MUST be generated
+          using a cryptographically secure random number generator (CSPRNG).
+          The private key MUST NOT be logged, embedded in any artifact, or
+          transmitted over any channel.
+      - step: 2
+        name: Prepare updated dossier
+        description: >
+          Update identity.crypto_identity in the dossier to reflect the new key:
+            - If did is used: derive the new did:key URI from the new public key.
+            - If public_key is used: update algorithm, encoding, and value.
+          Set dossier_metadata.updated_at to the current RFC3339 UTC timestamp.
+          Increment dossier_metadata.dossier_version (patch for key-only rotation).
+      - step: 3
+        name: Dual-sign transition envelope
+        description: >
+          Emit a special transition handoff envelope signed with BOTH the old key
+          and the new key. This proves continuity of identity across the rotation
+          event and allows verifiers to update their key cache atomically.
+          The transition envelope MUST carry:
+            - task_state: in_progress
+            - A rotation_event extension field (x-gc-rotation-event: true)
+            - Two signature blocks: old key in signature field,
+              new key in an x-gc-new-signature extension field.
+          Verifiers that receive the transition envelope MUST verify BOTH signatures
+          before accepting the new key as authoritative.
+      - step: 4
+        name: Record PASS entry
+        description: >
+          Add a PASS changelog entry with:
+            - change_type: security
+            - summary including old key_hint and new key_hint
+            - authoring_agent set to the rotating agent's agent_id
+          The PASS entry is non-repudiation evidence for the rotation event.
+      - step: 5
+        name: Emit telemetry event
+        description: >
+          Emit a telemetry event with:
+            - event_type: registry_updated
+            - summary describing the rotation (old DID/fingerprint → new DID/fingerprint)
+            - severity: info
+      - step: 6
+        name: Distribute updated dossier
+        description: >
+          Publish the updated dossier to all registry locations where the previous
+          version was available. Verifiers with cached copies of the old dossier
+          MUST receive the update within the cache TTL window (300 seconds).
+      - step: 7
+        name: Retire old key
+        description: >
+          After all peers have acknowledged the new key (or after the dual-sign
+          transition window of 24 hours), the old private key MUST be securely
+          deleted. The old public key remains in PASS changelog history for
+          audit purposes but MUST NOT be accepted for new envelope verification.
+
+  rules:
+    - An agent undergoing scheduled rotation MUST NOT let the old key expire
+      before completing steps 1–6; rotation MUST complete before expiry.
+    - The old key MUST NOT be used to sign new envelopes after the transition
+      window closes, even if the rotation envelope has not yet been acknowledged
+      by all peers.
+    - Rotation MUST NOT change agent_id, agent_class, or authority_scope.
+      A key rotation event is an identity continuity event, not a new identity.
+    - If rotation is not possible (e.g., CSPRNG failure), the agent MUST escalate
+      to level 2 (operator_clarification) and MUST NOT continue signing envelopes.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# REVOCATION — DOSSIER INVALIDATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+revocation:
+  purpose: >
+    Defines how a compromised key, decommissioned agent, or policy-violating
+    agent is permanently invalidated. Revocation is irreversible. Use rotation
+    for scheduled key refresh; use revocation when trust must be terminated.
+
+  triggers:
+    - id: key-compromise
+      revocation_reason: compromised
+      description: >
+        The agent's private key has been exposed, leaked, or is suspected to
+        have been accessed by an unauthorized party. This is the highest-urgency
+        revocation trigger. The agent MUST be revoked immediately upon discovery.
+    - id: decommission
+      revocation_reason: decommissioned
+      description: >
+        The agent has been retired from service as a planned operational decision.
+        Work in flight MUST be handed off before decommission revocation completes.
+    - id: authority-withdrawn
+      revocation_reason: authority_withdrawn
+      description: >
+        The governance actor or operator that authorized the agent has withdrawn
+        authorization. The agent MUST be revoked without requiring the agent's
+        cooperation.
+    - id: superseded
+      revocation_reason: superseded
+      description: >
+        A newer agent version supersedes this one. The old dossier is revoked
+        and superseded_by is populated with the replacement agent_id.
+    - id: policy-violation
+      revocation_reason: policy_violation
+      description: >
+        The agent has violated a governance policy (e.g., signed envelopes on
+        behalf of another agent, embedded secrets in artifacts). Revocation is
+        a compliance enforcement action.
+
+  procedure:
+    steps:
+      - step: 1
+        name: Immediate signing halt
+        description: >
+          The agent (or its operator) MUST immediately stop signing new handoff
+          envelopes with the compromised or revoked key. If the agent is
+          self-aware of its revocation (e.g., detects its own dossier has been
+          revoked), it MUST perform a compliance stop (escalation level 3) and
+          preserve the audit trail.
+      - step: 2
+        name: Update dossier status
+        description: >
+          Set dossier_metadata.status to revoked and populate the revocation
+          block:
+            - revoked_at: RFC3339 UTC timestamp of the revocation decision
+            - revocation_reason: one of the five enumerated reasons
+            - revoked_by: agent_id or human authority identifier
+            - superseded_by: replacement agent_id if reason is superseded (optional)
+          Set dossier_metadata.updated_at to the revoked_at timestamp.
+      - step: 3
+        name: Record PASS entry
+        description: >
+          Add a PASS changelog entry with:
+            - change_type: security
+            - summary including revocation_reason, revoked_at, and revoked_by
+            - compatibility_impact: backward-incompatible
+          The PASS entry is non-repudiation evidence for the revocation event
+          and MUST be created by the revoking authority, not the revoked agent.
+      - step: 4
+        name: Propagate revocation
+        description: >
+          Publish the revoked dossier to all registry locations. All verifiers
+          MUST invalidate cached dossier entries for the revoked agent_id
+          immediately upon receiving the revocation signal.
+          The orchestrator MUST broadcast a revocation notice to all active
+          agents that have previously interacted with the revoked agent_id.
+      - step: 5
+        name: Reject in-flight envelopes
+        description: >
+          Any handoff envelope signed with the revoked key that arrives AFTER
+          the revoked_at timestamp MUST be rejected by all receivers, even if
+          the signature is mathematically valid. Receivers SHOULD log the
+          rejection with event_type escalation and severity warning.
+          Envelopes that were accepted BEFORE revoked_at and are already in
+          progress MAY be completed at the receiver's discretion, but the
+          receiver MUST log the risk and escalate if continuation is unsafe.
+      - step: 6
+        name: Terminate active sessions
+        description: >
+          Any active work session involving the revoked agent MUST be terminated.
+          In-progress tasks SHOULD be escalated to level 2 (operator_clarification)
+          so a replacement agent can be assigned. The audit trail for the
+          terminated session MUST be preserved.
+
+  rules:
+    - A revoked dossier MUST NOT be reactivated under any circumstances.
+      Reactivation requires issuing a new dossier with a new agent_id.
+    - Systems MUST check revocation status on every envelope verification,
+      not only at session start. A cached active status MUST be re-validated
+      per the establishment.caching rules (TTL 300 seconds).
+    - The revoked_at timestamp MUST be authoritative for determining which
+      envelopes were signed before vs. after revocation. Clock skew of up to
+      30 seconds between agent clocks is tolerated.
+    - >
+      Revocation MUST be recorded in the CHANGELOG with change_type: security.
+      Silent revocation (status change without PASS entry) violates the
+      governance record requirement (audit_gap threat, agent-dossier.yaml).
+    - A governance actor with authority over the dossier owner MAY revoke a
+      dossier without the agent's cooperation. This is the emergency revocation
+      path for key compromise and policy violation cases.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KEY MATERIAL HANDLING RULES
+# ─────────────────────────────────────────────────────────────────────────────
+
+key_material_handling:
+  purpose: >
+    Normative rules for the storage, use, and disposal of Ed25519 private key
+    material. These rules apply to all agents and operators governed by this spec.
+  rules:
+    - id: no-key-in-artifacts
+      requirement: >
+        Ed25519 private keys MUST NOT appear in any governance artifact, log,
+        telemetry event, handoff envelope, dossier, or source-controlled file.
+        Only the public component (did or public_key.value) is permitted in
+        governance artifacts.
+    - id: secure-storage
+      requirement: >
+        Private keys MUST be stored in a hardware security module (HSM),
+        OS keystore, or equivalent secure enclave where available. Software-only
+        key storage is permitted when HSM is unavailable but MUST be noted as a
+        residual risk in the dossier owner's security posture.
+    - id: single-use-per-agent
+      requirement: >
+        Each Ed25519 key pair MUST be used by exactly one agent. Key sharing
+        between agents is prohibited; it would make per-agent attribution and
+        revocation impossible.
+    - id: key-derivation
+      requirement: >
+        Key pairs MUST be generated with a CSPRNG. Deterministic derivation from
+        passwords, mnemonics, or low-entropy seeds is prohibited unless the
+        derivation function is HKDF-SHA512 or equivalent and the input entropy
+        is at least 256 bits.
+    - id: private-key-deletion
+      requirement: >
+        When a key is retired after rotation (step 7 of rotation procedure) or
+        a dossier is revoked, the private key MUST be securely deleted using a
+        method that prevents forensic recovery. The deletion event SHOULD be
+        recorded in operator logs but MUST NOT reference the key material itself.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CONFORMANCE PROFILES
+# ─────────────────────────────────────────────────────────────────────────────
+
+conformance_profiles:
+  description: >
+    Zero-trust controls are enforced at three levels corresponding to the
+    conformance profiles defined in agent-dossier.yaml compliance_layer.
+  profiles:
+    - level: advisory
+      zero_trust_requirements:
+        - crypto_identity in dossier: SHOULD be present; absence is a warning.
+        - signature on handoff envelopes: SHOULD be present; absence is a warning.
+        - dossier status check: MUST be performed; failure is a warning.
+        - signature verification: SHOULD be performed when signature is present.
+        - rotation_interval: SHOULD respect the 90-day recommendation.
+        - revocation propagation: SHOULD occur within 300 seconds.
+    - level: standard
+      zero_trust_requirements:
+        - crypto_identity in dossier: MUST be present.
+        - signature on handoff envelopes: SHOULD be present; absence is a warning.
+        - dossier status check: MUST be performed; failure blocks acceptance.
+        - signature verification: MUST be performed when signature is present.
+        - rotation_interval: MUST not exceed 365 days.
+        - revocation propagation: MUST occur within 300 seconds.
+    - level: strict
+      zero_trust_requirements:
+        - "crypto_identity in dossier: MUST be present."
+        - "signature on handoff envelopes: MUST be present on all envelopes."
+        - "dossier status check: MUST be performed; failure blocks acceptance."
+        - "signature verification: MUST be performed; failure blocks acceptance."
+        - "key_hint binding: MUST be verified against from_agent dossier."
+        - "rotation_interval: MUST not exceed 90 days."
+        - >
+          revocation propagation: MUST occur within 60 seconds (emergency) or
+          300 seconds (scheduled).
+        - >
+          key storage: MUST use HSM or OS keystore; software-only key storage
+          MUST be declared and documented as a residual risk.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RESIDUAL RISKS AND OPEN ITEMS
+# ─────────────────────────────────────────────────────────────────────────────
+
+residual_risks:
+  description: >
+    Known gaps not fully resolved by this spec version. Tracked for future PASSes.
+  items:
+    - id: no-key-registry
+      description: >
+        This spec requires verifiers to obtain peer public keys from dossiers,
+        but no governed key registry or key distribution protocol exists yet.
+        Verifiers must rely on local dossier copies or the governing orchestrator.
+      mitigation_target: PASS-3 (GC-3-B-01 runtime agent discovery registry)
+    - id: no-realtime-revocation-signal
+      description: >
+        Revocation propagation relies on dossier polling (cache TTL 300 seconds).
+        A revoked key can still be used to sign accepted envelopes for up to 300
+        seconds after revocation in standard profile. No push-based revocation
+        channel (OCSP-equivalent) is defined.
+      mitigation_target: PASS-3
+    - id: clock-skew
+      description: >
+        The 30-second clock skew tolerance for revocation_at determination may
+        allow post-revocation envelopes to be accepted. Network Time Protocol
+        (NTP) synchronization is assumed but not mandated.
+      mitigation_target: PASS-3 (transport binding spec, 101-G1c)
+    - id: did-resolution-infrastructure
+      description: >
+        did:key is specified as the preferred DID method and is locally resolvable.
+        Other DID methods (did:web, did:ion) require external resolution
+        infrastructure not yet defined for Governance Commons.
+      mitigation_target: PASS-6 (GC-4-B-01 federated trust network)

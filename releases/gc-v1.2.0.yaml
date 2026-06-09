@@ -1,0 +1,39 @@
+gc_schema_version: "1.0.0"
+release_id: GC-v1.2.0
+gc_version: "1.2.0"
+declared_at: "2026-06-08T00:00:00Z"
+declared_by: jj-ervin
+status: planned
+milestone: M2
+gc_pass_id: GC-PASS-2026-0015
+
+specs:
+  - spec: agent-dossier
+    repo: governancecommons/agent-dossier
+    min_version: "1.1.0"
+    compat_status: ok
+
+  - spec: agent-matrix
+    repo: governancecommons/agent-matrix
+    min_version: "1.3.0"
+    compat_status: ok
+
+  - spec: ons
+    repo: governancecommons/ons
+    min_version: "1.2.0"
+    compat_status: ok
+    notes: "Currently at v1.3.0 — satisfies >=1.2.0 constraint."
+
+  - spec: agent-project-orchestrator
+    repo: governancecommons/agent-project-orchestrator
+    min_version: "1.1.0"
+    compat_status: ok
+
+compat_hold_items: []
+
+notes: >
+  Planned release. Status advances to 'ready' once all spec versions are published
+  (GC-5-F-02, GC-5-F-03), GitHub Releases exist for all included versions (GC-5-G-02),
+  and pinned_version fields are populated for each spec.
+  agent-team-protocol is not included in v1.2.0; it requires agent-matrix >=1.4.0
+  which is targeted for GC v1.3.0.

@@ -1,0 +1,494 @@
+schema:
+  name: Governance Commons — ISO/IEC 42001:2023 Control Mapping
+  version: 1.0.0
+  pass: PASS-4
+  gap_id: GC-3-E-03
+  authority: AL:2
+  status: stable
+  time.loc: "2026-06-08T00:00:00Z"
+  framework: ISO/IEC 42001:2023 — Artificial Intelligence Management System (AIMS)
+  purpose: >
+    Maps Governance Commons specifications and artifacts to ISO/IEC 42001:2023
+    clause requirements and Annex A controls. Each entry identifies the GC
+    artifact(s) that provide evidence for the clause, describes coverage quality,
+    and notes gaps. Intended for use in compliance evidence bundles
+    (schemas/gc-compliance-evidence.schema.json) and audit reports.
+
+  coverage_levels:
+    full: GC artifact directly satisfies the clause requirement.
+    partial: GC artifact partially satisfies the requirement; gaps noted.
+    planned: Coverage is a planned deliverable in a future PASS.
+    out_of_scope: Clause is outside GC's governance layer scope.
+
+# ── Section 4 — Context of the Organization ─────────────────────────────────
+
+section_4:
+  title: Context of the Organization
+
+  clauses:
+
+    - id: "4.1"
+      title: Understanding the organization and its context
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            Governance Commons charter defines the organizational context:
+            open-standards ecosystem for multi-agent AI governance. Scope,
+            authority model, and operating model are documented at AL:2/AL:3.
+        - path: DEVPLAN.md
+          note: >
+            Release train status and compatibility matrix document the
+            ecosystem context and known constraints.
+
+    - id: "4.2"
+      title: Understanding the needs and expectations of interested parties
+      coverage: partial
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            Founding maintainer and adopter ecosystem identified. AL:1/AL:2/AL:3
+            authority model defines stakeholder responsibilities.
+      gaps: >
+        Formal interested party register and stakeholder needs analysis not
+        yet documented. PASS-5 prerequisite.
+
+    - id: "4.3"
+      title: Determining the scope of the AI management system
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            AIMS scope: governance layer for multi-agent AI systems using
+            Governance Commons standards. Explicit in-scope and out-of-scope
+            boundaries stated in charter section.
+        - path: DEVPLAN.md
+          note: >
+            PASS progression defines the planned scope expansion through
+            PASS-5 (public release train).
+
+    - id: "4.4"
+      title: AI management system
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: DEVPATH + DEVPLAN dual-document model is the AIMS operational backbone.
+        - path: governance/
+          note: >
+            governance/ directory (agent-constraints.yaml, zero-trust.yaml,
+            threat-model.md, nist-ai-rmf-mapping.yaml, iso-42001-mapping.yaml)
+            constitutes the AIMS control corpus.
+
+# ── Section 5 — Leadership ───────────────────────────────────────────────────
+
+section_5:
+  title: Leadership
+
+  clauses:
+
+    - id: "5.1"
+      title: Leadership and commitment
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            Founding maintainer Jess Ervin (jj-ervin) holds AL:3 authority.
+            Charter changes require founder sign-off. Commitment is traceable
+            via PASS-YYYY-NNNN audit trail.
+        - path: passchangelog.md
+          note: PASS records show leadership involvement in all major decisions.
+
+    - id: "5.2"
+      title: Policy
+      coverage: full
+      gc_artifacts:
+        - path: governance/agent-constraints.yaml
+          note: >
+            AC-001 through AC-007 are the operative AI policy: prohibited actions,
+            proposal protocol, and remediation rules for agent operations.
+        - path: DEVPATH.md
+          note: >
+            Authority model is the meta-policy: who can change what, under what
+            conditions, with what approval.
+        - path: governance/zero-trust.yaml
+          note: Trust establishment and revocation policy for agent identity.
+
+    - id: "5.3"
+      title: Organizational roles, responsibilities, and authorities
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            AL:1/AL:2/AL:3 authority model defines roles (spec owner, GC maintainer,
+            founder) and what decisions each level controls. Cross-spec compatibility
+            decisions require AL:2; ecosystem charter changes require AL:3.
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            identity.agent_class and capability declarations define each agent's
+            role and authority boundary at the AI system level.
+
+# ── Section 6 — Planning ─────────────────────────────────────────────────────
+
+section_6:
+  title: Planning
+
+  clauses:
+
+    - id: "6.1"
+      title: Actions to address risks and opportunities
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: >
+            STRIDE analysis (T-001 through T-006) with mitigations is the risk
+            identification and treatment record.
+        - path: governance/zero-trust.yaml
+          note: >
+            Zero-trust spec addresses the opportunity to reduce identity spoofing
+            and replay risks in multi-agent systems.
+        - path: governance/agent-constraints.yaml
+          note: Prohibited action policy addresses identified risks (AC-001 through AC-007).
+
+    - id: "6.1.1"
+      title: AI risk assessment
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: STRIDE threat model is the operative AI risk assessment.
+        - path: governance/nist-ai-rmf-mapping.yaml
+          note: >
+            MAP function mappings document how AI risks were assessed and
+            prioritized (MAP.1.5, MAP.2.3, MAP.3.1, MAP.5.1, MAP.5.2).
+
+    - id: "6.1.2"
+      title: AI risk treatment
+      coverage: full
+      gc_artifacts:
+        - path: governance/zero-trust.yaml
+          note: Revocation (6-step, 5 triggers) is the primary identity-risk treatment.
+        - path: governance/agent-constraints.yaml
+          note: Remediation rules per constraint category are the action-risk treatment.
+        - path: governance/threat-model.md
+          note: Per-threat mitigation strategies documented.
+
+    - id: "6.2"
+      title: AI objectives and planning to achieve them
+      coverage: full
+      gc_artifacts:
+        - path: DEVPLAN.md
+          note: >
+            PASS milestones (PASS-1 through PASS-5) are the AI governance
+            objectives. Each PASS has explicit exit criteria and a traceable
+            completion record.
+        - path: DEVPATH.md
+          note: Design Decision Records (DDR-1 through DDR-6) document objective-setting rationale.
+
+# ── Section 7 — Support ──────────────────────────────────────────────────────
+
+section_7:
+  title: Support
+
+  clauses:
+
+    - id: "7.1"
+      title: Resources
+      coverage: full
+      gc_artifacts:
+        - path: agent-matrix/agent-matrix.yaml
+          note: >
+            SKU routing and named profiles (minimal, standard, data-engineering)
+            define AI system resource allocation. Per-profile SLO/SLI definitions
+            establish resource baselines.
+        - path: agent-project-orchestrator/runtime-contract.yaml
+          note: Per-agent resource budgets (time_limit, tool_call_limit) enforced at runtime.
+
+    - id: "7.2"
+      title: Competence
+      coverage: full
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            capability_profile.capabilities are the formal competence declarations.
+            dossier_version provides the version-at-time-of-use record for
+            audit replay.
+
+    - id: "7.4"
+      title: Communication
+      coverage: full
+      gc_artifacts:
+        - path: agent-matrix/a2a-binding.yaml
+          note: >
+            A2A binding (5/5 depth: task_payload, capability_negotiation,
+            peer_trust_anchor, resource_uri_scheme, error_retry_semantics)
+            is the GC inter-agent communication standard.
+        - path: agent-matrix/cloudevents-binding.yaml
+          note: >
+            CloudEvents binding (delivery_semantics, ordering_causality,
+            trace_context, idempotency) defines the event communication contract.
+
+    - id: "7.5"
+      title: Documented information
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: AIMS governance history and design decision record.
+        - path: DEVPLAN.md
+          note: Execution plan, compatibility matrix, and gap analysis.
+        - path: governance/
+          note: Operative policy documents (zero-trust, threat-model, constraints, mappings).
+        - path: passchangelog.md
+          note: Timestamped, versioned audit trail — the documented information record.
+
+# ── Section 8 — Operation ────────────────────────────────────────────────────
+
+section_8:
+  title: Operation
+
+  clauses:
+
+    - id: "8.1"
+      title: Operational planning and control
+      coverage: full
+      gc_artifacts:
+        - path: agent-project-orchestrator/runtime-contract.yaml
+          note: >
+            Runtime contract defines operational constraints: resource budgets,
+            escalation protocol, governance file loading. All operative
+            multi-agent.yaml controls are loaded at runtime (GC-1-D-10).
+        - path: docs/observability-contract.yaml
+          note: >
+            OTel span compliance rules (obs-1 through obs-12) are the operational
+            telemetry controls. Chain and security rules provide the audit layer.
+
+    - id: "8.2"
+      title: AI risk assessment process
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: STRIDE methodology with multi-agent-specific threat catalog (T-001 through T-006).
+        - path: governance/zero-trust.yaml
+          note: Trust verification process at every agent boundary.
+
+    - id: "8.3"
+      title: AI risk treatment process
+      coverage: full
+      gc_artifacts:
+        - path: governance/zero-trust.yaml
+          note: >
+            Step-by-step establishment (4-phase), rotation (7-step), and
+            revocation (6-step) protocols are the operative treatment process.
+        - path: governance/agent-constraints.yaml
+          note: Remediation rules for each prohibited action category (AC-001 through AC-007).
+
+    - id: "8.4"
+      title: AI system impact assessment
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: >
+            Each STRIDE threat (T-001 through T-006) includes impact classification.
+            Mitigations are scoped to the expected impact level.
+        - path: governance/agent-constraints.yaml
+          note: >
+            Prohibited actions (AC-001 through AC-007) are categorized by impact
+            class — actions with unacceptable impact are prohibited; others have
+            oversight requirements.
+
+# ── Section 9 — Performance Evaluation ──────────────────────────────────────
+
+section_9:
+  title: Performance Evaluation
+
+  clauses:
+
+    - id: "9.1"
+      title: Monitoring, measurement, analysis, and evaluation
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            OTel metrics (gc.agent.task.*, gc.agent.escalation, gc.agent.handoff,
+            gc.agent.lifecycle.event, histograms for durations) provide the
+            quantitative monitoring layer.
+        - path: docs/conformance/conformance-report.schema.json
+          note: >
+            Conformance report format enables systematic analysis of GC spec
+            compliance across deployed agents.
+
+    - id: "9.2"
+      title: Internal audit
+      coverage: full
+      gc_artifacts:
+        - path: passchangelog.md
+          note: >
+            PASS-YYYY-NNNN audit trail is the internal audit record. Each entry
+            is timestamped and carries the evidence of governance actions taken.
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: >
+            Signed evidence bundles are the audit artifact. bundle_hash and
+            JWS signature provide integrity assurance for audit review.
+        - path: docs/observability-contract.yaml
+          note: >
+            Audit log hash chaining (chain-1 through chain-5 rules) enables
+            tamper-evident verification of the audit record itself.
+
+    - id: "9.3"
+      title: Management review
+      coverage: full
+      gc_artifacts:
+        - path: DEVPLAN.md
+          note: >
+            PASS gate reviews are the operative management review mechanism.
+            Each gate review evaluates exit criteria, updates gap status, and
+            authorizes the next PASS. Recorded in passchangelog.md via GC-PASS entries.
+
+# ── Section 10 — Improvement ─────────────────────────────────────────────────
+
+section_10:
+  title: Improvement
+
+  clauses:
+
+    - id: "10.1"
+      title: Nonconformity and corrective action
+      coverage: full
+      gc_artifacts:
+        - path: docs/conformance/conformance-report.schema.json
+          note: >
+            Nonconformity is machine-readable: per-rule FAIL results in the
+            conformance report trigger corrective action items.
+        - path: passchangelog.md
+          note: >
+            PASS gap items (status: O → C transitions) track corrective actions
+            through to closure. Evidence of correction is the closed gap entry.
+        - path: governance/agent-constraints.yaml
+          note: Remediation rules define the corrective action protocol for constraint breaches.
+
+    - id: "10.2"
+      title: Continual improvement
+      coverage: full
+      gc_artifacts:
+        - path: DEVPLAN.md
+          note: >
+            PASS progression model (PASS-1 → PASS-5 → PASS-6) is the structured
+            continual improvement cycle. Each PASS closes identified gaps and
+            registers new ones from gate review findings.
+        - path: DEVPATH.md
+          note: >
+            Design Decision Records (DDR-1 through DDR-6) document improvement
+            rationale. Authority model prevents regressive changes without
+            explicit AL:2/AL:3 approval.
+
+# ── Annex A Controls ─────────────────────────────────────────────────────────
+
+annex_a:
+  title: Annex A — Controls for Artificial Intelligence Management
+
+  controls:
+
+    - id: "A.2"
+      title: Policies for AI
+      coverage: full
+      gc_artifacts:
+        - path: governance/agent-constraints.yaml
+          note: Binding policy for agent operations — prohibited actions and remediation.
+        - path: governance/zero-trust.yaml
+          note: Trust establishment, rotation, and revocation policy.
+        - path: docs/observability-contract.yaml
+          note: Telemetry policy — required fields, compliance rules, security event handling.
+
+    - id: "A.3"
+      title: Internal organization
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            AL:1/AL:2/AL:3 authority hierarchy defines the internal governance
+            structure. Spec owners, ecosystem maintainer, and founder roles are named.
+
+    - id: "A.4"
+      title: Resources for AI systems
+      coverage: full
+      gc_artifacts:
+        - path: agent-matrix/agent-matrix.yaml
+          note: >
+            Named profiles define resource tiers. SKU routing assigns models
+            per profile. SLO/SLI per profile establishes resource requirements.
+        - path: agent-project-orchestrator/runtime-contract.yaml
+          note: Per-agent resource budgets (time_limit, tool_call_limit) enforced at runtime.
+
+    - id: "A.5"
+      title: Assessing AI system impact
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Impact assessment for all six STRIDE threat categories (T-001 through T-006).
+        - path: governance/agent-constraints.yaml
+          note: Impact-based prohibition classification (AC-001 through AC-007).
+
+    - id: "A.6"
+      title: AI system lifecycle management
+      coverage: full
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            Agent lifecycle is tracked from dossier creation through revocation/expiry
+            (GC-1-A-10). telemetry_trace_schema lifecycle event types (pass_written,
+            scaffold_started, scaffold_completed, implementation_started,
+            implementation_completed, doc_written, registry_updated) cover the
+            full artifact lifecycle.
+        - path: docs/observability-contract.yaml
+          note: >
+            Seven canonical lifecycle spans in lifecycle_events cover the
+            governance artifact lifecycle. Security event spans cover incident
+            response lifecycle.
+
+    - id: "A.7"
+      title: Data for AI systems
+      coverage: out_of_scope
+      notes: >
+        GC governs the agent communication and governance layer, not training
+        data pipelines or inference data. Data governance is delegated to
+        adopting organizations.
+
+    - id: "A.8"
+      title: Information for users of AI systems
+      coverage: full
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            Capability declarations, conformance profile, and dossier_version
+            are the user-facing information about what the AI system can and
+            cannot do.
+        - path: agent-matrix/agent-matrix.yaml
+          note: Named profiles and capability profiles provide system-level user information.
+
+    - id: "A.9"
+      title: Use of AI systems
+      coverage: full
+      gc_artifacts:
+        - path: governance/agent-constraints.yaml
+          note: >
+            Defines what AI agents are permitted to do and how they must behave
+            during operation. AC-001 through AC-007 govern use boundaries.
+        - path: governance/zero-trust.yaml
+          note: >
+            Use is gated on successful trust establishment. Revocation terminates
+            authorized use immediately.
+
+    - id: "A.10"
+      title: Third-party and supplier relationships
+      coverage: full
+      gc_artifacts:
+        - path: agent-matrix/a2a-binding.yaml
+          note: >
+            A2A binding peer_trust_anchor (5-step protocol) governs third-party
+            agent integration — trust establishment with external peer agents.
+        - path: ONS/ons.yaml
+          note: >
+            ONS cluster registration protocol governs how third-party clusters
+            are admitted to the GC naming namespace (GC-1-C-05).
+        - path: governance/zero-trust.yaml
+          note: >
+            Dual-sign transition rule in key rotation governs the handoff period
+            when third-party credentials are being migrated.

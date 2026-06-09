@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/conformance-report/v1.json",
+  "title": "GC Conformance Report",
+  "description": "Machine-readable conformance report produced by any Governance Commons validator. Version 1.0.0 of the GC conformance report format (GC-2-C-01).",
+  "type": "object",
+  "required": [
+    "gc_report_version",
+    "spec",
+    "spec_version",
+    "profile",
+    "subject",
+    "generated_at",
+    "rules",
+    "summary",
+    "conformant",
+    "conformance_level"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "gc_report_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Version of the GC conformance report format schema. Must be '1.0.0' for this schema version."
+    },
+    "spec": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the spec being validated against (e.g. 'ons', 'agent-dossier', 'agent-matrix')."
+    },
+    "spec_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semver of the spec targeted by this validation run (e.g. '1.4.0')."
+    },
+    "profile": {
+      "type": "string",
+      "enum": ["advisory", "standard", "strict"],
+      "description": "Conformance profile evaluated. Advisory: informational only. Standard: full normative compliance. Strict: maximum enforcement including optional rules."
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of what was validated — a file path, URI, or inline label."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 / RFC 3339 UTC timestamp of when this report was produced (e.g. '2026-06-07T00:00:00Z')."
+    },
+    "rules": {
+      "type": "array",
+      "description": "Per-rule evaluation results in the order they were evaluated.",
+      "items": {
+        "$ref": "#/$defs/RuleResult"
+      }
+    },
+    "summary": {
+      "$ref": "#/$defs/ReportSummary"
+    },
+    "conformant": {
+      "type": "boolean",
+      "description": "True if all rules for the declared profile passed. False if any required rule failed."
+    },
+    "conformance_level": {
+      "type": "string",
+      "enum": ["none", "advisory", "standard", "strict"],
+      "description": "Highest conformance level achieved. Matches 'profile' when conformant=true; 'none' when conformant=false."
+    }
+  },
+  "$defs": {
+    "RuleResult": {
+      "type": "object",
+      "required": ["rule_id", "description", "result"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable rule identifier (e.g. 'ONS-CASING-001'). Must not change across spec versions unless the rule itself changes semantics."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable description of what the rule checks."
+        },
+        "result": {
+          "type": "string",
+          "enum": ["pass", "fail", "skip"],
+          "description": "Evaluation outcome. 'skip' means the rule was not applicable given the subject or profile."
+        },
+        "message": {
+          "type": ["string", "null"],
+          "description": "Detail message. Required for 'fail' results. Optional context for 'skip'. Null or omitted for 'pass'."
+        }
+      }
+    },
+    "ReportSummary": {
+      "type": "object",
+      "required": ["total", "passed", "failed", "skipped"],
+      "additionalProperties": false,
+      "description": "Aggregate counts across all rule results.",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of rules evaluated (passed + failed + skipped)."
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

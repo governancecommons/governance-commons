@@ -18,10 +18,11 @@
 | [Foxtrot](agent-dossier-www/) | agent-dossier-www | Public web presence for Agent Dossier spec | 🔵 Active | — |
 | [Foxtrot](governance-commons-vscode/) | governance-commons-vscode | VS Code extension for Governance Commons standards | 🔵 Active | ONS TypeScript impl needed |
 | [Golf](projects.yaml) | ecosystem infrastructure | GitHub org, domain, npm org, PyPI namespace, conformance program | 🔴 Deferred | Start when PASS-2 is in flight |
+| [Hotel](../devx-control-plane/) | devx-control-plane (DCP) | Operational implementation layer — registry, dashboard, planning templates, boundary doctrine, agent routing | 🔵 Active | GC standards integration; starter track launch |
 
 **Status key:** 🟢 Shipped · 🟡 Release prep · 🔵 Active dev · 🔴 Not started / planning
 
-**Naming note:** NATO call signs are display titles for the canonical track letters only: A/Alpha through G/Golf. They do not rename task namespaces or imply a separate planning taxonomy.
+**Naming note:** NATO call signs are display titles for the canonical track letters only: A/Alpha through H/Hotel. They do not rename task namespaces or imply a separate planning taxonomy.
 
 ---
 
@@ -119,6 +120,10 @@ Track Foxtrot (web presence)
 Track Golf (infrastructure)
   └── GitHub org ──► Track Charlie ONS v1.2.0 GitHub Release
                   └── Track Foxtrot site deployment
+
+Track Hotel (devx-control-plane)
+  └── GC standards (Alpha–Echo) ──► DCP Agent Kit integration
+                                 └── Starter track launch ──► Full dev track
 ```
 
 ---
@@ -131,6 +136,7 @@ Track Golf (infrastructure)
 - **agent-team-protocol has its PASS-1 schema/test batch closed.** It is tracked as a project/work area in `projects.yaml`, not as a portfolio track call sign.
 - **Track Foxtrot and Track Golf are coupled.** Web presence work is blocked on org creation. Do not invest in Track Foxtrot beyond maintenance until the GitHub org exists.
 - **CNCF/W3C analogy (source 102):** These ecosystems have formal charters, WG structures, RFC processes, and IP agreements. Governance Commons currently has none of these. Track Golf owns all of them. They are prerequisites for any enterprise conformance claims.
+- **Track Hotel (devx-control-plane) is the operational implementation layer.** GC provides the portable standards; DCP is what developers actually clone and run. The two are complementary — DCP without GC is tooling without a standard; GC without DCP is a standard without an implementation.
 - **hbl and osprey are NOT listed here.** They are aspirational peer ecosystems. They will appear in TRACKS.md only when real repos exist.
 
 ---

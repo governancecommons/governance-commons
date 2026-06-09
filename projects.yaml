@@ -1,5 +1,5 @@
 version: "1.0"
-updated: "2026-06-06"
+updated: "2026-06-08"
 root: "c:/dev/governance-commons"
 
 # Status values: active | stable | wip | scaffold | planned | archive
@@ -19,6 +19,7 @@ projects:
 
   - name: agent-dossier
     path: agent-dossier
+    github: governancecommons/agent-dossier
     group: specs
     description: "Per-agent identity, authority, handoff, telemetry, and audit contract spec"
     status: active
@@ -39,6 +40,7 @@ projects:
 
   - name: agent-matrix
     path: agent-matrix
+    github: governancecommons/agent-matrix
     group: specs
     description: "Multi-agent capability, routing, trust, safety, and coordination model"
     status: active
@@ -58,6 +60,7 @@ projects:
 
   - name: ons
     path: ons
+    github: governancecommons/ons
     group: specs
     description: "Ontic Namespace Structure — naming grammar, namespace identity, collision rules, and validation rule IDs"
     status: stable
@@ -76,6 +79,7 @@ projects:
 
   - name: agent-project-orchestrator
     path: agent-project-orchestrator
+    github: governancecommons/agent-project-orchestrator
     group: specs
     description: "Runtime execution contract for project-level orchestrators — task graph, dispatch, handoff, audit"
     status: active
@@ -100,6 +104,7 @@ projects:
 
   - name: agent-team-protocol
     path: agent-team-protocol
+    github: governancecommons/agent-team-protocol
     group: specs
     description: "Fleet-level governance spec — delegation, trust topology, shared audit trail, fleet escalation, team lifecycle"
     status: wip
@@ -119,6 +124,7 @@ projects:
 
   - name: agent-roster
     path: agent-roster
+    github: governancecommons/agent-roster
     group: data
     description: "Curated list of 16 paid + 16 free AI agents, top-4 per role category, with monthly automated review"
     status: active
@@ -139,6 +145,7 @@ projects:
 
   - name: governance-commons-sdk
     path: governance-commons-sdk
+    github: governancecommons/governance-commons-sdk
     group: sdk
     description: "Code-level implementation of Governance Commons standards — ONS TypeScript/Python validators, npm + PyPI package scaffolds"
     status: wip
@@ -155,6 +162,7 @@ projects:
 
   - name: governance-commons-www
     path: governance-commons-www
+    github: governancecommons/governance-commons-www
     group: sites
     description: "Public web presence for Governance Commons"
     status: active
@@ -165,6 +173,7 @@ projects:
 
   - name: agent-dossier-www
     path: agent-dossier-www
+    github: governancecommons/agent-dossier-www
     group: sites
     description: "Public web presence for Agent Dossier spec"
     status: active
@@ -175,6 +184,7 @@ projects:
 
   - name: governance-commons-vscode
     path: governance-commons-vscode
+    github: governancecommons/governance-commons-vscode
     group: sites
     description: "VS Code extension surface for Governance Commons standards"
     status: active

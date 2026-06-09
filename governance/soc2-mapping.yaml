@@ -1,0 +1,314 @@
+schema:
+  name: Governance Commons — SOC 2 Type II Control Mapping
+  version: 1.0.0
+  pass: PASS-5
+  gap_id: 101-G4c
+  authority: AL:2
+  status: stable
+  time.loc: "2026-06-09T02:35:47Z"
+  framework: AICPA Trust Services Criteria (2017, revised points of focus 2022)
+  framework_url: https://www.aicpa.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022
+  purpose: >
+    Maps Governance Commons specifications and artifacts to SOC 2 Type II
+    Trust Services Criteria for Security, Availability, and Confidentiality.
+    Each entry names the GC artifact(s) that provide audit evidence, describes
+    coverage quality, and identifies gaps. Intended for use in SOC readiness,
+    Type II evidence collection, and signed compliance evidence bundles
+    (schemas/gc-compliance-evidence.schema.json).
+
+  coverage_levels:
+    full: GC artifact directly satisfies or materially supports the criterion.
+    partial: GC artifact partially supports the criterion; gaps noted.
+    planned: Coverage is a planned deliverable in a future PASS.
+    out_of_scope: Criterion is outside GC's governance layer scope.
+
+  evidence_profile:
+    report_type: SOC 2 Type II
+    trust_service_categories:
+      - Security
+      - Availability
+      - Confidentiality
+    evidence_expectation: >
+      Type II evidence requires operating effectiveness over an audit period.
+      GC artifacts provide control design, machine-readable audit records, and
+      telemetry/evidence export surfaces. Adopting organizations remain
+      responsible for operating evidence such as access reviews, incident
+      tickets, infrastructure logs, and auditor-selected samples.
+
+# ── Security — Common Criteria ───────────────────────────────────────────────
+# Common Criteria CC1 through CC9 apply to Security and support all SOC 2 reports.
+
+security:
+  description: >
+    The system is protected against unauthorized access, unauthorized disclosure,
+    and damage that could compromise system security, availability,
+    confidentiality, integrity, or privacy.
+
+  common_criteria:
+
+    - id: CC1
+      title: Control Environment
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            AL:1/AL:2/AL:3 authority model defines governance responsibility,
+            decision ownership, and restricted release actions.
+        - path: governance/agent-constraints.yaml
+          note: >
+            AC-001 through AC-007 define prohibited agent actions, approval
+            requirements, proposal protocol, and remediation.
+        - path: passchangelog.md
+          note: Timestamped GC-PASS records provide control-operation evidence.
+      criteria:
+        - CC1.1
+        - CC1.2
+        - CC1.3
+        - CC1.4
+        - CC1.5
+
+    - id: CC2
+      title: Communication and Information
+      coverage: full
+      gc_artifacts:
+        - path: DEVPLAN.md
+          note: >
+            Canonical execution plan, compatibility matrix, gap checklist, and
+            release train status communicate current control state.
+        - path: docs/observability-contract.yaml
+          note: >
+            Defines required gc.agent.* event fields, lifecycle spans, metrics,
+            and log body schema for control communication.
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: >
+            Signed evidence bundles package control information for auditors
+            and relying parties.
+      criteria:
+        - CC2.1
+        - CC2.2
+        - CC2.3
+
+    - id: CC3
+      title: Risk Assessment
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: STRIDE threat model documents multi-agent risk categories, severity, and mitigations.
+        - path: governance/zero-trust.yaml
+          note: >
+            Establishment, rotation, and revocation protocols address identity,
+            replay, and trust-boundary risks.
+        - path: governance/nist-ai-rmf-mapping.yaml
+          note: MAP and MEASURE mappings provide risk identification and assessment traceability.
+      criteria:
+        - CC3.1
+        - CC3.2
+        - CC3.3
+        - CC3.4
+
+    - id: CC4
+      title: Monitoring Activities
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            OTel spans, metrics, lifecycle event schema, anomaly categories, and
+            audit sink rules support continuous control monitoring.
+        - path: schemas/gc-agent-event.schema.json
+          note: Machine-readable event schema includes chain and security fields.
+        - path: docs/conformance/conformance-report.schema.json
+          note: Per-rule pass/fail conformance reports provide monitorable control outcomes.
+      criteria:
+        - CC4.1
+        - CC4.2
+
+    - id: CC5
+      title: Control Activities
+      coverage: full
+      gc_artifacts:
+        - path: governance/agent-constraints.yaml
+          note: Prohibited actions and approval gates define preventive control activities.
+        - path: governance/zero-trust.yaml
+          note: Trust establishment and revocation procedures define required control actions.
+        - path: docs/conformance/badge-criteria.md
+          note: Advisory, standard, and strict profiles translate controls into adopter-facing criteria.
+      criteria:
+        - CC5.1
+        - CC5.2
+        - CC5.3
+
+    - id: CC6
+      title: Logical and Physical Access Controls
+      coverage: partial
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: >
+            crypto_identity, dossier lifecycle status, expiry, and revocation
+            declarations support logical identity and access enforcement.
+        - path: governance/zero-trust.yaml
+          note: >
+            Per-interaction trust establishment and signature verification define
+            the logical access protocol for agents.
+        - path: agent-project-orchestrator/runtime-contract.yaml
+          note: Per-agent tool permissions and resource budgets are runtime access controls.
+      gaps: >
+        Physical access controls, workforce identity provider controls, and
+        infrastructure access reviews are adopter responsibilities outside the
+        GC standards layer.
+      criteria:
+        - CC6.1
+        - CC6.2
+        - CC6.3
+        - CC6.4
+        - CC6.5
+        - CC6.6
+        - CC6.7
+        - CC6.8
+
+    - id: CC7
+      title: System Operations
+      coverage: full
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: >
+            Security event spans cover anomaly detection, policy violation,
+            constraint breach, authentication failure, and chain integrity failure.
+        - path: schemas/gc-agent-event.schema.json
+          note: Structured event types and required fields support incident triage and response evidence.
+        - path: governance/threat-model.md
+          note: Threat mitigations define expected operational response by threat category.
+      criteria:
+        - CC7.1
+        - CC7.2
+        - CC7.3
+        - CC7.4
+        - CC7.5
+
+    - id: CC8
+      title: Change Management
+      coverage: full
+      gc_artifacts:
+        - path: DEVPATH.md
+          note: >
+            DDR process and authority model govern design decisions, PASS gates,
+            release milestones, and publish-triggering changes.
+        - path: DEVPLAN.md
+          note: Gap checklist and compatibility matrix track planned, active, and closed changes.
+        - path: passchangelog.md
+          note: Timestamped PASS entries provide change evidence and rationale.
+      criteria:
+        - CC8.1
+
+    - id: CC9
+      title: Risk Mitigation
+      coverage: full
+      gc_artifacts:
+        - path: governance/threat-model.md
+          note: Residual risks and mitigations document risk response.
+        - path: governance/zero-trust.yaml
+          note: Revocation and rotation protocols mitigate compromised identity and stale trust.
+        - path: projects.yaml
+          note: >
+            Project registry and compat fields identify cross-repo dependencies
+            and peer-system risk boundaries.
+      criteria:
+        - CC9.1
+        - CC9.2
+
+# ── Availability ─────────────────────────────────────────────────────────────
+
+availability:
+  description: >
+    The system is available for operation and use to meet commitments or system
+    requirements.
+
+  criteria:
+
+    - id: A1.1
+      title: Availability commitments and requirements
+      coverage: partial
+      gc_artifacts:
+        - path: agent-matrix/agent-matrix.yaml
+          note: SLO/SLI definitions per profile define expected service behavior.
+        - path: agent-project-orchestrator/runtime-contract.yaml
+          note: Per-agent time limits, retry limits, and escalation thresholds support operational availability commitments.
+        - path: docs/observability-contract.yaml
+          note: Duration histograms and task outcome metrics measure availability-impacting behavior.
+      gaps: >
+        Customer-facing SLAs, infrastructure uptime objectives, capacity plans,
+        and business continuity commitments are adopter-specific.
+
+    - id: A1.2
+      title: Environmental protections, backup, and recovery
+      coverage: partial
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: Chain integrity and lifecycle events preserve audit continuity after recovery.
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: Signed evidence bundles can be exported and retained independently from runtime systems.
+        - path: governance/zero-trust.yaml
+          note: Rotation and revocation procedures support recovery after key compromise.
+      gaps: >
+        Backup infrastructure, restore testing, disaster recovery plans, and
+        environmental protections are adopter operational controls.
+
+    - id: A1.3
+      title: Recovery plan testing and incident response
+      coverage: partial
+      gc_artifacts:
+        - path: docs/observability-contract.yaml
+          note: Security event categories and chain verification failures provide incident evidence.
+        - path: governance/agent-constraints.yaml
+          note: Remediation rules define control response for prohibited agent actions.
+        - path: governance/threat-model.md
+          note: STRIDE mitigations describe expected response paths for material threats.
+      gaps: >
+        Formal disaster recovery exercises, RTO/RPO evidence, and incident
+        postmortems are produced by adopters, not by the standard itself.
+
+# ── Confidentiality ──────────────────────────────────────────────────────────
+
+confidentiality:
+  description: >
+    Information designated as confidential is protected to meet commitments or
+    system requirements.
+
+  criteria:
+
+    - id: C1.1
+      title: Identification and protection of confidential information
+      coverage: partial
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: Privacy rules require sensitive-data minimization, secret redaction, and policy basis recording.
+        - path: docs/observability-contract.yaml
+          note: Log body and event schemas require structured summaries and discourage secret-bearing payloads.
+        - path: governance/agent-constraints.yaml
+          note: Agent restrictions prevent unauthorized publication, release, or mutation of governed artifacts.
+      gaps: >
+        Data classification inventory, DLP rules, encryption configuration, and
+        customer confidentiality commitments are adopter controls.
+
+    - id: C1.2
+      title: Disposal and retention of confidential information
+      coverage: partial
+      gc_artifacts:
+        - path: agent-dossier/agent-dossier.yaml
+          note: Dossier lifecycle states (expired, revoked, deprecated, retired) define retirement semantics for agent records.
+        - path: governance/zero-trust.yaml
+          note: Key rotation rules require secure old-key deletion after transition.
+        - path: schemas/gc-compliance-evidence.schema.json
+          note: Evidence bundle periods and signatures support retention-scoped audit exports.
+      gaps: >
+        Retention schedules, secure deletion tooling, legal hold policy, and
+        disposal attestations remain adopter-specific.
+
+audit_notes:
+  - >
+    This mapping is not an auditor opinion and does not claim SOC 2 compliance
+    by itself. It identifies where Governance Commons artifacts provide control
+    design or operating evidence for an adopter's SOC 2 Type II readiness.
+  - >
+    Processing Integrity and Privacy Trust Services Criteria are not mapped in
+    this version because PASS-5 Batch 2 scope is limited to Security,
+    Availability, and Confidentiality.
