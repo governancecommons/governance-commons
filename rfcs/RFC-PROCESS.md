@@ -94,11 +94,11 @@ for acceptance at window close.
 ## Acceptance and implementation
 
 An accepted RFC is merged into `rfcs/` with status `accepted`. It becomes a binding AL:2
-decision recorded in `DEVPLAN.md` under the relevant PASS. Implementation MAY begin after
+decision recorded in `DEV-PLAN.md` under the relevant PASS. Implementation MAY begin after
 acceptance; it MUST NOT begin before.
 
 If an RFC requires coordinated changes across multiple specs, the maintainer records a
-compat-hold in `DEVPLAN.md` until all named consumers confirm compatibility (DDR-1).
+compat-hold in `DEV-PLAN.md` until all named consumers confirm compatibility (DDR-1).
 
 ---
 

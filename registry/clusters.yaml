@@ -51,7 +51,7 @@ clusters:
     namespace_domain: governance
     owner: Governance Commons — jj-ervin
     status: active
-    registry_record: DEVPLAN.md (ecosystem devplan — AL:2)
+    registry_record: DEV-PLAN.md (ecosystem devplan — AL:2)
     opened_by: GC.00
     created_at: "2026-06-05T00:00:00Z"
     description: >
@@ -68,7 +68,7 @@ clusters:
     namespace_domain: governance
     owner: Governance Commons — jj-ervin
     status: active
-    registry_record: agent-project-orchestrator/DEVPATH.md
+    registry_record: agent-project-orchestrator/DEV-PATH.md
     opened_by: APO.00
     created_at: "2026-06-05T00:00:00Z"
     description: >

@@ -50,7 +50,7 @@ security:
       title: Control Environment
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             AL:1/AL:2/AL:3 authority model defines governance responsibility,
             decision ownership, and restricted release actions.
@@ -71,7 +71,7 @@ security:
       title: Communication and Information
       coverage: full
       gc_artifacts:
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: >
             Canonical execution plan, compatibility matrix, gap checklist, and
             release train status communicate current control state.
@@ -188,11 +188,11 @@ security:
       title: Change Management
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             DDR process and authority model govern design decisions, PASS gates,
             release milestones, and publish-triggering changes.
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: Gap checklist and compatibility matrix track planned, active, and closed changes.
         - path: passchangelog.md
           note: Timestamped PASS entries provide change evidence and rationale.

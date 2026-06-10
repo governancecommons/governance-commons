@@ -15,7 +15,7 @@ schema:
       url: https://opentelemetry.io/docs/specs/
       version: "1.x"
     - name: DDR-6 (AL:2 timestamp requirement)
-      ref: DEVPATH.md#DDR-6
+      ref: DEV-PATH.md#DDR-6
     - name: agent-dossier telemetry_trace_schema
       ref: agent-dossier/agent-dossier.yaml#telemetry_trace_schema
     - name: Structured event JSON Schema
@@ -126,7 +126,7 @@ lifecycle_events:
         - gc.agent.pass_id
         - gc.agent.evidence
       notes: >
-        gc.summary SHOULD identify the document produced (e.g. "DEVPLAN.md updated
+        gc.summary SHOULD identify the document produced (e.g. "DEV-PLAN.md updated
         with PASS-3 Batch 2 closure"). Use gc.agent.evidence to list artifact paths.
 
     - span_name: gc.agent.registry.updated

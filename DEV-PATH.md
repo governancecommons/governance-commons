@@ -1,4 +1,4 @@
-# DEVPATH — Governance Commons Ecosystem Path
+# DEV-PATH — Governance Commons Ecosystem Path
 
 **AUTHORITY LEVEL: AL:2**
 **Status:** ACTIVE
@@ -8,8 +8,8 @@
 
 ## CANONICAL DOC RULE
 
-`DEVPATH.md` owns: ecosystem phases, authority model, design decision record.
-`DEVPLAN.md` owns: current execution state, release train, compatibility matrix, gap checklist.
+`DEV-PATH.md` owns: ecosystem phases, authority model, design decision record.
+`DEV-PLAN.md` owns: current execution state, release train, compatibility matrix, gap checklist.
 
 Sub-repo planning files (`agent-dossier/ROADMAP.md`, `agent-project-orchestrator/DevPath-v1.0.md`, etc.)
 are **AL:1** — they govern their own repos and do not supersede this file.
@@ -22,7 +22,7 @@ This file does not contain per-repo task lists. It sets ecosystem structure and 
 | Level | Scope | Who can change |
 |-------|-------|----------------|
 | AL:3 | Ecosystem charter — inviolable invariants, licensing model, GC naming, **publish timing, public registry releases, tag creation that triggers publish workflows** | Founder only. Recorded as GC-CHARTER entries. |
-| AL:2 | This file + DEVPLAN — compatibility constraints, release milestones, design decisions, **PASS exit criteria, opening/closing PASSes, GC release milestone declarations** | GC project maintainer. Changes require a GC-PASS entry. |
+| AL:2 | This file + DEV-PLAN — compatibility constraints, release milestones, design decisions, **PASS exit criteria, opening/closing PASSes, GC release milestone declarations** | GC project maintainer. Changes require a GC-PASS entry. |
 | AL:1 | Individual repo devpaths — implementation, architecture, release cadence within a spec's scope | Spec owner, independently of ecosystem cadence. |
 
 **Boundary rule:** AL:2 sets compatibility constraints and release milestones. It cannot dictate
@@ -89,11 +89,11 @@ requires it.
 ## THREE DESIGN DECISIONS
 
 Source 102 identified three decisions that determine whether multi-repo ecosystem architecture
-works in practice. Answers are binding at AL:2. Full rationale in `DEVPLAN.md`.
+works in practice. Answers are binding at AL:2. Full rationale in `DEV-PLAN.md`.
 
 **DDR-1 — Version conflict handling.**
 Specs declare `BREAKING:` + `breaking_consumers:` in their CHANGELOG when a breaking change
-is proposed. The ecosystem DEVPLAN records a coordinated update item. Downstream specs enter
+is proposed. The ecosystem DEV-PLAN records a coordinated update item. Downstream specs enter
 compat-hold. The next GC release milestone is blocked until all named consumers resolve.
 Machine-readable contract: `compat:` field in `projects.yaml`.
 
@@ -133,7 +133,7 @@ implemented across five layers, each scoped to the PASS where it becomes enforce
 
 | Layer | Artifact / system | Required field(s) | PASS | Gap / item |
 |-------|-------------------|-------------------|------|------------|
-| L1 | DEVPLAN, DEVPATH, registry files, ONS CHANGELOG entries | `time.loc:` header field | PASS-0 — done | Convention |
+| L1 | DEV-PLAN, DEV-PATH, registry files, ONS CHANGELOG entries | `time.loc:` header field | PASS-0 — done | Convention |
 | L2 | agent-dossier handoff envelopes; telemetry lifecycle events | `emitted_at` (REQUIRED), `accepted_at` (OPTIONAL); event types: `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated` | PASS-1 | GC-1-A-TL-01, GC-1-A-TL-02 |
 | L3 | observability-contract.yaml gc.agent.* event schema | `time_loc` required field on every gc.agent.* event | PASS-4 | GC-3-E-01 (existing) |
 | L4 | agent-project-orchestrator telemetry.emit() | `time_loc` required key in every emit call; runtime validation rejects emission without it | PASS-2 | GC-1-D-TL-01 |
@@ -150,7 +150,7 @@ profiles and commercial-capability implementation paths.
 
 ## ECOSYSTEM PHASES
 
-Each phase maps to one or more PASSes in `DEVPLAN.md`. Phase exit criteria must all be met
+Each phase maps to one or more PASSes in `DEV-PLAN.md`. Phase exit criteria must all be met
 before the next phase begins. Per-repo implementation work happens inside each repo's own devpath.
 
 ---
@@ -162,7 +162,7 @@ project registry. The five design decisions are answered and binding.
 
 **Exit criteria:**
 
-- DEVPATH.md, DEVPLAN.md, TRACKS.md, projects.yaml, tools/gc-status.ps1 all exist and are current
+- DEV-PATH.md, DEV-PLAN.md, TRACKS.md, projects.yaml, tools/gc-status.ps1 all exist and are current
 - Three source_102 design decisions answered and recorded (DDR-1 through DDR-5)
 - tools/gc-status.ps1 runs against all sub-repos without errors
 - All sub-repos listed in projects.yaml with correct group, status, and compat fields
@@ -301,7 +301,7 @@ demonstrable technical leadership beyond table-stakes compliance.
 | GC-PASS-2026-0002 | PASS-1 gate review — all 8 exit criteria passed; PASS-2 open | 2026-06-07 | ✅ |
 | GC-PASS-2026-0012 | PASS-2 gate review — all 8 exit criteria met; PASS-3 open | 2026-06-07 | ✅ |
 | GC-PASS-2026-0013 | PASS-3 gate review — all 6 exit criteria met; PASS-4 open | 2026-06-08 | ✅ |
-| GC-PASS-2026-0014 | GC-CONSTRAINT-001 — agent authority constraints registered; DEVPATH authority model strengthened | 2026-06-08 | ✅ |
+| GC-PASS-2026-0014 | GC-CONSTRAINT-001 — agent authority constraints registered; DEV-PATH authority model strengthened | 2026-06-08 | ✅ |
 | GC-PASS-2026-0015 | PASS-4 gate review — all 7 exit criteria met; PASS-5 open | 2026-06-08 | ✅ |
 
 ---

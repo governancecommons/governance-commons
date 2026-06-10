@@ -9,7 +9,7 @@ root: "c:/dev/governance-commons"
 # ── DESIGN DECISION DDR-1 ────────────────────────────────────────────────────
 # compat: fields declare minimum required peer spec versions.
 # When a BREAKING: change is declared in any spec, update the affected compat:
-# entries below and record the coordinated update in DEVPLAN.md > COMPATIBILITY MATRIX.
+# entries below and record the coordinated update in DEV-PLAN.md > COMPATIBILITY MATRIX.
 # ─────────────────────────────────────────────────────────────────────────────
 
 projects:
@@ -28,8 +28,8 @@ projects:
     compat:
       ons: ">=1.1.0"
     planning:
-      devpath: agent-dossier/DEVPATH.md
-      devplan: agent-dossier/DEVPLAN.md
+      devpath: agent-dossier/DEV-PATH.md
+      devplan: agent-dossier/DEV-PLAN.md
       tracks: agent-dossier/TRACKS.md
       passchangelog: agent-dossier/passchangelog.md
       changelog: agent-dossier/CHANGELOG.md
@@ -49,8 +49,8 @@ projects:
     compat:
       agent_dossier: ">=1.0.0"
     planning:
-      devpath: agent-matrix/DEVPATH.md
-      devplan: agent-matrix/DEVPLAN.md
+      devpath: agent-matrix/DEV-PATH.md
+      devplan: agent-matrix/DEV-PLAN.md
       tracks: agent-matrix/TRACKS.md
       passchangelog: agent-matrix/passchangelog.md
       changelog: agent-matrix/CHANGELOG.md
@@ -68,8 +68,8 @@ projects:
     branch: main
     compat: {}
     planning:
-      devpath: ons/DEVPATH.md
-      devplan: ons/DEVPLAN.md
+      devpath: ons/DEV-PATH.md
+      devplan: ons/DEV-PLAN.md
       tracks: ons/TRACKS.md
       passchangelog: ons/passchangelog.md
       changelog: ons/CHANGELOG.md
@@ -89,8 +89,8 @@ projects:
       agent_dossier: ">=1.0.0"
       agent_matrix: ">=1.0.0"
     planning:
-      devpath: agent-project-orchestrator/DEVPATH.md
-      devplan: agent-project-orchestrator/DEVPLAN.md
+      devpath: agent-project-orchestrator/DEV-PATH.md
+      devplan: agent-project-orchestrator/DEV-PLAN.md
       tracks: agent-project-orchestrator/TRACKS.md
       passchangelog: agent-project-orchestrator/passchangelog.md
       changelog: agent-project-orchestrator/CHANGELOG.md
@@ -114,8 +114,8 @@ projects:
       agent_matrix: ">=1.4.0"
       agent_dossier: ">=1.0.0"
     planning:
-      devpath: agent-team-protocol/DEVPATH.md
-      devplan: agent-team-protocol/DEVPLAN.md
+      devpath: agent-team-protocol/DEV-PATH.md
+      devplan: agent-team-protocol/DEV-PLAN.md
       changelog: agent-team-protocol/CHANGELOG.md
     pass_status:
       p0_gaps: 0
@@ -132,8 +132,8 @@ projects:
     branch: main
     spec_reference: agent-matrix
     planning:
-      devpath: agent-roster/DEVPATH.md
-      devplan: agent-roster/DEVPLAN.md
+      devpath: agent-roster/DEV-PATH.md
+      devplan: agent-roster/DEV-PLAN.md
       tracks: agent-roster/TRACKS.md
       passchangelog: agent-roster/passchangelog.md
       changelog: agent-roster/CHANGELOG.md

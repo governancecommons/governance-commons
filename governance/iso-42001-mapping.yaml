@@ -31,12 +31,12 @@ section_4:
       title: Understanding the organization and its context
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             Governance Commons charter defines the organizational context:
             open-standards ecosystem for multi-agent AI governance. Scope,
             authority model, and operating model are documented at AL:2/AL:3.
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: >
             Release train status and compatibility matrix document the
             ecosystem context and known constraints.
@@ -45,7 +45,7 @@ section_4:
       title: Understanding the needs and expectations of interested parties
       coverage: partial
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             Founding maintainer and adopter ecosystem identified. AL:1/AL:2/AL:3
             authority model defines stakeholder responsibilities.
@@ -57,12 +57,12 @@ section_4:
       title: Determining the scope of the AI management system
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             AIMS scope: governance layer for multi-agent AI systems using
             Governance Commons standards. Explicit in-scope and out-of-scope
             boundaries stated in charter section.
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: >
             PASS progression defines the planned scope expansion through
             PASS-5 (public release train).
@@ -71,8 +71,8 @@ section_4:
       title: AI management system
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
-          note: DEVPATH + DEVPLAN dual-document model is the AIMS operational backbone.
+        - path: DEV-PATH.md
+          note: DEV-PATH + DEV-PLAN dual-document model is the AIMS operational backbone.
         - path: governance/
           note: >
             governance/ directory (agent-constraints.yaml, zero-trust.yaml,
@@ -90,7 +90,7 @@ section_5:
       title: Leadership and commitment
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             Founding maintainer Jess Ervin (jj-ervin) holds AL:3 authority.
             Charter changes require founder sign-off. Commitment is traceable
@@ -106,7 +106,7 @@ section_5:
           note: >
             AC-001 through AC-007 are the operative AI policy: prohibited actions,
             proposal protocol, and remediation rules for agent operations.
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             Authority model is the meta-policy: who can change what, under what
             conditions, with what approval.
@@ -117,7 +117,7 @@ section_5:
       title: Organizational roles, responsibilities, and authorities
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             AL:1/AL:2/AL:3 authority model defines roles (spec owner, GC maintainer,
             founder) and what decisions each level controls. Cross-spec compatibility
@@ -175,12 +175,12 @@ section_6:
       title: AI objectives and planning to achieve them
       coverage: full
       gc_artifacts:
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: >
             PASS milestones (PASS-1 through PASS-5) are the AI governance
             objectives. Each PASS has explicit exit criteria and a traceable
             completion record.
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: Design Decision Records (DDR-1 through DDR-6) document objective-setting rationale.
 
 # ── Section 7 — Support ──────────────────────────────────────────────────────
@@ -230,9 +230,9 @@ section_7:
       title: Documented information
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: AIMS governance history and design decision record.
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: Execution plan, compatibility matrix, and gap analysis.
         - path: governance/
           note: Operative policy documents (zero-trust, threat-model, constraints, mappings).
@@ -336,7 +336,7 @@ section_9:
       title: Management review
       coverage: full
       gc_artifacts:
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: >
             PASS gate reviews are the operative management review mechanism.
             Each gate review evaluates exit criteria, updates gap status, and
@@ -368,12 +368,12 @@ section_10:
       title: Continual improvement
       coverage: full
       gc_artifacts:
-        - path: DEVPLAN.md
+        - path: DEV-PLAN.md
           note: >
             PASS progression model (PASS-1 → PASS-5 → PASS-6) is the structured
             continual improvement cycle. Each PASS closes identified gaps and
             registers new ones from gate review findings.
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             Design Decision Records (DDR-1 through DDR-6) document improvement
             rationale. Authority model prevents regressive changes without
@@ -401,7 +401,7 @@ annex_a:
       title: Internal organization
       coverage: full
       gc_artifacts:
-        - path: DEVPATH.md
+        - path: DEV-PATH.md
           note: >
             AL:1/AL:2/AL:3 authority hierarchy defines the internal governance
             structure. Spec owners, ecosystem maintainer, and founder roles are named.

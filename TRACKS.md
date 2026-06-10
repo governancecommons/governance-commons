@@ -1,7 +1,7 @@
 # TRACKS — Governance Commons Portfolio Overview
 
 **Last updated:** 2026-06-07T00:00:00Z
-**Authority:** Master spec/project portfolio view. For PASS governance history see `DEVPATH.md`; for active execution priorities see `DEVPLAN.md`.
+**Authority:** Master spec/project portfolio view. For PASS governance history see `DEV-PATH.md`; for active execution priorities see `DEV-PLAN.md`.
 
 ---
 
@@ -62,7 +62,7 @@
 **PASS:** PASS-1 (runtime correctness) — P1 batch closed
 **Open P0 gaps:** 0
 **Open P1/P2 runtime gaps:** 0
-**Key links:** `agent-project-orchestrator/DEVPATH.md`, `agent-project-orchestrator/DEVPLAN.md`, `agent-project-orchestrator/TRACKS.md`
+**Key links:** `agent-project-orchestrator/DEV-PATH.md`, `agent-project-orchestrator/DEV-PLAN.md`, `agent-project-orchestrator/TRACKS.md`
 
 ### Track Echo — governance-commons-sdk (SDK)
 
@@ -145,8 +145,8 @@ Track Hotel (devx-control-plane)
 
 | Resource | Purpose |
 |----------|---------|
-| `DEVPATH.md` | Ecosystem governance path — PASS registry, design decisions, authority model |
-| `DEVPLAN.md` | Current execution plan — active priorities, gap checklist, release train |
+| `DEV-PATH.md` | Ecosystem governance path — PASS registry, design decisions, authority model |
+| `DEV-PLAN.md` | Current execution plan — active priorities, gap checklist, release train |
 | `projects.yaml` | Machine-readable project registry — groups, paths, compat constraints |
 | `tools/gc-status.ps1` | Git status dashboard for all sub-repos |
 | `docs/charter.md` | AL:3 ecosystem invariants — licensing, naming, founding maintainer |

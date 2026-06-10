@@ -1,9 +1,9 @@
-# DEVPLAN — Governance Commons Execution Plan
+# DEV-PLAN — Governance Commons Execution Plan
 
 **AUTHORITY LEVEL: AL:2**
 **Status:** ACTIVE — canonical execution and release planning source
 **time.loc:** 2026-06-09T00:00:00Z
-**Canonical pair:** `DEVPATH.md` + `DEVPLAN.md`
+**Canonical pair:** `DEV-PATH.md` + `DEV-PLAN.md`
 
 ---
 
@@ -11,8 +11,8 @@
 
 There are exactly two root planning documents for Governance Commons:
 
-1. `DEVPATH.md` — history and governance path. Owns phase/PASS registry, design decision record, authority model, agent onboarding.
-2. `DEVPLAN.md` — current execution plan. Owns active priorities, release train status, compatibility matrix, and gap closure tracking.
+1. `DEV-PATH.md` — history and governance path. Owns phase/PASS registry, design decision record, authority model, agent onboarding.
+2. `DEV-PLAN.md` — current execution plan. Owns active priorities, release train status, compatibility matrix, and gap closure tracking.
 
 All other devpath/devplan files under this directory are non-canonical unless they explicitly redirect here.
 Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not supersede this file.
@@ -38,7 +38,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 - GC-4-E-03 closed (2026-06-08): security and anomaly detection event categories — `security_events` section in `docs/observability-contract.yaml` (5 new spans: gc.agent.anomaly.detected, policy.violation, constraint.breach, auth.failure, chain.integrity_failure; 5 compliance rules sec-1 through sec-5); 5 new `gc_event_type` enum values and security-specific fields added to `schemas/gc-agent-event.schema.json`
 - GC-4-E-04 closed (2026-06-08): signed compliance evidence export — `schemas/gc-compliance-evidence.schema.json` v1.0.0 — bundle_id, evidence_period, control_frameworks (NIST-AI-RMF/ISO-42001/SOC2/EU-AI-Act), events array, bundle_hash (SHA-256 canonical), JWS EdDSA signature block; chain_verified flag; allOf conditional for chain integrity requirement
 - GC-3-E-01 closed (2026-06-08): observability-contract.yaml v1.0.0 — 7 canonical lifecycle span definitions with required fields, structured event schema (schemas/gc-agent-event.schema.json), 12 compliance rules, DDR-6 Layer 3 enforcement; JSON Schema validates correctly
-- GC-CONSTRAINT-001 registered (2026-06-08, GC-PASS-2026-0014): agent authority constraints — prohibited actions (AC-001 through AC-007), proposal protocol, and remediation rules; DEVPATH authority model strengthened with agent boundary rule
+- GC-CONSTRAINT-001 registered (2026-06-08, GC-PASS-2026-0014): agent authority constraints — prohibited actions (AC-001 through AC-007), proposal protocol, and remediation rules; DEV-PATH authority model strengthened with agent boundary rule
 - PASS-3 gate review passed (2026-06-08, GC-PASS-2026-0013): all 6 exit criteria met; PASS-4 open
 - PASS-2 gate review passed (2026-06-07, GC-PASS-2026-0012): all 8 exit criteria met; PASS-3 open
 - PASS-2 Batch 4 closed (2026-06-07, PASS-2026-0011): GC-3-B-04 (streaming output SECTION 15B, 33 tests), GC-3-B-05 (prompt injection defense SECTION 16B, 37 tests); 70/70 pass
@@ -46,14 +46,14 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 - PASS-2 Batch 2 closed (2026-06-07, GC-PASS-2026-0005): GC-3-A-03 (zero-trust spec — establishment, rotation, revocation)
 - PASS-2 Batch 1 closed (2026-06-07, GC-PASS-2026-0004): GC-3-A-01 (handoff JWS/Ed25519 signature), GC-3-A-02 (DID-compatible crypto_identity), GC-3-B-06 (STRIDE threat model)
 - Source 97–102 gap analysis series read and synthesized
-- Three source_102 design decisions answered in DEVPATH.md (DDR-1 through DDR-5)
-- Ecosystem planning infrastructure created (DEVPATH, DEVPLAN, TRACKS, projects.yaml, tools/gc-status.ps1)
+- Three source_102 design decisions answered in DEV-PATH.md (DDR-1 through DDR-5)
+- Ecosystem planning infrastructure created (DEV-PATH, DEV-PLAN, TRACKS, projects.yaml, tools/gc-status.ps1)
 - agent-project-orchestrator renamed from project-orchestrator-agent and pushed to governancecommons/agent-project-orchestrator
 - Track Alpha, Charlie, and Delta P0 gap closure reconciled across source gap checklist and project registry
 - GC-1-D-04 through GC-1-D-08: APO P1 runtime correctness batch (telemetry, typed tasks, handoff envelopes, tests)
 - GC-1-D-10 / GC-1-D-11: APO PASS-2 runtime governance loading + per-agent resource budget enforcement
 - GC-1-C-05: ONS cluster registration protocol defined (PASS-2026-0008) + registry/clusters.yaml created (PASS-2026-0009)
-- DDR-6: AL:2 timestamp requirement established; 5-layer implementation scope written into DEVPLAN, DEVPATH, agent-dossier spec, and handoff-envelope schema
+- DDR-6: AL:2 timestamp requirement established; 5-layer implementation scope written into DEV-PLAN, DEV-PATH, agent-dossier spec, and handoff-envelope schema
 
 **PASS-1 completed tasks (all closed):**
 
@@ -193,24 +193,24 @@ to the PASS where it becomes enforceable:
 
 | Layer | Scope | Enforcement point | PASS |
 |-------|-------|-------------------|------|
-| L1 | `time.loc:` field in DEVPLAN/DEVPATH/registry headers | Convention — current | PASS-0 (done) |
+| L1 | `time.loc:` field in DEV-PLAN/DEV-PATH/registry headers | Convention — current | PASS-0 (done) |
 | L2 | `emitted_at` (REQUIRED) + `accepted_at` (OPTIONAL) in handoff envelopes; `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written` event types in agent-dossier telemetry_trace_schema | agent-dossier spec + schema | PASS-1 |
 | L3 | `gc.agent.*` structured event schema with mandatory `time_loc` field in `observability-contract.yaml` | observability-contract.yaml (GC-3-E-01) | PASS-4 |
 | L4 | `time_loc` required key in every `telemetry.emit()` call in agent-project-orchestrator | Runtime enforcement in APO | PASS-2 |
-| L5 | This AL:2 rule — binding cross-spec requirement enforced at GC release milestone review | DEVPLAN gating | PASS-0 (this entry) |
+| L5 | This AL:2 rule — binding cross-spec requirement enforced at GC release milestone review | DEV-PLAN gating | PASS-0 (this entry) |
 
 The canonical field name is `time.loc` at the document level (colon-qualified key per ONS separator
 semantics) and `*_at` at the schema level (`created_at`, `emitted_at`, `accepted_at`). Both forms
-MUST use ISO 8601 / RFC3339 UTC format (`YYYY-MM-DDTHH:MM:SSZ`). See DEVPATH DDR-6 for rationale.
+MUST use ISO 8601 / RFC3339 UTC format (`YYYY-MM-DDTHH:MM:SSZ`). See DEV-PATH DDR-6 for rationale.
 
 ---
 
 ## THREE DESIGN DECISIONS — Answers
 
-These are binding decisions at AL:2. Full rationale is in `DEVPATH.md` under Design Decision Record.
+These are binding decisions at AL:2. Full rationale is in `DEV-PATH.md` under Design Decision Record.
 
 **DDR-1 — Version Conflict Handling:**
-Breaking changes declare `BREAKING:` + `breaking_consumers:` in CHANGELOG. Ecosystem DEVPLAN records a coordinated update item. Downstream specs enter compat-hold. GC release milestone is blocked until all named consumers are resolved. Machine-readable artifact: `compat:` field in `projects.yaml`.
+Breaking changes declare `BREAKING:` + `breaking_consumers:` in CHANGELOG. Ecosystem DEV-PLAN records a coordinated update item. Downstream specs enter compat-hold. GC release milestone is blocked until all named consumers are resolved. Machine-readable artifact: `compat:` field in `projects.yaml`.
 
 **DDR-2 — Release Train Mechanics:**
 Each spec ships on its own cadence. GC milestones are informational pinning contracts — they name minimum compatible versions, not CI gates. `GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0`. Adopters pin to the GC milestone, not to individual spec heads.
@@ -255,7 +255,7 @@ No current `compat-hold` items.
 
 ## GAP ANALYSIS CHECKLIST
 
-Cross-reference from sources 97–101 to DEVPATH PASS assignments.
+Cross-reference from sources 97–101 to DEV-PATH PASS assignments.
 Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-hold
 
 ### Source 97 — agent-dossier runtime gaps

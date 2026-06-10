@@ -3,7 +3,7 @@
 Status: **Active — PASS-5 (Public Release Train)**  
 Created: 2026-06-09  
 Authority: Owned by this repo. Sequencing and cross-repo dependencies defer to [`docs/DEV-RELEASE.md`](../docs/DEV-RELEASE.md).  
-Relationship to DEVPLAN: `DEVPLAN.md` owns execution (tasks, PASSes, gap closure). This file owns release contracts — what ships externally, under what conditions, and what each release unlocks downstream.
+Relationship to DEV-PLAN: `DEV-PLAN.md` owns execution (tasks, PASSes, gap closure). This file owns release contracts — what ships externally, under what conditions, and what each release unlocks downstream.
 
 ---
 
@@ -119,7 +119,7 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 - Operational runbooks: validator failure, compromised key, revoked agent, broken evidence chain
 - Steering / WG structure established (prerequisite for enterprise procurement claims)
 
-### Remaining open gaps (from DEVPLAN gap checklist)
+### Remaining open gaps (from DEV-PLAN gap checklist)
 
 | Gap | ID | Priority | Notes |
 | --- | --- | --- | --- |
@@ -150,7 +150,7 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 - [ ] Stranger can declare conformance end-to-end without asking anyone
 - [ ] At least one working example against real MCP tooling (not schema only)
 - [ ] Operational runbooks published on governancecommons.org
-- [ ] Steering/WG structure declared in DEVPLAN.md and visible on website
+- [ ] Steering/WG structure declared in DEV-PLAN.md and visible on website
 
 ---
 
@@ -205,8 +205,8 @@ Every item in the spec-complete table above is confirmed — the work is real. T
 
 ## Related Documents
 
-- [`DEVPLAN.md`](DEVPLAN.md) — canonical execution plan; owns PASS state, tasks, gap closure tracking
-- [`DEVPATH.md`](DEVPATH.md) — governance history, design decisions, authority model
+- [`DEV-PLAN.md`](DEV-PLAN.md) — canonical execution plan; owns PASS state, tasks, gap closure tracking
+- [`DEV-PATH.md`](DEV-PATH.md) — governance history, design decisions, authority model
 - [`TRACKS.md`](TRACKS.md) — portfolio overview and track status
 - [`docs/DEV-RELEASE.md`](../docs/DEV-RELEASE.md) — portfolio master, priority order, dependency graph
 - [`docs/gap-analysis-framework.md`](../docs/gap-analysis-framework.md) — 12-question gap framework

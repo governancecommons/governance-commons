@@ -39,9 +39,9 @@ prohibited:
     action: Declare a DevPath or DevPlan decision final
     required_approval: AL:2
     rationale: >
-      Design Decision Records (DDR-*) and compatibility constraints in DEVPLAN
+      Design Decision Records (DDR-*) and compatibility constraints in DEV-PLAN
       are binding at AL:2. Agents may draft decisions and present options; they
-      may not write a decision into DEVPATH/DEVPLAN as final without sign-off.
+      may not write a decision into DEV-PATH/DEV-PLAN as final without sign-off.
 
   - id: AC-004
     category: publishing
@@ -100,7 +100,7 @@ proposal_protocol:
   rules:
     - Agents proposing AL:2+ changes MUST include the flag_format string in any
       draft before the maintainer has responded.
-    - A proposal is not recorded in DEVPLAN or DEVPATH as decided until the
+    - A proposal is not recorded in DEV-PLAN or DEV-PATH as decided until the
       maintainer gives explicit sign-off (verbal, written, or PR approval).
     - Retroactive sign-off is valid — a maintainer may ratify an already-recorded
       decision by explicitly confirming it. Ratification should be noted with a
