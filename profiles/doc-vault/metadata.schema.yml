@@ -1,0 +1,198 @@
+schema:
+  id: gc.profile.doc-vault.metadata
+  version: 0.1.0
+  description: Metadata schema for records governed by gc.profile.doc-vault
+
+fields:
+
+  record_id:
+    type: string
+    required: true
+    description: Unique identifier for this record within the repository.
+    example: "oh-legal-oa-001"
+
+  entity_prefix:
+    type: string
+    required: true
+    description: ONS entity prefix for the owning entity.
+    example: "oh"
+
+  document_title:
+    type: string
+    required: true
+    description: Human-readable title of the document.
+    example: "Operating Agreement"
+
+  document_type:
+    type: string
+    required: true
+    description: Classification of the document.
+    enum:
+      - legal
+      - governance
+      - ip
+      - finance
+      - contract
+      - admin
+      - project
+      - reference
+      - template
+
+  domain:
+    type: string
+    required: true
+    description: Functional domain this record belongs to.
+    example: "legal"
+
+  category:
+    type: string
+    required: true
+    description: Specific category within the domain.
+    example: "operating-agreement"
+
+  lifecycle_state:
+    type: string
+    required: true
+    description: Current lifecycle state of the record.
+    enum:
+      - draft
+      - review
+      - approved-for-execution
+      - executed
+      - superseded
+      - archived
+      - destroyed
+      - legal-hold
+      - issued
+      - confirmation
+      - received
+
+  version:
+    type: string
+    required: true
+    description: Version identifier following gc.profile.doc-vault versioning semantics.
+    example: "v1-0"
+    pattern: "v[0-9]+-[0-9]+"
+
+  effective_date:
+    type: date
+    required: false
+    description: Date the document became effective or was adopted.
+    format: YYYY-MM-DD
+
+  created_date:
+    type: date
+    required: true
+    description: Date the record was created or first drafted.
+    format: YYYY-MM-DD
+
+  received_date:
+    type: date
+    required: false
+    description: Date an external record was received. Required for issued, confirmation, and received states.
+    format: YYYY-MM-DD
+
+  approved_by:
+    type: string
+    required: false
+    description: Name or role of the approving party. Required for executed records.
+    example: "Managing Member"
+
+  owner:
+    type: string
+    required: true
+    description: Name or role of the record owner.
+    example: "Managing Member"
+
+  access_level:
+    type: string
+    required: true
+    description: Access classification for this record.
+    enum:
+      - owner-only
+      - trusted-advisor
+      - division-level
+      - internal
+      - public
+
+  sensitivity:
+    type: string
+    required: true
+    description: Sensitivity classification.
+    enum:
+      - none
+      - internal
+      - confidential
+      - restricted
+
+  retention_category:
+    type: string
+    required: true
+    description: Retention schedule category applied to this record.
+    enum:
+      - permanent
+      - seven-years
+      - three-years
+      - one-year
+      - until-superseded
+      - until-project-close
+      - legal-hold
+      - destroy-eligible
+
+  retention_period:
+    type: string
+    required: true
+    description: Human-readable retention period.
+    example: "7 years from effective date"
+    note: Template value only. Review with legal/tax/compliance advisors.
+
+  legal_hold:
+    type: boolean
+    required: true
+    default: false
+    description: Whether this record is under legal hold. Overrides all disposition actions.
+
+  external_source:
+    type: boolean
+    required: true
+    default: false
+    description: Whether this record was received from an external party.
+
+  source_system:
+    type: string
+    required: false
+    description: System or party that originated the record, if external.
+    example: "IRS", "Wyoming Secretary of State", "First National Bank"
+
+  current_record:
+    type: boolean
+    required: true
+    default: true
+    description: Whether this is the current active version of the record.
+
+  supersedes:
+    type: string
+    required: false
+    description: Filename or record_id of the record this version replaces.
+
+  superseded_by:
+    type: string
+    required: false
+    description: Filename or record_id of the record that replaced this version.
+
+  checksum:
+    type: string
+    required: false
+    description: SHA-256 checksum of the file for integrity verification.
+    example: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+  storage_location:
+    type: string
+    required: true
+    description: Relative path to the file within the repository.
+    example: "00_root/oh.legal.operating-agreement/executed/"
+
+  notes:
+    type: string
+    required: false
+    description: Free-text notes about this record.

@@ -1,0 +1,47 @@
+profile: gc.profile.doc-vault
+profile_version: 0.1.0
+adopted_date: 2026-06-15
+
+entity_name: Osprey Holding LLC
+entity_prefix: oh
+repo_type: document-repository
+ons_required: true
+
+governing_policy: OH-GOV-DOC-001
+
+top_level_folders:
+  - 00_root
+  - 01_governance
+  - 02_finance
+  - 03_ip-vault
+  - 04_divisions
+  - 05_projects
+  - 06_admin
+  - 99_archive
+
+divisions:
+  - id: hbl
+    name: HBL Creative Studios
+    folder: 04_divisions/hbl-creative-studios
+
+retention_schedule: .governance/retention.yml
+access_matrix: .governance/access-matrix.yml
+ons_config: .governance/ons.yml
+
+active_controls:
+  - document_lifecycle
+  - version_control
+  - metadata
+  - retention
+  - access_control
+  - archive_rules
+  - legal_hold
+  - external_document_intake
+  - sensitive_data_handling
+  - ai_access_boundaries
+
+notes: >
+  Osprey Holding LLC is a Wyoming single-member LLC formed 2026-06-15.
+  This repository governs holding-level legal, governance, finance, IP,
+  and administrative records. Division-level records are organized under
+  04_divisions/ by division folder.

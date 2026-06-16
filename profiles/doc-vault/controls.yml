@@ -1,0 +1,198 @@
+controls:
+
+  document_classification:
+    id: ctrl-001
+    name: Document Classification
+    description: Every record must be assigned a document_type and domain.
+    required_fields:
+      - document_type
+      - domain
+      - category
+    valid_document_types:
+      - legal
+      - governance
+      - ip
+      - finance
+      - contract
+      - admin
+      - project
+      - reference
+      - template
+
+  lifecycle_state:
+    id: ctrl-002
+    name: Lifecycle State
+    description: Every record must carry a current lifecycle state.
+    required_fields:
+      - lifecycle_state
+    valid_states:
+      internal:
+        - draft
+        - review
+        - approved-for-execution
+        - executed
+        - superseded
+        - archived
+        - destroyed
+        - legal-hold
+      external:
+        - issued
+        - confirmation
+        - received
+    rules:
+      - executed records must not be overwritten or deleted
+      - superseded executed records must move to archive/superseded
+      - old drafts must move to archive/old-drafts
+      - legal-hold overrides all destruction and disposition actions
+      - external records enter directly as issued, confirmation, or received
+
+  version_index:
+    id: ctrl-003
+    name: Version Index
+    description: Each governed document folder must contain a version index file.
+    required: true
+    file_pattern: "{entity_prefix}.{domain}.{category}.version-index.{year}.md"
+    required_columns:
+      - version
+      - status
+      - date
+      - file
+      - owner
+      - notes
+
+  access_level:
+    id: ctrl-004
+    name: Access Level
+    description: Every record must be assigned an access level.
+    required_fields:
+      - access_level
+    valid_levels:
+      - owner-only
+      - trusted-advisor
+      - division-level
+      - internal
+      - public
+
+  retention_category:
+    id: ctrl-005
+    name: Retention Category
+    description: Every record must be assigned a retention category.
+    required_fields:
+      - retention_category
+      - retention_period
+    note: Retention periods are templates only. Review with legal/tax/compliance advisors.
+
+  archive_disposition:
+    id: ctrl-006
+    name: Archive Disposition
+    description: Defines how records move to or through the archive.
+    rules:
+      - old drafts go to archive/old-drafts/
+      - superseded executed records go to archive/superseded/
+      - destroyed records require a destruction log entry
+      - legal hold prevents any disposition action
+
+  legal_hold:
+    id: ctrl-007
+    name: Legal Hold
+    description: Records under legal hold must not be destroyed, modified, or disposed of.
+    required_fields:
+      - legal_hold
+    rules:
+      - legal_hold flag overrides retention schedule
+      - legal_hold flag overrides archive disposition
+      - legal_hold flag overrides destruction eligibility
+      - release of legal hold requires explicit authorization
+
+  sensitive_data_flag:
+    id: ctrl-008
+    name: Sensitive Data Flag
+    description: Records containing sensitive data must be flagged.
+    required_fields:
+      - sensitivity
+    valid_values:
+      - none
+      - internal
+      - confidential
+      - restricted
+    sensitive_data_examples:
+      - EIN and tax identification numbers
+      - bank account numbers and routing numbers
+      - personal addresses and identification documents
+      - signatures
+      - credentials and passwords
+      - health or personal data
+
+  external_source_flag:
+    id: ctrl-009
+    name: External Source Flag
+    description: Records received from external parties must be flagged.
+    required_fields:
+      - external_source
+      - source_system
+    external_status_types:
+      - issued
+      - confirmation
+      - received
+
+  approval_evidence:
+    id: ctrl-010
+    name: Approval Evidence
+    description: Executed records must carry approval metadata.
+    required_fields:
+      - approved_by
+      - effective_date
+    applies_to:
+      - executed
+      - approved-for-execution
+
+  chain_of_custody:
+    id: ctrl-011
+    name: Chain of Custody
+    description: Material movements of records must be logged.
+    log_file: chain-of-custody-log.md
+    required_columns:
+      - date
+      - actor
+      - action
+      - file
+      - from_location
+      - to_location
+      - reason
+      - notes
+
+  redaction_tracking:
+    id: ctrl-012
+    name: Redaction Tracking
+    description: Any redacted copy of a record must be logged.
+    log_file: redaction-log.md
+    required_columns:
+      - date
+      - source_file
+      - redacted_file
+      - redacted_fields
+      - redacted_by
+      - reason
+      - notes
+
+  ai_access_boundary:
+    id: ctrl-013
+    name: AI Access Boundary
+    description: Defines what AI systems may and may not access in this repository.
+    permitted:
+      - public governance files
+      - non-sensitive internal governance files
+      - templates
+      - README files
+      - naming and classification assistance
+    prohibited:
+      - EIN and tax identification numbers
+      - bank account numbers
+      - personal addresses and identification documents
+      - signatures
+      - credentials and passwords
+      - executed legal agreements containing private data
+    rules:
+      - AI should use redacted copies where possible
+      - AI-generated legal, tax, and compliance documents require human review before execution
+      - AI must never receive secrets or credentials

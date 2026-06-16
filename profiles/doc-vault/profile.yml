@@ -1,0 +1,77 @@
+profile_id: gc.profile.doc-vault
+profile_name: Governance Commons Doc Vault Profile
+version: 0.1.0
+status: draft
+repo_type: document-repository
+default_entity_prefix: example
+ons_required: true
+
+description: >
+  Defines the structure, lifecycle, naming, metadata, retention, and access
+  standards for governed document repositories including legal records, finance
+  records, IP vaults, operating agreements, policies, contracts, and business
+  operating records.
+
+required_top_level_folders:
+  - 00_root
+  - 01_governance
+  - 02_finance
+  - 03_ip-vault
+  - 04_entities-or-divisions
+  - 05_projects
+  - 06_admin
+  - 99_archive
+
+required_controls:
+  - document_lifecycle
+  - version_control
+  - metadata
+  - retention
+  - access_control
+  - archive_rules
+  - legal_hold
+  - external_document_intake
+  - sensitive_data_handling
+  - ai_access_boundaries
+
+lifecycle_states:
+  internal:
+    - draft
+    - review
+    - approved-for-execution
+    - executed
+    - superseded
+    - archived
+    - destroyed
+    - legal-hold
+  external:
+    - issued
+    - confirmation
+    - received
+
+file_naming_pattern: "{entity_prefix}.{domain}.{category}.{status}.{version}.{date}.{extension}"
+
+supported_file_formats:
+  editable:
+    - .docx
+    - .md
+    - .xlsx
+  official_record:
+    - .pdf
+  reference:
+    - .pdf
+    - .png
+    - .jpg
+
+standards_alignment:
+  - iso_15489
+  - iso_9001_documented_information
+  - nist_csf_2_0
+  - arma_garp
+  - soc2_readiness
+
+not_in_scope:
+  - validator_code
+  - dcp_modification
+  - certification_claims
+  - code_repository_governance

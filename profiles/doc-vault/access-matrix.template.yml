@@ -1,0 +1,93 @@
+access_matrix:
+  profile: gc.profile.doc-vault
+  version: 0.1.0
+  entity: "[entity name]"
+  entity_prefix: "[entity prefix]"
+  effective_date: "[YYYY-MM-DD]"
+
+  notice: >
+    This access matrix is a template. Adapt it to your entity structure,
+    personnel, and legal requirements. Review with legal counsel if your
+    entity handles regulated data or has multiple members or employees.
+
+  levels:
+
+    owner-only:
+      label: Owner Only
+      description: >
+        Accessible only to the entity owner or managing member.
+        Must never be shared with AI systems, public repositories,
+        or unvetted third parties.
+      examples:
+        - EIN assignment letters
+        - Banking documents and account numbers
+        - Signed operating agreements
+        - IP assignment agreements
+        - Tax returns and tax records
+        - Signature pages
+        - Personal addresses and identification documents
+        - Credentials and passwords
+        - Pre-formation records
+      storage_rule: Private cloud only. Local encrypted backup. Never GitHub or public storage.
+
+    trusted-advisor:
+      label: Trusted Advisor
+      description: >
+        Accessible to vetted professional advisors under a formal advisory
+        or engagement relationship (CPA, attorney, registered agent, banker).
+        Share only what is required for the engagement.
+      examples:
+        - CPA review documents and workpapers
+        - Attorney review documents
+        - Registered agent correspondence
+        - Bank-requested documents
+        - Audit support materials
+      storage_rule: Private cloud. Share via secure channel only. Do not email unencrypted.
+
+    division-level:
+      label: Division Level
+      description: >
+        Accessible to personnel operating within a specific division or subsidiary.
+        Does not include holding-level legal, financial, or IP records.
+      examples:
+        - Non-sensitive division operating documents
+        - Project documents and briefs
+        - Standard operating procedures (SOPs)
+        - Division-level policy documents
+        - Content and production working files
+      storage_rule: Private cloud or division-scoped shared storage.
+
+    internal:
+      label: Internal
+      description: >
+        Accessible to all authorized internal personnel across the entity.
+        Non-sensitive governance and operational reference materials.
+      examples:
+        - Internal policy documents
+        - Non-sensitive governance schemas
+        - Internal README files
+        - Operational checklists
+        - Meeting agendas (non-binding)
+      storage_rule: Private cloud or internal shared storage.
+
+    public:
+      label: Public
+      description: >
+        Accessible to anyone. Must contain no sensitive, confidential,
+        or personally identifiable information.
+      examples:
+        - Public README files
+        - Public governance templates
+        - Open governance schemas
+        - Non-sensitive brand and public-facing documents
+        - Open-source project documentation
+      storage_rule: May be stored in public GitHub repositories or public web locations.
+
+  prohibited_in_public_storage:
+    - EIN and tax identification numbers
+    - Bank account numbers and routing numbers
+    - Signed legal agreements
+    - Personal addresses and identification
+    - Credentials, passwords, and secrets
+    - IP assignments and confidential IP records
+    - Any record classified owner-only or trusted-advisor

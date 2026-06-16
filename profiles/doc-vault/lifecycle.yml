@@ -1,0 +1,149 @@
+lifecycle:
+  profile: gc.profile.doc-vault
+  version: 0.1.0
+
+  internal_states:
+
+    draft:
+      description: Editable working version under active authoring.
+      storage: working/
+      file_format: .docx or .md
+      version_range: v0-x
+      transitions_to:
+        - review
+        - archived
+      rules:
+        - may contain tracked changes and comments
+        - must not be treated as an official record
+
+    review:
+      description: Document under formal review prior to execution.
+      storage: review/
+      file_format: .docx or .md
+      version_range: v0-x
+      transitions_to:
+        - approved-for-execution
+        - draft
+        - archived
+      rules:
+        - must reflect reviewer notes or tracked changes
+        - version increments through v0-x until approved
+
+    approved-for-execution:
+      description: Document approved and ready for signing or formal adoption.
+      storage: review/
+      file_format: .docx or .pdf
+      version_range: v0-9 or v1-0
+      transitions_to:
+        - executed
+      rules:
+        - no further edits permitted after approval
+        - must be countersigned or formally adopted before moving to executed
+
+    executed:
+      description: Signed, filed, or formally adopted official record.
+      storage: executed/
+      file_format: .pdf (primary) + .docx source
+      version_range: v1-0 and above
+      transitions_to:
+        - superseded
+        - legal-hold
+        - archived
+      rules:
+        - executed PDFs must never be overwritten or modified
+        - matching .docx source must be retained alongside the PDF
+        - first executed version is always v1-0
+        - amendments increment to v1-1, v1-2, etc.
+        - restatements increment to v2-0, v3-0, etc.
+
+    superseded:
+      description: Replaced by a newer executed version.
+      storage: archive/superseded/
+      transitions_to:
+        - archived
+        - legal-hold
+      rules:
+        - superseded executed records move immediately to archive/superseded/
+        - must retain original filename plus superseded date in version index
+
+    archived:
+      description: No longer active; retained for record-keeping.
+      storage: archive/
+      sub_locations:
+        old_drafts: archive/old-drafts/
+        superseded: archive/superseded/
+      rules:
+        - archived records must not be edited
+        - archive index must record original path, archive date, reason, and retention category
+
+    destroyed:
+      description: Record has been permanently deleted per retention schedule.
+      rules:
+        - destruction is only permitted after retention period expires
+        - legal hold overrides destruction eligibility
+        - a destruction log entry must be created before deletion
+        - actual file deletion removes the record; the log entry is the only remaining artifact
+
+    legal-hold:
+      description: Record is under legal hold and must not be modified or disposed of.
+      rules:
+        - legal hold overrides retention schedule
+        - legal hold overrides archive disposition
+        - legal hold overrides destruction eligibility
+        - release requires explicit written authorization
+        - legal hold notice must be filed in the record's folder
+
+  external_states:
+
+    issued:
+      description: >
+        Formally assigned by a government authority or official body.
+        The document itself is the assignment — it does not need to be executed by the entity.
+      examples:
+        - EIN letters from the IRS
+        - State-issued licenses and permits
+        - Court orders
+        - Government confirmation letters
+      storage: appropriate domain folder (executed/ or root)
+      rules:
+        - treated as immutable from point of receipt
+        - enters directly without passing through draft/review/executed
+        - retained in format received
+
+    confirmation:
+      description: >
+        A receipt or acknowledgment that an action or filing occurred.
+        Confirms an event but is not the primary record of that event.
+      examples:
+        - State filing receipts
+        - Bank account opening confirmations
+        - Registered agent acceptance notices
+        - Payment receipts
+      storage: appropriate domain folder
+      rules:
+        - treated as immutable from point of receipt
+        - enters directly without passing through draft/review/executed
+        - retained in format received
+
+    received:
+      description: >
+        A document sent by a third party that the entity did not originate
+        and did not sign as the executing party.
+      examples:
+        - Bank agreements originated by the bank
+        - CPA deliverables and letters
+        - Vendor contracts originated by the other party
+        - Insurance certificates
+      storage: appropriate domain folder
+      rules:
+        - treated as immutable from point of receipt
+        - enters directly without passing through draft/review/executed
+        - retained in format received
+        - may require countersignature to become executed
+
+  transition_rules:
+    - executed records must never be overwritten
+    - superseded executed records move to archive/superseded/
+    - old drafts move to archive/old-drafts/
+    - legal-hold overrides all disposition and destruction actions
+    - external records bypass internal lifecycle and enter as issued, confirmation, or received

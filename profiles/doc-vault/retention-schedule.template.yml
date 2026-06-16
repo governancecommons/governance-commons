@@ -1,0 +1,104 @@
+retention_schedule:
+  profile: gc.profile.doc-vault
+  version: 0.1.0
+  entity: "[entity name]"
+  entity_prefix: "[entity prefix]"
+  effective_date: "[YYYY-MM-DD]"
+  reviewed_by: "[advisor name and role]"
+
+  notice: >
+    Retention periods defined in this schedule are templates only.
+    They must be reviewed and approved by qualified legal, tax, and compliance
+    advisors for the specific jurisdiction, entity type, and document category
+    before being treated as binding policy.
+
+  categories:
+
+    permanent:
+      label: Permanent
+      retention_period: Indefinite — do not destroy
+      description: Records that must be retained for the life of the entity and beyond.
+      examples:
+        - Articles of Organization / Incorporation
+        - Operating Agreement and all amendments
+        - EIN assignment letter
+        - IP assignment agreements
+        - Corporate resolutions
+        - Ownership and membership records
+        - Formation documents
+      disposition: No destruction permitted
+
+    seven-years:
+      label: Seven Years
+      retention_period: 7 years from the later of creation date or effective date
+      description: Records typically required for tax, audit, and legal defensibility.
+      examples:
+        - Tax returns and supporting documentation
+        - Bank statements and financial records
+        - Contracts and agreements
+        - Invoices and receipts
+        - CPA workpapers and deliverables
+        - Employment and contractor records
+      disposition: Destroy-eligible after retention period unless legal hold applies
+      note: IRS audit window is generally 3 years but may extend to 6-7 years. Review with CPA.
+
+    three-years:
+      label: Three Years
+      retention_period: 3 years from creation or effective date
+      description: Records with a standard short-term retention requirement.
+      examples:
+        - General correspondence
+        - Non-critical vendor communications
+        - Meeting notes (non-binding)
+        - Routine administrative records
+      disposition: Destroy-eligible after retention period unless legal hold applies
+
+    one-year:
+      label: One Year
+      retention_period: 1 year from creation or effective date
+      description: Short-lived operational records.
+      examples:
+        - Drafts superseded by an executed version
+        - Routine reference materials
+        - Temporary working documents
+      disposition: Destroy-eligible after retention period
+
+    until-superseded:
+      label: Until Superseded
+      retention_period: Retain until replaced by a newer executed version, then move to archive/superseded
+      description: Records that are replaced by newer versions of the same document.
+      examples:
+        - Superseded operating agreement versions
+        - Superseded policies
+        - Superseded SOPs
+      disposition: Move to archive/superseded/ on replacement; apply seven-years or permanent from that date
+
+    until-project-close:
+      label: Until Project Close
+      retention_period: Retain until the project is formally closed, then apply standard category
+      description: Records tied to a specific project lifecycle.
+      examples:
+        - Project charters
+        - Project working documents
+        - Project correspondence
+      disposition: Apply appropriate category (seven-years or three-years) after project close
+
+    legal-hold:
+      label: Legal Hold
+      retention_period: Indefinite — until legal hold is formally released
+      description: Records subject to active legal hold. Overrides all other retention rules.
+      examples:
+        - Any record relevant to actual or anticipated litigation
+        - Any record subject to regulatory inquiry
+        - Any record flagged by legal counsel
+      disposition: No destruction permitted until hold is released in writing
+
+    destroy-eligible:
+      label: Destroy Eligible
+      retention_period: May be destroyed after retention period if no legal hold applies
+      description: Records that have passed their retention period and are cleared for destruction.
+      rules:
+        - Confirm no legal hold applies before destruction
+        - Log destruction in the destruction log before deleting
+        - Destruction log entry must include date, actor, filename, retention category, and reason
+      disposition: Permanent deletion after logging
