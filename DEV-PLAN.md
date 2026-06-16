@@ -131,6 +131,127 @@ spec surface required for a credible v1.0 public release.
 
 ---
 
+## PASS-6 — Optional Profiles & Document Vault Expansion
+
+**Status:** PROPOSED — requires AL:2 sign-off before opening
+**time.loc:** 2026-06-15T00:00:00Z
+**Seed:** gc.profile.doc-vault v0.1.0 committed 2026-06-15 (674ac0f)
+
+PASS-6 owns optional category-defining profiles and the document vault capability track.
+The OSS core baseline is frozen. Everything in this section extends it without modifying it.
+
+### Background
+
+On 2026-06-15, while setting up Osprey Holding LLC's business document repository,
+`gc.profile.doc-vault` was developed and committed. This became the first GC profile for
+non-code repositories. The session revealed a broader product opportunity: governed document
+repositories are a more accessible adoption wedge than multi-agent governance for most users.
+
+Key insight: "My files are a mess" is easier to understand than "multi-agent governance framework."
+The doc vault profile targets founders, solo operators, LLCs, studios, and consultants —
+people who need structure but not enterprise DMS software.
+
+### What was built in the seed session (2026-06-15)
+
+- `profiles/doc-vault/` — 21 files: profile.yml, controls.yml, lifecycle.yml, metadata.schema.yml,
+  standards-map.md, retention-schedule.template.yml, access-matrix.template.yml,
+  archive-rules.md, ai-access-boundaries.md, 7 templates, Osprey Holding example
+- Extended lifecycle states beyond the original spec: `issued`, `confirmation`, `received`
+  for external records (government-issued docs, filing receipts, third-party received docs)
+- `.governance/` adoption pattern: profile.yml + ons.yml + retention.yml + agents.yml
+- `agents.yml` — agent briefing file: quick reference, folder map, rules, current state,
+  suggested prompts — the file that makes any LLM immediately context-aware without setup
+
+### PASS-6 Planned Scope (PROPOSED)
+
+#### Track I — Additional profiles
+
+Each profile follows the same structure as doc-vault: profile.yml, controls.yml, lifecycle.yml,
+metadata.schema.yml, standards-map.md, templates/, examples/.
+
+| id | name | purpose |
+|---|---|---|
+| gc.profile.doc-vault | Doc Vault | ✅ DONE — governed document repositories |
+| gc.profile.code-repo | Code Repo | Software project governance (README, CONTRIBUTING, AGENTS.md, release rules) |
+| gc.profile.doc-control | Document Control | Policies, SOPs, board docs, approval matrices, signature rules |
+| gc.profile.audit-gap | Audit & Gap Analysis | required_documents.yml, gap_register.yml, risk_flags.yml — feeds DCP scanner |
+| gc.profile.agent-vault | Agent Integration | agents.yml, context_manifest.yml, prompts.md — AI-readable repo context |
+
+Note: gc.profile.code-repo overlaps with existing agent-dossier/agent-matrix work. Reconcile
+before building to avoid duplication. gc.profile.agent-vault may become a sub-component of
+all profiles rather than a standalone profile.
+
+#### Track II — Business type templates
+
+Pre-filled profile templates by entity type. Lower adoption barrier — user picks a type,
+gets a ready-to-use .governance/ folder and folder scaffold.
+
+Target types:
+
+- Wyoming single-member LLC (Osprey pattern — already exists as example)
+- Multi-entity holding company
+- Creative studio / content creator
+- Solo consultant / freelancer
+- Real estate holding
+- Nonprofit / foundation
+- SaaS startup
+- Family office
+
+#### Track III — agents.yml as standard profile component
+
+Every profile should ship with an `agents.yml` template. This is the file that makes GC
+adoption immediately useful to AI-assisted workflows. Standard fields:
+
+- briefing (plain English repo summary)
+- quick_reference (naming, status values, folder map)
+- rules_for_agents
+- sensitive_fields_never_share
+- current_state (what's done, what's pending, known gaps)
+- suggested_prompts (copy-paste prompts for common tasks)
+
+#### Track IV — DCP integration surface (PROPOSED, not designed)
+
+The audit/gap analysis capability (scan folder, detect missing docs, suggest renames,
+produce cleanup report) belongs in DCP, not in GC profiles. GC defines what good looks like.
+DCP checks whether the repo actually follows the rules.
+
+DCP integration points to define:
+
+- DCP reads `.governance/profile.yml` to know which profile to validate against
+- DCP reads `.governance/agents.yml` for current state baseline
+- DCP writes gap_register.yml and risk_flags.yml back into .governance/
+- DCP produces a cleanup report per gc.profile.audit-gap controls
+
+This is future scope. Do not implement validator code in GC profiles.
+
+#### Track V — Adoption UX (tooling concern, not GC concern)
+
+The following are product/tooling ideas that belong in DCP or a separate CLI tool, not in GC:
+
+- Installer wizard ("which profile do you want?")
+- Folder scaffold generator from plain-language questions (no YAML required)
+- Audit button ("scan this folder and show what's missing")
+- Preview changes before applying
+- Export install report
+- Auto-generate agent-ready prompts from profile
+
+### Standards alignment note
+
+gc.profile.doc-vault is aligned with ISO 15489, ISO 9001 Clause 7.5, NIST CSF 2.0,
+ARMA GARP, and SOC 2 readiness concepts. It does NOT make an adopter compliant, certified,
+or audit-ready. Language throughout uses "aligned with," "informed by," "supports readiness for."
+This distinction must be preserved across all PASS-6 profiles.
+
+### What is intentionally out of scope for PASS-6
+
+- Validator code in GC profiles (belongs in DCP)
+- DCP modification
+- Certification claims
+- ISO compliance certification
+- Enterprise DMS features
+
+---
+
 ## CHARTER AND PROCESS
 
 The operating model gaps Codex flagged as the real missing pieces. These govern how Governance
