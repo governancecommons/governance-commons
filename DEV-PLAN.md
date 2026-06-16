@@ -252,6 +252,97 @@ This distinction must be preserved across all PASS-6 profiles.
 
 ---
 
+## PASS-7 — Adoption & Compliance Infrastructure
+
+**Status:** PROPOSED — requires AL:2 sign-off before opening
+**time.loc:** 2026-06-15T00:00:00Z
+**Depends on:** PASS-6 profiles and .governance/ adoption pattern
+
+PASS-7 is the compliance readiness and adoption infrastructure track. Where PASS-6 defines
+what good looks like, PASS-7 provides the scaffolding for organizations to actually demonstrate
+they are following the rules over time — building toward real audit readiness, not just alignment.
+
+The four things that separate "aligned with ISO" from "ISO compliant" are:
+
+1. Formal audit by an accredited body
+2. Documented evidence over time
+3. Trained personnel following processes consistently
+4. A corrective action system
+
+GC cannot perform the audit or train the people. But it can provide the structure for
+accumulating evidence, recording training, and tracking corrective actions — so that when
+an auditor arrives, the evidence exists and is organized.
+
+### Track I — Compliance Evidence Accumulation
+
+GC already has `schemas/gc-compliance-evidence.schema.json` (PASS-4, GC-4-E-04) for
+AI agent audit evidence. PASS-7 extends this pattern to document repository governance.
+
+Deliverables:
+
+- `gc.profile.compliance-evidence` — evidence bundle schema for doc vault governance
+- Templates for recording evidence of controls being followed over time
+- Evidence log: date, control, actor, action taken, outcome, artifact reference
+- Linkage from `.governance/` controls to evidence log entries
+- Supports: ISO 15489, ISO 9001 Cl. 7.5, NIST CSF 2.0, ARMA GARP, SOC 2
+
+### Track II — Corrective Action System
+
+A corrective action system (CAS) tracks when a control was violated, what was done to fix it,
+and whether the fix was verified. This is required for ISO 9001 Clause 10.2 and SOC 2 CC4.
+
+Deliverables:
+
+- `corrective-action-register.template.yml` — log of identified nonconformances
+- `corrective-action-record.template.md` — formal CAR document per issue
+- Required fields: date identified, control violated, root cause, corrective action taken,
+  verification date, closed by
+- Integration point: DCP gap scanner writes findings → CAR template → evidence log
+
+### Track III — Training & Awareness Records
+
+Trained personnel following processes consistently is a real ISO requirement. GC can provide
+the structure for recording that training occurred.
+
+Deliverables:
+
+- `training-record.template.md` — who was trained, on what policy, when, verified by
+- `awareness-log.template.md` — log of policy acknowledgments (e.g., "I have read OH-GOV-DOC-001")
+- Applies to: document lifecycle policy, AI access boundaries, sensitive data handling, access control
+
+### Track IV — Audit Readiness Package
+
+When an auditor arrives (ISO, SOC 2, or otherwise), they need a package. GC can define
+what that package contains and provide templates to assemble it.
+
+Deliverables:
+
+- `gc.profile.audit-readiness` — profile for assembling an audit evidence package
+- `audit-readiness-checklist.template.md` — control-by-control checklist with evidence pointers
+- `audit-scope.template.yml` — defines what is in scope for a given audit engagement
+- `audit-index.template.md` — table of contents for the evidence package
+- Integrates with: compliance evidence log, corrective action register, training records
+
+### Track V — Accredited Audit Path (out of GC scope — recorded for clarity)
+
+GC cannot and will not provide accredited audits. This is explicitly out of scope.
+The path to actual certification requires:
+
+- Engaging an accredited certification body (ISO) or qualified auditor (SOC 2)
+- Accumulating evidence over a defined period (SOC 2 Type II requires minimum 6 months)
+- Resolving all open corrective actions before the audit window closes
+- Maintaining the certified state through surveillance audits (ISO) or annual reviews (SOC 2)
+
+GC's role ends at providing the structure. The organization and its advisors do the rest.
+
+### Standards note for PASS-7
+
+All PASS-7 deliverables carry the same language discipline as PASS-6:
+"supports readiness for," "provides structure for," "informed by."
+No PASS-7 artifact claims compliance, certification, or legal sufficiency.
+
+---
+
 ## CHARTER AND PROCESS
 
 The operating model gaps Codex flagged as the real missing pieces. These govern how Governance
