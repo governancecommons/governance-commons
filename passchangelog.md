@@ -146,4 +146,40 @@ events without it. Closes GC-3-E-01.
 
 ---
 
+## GC-PASS-2026-0006 — 2026-06-16
+
+**pass_id**: GC-PASS-2026-0006
+**change_type**: governance
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: governance-commons profiles/, dxp-org/dvp (new repo unblocked)
+
+**what**: PASS-6 formally opened. Scope: optional category-defining profiles and the Doc Vault
+Plane (DVP) capability track. gc.profile.doc-vault v0.1.0 (committed 2026-06-15, 674ac0f) is
+accepted as the PASS-6 seed artifact. DVP repository creation is now unblocked.
+
+**why**: gc.profile.doc-vault was developed and committed during the Osprey LLC vault setup
+session on 2026-06-15. The work proved that GC profiles for non-code repositories are viable
+and that document governance is an accessible adoption wedge. PASS-6 scope was fully documented
+in DEV-PLAN.md (added 2026-06-15) but could not begin formally without AL:2 sign-off.
+The OSS baseline is frozen at PASS-5 Batch 2; PASS-6 extends without modifying it.
+
+**new_constraints**:
+
+- All PASS-6 profiles must use "aligned with," "informed by," "supports readiness for" language.
+  No profile may claim compliance, certification, or audit-readiness.
+- Validator code belongs in DCP, not in GC profile definitions.
+- gc.profile.code-repo must reconcile with existing agent-dossier/agent-matrix work before build.
+- gc.profile.agent-vault scope must be evaluated as a sub-component of all profiles vs.
+  standalone before committing to a standalone build.
+- DVP is a separate product from DCP; it must not modify DCP or absorb DCP scope.
+
+**reasoning**: The PASS-6 boundary (optional profiles as extensions, not baseline changes)
+was established during the OSS freeze decision (2026-06-09, PASS-5 Batch 2). Opening PASS-6
+does not reopen the baseline. The Osprey session proved the doc-vault concept end-to-end with
+a real entity — that is sufficient evidence to open the track. DVP creation was explicitly
+listed as blocked on this sign-off; unblocking it was the primary trigger for this entry.
+
+---
+
 <!-- New entries go above this line, newest first -->

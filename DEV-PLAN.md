@@ -133,7 +133,7 @@ spec surface required for a credible v1.0 public release.
 
 ## PASS-6 — Optional Profiles & Document Vault Expansion
 
-**Status:** PROPOSED — requires AL:2 sign-off before opening
+**Status:** OPEN — GC-PASS-2026-0006 (2026-06-16)
 **time.loc:** 2026-06-15T00:00:00Z
 **Seed:** gc.profile.doc-vault v0.1.0 committed 2026-06-15 (674ac0f)
 
