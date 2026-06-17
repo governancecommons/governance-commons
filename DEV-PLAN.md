@@ -235,6 +235,57 @@ The following are product/tooling ideas that belong in DCP or a separate CLI too
 - Export install report
 - Auto-generate agent-ready prompts from profile
 
+### Track VI — DVP (Doc Vault Plane)
+
+**DVP** is the named control plane for business document repositories.
+It is a separate product from DCP and targets a different audience.
+
+```text
+DCP   DevX Control Plane     code repos        developer audience
+DVP   Doc Vault Plane        business docs     founder / operator audience
+```
+
+Both sit on top of GC. Both read GC profiles. Completely separate tools, same underlying standard.
+
+**What DVP owns:**
+
+- Business vault installer (folder scaffold + .governance/ generation from plain questions)
+- Business type templates (Holding Company, Creative Studio, Solo Consultant, etc.)
+- Audit scanner: reads .governance/profile.yml, scans folder, reports gaps and misfiles
+- Cleanup report generator
+- agents.yml refresh (keeps current_state accurate as the vault evolves)
+- MCP config generator ("Connect to Claude Desktop" button)
+- Agent context prompt generator ("Copy Agent Context")
+- Dry-run / preview mode before applying changes
+- Windows + OneDrive-aware path handling
+
+**What DVP does NOT own:**
+
+- Profile definitions (those are GC)
+- Naming grammar (that is ONS)
+- Code repo governance (that is DCP)
+- Accredited audits or compliance certification
+
+**Build order (PROPOSED):**
+
+1. PowerShell/Python CLI — validates concept, works on Windows today
+2. Simple local web UI — accessible to non-developers
+3. Desktop app (Tauri or Electron) — only after adoption proves demand
+
+**DVP reads:**
+
+- `GC profiles/` — to know what a governed vault should look like
+- `.governance/profile.yml` — to know which profile the vault declares
+- `.governance/agents.yml` — to know current state and update it after scans
+
+**DVP writes:**
+
+- `.governance/` folder and all config files (on install)
+- `agents.yml current_state` (on scan)
+- `gap_register.yml` (on audit)
+- Cleanup report (on audit)
+- MCP config snippet (on connect)
+
 ### Standards alignment note
 
 gc.profile.doc-vault is aligned with ISO 15489, ISO 9001 Clause 7.5, NIST CSF 2.0,
