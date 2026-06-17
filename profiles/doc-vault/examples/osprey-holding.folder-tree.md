@@ -1,13 +1,13 @@
-# Osprey Holding LLC — Example Folder Tree
+# Osprey LLC — Example Folder Tree
 
 **Profile:** gc.profile.doc-vault  
-**Entity:** Osprey Holding LLC (`oh`)  
+**Entity:** Osprey LLC (`oh`)  
 **Note:** This is an illustrative example only. No private legal documents are included.
 
 ---
 
 ```
-Osprey_Holding_LLC/
+Osprey_LLC/
 │
 ├── .governance/
 │   ├── profile.yml                          ← declares gc.profile.doc-vault

@@ -2,7 +2,7 @@ profile: gc.profile.doc-vault
 profile_version: 0.1.0
 adopted_date: 2026-06-15
 
-entity_name: Osprey Holding LLC
+entity_name: Osprey LLC
 entity_prefix: oh
 repo_type: document-repository
 ons_required: true
@@ -41,7 +41,7 @@ active_controls:
   - ai_access_boundaries
 
 notes: >
-  Osprey Holding LLC is a Wyoming single-member LLC formed 2026-06-15.
+  Osprey LLC is a Wyoming single-member LLC formed 2026-06-15.
   This repository governs holding-level legal, governance, finance, IP,
   and administrative records. Division-level records are organized under
   04_divisions/ by division folder.

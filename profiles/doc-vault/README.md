@@ -86,4 +86,4 @@ To adopt this profile, add a `.governance/` folder to your document repository r
 └── ons.yml           ← your entity prefix and naming rules
 ```
 
-See `examples/` for a complete adoption example using Osprey Holding LLC.
+See `examples/` for a complete adoption example using Osprey LLC.

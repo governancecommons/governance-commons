@@ -142,7 +142,7 @@ The OSS core baseline is frozen. Everything in this section extends it without m
 
 ### Background
 
-On 2026-06-15, while setting up Osprey Holding LLC's business document repository,
+On 2026-06-15, while setting up Osprey LLC's business document repository,
 `gc.profile.doc-vault` was developed and committed. This became the first GC profile for
 non-code repositories. The session revealed a broader product opportunity: governed document
 repositories are a more accessible adoption wedge than multi-agent governance for most users.
@@ -155,7 +155,7 @@ people who need structure but not enterprise DMS software.
 
 - `profiles/doc-vault/` — 21 files: profile.yml, controls.yml, lifecycle.yml, metadata.schema.yml,
   standards-map.md, retention-schedule.template.yml, access-matrix.template.yml,
-  archive-rules.md, ai-access-boundaries.md, 7 templates, Osprey Holding example
+  archive-rules.md, ai-access-boundaries.md, 7 templates, Osprey example
 - Extended lifecycle states beyond the original spec: `issued`, `confirmation`, `received`
   for external records (government-issued docs, filing receipts, third-party received docs)
 - `.governance/` adoption pattern: profile.yml + ons.yml + retention.yml + agents.yml
