@@ -307,4 +307,43 @@ demonstrable technical leadership beyond table-stakes compliance.
 ---
 
 *This file sets ecosystem structure and phase gates. Per-repo task execution lives in each repo's own devpath.*
+
+---
+
+## INDUSTRY GAP ANALYSIS — Governance Commons
+
+**Framework:** 12-question gap analysis (c:\dev\docs\gap-analysis-framework.md v1.1)
+**Applied:** 2026-06-16
+**Scope:** Governance Commons as an AI agent governance standards ecosystem
+**Gap states:** `open` | `spec-complete` | `release-complete` | `runtime-complete`
+
+A gap is not closed until: (1) mechanism exists, (2) it is tested, (3) it is observable, (4) it is discoverable.
+
+---
+
+| Q | Area | Priority | Gap | Status | Suggested Action |
+|---|---|---|---|---|---|
+| Q1 | Regulatory | High | EU AI Act (Aug 2, 2026) not a release gate; GDPR data subject rights not modeled; CO ADMT 2027 not addressed | open | Add jurisdiction profiles to PASS-6: EU AI Act, GDPR, CO ADMT 2027, CA/NY transparency |
+| Q2 | Standards | High | SLSA provenance and SBOM open; ISO 42001 + NIST AI RMF + SOC 2 mapped but not published as release artifacts | spec-complete | Finish SLSA provenance, SBOM, release attestations for all published packages |
+| Q3 | De Facto | Medium | MCP/A2A/CloudEvents specified and tested; no external adoption proof running against real tooling | spec-complete | Publish examples running against real MCP/CloudEvents tooling, not just schemas |
+| Q4 | Best Practice | Medium | Strong schemas/test vectors; no live reference verifier service for signed evidence and audit chains | spec-complete | Build reference verifier service for signed evidence, conformance, audit chains |
+| Q5 | Security | High | STRIDE, zero-trust, JWS/Ed25519, revocation defined; PKI key discovery and federated trust immature | spec-complete | Define key discovery, revocation propagation, trust-anchor registry |
+| Q6 | Ops | Medium | Governance of operations exists; no public runbooks for validator failure, compromised key, revoked agent | open | Add runbooks for validator failure, compromised key, revoked agent, broken evidence chain |
+| Q7 | DevEx | High | SDK exists locally; PyPI/npm publish and first-user install path still open | open | Finish PyPI/npm publish and 5-minute governed-agent example (PASS-5 Batch 4) |
+| Q8 | Interop | Medium | Good protocol coverage; no "works with your stack" proof for LangChain, AutoGen, OIDC, GitHub Actions | open | Add GitHub Actions, Prometheus/Grafana, OIDC, LangChain/AutoGen examples |
+| Q9 | Process | Medium | RFC and conformance exist; no steering/WG structure established | spec-complete | Create lightweight maintainer roles before enterprise adoption claims |
+| Q10 | Docs | Medium | Improved; nested spec repos confuse newcomers; no ecosystem map | open | Add ecosystem map and "which repo do I need?" guide |
+| Q11 | Testing | Medium | ONS/matrix/SDK have tests; cross-spec conformance suite not packaged | open | Create `gc-conformance-suite` with fixtures across dossier, matrix, ONS, APO |
+| Q12 | Ahead | High | Best-positioned repo for category-defining work — constitutional governance, federated trust, temporal authority, audit replay | open | Prioritize constitutional governance layer and audit replay as first PASS-6 optional profiles |
+
+### Doc Vault / DVP additions (2026-06-16)
+
+| Q | Area | Priority | Gap | Status |
+|---|---|---|---|---|
+| Q1 | Regulatory | Medium | ISO 15489, ARMA GARP aligned but no jurisdiction-specific retention law mapping (IRS 7-year, SOX, HIPAA) | open |
+| Q2 | Standards | Medium | doc-vault standards-map.md covers alignment; no formal conformance schema for doc vault profile | open |
+| Q3 | De Facto | Medium | No integration with OneDrive, Google Drive, Dropbox — where actual business docs live | open |
+| Q7 | DevEx | High | DVP installer does not exist yet; adoption requires manual setup | open |
+| Q12 | Ahead | High | `.governance/` as machine-readable business constitution — no product owns this space yet | open |
+
 *Do not add per-repo task tables here — update the relevant repo's planning docs instead.*
