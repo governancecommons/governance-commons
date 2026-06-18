@@ -1,4 +1,4 @@
-# DEV-PLAN — Governance Commons Execution Plan
+﻿# DEV-PLAN — Governance Commons Execution Plan
 
 **AUTHORITY LEVEL: AL:2**
 **Status:** ACTIVE — canonical execution and release planning source
@@ -21,7 +21,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 ## CURRENT EXECUTION POSITION
 
-**Active PASS:** PASS-5 (Public Release Train) — opened 2026-06-08 via GC-PASS-2026-0015
+**Active PASS:** PASS-5 (Public Release Train) — opened 2026-06-08 via GC-PASS-0015.00
 **Primary active tracks:** Track Foxtrot (PyPI + npm publish, release train manifest, GitHub Releases) · Track Golf (GitHub org, governancecommons.org, release notes) · Track Hotel (RFC process, ADOPTERS.md, conformance badge criteria)
 **Completed tracks:** Track Alpha PASS-1 + PASS-2 + PASS-4 closed · Track Bravo PASS-2 + PASS-4 closed · Track Charlie PASS-1 + PASS-3 closed · Track Delta PASS-1 + PASS-2 closed · Track Echo PASS-3 + PASS-4 closed
 **Next milestone:** PASS-5 close-out → GC v1.2.0 declaration → PASS-6 (Category-Defining Profile)
@@ -31,20 +31,20 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 **Recently completed:**
 
 - OSS core baseline freeze decision recorded (2026-06-09): PASS-5 Batch 2 is the frozen open-source baseline for the first public GC release; no new baseline scope before release close-out; PASS-6 owns optional category-defining profiles and commercial-capability paths; forking deferred.
-- PASS-4 gate review passed (2026-06-08, GC-PASS-2026-0015): all 7 exit criteria met; PASS-5 open. EU AI Act coverage satisfied via `control_frameworks` reference in `schemas/gc-compliance-evidence.schema.json`.
+- PASS-4 gate review passed (2026-06-08, GC-PASS-0015.00): all 7 exit criteria met; PASS-5 open. EU AI Act coverage satisfied via `control_frameworks` reference in `schemas/gc-compliance-evidence.schema.json`.
 - GC-3-E-03 closed (2026-06-08): `governance/iso-42001-mapping.yaml` v1.0.0 — ISO/IEC 42001:2023 AIMS full mapping; Sections 4–10 + Annex A controls A.2–A.10; coverage levels (full/partial/planned/out_of_scope); all GC artifacts cross-referenced per clause
 - GC-3-E-02 closed (2026-06-08): `governance/nist-ai-rmf-mapping.yaml` v1.0.0 — NIST AI RMF 1.0 full mapping; all four functions (GOVERN, MAP, MEASURE, MANAGE); 22 subcategory outcomes mapped to GC artifacts; coverage levels and gap notes included
 - GC-4-E-02 closed (2026-06-08): tamper-evident audit log hash chaining — `audit_log_chain` section in `docs/observability-contract.yaml` (SHA-256 canonical serialization spec, verification algorithm, 5 compliance rules chain-1 through chain-5); `gc_chain_id`, `gc_chain_seq`, `gc_prev_event_hash` fields added to `schemas/gc-agent-event.schema.json`
 - GC-4-E-03 closed (2026-06-08): security and anomaly detection event categories — `security_events` section in `docs/observability-contract.yaml` (5 new spans: gc.agent.anomaly.detected, policy.violation, constraint.breach, auth.failure, chain.integrity_failure; 5 compliance rules sec-1 through sec-5); 5 new `gc_event_type` enum values and security-specific fields added to `schemas/gc-agent-event.schema.json`
 - GC-4-E-04 closed (2026-06-08): signed compliance evidence export — `schemas/gc-compliance-evidence.schema.json` v1.0.0 — bundle_id, evidence_period, control_frameworks (NIST-AI-RMF/ISO-42001/SOC2/EU-AI-Act), events array, bundle_hash (SHA-256 canonical), JWS EdDSA signature block; chain_verified flag; allOf conditional for chain integrity requirement
 - GC-3-E-01 closed (2026-06-08): observability-contract.yaml v1.0.0 — 7 canonical lifecycle span definitions with required fields, structured event schema (schemas/gc-agent-event.schema.json), 12 compliance rules, DDR-6 Layer 3 enforcement; JSON Schema validates correctly
-- GC-CONSTRAINT-001 registered (2026-06-08, GC-PASS-2026-0014): agent authority constraints — prohibited actions (AC-001 through AC-007), proposal protocol, and remediation rules; DEV-PATH authority model strengthened with agent boundary rule
-- PASS-3 gate review passed (2026-06-08, GC-PASS-2026-0013): all 6 exit criteria met; PASS-4 open
-- PASS-2 gate review passed (2026-06-07, GC-PASS-2026-0012): all 8 exit criteria met; PASS-3 open
+- GC-CONSTRAINT-001 registered (2026-06-08, GC-PASS-0014.00): agent authority constraints — prohibited actions (AC-001 through AC-007), proposal protocol, and remediation rules; DEV-PATH authority model strengthened with agent boundary rule
+- PASS-3 gate review passed (2026-06-08, GC-PASS-0013.00): all 6 exit criteria met; PASS-4 open
+- PASS-2 gate review passed (2026-06-07, GC-PASS-0012.00): all 8 exit criteria met; PASS-3 open
 - PASS-2 Batch 4 closed (2026-06-07, PASS-2026-0011): GC-3-B-04 (streaming output SECTION 15B, 33 tests), GC-3-B-05 (prompt injection defense SECTION 16B, 37 tests); 70/70 pass
 - PASS-2 Batch 3 closed (2026-06-07, PASS-2026-0010): GC-3-B-02 (A2A 5/5), GC-3-B-03 (CloudEvents 5/5, 5 event schemas, 68 tests)
-- PASS-2 Batch 2 closed (2026-06-07, GC-PASS-2026-0005): GC-3-A-03 (zero-trust spec — establishment, rotation, revocation)
-- PASS-2 Batch 1 closed (2026-06-07, GC-PASS-2026-0004): GC-3-A-01 (handoff JWS/Ed25519 signature), GC-3-A-02 (DID-compatible crypto_identity), GC-3-B-06 (STRIDE threat model)
+- PASS-2 Batch 2 closed (2026-06-07, GC-PASS-0005.00): GC-3-A-03 (zero-trust spec — establishment, rotation, revocation)
+- PASS-2 Batch 1 closed (2026-06-07, GC-PASS-0004.00): GC-3-A-01 (handoff JWS/Ed25519 signature), GC-3-A-02 (DID-compatible crypto_identity), GC-3-B-06 (STRIDE threat model)
 - Source 97–102 gap analysis series read and synthesized
 - Three source_102 design decisions answered in DEV-PATH.md (DDR-1 through DDR-5)
 - Ecosystem planning infrastructure created (DEV-PATH, DEV-PLAN, TRACKS, projects.yaml, tools/gc-status.ps1)
@@ -61,13 +61,13 @@ All 19 PASS-1 immediate tasks closed. See CHANGELOG entries PASS-2026-0004 throu
 
 ---
 
-**PASS-2 immediate next tasks (Batch 1 — parallel):** ✅ CLOSED 2026-06-07 (GC-PASS-2026-0004)
+**PASS-2 immediate next tasks (Batch 1 — parallel):** ✅ CLOSED 2026-06-07 (GC-PASS-0004.00)
 
 1. ~~GC-3-A-01~~ — agent-dossier: handoff envelope JWS/Ed25519 signature schema — DONE: `signature_block` in spec + `handoff-envelope-signature.schema.json` + `handoff-envelope.schema.json` updated + valid/invalid examples
 2. ~~GC-3-A-02~~ — agent-dossier: agent identity DID-compatible binding — DONE: `identity_block.crypto_identity` (did / public_key) in spec + `agent-dossier-instance.schema.json` updated + examples
 3. ~~GC-3-B-06~~ — governance-commons root: STRIDE threat model — DONE: `governance/threat-model.md` covering all 6 STRIDE categories with mitigations; cross-references multi-agent.yaml T-001–T-006
 
-**PASS-2 Batch 2:** ✅ CLOSED 2026-06-07 (GC-PASS-2026-0005)
+**PASS-2 Batch 2:** ✅ CLOSED 2026-06-07 (GC-PASS-0005.00)
 
 1. ~~GC-3-A-03~~ — governance-commons root: zero-trust spec — DONE: `governance/zero-trust.yaml` — establishment (4-phase), rotation (7-step + dual-sign transition), revocation (6-step, 5 triggers), key material rules, conformance profiles, residual risks
 
@@ -133,7 +133,7 @@ spec surface required for a credible v1.0 public release.
 
 ## PASS-6 — Optional Profiles & Document Vault Expansion
 
-**Status:** OPEN — GC-PASS-2026-0006 (2026-06-16)
+**Status:** OPEN — GC-PASS-0006.00 (2026-06-16)
 **time.loc:** 2026-06-15T00:00:00Z
 **Seed:** gc.profile.doc-vault v0.1.0 committed 2026-06-15 (674ac0f)
 

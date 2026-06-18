@@ -1,4 +1,4 @@
-# RFC-NNNN: <Title>
+﻿# RFC-NNNN: <Title>
 
 | Field | Value |
 |-------|-------|
@@ -34,7 +34,7 @@ _Other approaches you evaluated. For each: what it is, why it was not chosen._
 
 ## Prior art
 
-_Relevant external standards, prior GC decisions (DDR-N, GC-PASS-YYYY-NNNN), or related RFCs
+_Relevant external standards, prior GC decisions (DDR-N, GC-PASS-NNNN.NN), or related RFCs
 that informed this proposal._
 
 ## Compatibility impact

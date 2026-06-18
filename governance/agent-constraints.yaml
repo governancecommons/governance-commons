@@ -1,4 +1,4 @@
-id: GC-CONSTRAINT-001
+﻿id: GC-CONSTRAINT-001
 title: Agent Authority Constraints
 authority_level: "AL:2"
 effective: "2026-06-08T00:00:00Z"
@@ -119,4 +119,4 @@ remediation:
     Example: PASS-3 exit criteria "published to PyPI/npm" were written by an
     agent without sign-off (AC-001, AC-005 violations). Ratified 2026-06-08 as:
     criteria corrected to "publish-ready"; actual publish moved to PASS-5
-    (GC-PASS-2026-0013 reflects this correction).
+    (GC-PASS-0013.00 reflects this correction).

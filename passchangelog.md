@@ -1,9 +1,9 @@
-# PASSCHANGELOG — Governance Commons
+﻿# PASSCHANGELOG — Governance Commons
 
 Ecosystem-level governance decisions for the Governance Commons ecosystem.
 For per-spec implementation changes, see each spec's own `passchangelog.md` and `CHANGELOG.md`.
 
-ID format: GC-PASS-YYYY-NNNN (year, 4-digit sequence). Newest first.
+ID format: GC-PASS-NNNN.NN (4-digit sequence — execution order). Newest first.
 
 ---
 
@@ -18,7 +18,7 @@ Use the format that matches `change_type`. Do not mix them.
 For passes that create or extend something — new specs, schemas, rules, tooling.
 
 ```markdown
-**pass_id**: GC-PASS-YYYY-NNNN
+**pass_id**: GC-PASS-NNNN.NN
 **change_type**: build
 **authority_level**: AL:1 | AL:2 | AL:3
 **status**: ACCEPTED
@@ -37,7 +37,7 @@ For passes that create or extend something — new specs, schemas, rules, toolin
 For passes that resolve a problem — bugs, contradictions, drift, bad prior decisions.
 
 ```markdown
-**pass_id**: GC-PASS-YYYY-NNNN
+**pass_id**: GC-PASS-NNNN.NN
 **change_type**: fix
 **authority_level**: AL:1 | AL:2 | AL:3
 **status**: ACCEPTED
@@ -52,9 +52,9 @@ For passes that resolve a problem — bugs, contradictions, drift, bad prior dec
 
 ---
 
-## GC-PASS-2026-0005 — 2026-06-07
+## GC-PASS-0005.00 — 2026-06-07
 
-**pass_id**: GC-PASS-2026-0005
+**pass_id**: GC-PASS-0005.00
 **change_type**: governance
 **authority_level**: AL:2
 **summary**: PASS-2 Batch 2 delivery. Closed GC-3-A-03 (zero-trust spec).
@@ -83,9 +83,9 @@ to PASS-3 key registry, real-time revocation, and transport binding work.
 
 ---
 
-## GC-PASS-2026-0004 — 2026-06-07
+## GC-PASS-0004.00 — 2026-06-07
 
-**pass_id**: GC-PASS-2026-0004
+**pass_id**: GC-PASS-0004.00
 **change_type**: governance
 **authority_level**: AL:2
 **summary**: PASS-2 Batch 1 delivery. Closed GC-3-A-01 (handoff envelope JWS/Ed25519
@@ -106,9 +106,9 @@ and a residual risk table pointing to PASS-3 zero-trust key infrastructure work.
 
 ---
 
-## GC-PASS-2026-0003 — 2026-06-07
+## GC-PASS-0003.00 — 2026-06-07
 
-**pass_id**: GC-PASS-2026-0003
+**pass_id**: GC-PASS-0003.00
 **change_type**: governance
 **authority_level**: AL:2
 **summary**: Published `docs/observability-contract.yaml` — the ecosystem-level OpenTelemetry
@@ -124,9 +124,9 @@ events without it. Closes GC-3-E-01.
 
 ---
 
-## GC-PASS-2026-0002 — 2026-06-05
+## GC-PASS-0002.00 — 2026-06-05
 
-**pass_id**: GC-PASS-2026-0002
+**pass_id**: GC-PASS-0002.00
 **change_type**: governance
 **authority_level**: AL:2
 **summary**: Established unified per-repo planning structure across all four core spec repos. Each spec (agent-dossier, agent-matrix, ons, agent-project-orchestrator) now has DEV-PATH.md, DEV-PLAN.md, TRACKS.md, and passchangelog.md under AL:1 authority. Stale planning files in agent-project-orchestrator (DevPath-v1.0.md, DevPlan-v1.0.md, Tracks.md) replaced with canonical-format equivalents. ROADMAP.md in agent-dossier retired; deferred items carried forward in agent-dossier DEV-PLAN.md.
@@ -135,9 +135,9 @@ events without it. Closes GC-3-E-01.
 
 ---
 
-## GC-PASS-2026-0001 — 2026-06-05
+## GC-PASS-0001.00 — 2026-06-05
 
-**pass_id**: GC-PASS-2026-0001
+**pass_id**: GC-PASS-0001.00
 **change_type**: governance
 **authority_level**: AL:2
 **summary**: Governance Commons ecosystem planning infrastructure declared. DEV-PATH.md (ecosystem phases, authority model, design decisions DDR-1 through DDR-5), DEV-PLAN.md (execution plan, gap analysis checklist, charter and process), TRACKS.md (portfolio overview, dependency map), projects.yaml (machine-readable project registry with compat: fields), tools/gc-status.ps1 (status dashboard), docs/ (charter, architecture, rfc, conformance), and tools/ directory structure established at governance-commons root. PASS-0 bootstrap phase initiated. Five design decisions from source_102 answered and recorded as binding AL:2 decisions.
@@ -146,9 +146,9 @@ events without it. Closes GC-3-E-01.
 
 ---
 
-## GC-PASS-2026-0006 — 2026-06-16
+## GC-PASS-0006.00 — 2026-06-16
 
-**pass_id**: GC-PASS-2026-0006
+**pass_id**: GC-PASS-0006.00
 **change_type**: governance
 **authority_level**: AL:2
 **status**: ACCEPTED

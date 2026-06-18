@@ -1,4 +1,4 @@
-# DEV-PATH — Governance Commons Ecosystem Path
+﻿# DEV-PATH — Governance Commons Ecosystem Path
 
 **AUTHORITY LEVEL: AL:2**
 **Status:** ACTIVE
@@ -187,7 +187,7 @@ Normative language is unambiguous. Stale documentation corrected. No spec contra
 - APO: DevPath + Tracks reflect actual implementation state; level-2 escalation reachable; runtime-contract.yaml compiles deterministically
 - All specs: valid and invalid test vectors exist for all schemas
 
-**Status:** ✅ COMPLETE — gate review passed 2026-06-07 (GC-PASS-2026-0002). All eight exit criteria met. Minor note: agent-matrix lacks invalid test vectors — deferred to PASS-3 tooling work, not blocking.
+**Status:** ✅ COMPLETE — gate review passed 2026-06-07 (GC-PASS-0002.00). All eight exit criteria met. Minor note: agent-matrix lacks invalid test vectors — deferred to PASS-3 tooling work, not blocking.
 
 ---
 
@@ -208,7 +208,7 @@ Major interoperability protocols (A2A, MCP, CloudEvents) have explicit governanc
 - Trust establishment, rotation, and revocation rules defined
 - APO runtime: `time_loc` is a required key in every `telemetry.emit()` call; runtime rejects emission without it — Layer 4 timestamp requirement (DDR-6, gap GC-1-D-TL-01)
 
-**Status:** ✅ COMPLETE — gate review passed 2026-06-07 (GC-PASS-2026-0012). All 8 exit criteria met.
+**Status:** ✅ COMPLETE — gate review passed 2026-06-07 (GC-PASS-0012.00). All 8 exit criteria met.
 
 ---
 
@@ -228,7 +228,7 @@ Validator packages are installable. CI integration is one file copy away.
 
 Note: actual registry publish (PyPI + npm) is a PASS-5 exit criterion, not PASS-3.
 
-**Status:** ✅ COMPLETE — gate review passed 2026-06-08 (GC-PASS-2026-0013). All 6 exit criteria met.
+**Status:** ✅ COMPLETE — gate review passed 2026-06-08 (GC-PASS-0013.00). All 6 exit criteria met.
 
 ---
 
@@ -247,7 +247,7 @@ signed, and exportable to external audit systems.
 - NIST AI RMF, EU AI Act, ISO 42001 control mappings produce machine-readable evidence artifacts
 - Anomaly detection event categories defined
 
-**Status:** ✅ COMPLETE — gate review passed 2026-06-08 (GC-PASS-2026-0015). All 7 exit criteria met. Note: EU AI Act coverage satisfied via `control_frameworks` reference in `schemas/gc-compliance-evidence.schema.json` (GC-4-E-04); standalone mapping deferred to PASS-5 or later.
+**Status:** ✅ COMPLETE — gate review passed 2026-06-08 (GC-PASS-0015.00). All 7 exit criteria met. Note: EU AI Act coverage satisfied via `control_frameworks` reference in `schemas/gc-compliance-evidence.schema.json` (GC-4-E-04); standalone mapping deferred to PASS-5 or later.
 
 ---
 
@@ -269,7 +269,7 @@ Each child repo can still patch independently.
 - ADOPTERS.md and conformance badge criteria defined
 - All included spec versions have release notes and migration notes
 
-**Status:** 🔵 OPEN — PASS-4 gate review GC-PASS-2026-0015 cleared on 2026-06-08
+**Status:** 🔵 OPEN — PASS-4 gate review GC-PASS-0015.00 cleared on 2026-06-08
 
 ---
 
@@ -297,12 +297,12 @@ demonstrable technical leadership beyond table-stakes compliance.
 
 | GC-PASS | Description | Date | Status |
 |---------|-------------|------|--------|
-| GC-PASS-2026-0001 | Ecosystem planning infrastructure declared — PASS-0 bootstrap | 2026-06-05 | 🔄 |
-| GC-PASS-2026-0002 | PASS-1 gate review — all 8 exit criteria passed; PASS-2 open | 2026-06-07 | ✅ |
-| GC-PASS-2026-0012 | PASS-2 gate review — all 8 exit criteria met; PASS-3 open | 2026-06-07 | ✅ |
-| GC-PASS-2026-0013 | PASS-3 gate review — all 6 exit criteria met; PASS-4 open | 2026-06-08 | ✅ |
-| GC-PASS-2026-0014 | GC-CONSTRAINT-001 — agent authority constraints registered; DEV-PATH authority model strengthened | 2026-06-08 | ✅ |
-| GC-PASS-2026-0015 | PASS-4 gate review — all 7 exit criteria met; PASS-5 open | 2026-06-08 | ✅ |
+| GC-PASS-0001.00 | Ecosystem planning infrastructure declared — PASS-0 bootstrap | 2026-06-05 | 🔄 |
+| GC-PASS-0002.00 | PASS-1 gate review — all 8 exit criteria passed; PASS-2 open | 2026-06-07 | ✅ |
+| GC-PASS-0012.00 | PASS-2 gate review — all 8 exit criteria met; PASS-3 open | 2026-06-07 | ✅ |
+| GC-PASS-0013.00 | PASS-3 gate review — all 6 exit criteria met; PASS-4 open | 2026-06-08 | ✅ |
+| GC-PASS-0014.00 | GC-CONSTRAINT-001 — agent authority constraints registered; DEV-PATH authority model strengthened | 2026-06-08 | ✅ |
+| GC-PASS-0015.00 | PASS-4 gate review — all 7 exit criteria met; PASS-5 open | 2026-06-08 | ✅ |
 
 ---
 
@@ -331,7 +331,7 @@ A gap is not closed until: (1) mechanism exists, (2) it is tested, (3) it is obs
 | Q6 | Ops | Medium | Governance of operations exists; no public runbooks for validator failure, compromised key, revoked agent | open | Add runbooks for validator failure, compromised key, revoked agent, broken evidence chain |
 | Q7 | DevEx | High | SDK exists locally; PyPI/npm publish and first-user install path still open | open | Finish PyPI/npm publish and 5-minute governed-agent example (PASS-5 Batch 4) |
 | Q8 | Interop | Medium | Good protocol coverage; no "works with your stack" proof for LangChain, AutoGen, OIDC, GitHub Actions | open | Add GitHub Actions, Prometheus/Grafana, OIDC, LangChain/AutoGen examples |
-| Q9 | Process | Medium | RFC and conformance exist; no steering/WG structure established | spec-complete | Create lightweight maintainer roles before enterprise adoption claims |
+| Q9 | Process | Medium | RFC and conformance exist; no steering/WG structure established; no named community roles | open | Define community governance roles (Maintainer, Contributor, RFC sponsor) before enterprise adoption claims — these are stewardship roles for the spec community, not product runtime roles; GC has no runtime surface. Required for PASS-5. |
 | Q10 | Docs | Medium | Improved; nested spec repos confuse newcomers; no ecosystem map | open | Add ecosystem map and "which repo do I need?" guide |
 | Q11 | Testing | Medium | ONS/matrix/SDK have tests; cross-spec conformance suite not packaged | open | Create `gc-conformance-suite` with fixtures across dossier, matrix, ONS, APO |
 | Q12 | Ahead | High | Best-positioned repo for category-defining work — constitutional governance, federated trust, temporal authority, audit replay | open | Prioritize constitutional governance layer and audit replay as first PASS-6 optional profiles |
