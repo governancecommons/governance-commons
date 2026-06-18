@@ -13,6 +13,8 @@ ID format: GC-PASS-NNNN.NN (4-digit sequence — execution order). Newest first.
 
 A bare `GC-PASS-NNNN` (no decimal suffix) is always wrong. Do not write it.
 
+**Timestamp requirement:** Every PASS entry must include a `**timestamp**` field in ISO 8601 format (`YYYY-MM-DDTHH:MM:SSZ`). This is mandatory — no PASS entry is complete without it. Agents must record the actual time of the decision, not omit it.
+
 ---
 
 ## Entry Formats
@@ -27,6 +29,7 @@ For passes that create or extend something — new specs, schemas, rules, toolin
 
 ```markdown
 **pass_id**: GC-PASS-NNNN.NN
+**timestamp**: YYYY-MM-DDTHH:MM:SSZ
 **change_type**: build
 **authority_level**: AL:1 | AL:2 | AL:3
 **status**: ACCEPTED
@@ -46,6 +49,7 @@ For passes that resolve a problem — bugs, contradictions, drift, bad prior dec
 
 ```markdown
 **pass_id**: GC-PASS-NNNN.NN
+**timestamp**: YYYY-MM-DDTHH:MM:SSZ
 **change_type**: fix
 **authority_level**: AL:1 | AL:2 | AL:3
 **status**: ACCEPTED
@@ -56,6 +60,24 @@ For passes that resolve a problem — bugs, contradictions, drift, bad prior dec
 **fix_approach**: (what the right fix is and why that approach over alternatives)
 **what_was_done**: (the concrete change made)
 **prevention**: (what now exists or must be done to stop this class of problem recurring)
+```
+
+---
+
+### Format: governance
+
+For passes that open/close phases, register authority decisions, or record ecosystem-level rulings.
+
+```markdown
+**pass_id**: GC-PASS-NNNN.NN
+**timestamp**: YYYY-MM-DDTHH:MM:SSZ
+**change_type**: governance
+**authority_level**: AL:1 | AL:2 | AL:3
+**status**: ACCEPTED
+**affected_surfaces**: (what this decision governs or constrains)
+
+**summary**: (what was decided and why — include scope, what was opened/closed, and any new constraints)
+**new_constraints**: (rules future passes must respect because of this — or "none")
 ```
 
 ---
