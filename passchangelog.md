@@ -5,6 +5,14 @@ For per-spec implementation changes, see each spec's own `passchangelog.md` and 
 
 ID format: GC-PASS-NNNN.NN (4-digit sequence — execution order). Newest first.
 
+**PASS structure:**
+
+- `NNNN.00` — **Primary Pass.** Always required. Defines the intent, scope, success criteria, inputs, and outputs for the entire pass family. Every sub-pass and compound pass hangs off this anchor.
+- `NNNN.01` – `NNNN.09` — **Sub-passes.** Discrete work items within the primary pass scope.
+- `NNNN.10` – `NNNN.99` — **Compound passes.** A cluster of sub-passes that must be grouped together.
+
+A bare `GC-PASS-NNNN` (no decimal suffix) is always wrong. Do not write it.
+
 ---
 
 ## Entry Formats
