@@ -487,6 +487,14 @@ public release is declared. PASS-6 owns optional category-defining profiles and 
 capability paths. Do not fork now; defer any fork decision until a concrete licensing, IP, or
 operational boundary requires it.
 
+**DDR-8 — GC Portability Posture (resolved 2026-06-17):**
+GC core (schemas, YAML specs, markdown) is fully portable — no OS dependency, just files. ONS
+naming grammar is portable; platform-specific restrictions (Windows reserved names, forbidden
+characters) are addressed by ONS-PC-01/02/03 in PASS-6, not by changing the core grammar. DCP
+scripts (PowerShell 7) run on Windows, Linux, and macOS; not on Android/iOS, but that is a
+tooling concern, not a GC/ONS concern — GC itself is readable from any platform. No separate
+portability tracking item needed; ONS-PC items cover the one real gap (platform naming safety).
+
 ---
 
 ## RELEASE TRAIN STATUS
