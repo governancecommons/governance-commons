@@ -22,7 +22,8 @@ def fix_separators(content: str) -> tuple[str, int]:
             s.startswith("|")
             and s.endswith("|")
             and re.match(r"^[\|\-\: ]+$", s)
-            and re.search(r"\|[-:]+\|", s)
+            and "-" in s
+            and s != "| " + " | ".join(["---"] * (s.count("|") - 1)) + " |"
         ):
             cols = s.count("|") - 1
             result.append("| " + " | ".join(["---"] * cols) + " |")
