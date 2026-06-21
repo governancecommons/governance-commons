@@ -82,6 +82,21 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0009.00 — 2026-06-20
+
+**pass_id**: GC-PASS-0009.00
+**timestamp**: 2026-06-20T00:00:00Z
+**change_type**: build
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: governance-commons (ECO: and GC: namespaces, CANON cluster complete), eco (ECO: namespace, initial registry)
+
+**what**: CANON.03 accepted as the Migration Protocol for eco and GC as CANON first-adopters. Formally reverses unauthorized named-cluster-only rule (agent drift, pre-2026-04-12, ACES.01 Inv#6 and Inv#14 violated, no governance record). Declares ECO: namespace (prefix ECO, owner jj-ervin, authority jj-ervin, 5 active layer bands: authority 0000-0999, operational 1000-1999, domain 2000-2999, platform 3000-3999, data-interop 4000-4999, reserved 9000-9999). Declares GC: namespace (prefix GC, owner jj-ervin, authority jj-ervin, 4 active layer bands: authority 0000-0999, operational 1000-1999, standards 2000-2999, platform 3000-3999, reserved 9000-9999). Declares assignment algorithm (8 rules A-1 through A-8 governing layer-band mapping, chronological ordering, cluster-header priority, legacy supersession, gap permission). Declares legacy ID mapping rules and conflict resolution rules (4 rules C-1 through C-4). Assigns GC: canonical IDs: GC:0001 (GC.00 charter), GC:1001-1002 (APO.00, ATP.00), GC:2001-2004 (CANON.00-03), GC:2005-2007 (ONS.00-02). Assigns ECO: canonical IDs: ECO:0001-0007 (ACES.00-06), ECO:1001-1003 (OG.00-02), ECO:1004-1007 (RT.00, EV.00, OPS.00, REM.00). Resolves CANON bootstrap condition: GC:2004 = CANON.03 (self-assigned, explicitly authorized and documented). Declares follow-on implementation task for remaining ~150+ eco PASSes, governed by A-1 through A-8 with no additional governance PASS required. Produces companion artifacts: governance-commons/passes/{namespace.yaml, layers.yaml, passes.registry.json, passes.registry.changelog.jsonl} (GC: namespace, 10 initial entries); eco/passes/{namespace.yaml, layers.yaml, passes.registry.json, passes.registry.changelog.jsonl} (ECO: namespace, 14 initial entries). CANON cluster is now complete: CANON.00-03 accepted, GC:2001-2004 assigned, bootstrap resolved.
+**why**: CANON.00-02 established the canonical identifier standard but could not assign IDs (bootstrap condition). CANON.03 is the authorized migration act that executes the first-adopter assignments and formally closes the drift issue that prompted CANON's creation. Without CANON.03, the system remains in the bootstrap state — the standard exists but no canonical IDs are assigned.
+**new_constraints**: All future ECO: and GC: assignments must follow Rules A-1 through A-8. Legacy ID mapping rules govern how legacy numbered forms are preserved. The follow-on migration task for remaining eco PASSes requires allocation authority authorization per assignment block (R-AA-1). No canonical IDs may be assigned outside a migration PASS or its follow-on continuation artifact. The OPS.00 duplicate-supersedes typo in CANON.03 line 479 was corrected before commit; the registry (passes.registry.json) has the correct entry.
+
+---
+
 ## GC-PASS-0008.00 — 2026-06-20
 
 **pass_id**: GC-PASS-0008.00

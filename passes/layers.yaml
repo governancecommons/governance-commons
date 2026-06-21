@@ -1,0 +1,43 @@
+# GC: Layer Bands Declaration
+# Governed by CANON.01 R-LY-1 through R-LY-7. Produced by CANON.03 (GC:2004).
+# Layer bands are per-namespace. These are GC:'s bands; ECO: has its own bands.
+
+namespace: GC
+
+layers:
+  - range: "0000-0999"
+    name: authority
+    description: >
+      GC ecosystem charter, ecosystem invariants, agent authority constraints,
+      and core governance decisions. These are the root authority records for
+      the Governance Commons framework itself — what GC is, what it governs,
+      and what constraints all adopters must respect.
+
+  - range: "1000-1999"
+    name: operational
+    description: >
+      Agent protocol governance and multi-agent coordination standards.
+      Covers APO (Agent Project Orchestrator) and ATP (Agent Team Protocol).
+      These govern how agents operate within GC-conformant systems.
+
+  - range: "2000-2999"
+    name: standards
+    description: >
+      Portable governance standards published by GC for adoption by any
+      conformant project. Covers ONS (naming grammar) and CANON (PASS
+      identifier standard). These are the artifacts external adopters
+      implement when they adopt GC governance.
+
+  - range: "3000-3999"
+    name: platform
+    description: >
+      GC registry, release, distribution, and SDK governance. Currently
+      unallocated. Reserved for future GC platform governance needs as
+      the framework matures.
+
+  - range: "9000-9999"
+    name: reserved
+    description: >
+      Reserved for future use, experimental ranges, and emergency governance.
+      No PASSes may be assigned here without a declaration PASS updating
+      these layer bands.

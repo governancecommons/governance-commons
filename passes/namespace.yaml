@@ -1,0 +1,16 @@
+# GC: Namespace Declaration
+# Governed by CANON.01. Produced by CANON.03 (GC:2004).
+# This file is the allocation authority source for the GC: namespace.
+
+prefix: GC
+owner: Governance Commons
+allocation_authority: jj-ervin
+description: >
+  Governance records for the Governance Commons portable standards ecosystem.
+  GC: identifiers are cross-ecosystem portable standards — they are intended
+  for adoption by any project that adopts the Governance Commons framework.
+  Eco-specific governance records live in the ECO: namespace, not here.
+registry_file: passes/passes.registry.json
+layers_file: passes/layers.yaml
+created_at: "2026-06-20T00:00:00Z"
+canon_version: CANON.01
