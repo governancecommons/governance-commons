@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/canon-registry-entry/CANON.02.json",
+  "title": "CANON Registry — Root File and Entry Schema",
+  "description": "Validates a CANON-conformant PASS registry file. Governed by CANON.02. Companion artifact to passes/canon/CANON.02.md.",
+  "type": "object",
+  "required": ["$canon_version", "namespace", "meta", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "$canon_version": {
+      "type": "string",
+      "const": "CANON.02",
+      "description": "Version of the CANON standard this registry conforms to."
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,6}$",
+      "description": "The namespace prefix this registry governs. Must match namespace.yaml and conform to CANON.01 R-ID-2."
+    },
+    "meta": {
+      "type": "object",
+      "required": [
+        "created_at",
+        "updated_at",
+        "allocation_authority",
+        "namespace_file",
+        "layers_file",
+        "changelog_file",
+        "canon_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime when this registry file was first created."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime when the registry was last modified. Must be updated on every write."
+        },
+        "allocation_authority": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The declared allocation authority for this namespace. Must match namespace.yaml."
+        },
+        "namespace_file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Relative path to the namespace declaration file (namespace.yaml)."
+        },
+        "layers_file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Relative path to the layers declaration file (layers.yaml)."
+        },
+        "changelog_file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Relative path to the append-only registry changelog."
+        },
+        "canon_version": {
+          "type": "string",
+          "const": "CANON.02",
+          "description": "Duplicate of $canon_version for tooling that reads meta separately."
+        },
+        "known_superseded_dependencies": {
+          "type": "array",
+          "description": "Explicitly acknowledged superseded dependencies. Suppresses WARN for listed entries.",
+          "items": {
+            "type": "object",
+            "required": ["id", "superseded_by", "acknowledged_by"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Z]{2,6}:[0-9]{4}$"
+              },
+              "superseded_by": {
+                "type": "string",
+                "pattern": "^[A-Z]{2,6}:[0-9]{4}$"
+              },
+              "acknowledged_by": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "external_registries": {
+          "type": "array",
+          "description": "External namespace registries referenced by depends_on entries in this registry.",
+          "items": {
+            "type": "object",
+            "required": ["namespace", "registry_url"],
+            "additionalProperties": false,
+            "properties": {
+              "namespace": {
+                "type": "string",
+                "pattern": "^[A-Z]{2,6}$"
+              },
+              "registry_url": {
+                "type": "string",
+                "minLength": 1,
+                "description": "URL or relative file path to the external registry file."
+              }
+            }
+          }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "description": "Array of canonical ID assignment records. The sole authoritative source for canonical ID assignments in this namespace.",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "canonical_id": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,6}:[0-9]{4}$",
+      "description": "A canonical PASS identifier conforming to CANON.01 R-ID-1."
+    },
+    "entry": {
+      "type": "object",
+      "title": "CANON Registry Entry",
+      "description": "A single canonical ID assignment or reservation record.",
+      "required": [
+        "id",
+        "alias",
+        "legacy_ids",
+        "title",
+        "layer",
+        "cluster",
+        "parent",
+        "status",
+        "timestamp",
+        "path",
+        "supersedes",
+        "superseded_by",
+        "depends_on",
+        "originating_pass"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/canonical_id",
+          "description": "The canonical ID. Must conform to CANON.01 R-ID-1. Must be unique within this registry."
+        },
+        "alias": {
+          "type": ["string", "null"],
+          "description": "Primary human-readable name (e.g., ACES.01). Must be unique within namespace. Null permitted for reserved entries only."
+        },
+        "legacy_ids": {
+          "type": "array",
+          "description": "Prior identifiers from systems predating CANON. Never null; empty array when none. Values must never be removed.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable name for this PASS."
+        },
+        "layer": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Layer name from the namespace layers declaration file. Use 'unassigned' for reserved entries where layer is not yet determined."
+        },
+        "cluster": {
+          "type": ["string", "null"],
+          "description": "Named cluster this PASS belongs to (e.g., ACES, OG, CANON). Must match alias NAMESPACE-part per CANON.01 R-SP-4. Null for PASSes not in a cluster."
+        },
+        "parent": {
+          "oneOf": [
+            { "$ref": "#/$defs/canonical_id" },
+            { "type": "null" }
+          ],
+          "description": "Canonical ID of the parent PASS (cluster header). Null for root PASSes."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "draft", "accepted", "sealed", "superseded", "reserved"],
+          "description": "Current status of this PASS. Must be one of the declared valid values."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime when the PASS was accepted or this entry was created."
+        },
+        "path": {
+          "type": ["string", "null"],
+          "description": "Relative path to the PASS document from repository root. Null for reserved entries without a document."
+        },
+        "supersedes": {
+          "type": "array",
+          "description": "Canonical IDs this PASS supersedes. Empty array when none.",
+          "items": {
+            "$ref": "#/$defs/canonical_id"
+          }
+        },
+        "superseded_by": {
+          "oneOf": [
+            { "$ref": "#/$defs/canonical_id" },
+            { "type": "null" }
+          ],
+          "description": "Canonical ID of the PASS that supersedes this one. Non-null only when status is 'superseded'."
+        },
+        "depends_on": {
+          "type": "array",
+          "description": "Canonical IDs this PASS depends on. Cross-namespace references permitted.",
+          "items": {
+            "$ref": "#/$defs/canonical_id"
+          }
+        },
+        "originating_pass": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The canonical ID or named form of the PASS that authorized this entry's creation."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional: one or two sentences describing what this PASS governs. Required for cluster header entries."
+        },
+        "reserved_for": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required when status is 'reserved'. Description of intended future use."
+        },
+        "reserved_by": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required when status is 'reserved'. Named form or canonical ID of the declaring PASS."
+        },
+        "range": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{4}$",
+          "description": "When a reservation covers a range of IDs: 'NNNN-NNNN'. Present only in reserved entries."
+        },
+        "sealed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Datetime when this PASS was sealed. Present only when status is 'sealed'."
+        },
+        "superseded_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Datetime when this PASS was superseded. Present only when status is 'superseded'."
+        }
+      },
+      "if": {
+        "properties": { "status": { "const": "superseded" } }
+      },
+      "then": {
+        "required": ["superseded_by"],
+        "properties": {
+          "superseded_by": { "not": { "type": "null" } }
+        }
+      },
+      "else": {
+        "properties": {
+          "superseded_by": { "type": "null" }
+        }
+      }
+    }
+  }
+}

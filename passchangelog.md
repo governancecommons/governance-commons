@@ -82,6 +82,51 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0008.00 — 2026-06-20
+
+**pass_id**: GC-PASS-0008.00
+**timestamp**: 2026-06-20T00:00:00Z
+**change_type**: build
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: governance-commons (all adopters), passes/canon/CANON.02.md, schemas/canon-registry-entry.schema.json
+
+**what**: CANON.02 accepted as the normative Registry Governance specification. Declares: registry file format (JSON required, YAML permitted; passes.registry.json naming; one file per namespace; entries array is sole authority); full entry schema (14 required fields: id, alias, legacy_ids, title, layer, cluster, parent, status, timestamp, path, supersedes, superseded_by, depends_on, originating_pass; 6 optional standard fields; extension model via lowercase namespace-prefixed keys); status taxonomy (proposed, draft, accepted, sealed, superseded, reserved; 4 transition rules; superseded is terminal); write authority enforcement (allocation_authority from namespace.yaml; agents require authorizing PASS for binding writes; changelog written atomically; automation authorized by PASS; extends GC-CONSTRAINT-001 to registry writes); schema validation contract (11 pre-write checks; CRITICAL/ERROR/WARN error taxonomy); append-only changelog (.jsonl format; 5 required fields; 5 action values; CI-enforced append-only); CI integration contract (9 required checks; violation reporting format; build fails on CRITICAL/ERROR); dependency validation (same-namespace MUST resolve; cross-namespace via external_registries; superseded dependency is WARN; circular deps are CRITICAL; known_superseded_dependencies suppression); registry-as-governed-artifact (version control is provenance; every write traceable to PASS; schema changes require CANON amendment; $canon_version mismatch is CRITICAL). Companion artifact published: schemas/canon-registry-entry.schema.json (JSON Schema draft/2020-12, additionalProperties: true for extensions). 44 normative rules across 9 rule families.
+**why**: CANON.01 specified how identifiers are formed and governed; CANON.02 specifies how the registry that records those identifiers is structured, validated, and protected as governed infrastructure. Without CANON.02, an adopter has rules for IDs but no governed place to store them.
+**new_constraints**: All CANON-conformant registries must declare $canon_version: CANON.02. Agents must not write binding registry entries without an authorizing PASS (R-WA-2). Changelog is append-only (R-CL-2). CI must run all 9 required checks on registry-touching commits (R-CI-1 through R-CI-9). Schema file changes require a CANON amendment PASS (R-GA-3).
+
+---
+
+## GC-PASS-0007.00 — 2026-06-20
+
+**pass_id**: GC-PASS-0007.00
+**timestamp**: 2026-06-20T00:00:00Z
+**change_type**: build
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: governance-commons (all adopters), passes/canon/CANON.01.md
+
+**what**: CANON.01 accepted as the normative PASS Identifier Governance specification. Declares canonical ID grammar (^[A-Z]{2,6}:[0-9]{4}$, ABNF, 7 validity rules), ONS conformance rule (NAMESPACE matches governance_cluster pattern; canonical ID is conformant specialization of qualification_authority), namespace declaration specification (namespace.yaml, 8 required fields, 4 ownership rules), layers declaration specification (layers.yaml, 3 required fields per entry, 7 normative rules, ECO: reference grammar as informative), alias model (named-cluster and legacy alias types, namespace-scoped resolution, 4-step resolver protocol, 6 rules), allocation authority model (traceability, delegation, range reservation, 7 rules), sub-pass relationship model (flat IDs only, parent and cluster as registry fields, 5 rules), immutability specification (immutable at assignment not at sealing, 4-step supersession protocol, 7 rules), and normative requirements summary (37 rules across 7 rule families).
+**why**: CANON.00 declared the format and principles; CANON.01 is the normative external-facing specification that adopting organizations implement. Without CANON.01, adoption requires inferring rules from CANON.00's prose — producing inconsistent implementations.
+**new_constraints**: All canonical ID assignments MUST conform to R-ID-1 through R-ID-7. Alias resolution MUST be namespace-scoped (R-AL-6). ID assignments MUST trace to a PASS decision (R-AA-1). Superseded PASSes MUST remain in the registry permanently (R-IM-6). CANON.02 (registry governance) is required before any conformant registry can be declared complete.
+
+---
+
+## GC-PASS-0006.00 — 2026-06-20
+
+**pass_id**: GC-PASS-0006.00
+**timestamp**: 2026-06-20T00:00:00Z
+**change_type**: build
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: governance-commons (all adopters), eco (first organizational adopter), registry/clusters.yaml, passes/canon/CANON.00.md
+
+**what**: CANON cluster established. CANON.00 accepted as the founding record of the Canonical PASS Identifier Standard. Declares the canonical ID format (NAMESPACE:NNNN), alias model (named cluster IDs are ergonomic aliases, never stable citation targets), immutability rule (IDs never move or are reused — mistakes corrected by supersession), layer band grammar (per-namespace declaration; ECO: reference grammar: 0000s authority, 1000s operational, 2000s domain, 3000s platform, 4000s data/interop, 9000s reserved), registry minimum model (id, alias, legacy_ids, title, layer, cluster, parent, status, timestamp, path, supersedes, superseded_by, depends_on), external adopter model (self-declared prefix, no GC registration required), and 8 cluster invariants (CANON-CI-1 through CANON-CI-8). CANON cluster registered in registry/clusters.yaml. Four-PASS cluster structure declared: CANON.00 (header), CANON.01 (ID governance), CANON.02 (registry governance), CANON.03 (eco migration). Bootstrap condition acknowledged: CANON.00 has no canonical ID until CANON.03 assigns it.
+**why**: Two compounding failures required a governing standard: (1) unauthorized agent drift — the named-cluster-only rule in eco's PASS-INDEX was written without a governing decision or founder sign-off; (2) portability gap — named cluster identifiers (ACES.01, OG.02) are opaque outside eco, making PASS records non-portable for external GC adopters. Neither failure could be resolved by a passchangelog entry alone.
+**new_constraints**: All future PASS identifier assignments must follow CANON-CI-8 (migration is governed — no casual number assignment outside a migration PASS). The registry is a governed artifact per CANON-CI-5. No canonical IDs may be assigned until CANON.01 and CANON.02 are accepted and CANON.03 executes migration.
+
+---
+
 ## GC-PASS-0005.00 — 2026-06-07
 
 **pass_id**: GC-PASS-0005.00

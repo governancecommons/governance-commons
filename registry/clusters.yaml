@@ -90,3 +90,23 @@ clusters:
       multi-agent coordination primitives, and team-scoped authority delegation.
     notes:
       - Depends on agent-matrix >=1.4.0 and agent-dossier >=1.0.0 per compat matrix.
+
+  - cluster: CANON
+    name: Canonical PASS Identifier Standard
+    namespace_domain: governance
+    owner: Governance Commons — jj-ervin
+    status: active
+    registry_record: GC-PASS-0006.00
+    opened_by: CANON.00
+    created_at: "2026-06-20T00:00:00Z"
+    description: >
+      Cluster governing the canonical identifier system for PASS records across Governance
+      Commons and all adopting organizations. Declares the NAMESPACE:NNNN canonical ID
+      format, namespace model, layer band grammar, alias model, registry governance
+      standard, and migration protocol. CANON is a portable standard; any organization
+      may adopt it using their own namespace prefix without GC registration.
+    notes:
+      - CANON.00 is the cluster header; canonical IDs not assigned until CANON.03 (migration).
+      - Formally reverses unauthorized named-cluster-only drift in eco PASS-INDEX.
+      - "ECO: and GC: are the first two adopting namespaces."
+      - External adopters self-declare a prefix and maintain a conformant registry.
