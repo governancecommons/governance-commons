@@ -53,8 +53,17 @@ def check_file(path: str) -> list[tuple[int, str]]:
 
 
 def main() -> int:
-    if len(sys.argv) > 1:
-        paths = sys.argv[1:]
+    if "--staged" in sys.argv:
+        import subprocess
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
+            capture_output=True, text=True
+        )
+        paths = [p for p in result.stdout.splitlines() if p.endswith(".md")]
+        if not paths:
+            return 0
+    elif len(sys.argv) > 1:
+        paths = [a for a in sys.argv[1:] if not a.startswith("--")]
     else:
         paths = glob.glob("**/*.md", recursive=True)
 
