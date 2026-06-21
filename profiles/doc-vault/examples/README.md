@@ -5,7 +5,7 @@ Illustrative adoption examples for `gc.profile.doc-vault`.
 ---
 
 | file | description |
-|---|---|
+| --- | --- |
 | `osprey-holding.profile.yml` | Example `.governance/profile.yml` for Osprey LLC |
 | `osprey-holding.folder-tree.md` | Example folder tree showing a fully structured Osprey Holding repository |
 

@@ -8,7 +8,7 @@
 ## Portfolio Status
 
 | Track | Repo | Goal | Status | Next Milestone |
-|-------|------|------|--------|----------------|
+| --- | --- | --- | --- | --- |
 | [Alpha](agent-dossier/) | agent-dossier | Per-agent identity, authority, handoff, telemetry, audit contract | 🔵 Active — P0 gaps closed | GC-1-A: P1 gap closure |
 | [Bravo](agent-matrix/) | agent-matrix | Multi-agent capability, routing, trust, safety, coordination | 🔵 Active — SKU/MCP/SLA gaps open | GC-1-B: SLA schema + MCP stub |
 | [Charlie](ons/) | ons | Naming grammar, namespace identity, validation rule IDs | 🟢 Stable — v1.3.0 shipped | GC-1-C-08/09: FAST rules + soft-deprecation |
@@ -144,7 +144,7 @@ Track Hotel (devx-control-plane)
 ## Quick Links
 
 | Resource | Purpose |
-|----------|---------|
+| --- | --- |
 | `DEV-PATH.md` | Ecosystem governance path — PASS registry, design decisions, authority model |
 | `DEV-PLAN.md` | Current execution plan — active priorities, gap checklist, release train |
 | `projects.yaml` | Machine-readable project registry — groups, paths, compat constraints |

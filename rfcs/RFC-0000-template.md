@@ -1,7 +1,7 @@
 ﻿# RFC-NNNN: <Title>
 
 | Field | Value |
-|-------|-------|
+| --- | --- |
 | RFC | NNNN |
 | Title | \<short descriptive title\> |
 | Status | draft |
@@ -29,7 +29,7 @@ field definitions._
 _Other approaches you evaluated. For each: what it is, why it was not chosen._
 
 | Alternative | Reason not chosen |
-|-------------|-------------------|
+| --- | --- |
 | ... | ... |
 
 ## Prior art

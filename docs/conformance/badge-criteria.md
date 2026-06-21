@@ -11,7 +11,7 @@ Governance Commons defines three conformance profiles. A project declares the hi
 profile it satisfies across each spec it adopts.
 
 | Profile | Requirements |
-|---------|-------------|
+| --- | --- |
 | **advisory** | Structure and naming follow GC conventions; no validator run required |
 | **standard** | `gc-validate --spec <name> --profile standard` passes with zero failures |
 | **strict** | `gc-validate --spec <name> --profile strict` passes with zero failures; a signed `gc-compliance-evidence` bundle is produced and retained |
@@ -23,7 +23,7 @@ profile it satisfies across each spec it adopts.
 ### ONS (Ontic Namespace Structure)
 
 | Profile | Criteria |
-|---------|---------|
+| --- | --- |
 | advisory | All identifiers follow ONS naming grammar; cluster prefix is registered or clearly scoped |
 | standard | `gc-validate --spec ons` passes; `rules.json` export is present if distributing a validator |
 | strict | standard + `rules.json` is versioned and referenced in conformance report |
@@ -31,7 +31,7 @@ profile it satisfies across each spec it adopts.
 ### Agent Dossier
 
 | Profile | Criteria |
-|---------|---------|
+| --- | --- |
 | advisory | A `dossier.yaml` (or equivalent) file exists and follows dossier schema structure |
 | standard | `gc-validate --spec dossier` passes; PASS IDs follow `PASS-YYYY-NNNN` format; handoff envelopes carry `emitted_at` |
 | strict | standard + signed handoff envelopes (JWS/Ed25519); signed evidence bundle submitted |
@@ -39,7 +39,7 @@ profile it satisfies across each spec it adopts.
 ### Agent Matrix
 
 | Profile | Criteria |
-|---------|---------|
+| --- | --- |
 | advisory | An `agent-matrix.yaml` (or equivalent) file exists; capability profiles are declared |
 | standard | `gc-validate --spec matrix` passes; SLO/SLI fields present; MCP tool scopes declared |
 | strict | standard + A2A and CloudEvents bindings present; signed evidence bundle submitted |
@@ -47,7 +47,7 @@ profile it satisfies across each spec it adopts.
 ### Agent Project Orchestrator (APO)
 
 | Profile | Criteria |
-|---------|---------|
+| --- | --- |
 | advisory | A `runtime-contract.yaml` (or equivalent) exists; task graph follows APO schema |
 | standard | `gc-validate --spec apo` passes; `time_loc` present in all `telemetry.emit()` calls |
 | strict | standard + per-agent resource budgets enforced; signed evidence bundle submitted |
@@ -70,7 +70,7 @@ Badges use [shields.io](https://shields.io) static badge format. Replace `<profi
 **Color by profile:**
 
 | Profile | Color | shields.io value |
-|---------|-------|-----------------|
+| --- | --- | --- |
 | advisory | blue | `blue` |
 | standard | green | `green` |
 | strict | bright green | `brightgreen` |

@@ -7,7 +7,7 @@
 ---
 
 | date | actor | action | file | from_location | to_location | reason | notes |
-|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- |
 | YYYY-MM-DD | [name/role] | created | [filename] | — | working/ | Initial draft created | |
 | YYYY-MM-DD | [name/role] | moved | [filename] | working/ | review/ | Submitted for review | |
 | YYYY-MM-DD | [name/role] | executed | [filename] | review/ | executed/ | Signed and adopted | |

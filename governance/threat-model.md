@@ -24,7 +24,7 @@ and `agent-dossier.yaml` threat entries are included where applicable.
 ## STRIDE Summary
 
 | Category | Threat | Primary Control |
-|----------|--------|-----------------|
+| --- | --- | --- |
 | **S**poofing | Forged agent identity in handoff envelopes | Ed25519 signature + DID identity binding |
 | **T**ampering | In-transit envelope modification; YAML injection | JWS signature over canonical payload; strict parser rules |
 | **R**epudiation | Denial of issued handoffs or actions | PASS changelog + telemetry trace + signed envelopes |
@@ -376,7 +376,7 @@ orchestrator claiming permissions that include orchestration-level authorities (
 ### multi-agent.yaml threat entries
 
 | ID | Description | STRIDE category | Section above |
-|----|-------------|-----------------|---------------|
+| --- | --- | --- | --- |
 | T-001 | Agent contract drift | E | E-03 |
 | T-002 | Task queue corruption | T, D | T-03, D-03 |
 | T-003 | Agent stall | D | D-02 |
@@ -387,7 +387,7 @@ orchestrator claiming permissions that include orchestration-level authorities (
 ### agent-dossier.yaml threat_model entries
 
 | ID | STRIDE category | Section above |
-|----|-----------------|---------------|
+| --- | --- | --- |
 | prompt_injection | S, E | S-01, E-02 |
 | capability_confusion | E | E-01 |
 | handoff_context_loss | T | T-01 |
@@ -402,7 +402,7 @@ The following threats are acknowledged but not fully mitigated by PASS-2 control
 They are tracked for resolution in later PASSes.
 
 | Threat | Gap | Target PASS |
-|--------|-----|-------------|
+| --- | --- | --- |
 | Key distribution — how do receivers obtain and trust from_agent public keys? | No public key infrastructure or key registry defined yet | PASS-3 (GC-3-A-03 zero-trust spec) |
 | Key revocation — if an agent's private key is compromised, how is the public key revoked? | Dossier revocation model exists but no real-time revocation signal | PASS-2 (GC-3-A-03) |
 | Transport-layer threats (eavesdropping, replay across sessions) | No transport binding defined yet | PASS-3 (101-G1c) |

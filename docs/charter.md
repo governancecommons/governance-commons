@@ -72,7 +72,7 @@ adopted independently without pulling in the full ecosystem.
 ## Appendix: Authority Level Summary
 
 | Level | Who | Scope | Change mechanism |
-|-------|-----|-------|-----------------|
+| --- | --- | --- | --- |
 | AL:3 | Founding maintainer only | Charter invariants (this file) | New GC-CHARTER-NNN entry |
 | AL:2 | GC project maintainer | Ecosystem plan, compatibility constraints, release milestones | GC-PASS entry in passchangelog.md |
 | AL:1 | Spec owner | Per-repo devpath, architecture, release cadence | Repo-level PASS entry in spec's passchangelog.md |

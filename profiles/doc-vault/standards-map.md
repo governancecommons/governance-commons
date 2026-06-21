@@ -57,7 +57,7 @@ ARMA's principles emphasize accountability, transparency, integrity, protection,
 `gc.profile.doc-vault` is **informed by** ARMA GARP principles:
 
 | ARMA Principle | Profile Support |
-|---|---|
+| --- | --- |
 | Accountability | Managing Member ownership and policy enforcement |
 | Transparency | Version indexes, audit trails, chain-of-custody logs |
 | Integrity | Immutable executed records, checksum support |

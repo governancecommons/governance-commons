@@ -5,7 +5,7 @@ Reusable templates for governed document repositories.
 ---
 
 | file | purpose |
-|---|---|
+| --- | --- |
 | `document-lifecycle-policy.template.md` | Formal document lifecycle and version governance policy for an entity |
 | `version-index.template.md` | Version history table for a governed document folder |
 | `document-index.template.md` | Master registry of all governed records in a repository |

@@ -23,7 +23,7 @@ criteria matrix and badge embedding instructions.
 ## Adopters
 
 | Project | Organization | Spec(s) | Profile | Declared | Link |
-|---------|-------------|---------|---------|----------|------|
+| --- | --- | --- | --- | --- | --- |
 | _(none yet — be the first)_ | | | | | |
 
 ---
@@ -31,7 +31,7 @@ criteria matrix and badge embedding instructions.
 ## Conformance profiles
 
 | Profile | Meaning |
-|---------|---------|
+| --- | --- |
 | **advisory** | Aware of the standard; structure and naming follow GC conventions |
 | **standard** | Passes `gc-validate` for all `MUST` rules at the standard profile |
 | **strict** | Passes `gc-validate` at the strict profile; submits a signed evidence bundle |

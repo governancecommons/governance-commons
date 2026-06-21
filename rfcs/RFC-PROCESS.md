@@ -37,7 +37,7 @@ draft → open-for-comment → accepted
 ```
 
 | State | Meaning |
-|-------|---------|
+| --- | --- |
 | `draft` | Author is still writing; not open for comment |
 | `open-for-comment` | Two-week comment window is running; community feedback welcome |
 | `accepted` | AL:2 maintainer accepted the RFC; implementation may begin |

@@ -170,7 +170,7 @@ Each profile follows the same structure as doc-vault: profile.yml, controls.yml,
 metadata.schema.yml, standards-map.md, templates/, examples/.
 
 | id | name | purpose |
-|---|---|---|
+| --- | --- | --- |
 | gc.profile.doc-vault | Doc Vault | ✅ DONE — governed document repositories |
 | gc.profile.code-repo | Code Repo | Software project governance (README, CONTRIBUTING, AGENTS.md, release rules) |
 | gc.profile.doc-control | Document Control | Policies, SOPs, board docs, approval matrices, signature rules |
@@ -455,7 +455,7 @@ be accepted as audit evidence. This requirement is implemented across five layer
 to the PASS where it becomes enforceable:
 
 | Layer | Scope | Enforcement point | PASS |
-|-------|-------|-------------------|------|
+| --- | --- | --- | --- |
 | L1 | `time.loc:` field in DEV-PLAN/DEV-PATH/registry headers | Convention — current | PASS-0 (done) |
 | L2 | `emitted_at` (REQUIRED) + `accepted_at` (OPTIONAL) in handoff envelopes; `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written` event types in agent-dossier telemetry_trace_schema | agent-dossier spec + schema | PASS-1 |
 | L3 | `gc.agent.*` structured event schema with mandatory `time_loc` field in `observability-contract.yaml` | observability-contract.yaml (GC-3-E-01) | PASS-4 |
@@ -500,7 +500,7 @@ portability tracking item needed; ONS-PC items cover the one real gap (platform 
 ## RELEASE TRAIN STATUS
 
 | GC Release | Status | Requires |
-|------------|--------|---------|
+| --- | --- | --- |
 | GC v1.0.0 | Implied (current) | Current published versions of each spec |
 | GC v1.2.0 | Planned (M2) — manifest declared (`releases/gc-v1.2.0.yaml`) | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1.1.0 |
 | GC v1.3.0 | Planned (M3) | agent-dossier >=1.2.0 + agent-matrix >=1.4.0 + ONS >=1.3.0 |
@@ -513,7 +513,7 @@ portability tracking item needed; ONS-PC items cover the one real gap (platform 
 Current cross-repo version constraints. Updated when breaking changes are declared.
 
 | Spec | Current version | Depends on | Constraint | Status |
-|------|----------------|------------|------------|--------|
+| --- | --- | --- | --- | --- |
 | agent-dossier | 1.0.x | ONS | ONS naming grammar for PASS IDs | No open conflicts |
 | agent-matrix | 1.x | agent-dossier | dossier schema for capability profiles | No open conflicts |
 | ONS | 1.2.0 | — | No upstream deps | No open conflicts |
@@ -532,7 +532,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 ### Source 97 — agent-dossier runtime gaps
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | 97-G1 | No package.json (js-yaml undeclared) | P0 | PASS-1 / GC-1-A-01 | C |
 | 97-G2 | No .gitignore | P0 | PASS-1 / GC-1-A-02 | C |
 | 97-G3 | JSON Schema validation declared but never wired | P0 | PASS-1 / GC-1-A-03 | C |
@@ -552,7 +552,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 ### Source 98 — agent-matrix strategic gaps
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | 98-G1 | No MCP server/client model | Critical | PASS-2 / GC-1-B-03 | C |
 | 98-G2 | No A2A protocol binding | Critical | PASS-2 / GC-3-B-02 | C (stub) |
 | 98-G3 | No CloudEvents envelope binding | Critical | PASS-2 / GC-3-B-03 | C (stub) |
@@ -573,7 +573,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 ### Source 99 — agent-project-orchestrator runtime gaps
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | 99-G1 | DevPath + Tracks stale (PASS-1/2/3 marked PENDING, code exists) | P0 | PASS-0 / GC-1-D-01 | C |
 | 99-G2 | CHANGELOG missing Python rewrite entry (PASS-2026-0002) | P0 | PASS-0 / GC-1-D-02 | C |
 | 99-G3 | Level-2 escalation (operator_clarification) unreachable in escalation.py:27-31 | P0 | PASS-1 / GC-1-D-03 | C |
@@ -588,7 +588,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 ### Source 100 — ONS v1.2.0 gaps
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | 100-S1 | Stale header comment (v1.1.0/2026-06-03 vs body v1.2.0/2026-06-04) | Low | PASS-1 / GC-1-C-01 | C |
 | 100-S2 | No casing rule for colon (qualification) domain | Medium | PASS-1 / GC-1-C-03 | C |
 | 100-S3 | No cluster registration protocol or registry | High | PASS-1 / GC-1-C-05 | C |
@@ -610,7 +610,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 ### Source 101 — Governance Commons capstone gaps
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | 101-G1a | A2A binding is surface mention only — stub exists, 5/5 depth required | Critical | PASS-2 / GC-3-B-02 | C |
 | 101-G1b | MCP not a first-class governance primitive | Critical | PASS-2 / GC-1-B-03 | C |
 | 101-G1c | No transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka) | Critical | PASS-4 / GC-4-B-03 | C |
@@ -636,7 +636,7 @@ Status: **O** = open · **C** = closed · **WF** = won't-fix · **H** = compat-h
 Gaps identified during PASS-1 gate review and PASS-2 scoping that have no prior source entry.
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | GC-3-A-03 | Zero-trust spec: establishment (key exchange), rotation (re-key events), revocation (dossier invalidation) — `governance/zero-trust.yaml` | Critical | PASS-2 | C |
 | GC-3-B-06 | STRIDE threat model for multi-agent systems — `governance/threat-model.md` covering all six categories with mitigations | High | PASS-2 | C |
 | GC-3-B-03-depth | CloudEvents binding depth to 5/5: `schemas/events/*.schema.json` for all 5 event types, delivery semantics, causality, idempotency, W3C trace-context (stub exists at 2/5) | Critical | PASS-2 | C |
@@ -646,7 +646,7 @@ Gaps identified during PASS-1 gate review and PASS-2 scoping that have no prior 
 Items identified during PASS-4 scoping that have no prior source entry.
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | GC-4-E-02 | Tamper-evident audit log hash chaining — `audit_log_chain` spec in observability-contract.yaml; SHA-256 chain fields in gc-agent-event.schema.json | High | PASS-4 | C |
 | GC-4-E-03 | Security and anomaly detection event categories — `security_events` section (5 spans, 5 rules) in observability-contract.yaml; new gc_event_type values and fields in gc-agent-event.schema.json | High | PASS-4 | C |
 | GC-4-E-04 | Signed compliance evidence export — `schemas/gc-compliance-evidence.schema.json` v1.0.0; JWS EdDSA signature block; control_frameworks array (NIST/ISO/SOC2/EU-AI-Act); bundle_hash integrity | High | PASS-4 | C |
@@ -657,7 +657,7 @@ Items identified during PASS-4 scoping that have no prior source entry.
 Gaps created by the AL:2 timestamp requirement (DDR-6). Spec additions to agent-dossier.yaml and handoff-envelope.schema.json are complete; the items below track implementation and enforcement.
 
 | Gap | Description | Priority | PASS | Status |
-|-----|-------------|----------|------|--------|
+| --- | --- | --- | --- | --- |
 | GC-1-A-TL-01 | agent-dossier: emit handoff envelopes with `emitted_at` populated at transmission time; verify all emission sites in APO `escalation.py` and any future emitters | P1 | PASS-1 | C |
 | GC-1-A-TL-02 | agent-dossier: emit telemetry events using the seven new lifecycle `event_type` values (`pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated`) from relevant agent execution paths | P1 | PASS-1 | C |
 | GC-1-D-TL-01 | agent-project-orchestrator: enforce `time_loc` as a required key in every `telemetry.emit()` call; runtime validation MUST reject emission without it | P2 | PASS-2 | C |
@@ -720,7 +720,7 @@ These are documented as constraints on the standards process:
 Work registered but deferred past the active batch. Items are promoted to "Immediate next tasks" when the preceding batch clears.
 
 | ID | Task | Track / Area | PASS | Blocks | Status |
-|----|------|--------------|------|--------|--------|
+| --- | --- | --- | --- | --- | --- |
 | ~~GC-3-B-01~~ | ~~Runtime agent discovery registry~~ | Bravo | PASS-3 | GC v1.3.0 | ✅ Done |
 | ~~101-G1c~~ | ~~Transport binding (HTTP/2 SSE, WebSocket, gRPC, Kafka)~~ | Bravo | PASS-4 | cross-spec interop | ✅ Done |
 | ~~GC-3-E-02~~ | ~~NIST AI RMF control evidence generation~~ | Echo | PASS-4 | GC v2.0.0 | ✅ Done |

@@ -20,7 +20,7 @@ This file does not contain per-repo task lists. It sets ecosystem structure and 
 ## AUTHORITY MODEL
 
 | Level | Scope | Who can change |
-|-------|-------|----------------|
+| --- | --- | --- |
 | AL:3 | Ecosystem charter — inviolable invariants, licensing model, GC naming, **publish timing, public registry releases, tag creation that triggers publish workflows** | Founder only. Recorded as GC-CHARTER entries. |
 | AL:2 | This file + DEV-PLAN — compatibility constraints, release milestones, design decisions, **PASS exit criteria, opening/closing PASSes, GC release milestone declarations** | GC project maintainer. Changes require a GC-PASS entry. |
 | AL:1 | Individual repo devpaths — implementation, architecture, release cadence within a spec's scope | Spec owner, independently of ecosystem cadence. |
@@ -132,7 +132,7 @@ implemented across five layers, each scoped to the PASS where it becomes enforce
 **Five-layer implementation scope:**
 
 | Layer | Artifact / system | Required field(s) | PASS | Gap / item |
-|-------|-------------------|-------------------|------|------------|
+| --- | --- | --- | --- | --- |
 | L1 | DEV-PLAN, DEV-PATH, registry files, ONS CHANGELOG entries | `time.loc:` header field | PASS-0 — done | Convention |
 | L2 | agent-dossier handoff envelopes; telemetry lifecycle events | `emitted_at` (REQUIRED), `accepted_at` (OPTIONAL); event types: `pass_written`, `scaffold_started`, `scaffold_completed`, `implementation_started`, `implementation_completed`, `doc_written`, `registry_updated` | PASS-1 | GC-1-A-TL-01, GC-1-A-TL-02 |
 | L3 | observability-contract.yaml gc.agent.* event schema | `time_loc` required field on every gc.agent.* event | PASS-4 | GC-3-E-01 (existing) |
@@ -296,7 +296,7 @@ demonstrable technical leadership beyond table-stakes compliance.
 ## GC-PASS REGISTRY
 
 | GC-PASS | Description | Date | Status |
-|---------|-------------|------|--------|
+| --- | --- | --- | --- |
 | GC-PASS-0001.00 | Ecosystem planning infrastructure declared — PASS-0 bootstrap | 2026-06-05 | 🔄 |
 | GC-PASS-0002.00 | PASS-1 gate review — all 8 exit criteria passed; PASS-2 open | 2026-06-07 | ✅ |
 | GC-PASS-0012.00 | PASS-2 gate review — all 8 exit criteria met; PASS-3 open | 2026-06-07 | ✅ |
@@ -322,7 +322,7 @@ A gap is not closed until: (1) mechanism exists, (2) it is tested, (3) it is obs
 ---
 
 | Q | Area | Priority | Gap | Status | Suggested Action |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | Q1 | Regulatory | High | EU AI Act (Aug 2, 2026) not a release gate; GDPR data subject rights not modeled; CO ADMT 2027 not addressed | open | Add jurisdiction profiles to PASS-6: EU AI Act, GDPR, CO ADMT 2027, CA/NY transparency |
 | Q2 | Standards | High | SLSA provenance and SBOM open; ISO 42001 + NIST AI RMF + SOC 2 mapped but not published as release artifacts | spec-complete | Finish SLSA provenance, SBOM, release attestations for all published packages |
 | Q3 | De Facto | Medium | MCP/A2A/CloudEvents specified and tested; no external adoption proof running against real tooling | spec-complete | Publish examples running against real MCP/CloudEvents tooling, not just schemas |
@@ -339,7 +339,7 @@ A gap is not closed until: (1) mechanism exists, (2) it is tested, (3) it is obs
 ### Doc Vault / DVP additions (2026-06-16)
 
 | Q | Area | Priority | Gap | Status |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Q1 | Regulatory | Medium | ISO 15489, ARMA GARP aligned but no jurisdiction-specific retention law mapping (IRS 7-year, SOX, HIPAA) | open |
 | Q2 | Standards | Medium | doc-vault standards-map.md covers alignment; no formal conformance schema for doc vault profile | open |
 | Q3 | De Facto | Medium | No integration with OneDrive, Google Drive, Dropbox — where actual business docs live | open |

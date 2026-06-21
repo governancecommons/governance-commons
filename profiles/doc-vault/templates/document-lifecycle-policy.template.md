@@ -42,7 +42,7 @@ It does not apply to ephemeral working notes, internal chat logs, or non-binding
 ## 3. Document Classes
 
 | class | examples | default retention |
-|---|---|---|
+| --- | --- | --- |
 | legal-formation | articles, operating agreement, EIN | permanent |
 | legal-contract | vendor agreements, NDAs | seven-years |
 | governance-policy | internal policies, SOPs | until-superseded then seven-years |
@@ -102,7 +102,7 @@ All governed documents follow this naming schema:
 **Status values:**
 
 | status | applies to |
-|---|---|
+| --- | --- |
 | draft | internal draft |
 | review | under formal review |
 | executed | signed or filed by [entity name] |
@@ -127,7 +127,7 @@ All governed documents follow this naming schema:
 ## 6. Version Semantics
 
 | version | meaning |
-|---|---|
+| --- | --- |
 | v0-1 | initial draft |
 | v0-2 through v0-9 | revised drafts |
 | v1-0 | first executed version |

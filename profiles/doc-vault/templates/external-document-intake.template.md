@@ -9,7 +9,7 @@
 ## Document Details
 
 | field | value |
-|---|---|
+| --- | --- |
 | Document title | |
 | Document type | legal / finance / contract / admin / reference |
 | External status | issued / confirmation / received |
@@ -25,7 +25,7 @@
 ## Classification
 
 | field | value |
-|---|---|
+| --- | --- |
 | Domain | legal / governance / ip / finance / contract / admin |
 | Category | |
 | Access level | owner-only / trusted-advisor / division-level / internal / public |
@@ -38,7 +38,7 @@
 ## Storage
 
 | field | value |
-|---|---|
+| --- | --- |
 | Assigned filename | |
 | Storage location | |
 | Version assigned | v1-0 |
