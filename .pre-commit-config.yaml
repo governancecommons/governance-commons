@@ -1,0 +1,14 @@
+repos:
+  - repo: local
+    hooks:
+      - id: md-table-separators
+        name: MD060 — markdown table separator style
+        language: python
+        entry: python scripts/check_md_tables.py
+        types: [markdown]
+        pass_filenames: true
+        description: >
+          Enforces | --- | --- | format on all markdown table separator rows.
+          Governed by anti_stall.lint_compliance.MD060 in
+          agent-project-orchestrator/governance/multi-agent.yaml.
+          Fix with: python scripts/fix_md_tables.py
