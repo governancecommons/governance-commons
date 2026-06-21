@@ -146,6 +146,13 @@ add new baseline scope. Versioning should happen at the GC release-manifest boun
 forking should not happen now. PASS-6 is the proper home for optional category-defining
 profiles and commercial-capability implementation paths.
 
+**DDR-9 — Review grammar promotion boundary.**
+`C:\dev\docs\REVIEW-GRAMMAR.md` is the local portfolio working grammar for commands such as
+normalize, validate, verify, trace, adversarial audit, meta-audit, authority audit, registry
+audit, and close the loop. Governance Commons now carries a draft portable profile at
+`profiles/review-grammar/`. The profile may be used by adopters as draft guidance, but it is
+not release-pinned as a GC standard until accepted by a future GC PASS or RFC.
+
 ---
 
 ## ECOSYSTEM PHASES
@@ -288,6 +295,8 @@ demonstrable technical leadership beyond table-stakes compliance.
 - Governance diff and audit replay format defined
 - Edge/offline governance profile defined
 - ONS LSP prototype path documented
+- Review grammar profile or RFC accepted, if the local root grammar proves stable enough to
+  promote beyond the `C:\dev` portfolio
 
 **Status:** ⬜ Not started
 

@@ -176,10 +176,13 @@ metadata.schema.yml, standards-map.md, templates/, examples/.
 | gc.profile.doc-control | Document Control | Policies, SOPs, board docs, approval matrices, signature rules |
 | gc.profile.audit-gap | Audit & Gap Analysis | required_documents.yml, gap_register.yml, risk_flags.yml — feeds DCP scanner |
 | gc.profile.agent-vault | Agent Integration | agents.yml, context_manifest.yml, prompts.md — AI-readable repo context |
+| gc.profile.review-grammar | Review Grammar | DRAFT — portable vocabulary for normalize, validate, verify, trace, adversarial audit, meta-audit, authority audit, registry audit, and closure states; profile lives in `profiles/review-grammar/` and is sourced from `C:\dev\docs\REVIEW-GRAMMAR.md` |
 
 Note: gc.profile.code-repo overlaps with existing agent-dossier/agent-matrix work. Reconcile
 before building to avoid duplication. gc.profile.agent-vault may become a sub-component of
 all profiles rather than a standalone profile.
+gc.profile.review-grammar is a draft portable profile. It MUST NOT be treated as a
+release-pinned GC standard until accepted by a future GC PASS or RFC.
 
 #### Track II — Business type templates
 

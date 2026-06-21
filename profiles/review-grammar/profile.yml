@@ -1,0 +1,88 @@
+profile_id: gc.profile.review-grammar
+profile_name: Governance Commons Review Grammar Profile
+version: 0.1.0
+status: draft
+repo_type: code-repository
+ons_required: false
+
+description: >
+  Defines a portable command grammar for AI-assisted review, normalization,
+  validation, adversarial audit, meta-audit, authority audit, registry audit,
+  tracing, and gap closure work in governed development repositories.
+
+purpose:
+  - make short human instructions unambiguous to agents
+  - preserve stable meanings for common review commands
+  - distinguish review, validation, verification, audit, and meta-audit work
+  - define minimum output evidence for review sessions
+  - reduce planning drift and false gap closure
+
+required_files:
+  - docs/REVIEW-GRAMMAR.md
+
+recommended_agent_instruction_files:
+  - AGENTS.md
+  - CLAUDE.md
+  - .github/copilot-instructions.md
+  - .governance/agents.md
+
+required_command_verbs:
+  - normalize
+  - validate
+  - verify
+  - adversarial audit
+  - meta-audit
+  - trace
+  - authority audit
+  - registry audit
+  - close the loop
+  - de-stale
+
+required_review_order_terms:
+  - first-order review
+  - meta-audit
+  - second-order review
+  - process audit
+  - third-order review
+
+required_closure_states:
+  - open
+  - spec-complete
+  - release-complete
+  - runtime-complete
+
+required_output_fields:
+  - scope
+  - findings
+  - evidence
+  - validation
+  - next_action
+
+required_tests:
+  - grammar_file_exists
+  - required_verbs_present
+  - closure_states_present
+  - output_contract_present
+  - agent_instructions_reference_grammar
+
+not_in_scope:
+  - runtime_enforcement
+  - certification_claims
+  - legal_audit_opinion
+  - replacing_project_management_tools
+  - replacing_security_or_compliance_review
+
+related_profiles:
+  - gc.profile.audit-gap
+  - gc.profile.code-repo
+
+tooling_expectations:
+  dcp:
+    validator: validate-review-grammar.ps1
+    behavior: >
+      Checks whether a repository has a review grammar file, required verbs,
+      closure states, output contract language, and agent instruction references.
+  eco:
+    future_mapping: >
+      May map review sessions to PASS/RunRecord evidence after this profile is
+      accepted or release-pinned by Governance Commons.
