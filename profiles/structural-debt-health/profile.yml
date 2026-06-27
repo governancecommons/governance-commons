@@ -1,0 +1,67 @@
+profile_id: gc.profile.structural-debt-health
+profile_name: Governance Commons Structural Debt Health Profile
+version: 0.1.0
+status: draft
+repo_type: code-repository
+ons_required: false
+
+description: >
+  Defines a portable health-check contract for classifying structural debt in
+  governed repositories and portfolios.
+
+purpose:
+  - distinguish generated/debug artifacts from intentional lifecycle vocabulary
+  - make legacy, shim, compatibility, workaround, and stale-reference findings reportable
+  - provide a stable pass/warn/fail health signal for DCP, eco, and other adopters
+  - keep implementation tooling outside the Governance Commons profile
+
+status_semantics:
+  pass: no failures or visible warnings
+  warn: no failures, but visible human-review warnings remain
+  fail: tracked generated/debug artifacts, missing registered paths, or scanner execution failure
+
+required_report_fields:
+  - profile
+  - profile_version
+  - status
+  - checked_repos
+  - checked_files
+  - failure_count
+  - warning_count
+  - failures
+  - warnings
+  - generated_artifact_policy
+  - marker_policy
+
+policy_defaults:
+  generated_artifact_policy: fail
+  marker_policy: warn
+
+intentional_categories:
+  - formal_deprecation_vocabulary
+  - published_schema_or_site_copy
+  - changelog_or_history_record
+  - known_active_compatibility_support
+  - scanner_or_lockfile_metadata
+
+tooling_expectations:
+  dcp:
+    validator: validate-debt.ps1
+    behavior: >
+      Scans registered project repos, skips archive/vendor-style entries, emits
+      a JSON report conforming to this profile, and treats generated/debug
+      artifacts as failures.
+  eco:
+    health_mapping: >
+      Consumes the JSON report as a health signal. pass maps to score 100,
+      warn maps to score 80, fail maps to score 0.
+  governance_commons:
+    responsibility: >
+      Defines the report contract and semantics. Does not ship validator code.
+
+not_in_scope:
+  - deleting files
+  - certifying legal or compliance sufficiency
+  - proving agent behavior
+  - replacing project-specific cleanup decisions
+
