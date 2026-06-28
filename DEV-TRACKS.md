@@ -1,4 +1,7 @@
-# TRACKS — Governance Commons Portfolio Overview
+# DEV-TRACKS — Governance Commons Portfolio Overview
+
+**AUTHORITY LEVEL: AL:2**
+**Status:** active
 
 **Last updated:** 2026-06-07T00:00:00Z
 **Authority:** Master spec/project portfolio view. For PASS governance history see `DEV-PATH.md`; for active execution priorities see `DEV-PLAN.md`.

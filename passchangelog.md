@@ -82,6 +82,38 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0011.00 — 2026-06-27
+
+**pass_id**: GC-PASS-0011.00
+**timestamp**: 2026-06-27T00:00:00Z
+**change_type**: build
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: ONS spec (ons.yaml), ons/registry/doc-types.yaml (new), GC passes registry, all agents and validators that consume ONS namespace domains
+
+**what**: DEV-ACCORD.01 (GC:2009) — ONS registration for portfolio planning doc types. (1) Adds `portfolio_doc_name` casing domain to ons.yaml — `DEV-UPPER-KEBAB` pattern `^DEV-[A-Z]+(?:-[A-Z]+)*$` covering all `DEV-*` planning doc types. (2) Adds `portfolio` namespace domain to ons.yaml — registry-required, default registry at `governance-commons/ons/registry/doc-types.yaml`, collision scope is the global portfolio doc type namespace. (3) Creates `ons/registry/doc-types.yaml` — registers DEV-PATH (`portfolio.planning.dev-path`), DEV-PLAN (`portfolio.planning.dev-plan`), DEV-RELEASE (`portfolio.planning.dev-release`), DEV-TRACKS (`portfolio.planning.dev-tracks`) with roles, casing domain, and governing PASS reference.
+**why**: DEV-ACCORD.00 declared the four doc types as canonical but did not formally register them in ONS. Without ONS registration, the names have no collision scope, no casing rule, and no namespace domain — agents and validators cannot reference them as first-class ONS entities. This PASS closes that gap and makes the doc types formally governed.
+**new_constraints**: (1) Any new `DEV-*` planning doc type MUST be registered in `ons/registry/doc-types.yaml` before portfolio-wide use. (2) Canonical name form is `portfolio.planning.{lowercase-type}` using dot-hierarchy. (3) `portfolio_doc_name` is the sole conformant casing pattern for `DEV-*` planning doc filenames.
+**reasoning**: Registering in ONS rather than just DEV-ACCORD makes the doc types visible to all tools that consume ONS — including the GC SDK validator and any future LSP. The `portfolio` domain is distinct from `governance` (PASS records), `product` (runtime namespaces), and `agentic` (agent identifiers). Canonical name form uses lowercase dot-hierarchy (`portfolio.planning.dev-path`) per existing product/agentic domain conventions, even though the filename form uses UPPER-KEBAB — this mirrors how other languages separate identifier form from wire/storage form.
+
+---
+
+## GC-PASS-0010.00 — 2026-06-27
+
+**pass_id**: GC-PASS-0010.00
+**timestamp**: 2026-06-27T00:00:00Z
+**change_type**: build
+**authority_level**: AL:2
+**status**: ACCEPTED
+**affected_surfaces**: all DEV-PATH, DEV-PLAN, DEV-RELEASE, DEV-TRACKS files across the portfolio; validate-planning.ps1; projects.yaml consumers; all agents reading planning docs
+
+**what**: DEV-ACCORD.00 (GC:2008) — Planning Document Standard cluster header. Declares the canonical planning doc types (DEV-PATH, DEV-PLAN, DEV-RELEASE, DEV-TRACKS, all DEV-prefixed), the H1 naming rule (`# {DOC-TYPE} — {Project-Scope}` with em dash U+2014), disambiguation rule, canonical doc rule (exclusive content ownership per type), append-only constraint for DEV-PATH, and the full validation contract. Enforced by validate-planning.ps1 at c:\dev root.
+**why**: Planning docs across 20+ portfolio projects had no governing standard. H1 format was inconsistent (hyphens vs em dash, reversed order, missing doc type prefix). Two files shared the exact same H1 causing agent disambiguation failures. No validator existed — drift was discovered manually, session by session. TRACKS.md did not follow the DEV- prefix convention.
+**new_constraints**: (1) H1 MUST be `# {DOC-TYPE} — {Project-Scope}` — type-first, em dash separator, unique scope. (2) Canonical doc types are DEV-PATH, DEV-PLAN, DEV-RELEASE, DEV-TRACKS — TRACKS.md is legacy and must be migrated. (3) DEV-PATH is append-only; H1 conformance corrections are the only permitted non-append edit. (4) validate-planning.ps1 is now the DEV-ACCORD conformance gate.
+**reasoning**: H1 format was patched manually in multiple sessions without a mechanism to prevent recurrence. A GC standard makes the rule citable, enforceable, and portable. Em dash was chosen over hyphen because hyphens appear inside project names and are syntactically ambiguous as separators. DEV-TRACKS over TRACKS aligns the naming convention with all other doc types. AUTHORITY LEVEL and Status are warnings (not errors) to avoid burying real errors under legacy debt noise.
+
+---
+
 ## GC-PASS-0009.00 — 2026-06-20
 
 **pass_id**: GC-PASS-0009.00

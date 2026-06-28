@@ -1,6 +1,7 @@
 # DEV-RELEASE — governance-commons
 
-Status: **Active — PASS-5 (Public Release Train)**  
+**AUTHORITY LEVEL: AL:2**
+**Status:** Active — PASS-5 (Public Release Train)  
 Created: 2026-06-09  
 Authority: Owned by this repo. Sequencing and cross-repo dependencies defer to [`docs/DEV-RELEASE.md`](../docs/DEV-RELEASE.md).  
 Relationship to DEV-PLAN: `DEV-PLAN.md` owns execution (tasks, PASSes, gap closure). This file owns release contracts — what ships externally, under what conditions, and what each release unlocks downstream.
@@ -207,7 +208,7 @@ Every item in the spec-complete table above is confirmed — the work is real. T
 
 - [`DEV-PLAN.md`](DEV-PLAN.md) — canonical execution plan; owns PASS state, tasks, gap closure tracking
 - [`DEV-PATH.md`](DEV-PATH.md) — governance history, design decisions, authority model
-- [`TRACKS.md`](TRACKS.md) — portfolio overview and track status
+- [`DEV-TRACKS.md`](DEV-TRACKS.md) — portfolio overview and track status
 - [`docs/DEV-RELEASE.md`](../docs/DEV-RELEASE.md) — portfolio master, priority order, dependency graph
 - [`docs/gap-analysis-framework.md`](../docs/gap-analysis-framework.md) — 12-question gap framework
 - [`docs/sessions/2026-06-09-combined-synthesis.md`](../docs/sessions/2026-06-09-combined-synthesis.md) — synthesis source

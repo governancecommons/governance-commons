@@ -186,6 +186,40 @@
       "superseded_by": null,
       "depends_on": ["GC:2005", "GC:2006"],
       "originating_pass": "CANON.03"
+    },
+    {
+      "id": "GC:2008",
+      "alias": "DEV-ACCORD.00",
+      "legacy_ids": [],
+      "title": "Planning Document Standard — Cluster Header",
+      "description": "Founding record of the DEV-ACCORD cluster. Declares the canonical planning doc types (DEV-PATH, DEV-PLAN, DEV-RELEASE, DEV-TRACKS), H1 naming rule with em dash separator, canonical doc rule, append-only constraint for DEV-PATH, and validation contract enforced by validate-planning.ps1.",
+      "layer": "standards",
+      "cluster": "DEV-ACCORD",
+      "parent": null,
+      "status": "accepted",
+      "timestamp": "2026-06-27T00:00:00Z",
+      "path": "passes/dev-accord/DEV-ACCORD.00.md",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:2005"],
+      "originating_pass": "DEV-ACCORD.00"
+    },
+    {
+      "id": "GC:2009",
+      "alias": "DEV-ACCORD.01",
+      "legacy_ids": [],
+      "title": "Planning Document Standard — ONS Registration",
+      "description": "Registers the four canonical planning doc types (DEV-PATH, DEV-PLAN, DEV-RELEASE, DEV-TRACKS) in the ONS namespace. Adds portfolio_doc_name casing domain and portfolio namespace domain to ons.yaml; creates ons/registry/doc-types.yaml.",
+      "layer": "standards",
+      "cluster": "DEV-ACCORD",
+      "parent": "GC:2008",
+      "status": "accepted",
+      "timestamp": "2026-06-27T00:00:00Z",
+      "path": "passes/dev-accord/DEV-ACCORD.01.md",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:2008"],
+      "originating_pass": "DEV-ACCORD.01"
     }
   ]
 }
