@@ -82,6 +82,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0012.00 — 2026-06-28
+
+**pass_id**: GC-PASS-0012.00
+**timestamp**: 2026-06-28T00:00:00Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: all agents operating under GC governance; all projects with PASS-governed work; dxp-init evidence bundle pipeline
+
+**what**: DEV-ACCORD.02 (GC:2010) — Execution model standard. Defines three layers: (1) PASS (governance contract — planned work with Done-when criteria, track, wave, seven required fields); (2) RUN (execution event — every code change regardless of size, always produces a git commit, significant RUNs produce a signed evidence bundle); (3) Evidence Bundle (signed, machine-verifiable audit record of a RUN, Stranger-test compliant). Defines PASS numbering: .00 primary, .01–.09 sub-PASSes, .10–.99 compound (parallel execution cluster). Defines parallelism declaration via `Parallel with:` and `Batch:` metadata fields. Defines multi-agent coordination doctrine: PASS is the shared contract all agents read before starting work.
+**why**: PASS doctrine existed only in dxp-init DEV-PATH.md (INIT-D17), making it invisible to agents working on eco, arche, cockpit, lasso, or any other portfolio project. The RUN concept did not exist — there was no governed vocabulary for execution events smaller than a PASS (one-line fixes, hotfixes, trivial commits). Without RUN, the governance model had a gap: significant work was governed by PASSes, but the bulk of daily work (small changes) had no governance vocabulary at all. DEV-ACCORD.02 closes both gaps.
+**new_constraints**: (1) Every agent under GC governance must understand PASS, RUN, and Evidence Bundle before performing planned work. (2) Every code change is a RUN, including trivial fixes. (3) Significant RUNs must produce a signed evidence bundle. (4) PASS required fields: PASS ID, Status, Track, Wave, Timestamp, Authority, Author — all seven mandatory. (5) Private signing keys must never appear in any repo.
+**reasoning**: PASS without RUN leaves a vocabulary gap at the execution layer. Agents need a word for "what I just did" that is smaller than a PASS and larger than nothing. RUN fills that gap without adding ceremony — every commit was already a RUN, it just had no name. The evidence bundle was already implemented in dxp-init (INIT.06); DEV-ACCORD.02 makes it the canonical audit artifact for a RUN at the GC level, not just a dxp-init feature.
+
+---
+
 ## GC-PASS-0011.00 — 2026-06-27
 
 **pass_id**: GC-PASS-0011.00

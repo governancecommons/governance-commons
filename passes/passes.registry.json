@@ -220,6 +220,23 @@
       "superseded_by": null,
       "depends_on": ["GC:2008"],
       "originating_pass": "DEV-ACCORD.01"
+    },
+    {
+      "id": "GC:2010",
+      "alias": "DEV-ACCORD.02",
+      "legacy_ids": [],
+      "title": "Execution Model — PASS, RUN, and Evidence Bundle",
+      "description": "Defines the three-layer execution model: PASS (governance contract), RUN (execution event), Evidence Bundle (audit record). Governing doctrine for all agents operating under GC governance.",
+      "layer": "standards",
+      "cluster": "DEV-ACCORD",
+      "parent": "GC:2008",
+      "status": "accepted",
+      "timestamp": "2026-06-28T00:00:00Z",
+      "path": "passes/dev-accord/DEV-ACCORD.02.md",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:2008"],
+      "originating_pass": "DEV-ACCORD.02"
     }
   ]
 }
