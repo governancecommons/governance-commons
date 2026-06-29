@@ -44,9 +44,10 @@ contains one instruction: read this document. Nothing else belongs in it.
 | Agent | Bootstrap file | How it reads | Status |
 | --- | --- | --- | --- |
 | Claude Code | `CLAUDE.md` | auto-read at session start | active |
-| ChatGPT | `CHATGPT.md` | paste into session manually | active |
-| Codex | `CODEX.md` | auto-read at session start | not yet created |
-| Copilot | `COPILOT.md` | auto-read at session start | not yet created |
+| ChatGPT / Codex / Copilot / others | `AGENTS.md` | auto-read at session start | active |
+
+`AGENTS.md` is the cross-agent standard. Any agent that is not Claude Code reads `AGENTS.md`.
+Both files point to this document and contain nothing else.
 
 ---
 
