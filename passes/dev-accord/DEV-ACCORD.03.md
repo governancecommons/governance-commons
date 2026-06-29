@@ -41,11 +41,12 @@ Before taking any action on any project:
 Each agent reads its own thin bootstrap file at the portfolio root. That file
 contains one instruction: read this document. Nothing else belongs in it.
 
-| Agent | Bootstrap file | Status |
-| --- | --- | --- |
-| Claude Code | `CLAUDE.md` | active |
-| Codex | `CODEX.md` | not yet created |
-| Copilot | `COPILOT.md` | not yet created |
+| Agent | Bootstrap file | How it reads | Status |
+| --- | --- | --- | --- |
+| Claude Code | `CLAUDE.md` | auto-read at session start | active |
+| ChatGPT | `CHATGPT.md` | paste into session manually | active |
+| Codex | `CODEX.md` | auto-read at session start | not yet created |
+| Copilot | `COPILOT.md` | auto-read at session start | not yet created |
 
 ---
 
