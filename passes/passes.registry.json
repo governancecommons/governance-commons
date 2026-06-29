@@ -254,6 +254,23 @@
       "superseded_by": null,
       "depends_on": ["GC:2008", "GC:2010"],
       "originating_pass": "DEV-ACCORD.03"
+    },
+    {
+      "id": "GC:2012",
+      "alias": "DEV-ACCORD.04",
+      "legacy_ids": [],
+      "title": "Agent Bootstrap Standard",
+      "description": "Defines AGENTS.md as the canonical GC cross-agent bootstrap file. Separates normative GC requirements from platform auto-discovery behavior, permits runtime adapter files such as CLAUDE.md, and prohibits universal auto-read overclaims.",
+      "layer": "standards",
+      "cluster": "DEV-ACCORD",
+      "parent": "GC:2008",
+      "status": "accepted",
+      "timestamp": "2026-06-28T00:00:00Z",
+      "path": "passes/dev-accord/DEV-ACCORD.04.md",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:2008", "GC:2011"],
+      "originating_pass": "DEV-ACCORD.04"
     }
   ]
 }

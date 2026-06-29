@@ -338,4 +338,20 @@ listed as blocked on this sign-off; unblocking it was the primary trigger for th
 
 ---
 
+## GC-PASS-0013.00 — 2026-06-28
+
+**pass_id**: GC-PASS-0013.00
+**change_type**: governance
+**authority_level**: AL:1
+**summary**: Accepted DEV-ACCORD.04 (GC:2012), the Agent Bootstrap Standard. Declares
+`AGENTS.md` as the canonical GC cross-agent bootstrap file, defines runtime-specific files
+such as `CLAUDE.md` as adapters rather than governance authorities, and prohibits universal
+auto-discovery claims unless backed by runtime-specific evidence. Clarifies that GC defines
+what conformant agents must read; vendor and host runtimes determine whether that file is
+auto-discovered.
+**status**: ACCEPTED
+**affected_specs**: DEV-ACCORD, agent onboarding, agent bootstrap files
+
+---
+
 <!-- New entries go above this line, newest first -->

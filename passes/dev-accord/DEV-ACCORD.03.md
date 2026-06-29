@@ -13,10 +13,10 @@
 ## Summary
 
 The canonical onboarding protocol for any agent operating in this portfolio.
-Agent-agnostic. Claude, Codex, Copilot, and any future agent all read this
-file before starting work. Agent-specific bootstrap files (CLAUDE.md,
-CODEX.md, COPILOT.md) are thin wrappers that point here and contain nothing
-else. All governance lives here.
+Agent-agnostic. Any GC-conformant agent reads this file before starting work.
+Agent-specific bootstrap files are adapters that point here and contain no
+portfolio governance. Bootstrap-file conformance is governed by
+DEV-ACCORD.04.
 
 ---
 
@@ -38,16 +38,17 @@ Before taking any action on any project:
 
 ## Agent bootstrap files
 
-Each agent reads its own thin bootstrap file at the portfolio root. That file
-contains one instruction: read this document. Nothing else belongs in it.
+Bootstrap file requirements are defined by DEV-ACCORD.04. This portfolio uses
+the following bootstrap files:
 
 | Agent | Bootstrap file | How it reads | Status |
 | --- | --- | --- | --- |
-| Claude Code | `CLAUDE.md` | auto-read at session start | active |
-| ChatGPT / Codex / Copilot / others | `AGENTS.md` | auto-read at session start | active |
+| Claude Code | `CLAUDE.md` | platform adapter; Claude Code auto-reads this file | active |
+| GC-conformant agents | `AGENTS.md` | normative GC bootstrap; auto-read depends on runtime or adapter | active |
 
-`AGENTS.md` is the cross-agent standard. Any agent that is not Claude Code reads `AGENTS.md`.
-Both files point to this document and contain nothing else.
+`AGENTS.md` is the cross-agent standard for GC-conformant agents. DEV-ACCORD
+does not claim every vendor runtime auto-discovers `AGENTS.md`; it defines what
+GC-conformant agents and adapters must read before acting.
 
 ---
 
@@ -116,7 +117,7 @@ bootstrap files listed above.
 
 - All portfolio governance and reading order lives in this file, not in any
   agent-specific bootstrap file.
-- Agent bootstrap files (CLAUDE.md, CODEX.md, COPILOT.md) must contain only
-  a pointer to this document. No governance content belongs in them.
-- Any future agent added to this portfolio must have a bootstrap file created
-  and registered in the table above before its first session.
+- Agent bootstrap files must conform to DEV-ACCORD.04.
+- Any future agent runtime added to this portfolio must either read `AGENTS.md`
+  directly or provide an adapter file that points to `AGENTS.md` or this
+  document before its first session.
