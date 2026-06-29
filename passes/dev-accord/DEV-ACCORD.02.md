@@ -150,7 +150,7 @@ Key properties:
 - Public key embedded in `gc-principal.yaml`; private key stays in OS config dir
 - **Stranger test:** a third party with only the bundle + public key can verify
   the run without repo access
-- Emitted via `dxp-init audit validate --evidence <dir>`
+- Emitted via `marlin audit validate --evidence <dir>`
 
 ---
 

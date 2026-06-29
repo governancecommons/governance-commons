@@ -36,6 +36,40 @@ Before taking any action on any project:
 
 ---
 
+## Agent-Trail
+
+**Agent-trail** is the named reading chain that orients any GC-conformant agent from session start to project-specific context. The shorthand form used in instructions and governance docs:
+
+```text
+AGENTS.md → DEV-ACCORD.03 → REVIEW-GRAMMAR → local guidance
+```
+
+Expanded to the full reading sequence:
+
+| Step | File | What it provides |
+| --- | --- | --- |
+| Entry | `AGENTS.md` / `CLAUDE.md` | Runtime bootstrap; routes to DEV-ACCORD.03 and nowhere else |
+| Protocol | `DEV-ACCORD.03` (this file) | Reading order, portfolio rules, ecosystem map |
+| Rules | `PROTECTED.md` | Files that cannot be touched; append-only constraints |
+| Doctrine | `DEV-CONTROL-PLANE.md` | Portfolio boundary doctrine: what belongs where |
+| Vocabulary | `docs/REVIEW-GRAMMAR.md` | Working command language for the session |
+| Execution model | `DEV-ACCORD.02.md` | PASS, RUN, and Evidence Bundle definitions |
+| Registry | `projects.yaml` | Project index and canonical plan pointers |
+| Local context | `DEV-PATH.md` + `DEV-PLAN.md` | Project-specific decisions, current phase, active work |
+
+**Properties:**
+
+- The trail is sequential. Each step depends on the prior steps being read.
+- The entry step is runtime-specific (`CLAUDE.md` for Claude Code; `AGENTS.md` for other GC-conformant agents). The rest are universal.
+- The vocabulary step (`REVIEW-GRAMMAR.md`) makes single-word session commands — normalize, validate, adversarial audit, de-stale — unambiguous without explanation in every session.
+- The local context step is project-scoped. It varies per project but always follows the DEV-PATH / DEV-PLAN shape defined in this portfolio.
+
+An agent that reads all steps is oriented. One that skips any step risks violating portfolio rules, misreading a command verb, or acting without understanding the project's current state.
+
+The term **agent-trail** may be used in any governance doc, instruction file, or session note to refer to this chain without spelling it out in full.
+
+---
+
 ## Agent bootstrap files
 
 Bootstrap file requirements are defined by DEV-ACCORD.04. This portfolio uses
@@ -91,7 +125,7 @@ Each subdirectory is an independent project with its own planning docs. See
 | `lasso/` | Multi-agent orchestration platform (concept/design stage) |
 | `niji/` | Color palette generator — successor to CPM15 |
 | `kinjuu/` | Future app — financial/budget/deadline tracking |
-| `dxp-init/` | Developer onboarding wizard — five-minute governance bootstrap |
+| `dxp-init/` | Marlin-DXP — governance adoption wizard and workbench; bin: marlin / marlin-dxp |
 
 ---
 
