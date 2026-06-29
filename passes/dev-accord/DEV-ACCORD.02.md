@@ -33,18 +33,33 @@ and Evidence Bundle before performing any planned work.
 A PASS is the planning and governance unit for significant work. It defines a
 goal, declares when the work is done, and records what was built.
 
+### PASS identity
+
+Every PASS has two identifiers:
+
+| Identifier | Format | Example | Purpose |
+| --- | --- | --- | --- |
+| Alias | CLUSTER.NN | INIT.06, DEV-ACCORD.02 | Human-readable; used in all references |
+| Canonical ID | GC:NNNN | GC:2010 | Permanent, immutable registry ID |
+
+`GC-PASS-NNNN.NN` is a **passchangelog row index** — a sequential number for
+each entry in the governance changelog. It is not a PASS identity. Do not use
+it to refer to a PASS in documentation, code, or cross-references. Always use
+the alias (`CLUSTER.NN`) or canonical ID (`GC:NNNN`).
+
 ### Numbering
 
 ```text
-NNNN.00   Primary PASS — owns the goal, defines scope and Done-when
-NNNN.01   Sub-PASS — discrete task under the primary
-NNNN.02   Sub-PASS — discrete task
+CLUSTER.NN.00   Primary PASS — owns the goal, defines scope and Done-when
+CLUSTER.NN.01   Sub-PASS — discrete task under the primary
+CLUSTER.NN.02   Sub-PASS — discrete task
 …
-NNNN.10   Compound PASS — cluster of sub-PASSes that execute in parallel
-NNNN.20   Compound PASS — another parallel execution cluster
+CLUSTER.NN.10   Compound PASS — cluster of sub-PASSes that execute in parallel
+CLUSTER.NN.20   Compound PASS — another parallel execution cluster
 ```
 
-A bare `GC-PASS-NNNN` (no decimal suffix) is always wrong.
+The `CLUSTER.NN` prefix is always present. A bare sequence number with no
+cluster is not a valid PASS identity.
 
 ### Declaring parallelism
 
@@ -166,7 +181,8 @@ immediately upon acceptance.
 
 - Every agent operating under GC governance must understand PASS, RUN, and
   Evidence Bundle before performing planned work.
-- A bare `GC-PASS-NNNN` (no decimal suffix) is always wrong.
+- PASS identity is `CLUSTER.NN` (alias) or `GC:NNNN` (canonical). `GC-PASS-NNNN.NN`
+  is a passchangelog row index — never a PASS identity.
 - Every PASS must carry the seven required fields listed above.
 - Every code change is a RUN, including one-line fixes.
 - Significant RUNs must produce a signed evidence bundle.

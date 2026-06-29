@@ -3,15 +3,17 @@
 Ecosystem-level governance decisions for the Governance Commons ecosystem.
 For per-spec implementation changes, see each spec's own `passchangelog.md` and `CHANGELOG.md`.
 
-ID format: GC-PASS-NNNN.NN (4-digit sequence — execution order). Newest first.
+Entry index: GC-PASS-NNNN.NN (4-digit sequential row number — not a PASS identity). Newest first.
 
-**PASS structure:**
+**PASS identity** — use `CLUSTER.NN` alias (e.g. `DEV-ACCORD.02`) or `GC:NNNN`
+canonical ID (e.g. `GC:2010`) to refer to a PASS. `GC-PASS-NNNN.NN` is only the
+changelog row number. Do not use it as a PASS reference in docs, code, or links.
 
-- `NNNN.00` — **Primary Pass.** Always required. Defines the intent, scope, success criteria, inputs, and outputs for the entire pass family. Every sub-pass and compound pass hangs off this anchor.
-- `NNNN.01` – `NNNN.09` — **Sub-passes.** Discrete work items within the primary pass scope.
-- `NNNN.10` – `NNNN.99` — **Compound passes.** A cluster of sub-passes that must be grouped together.
+**PASS structure** (see DEV-ACCORD.02 / GC:2010 for the governing standard):
 
-A bare `GC-PASS-NNNN` (no decimal suffix) is always wrong. Do not write it.
+- `CLUSTER.NN.00` — **Primary PASS.** Owns the goal, defines scope, Done-when, inputs, outputs.
+- `CLUSTER.NN.01` – `CLUSTER.NN.09` — **Sub-PASSes.** Discrete tasks within the primary PASS scope.
+- `CLUSTER.NN.10` – `CLUSTER.NN.99` — **Compound PASSes.** A cluster of sub-PASSes that execute in parallel.
 
 **Timestamp requirement:** Every PASS entry must include a `**timestamp**` field in ISO 8601 format (`YYYY-MM-DDTHH:MM:SSZ`). This is mandatory — no PASS entry is complete without it. Agents must record the actual time of the decision, not omit it.
 
