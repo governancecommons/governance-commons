@@ -28,9 +28,11 @@ Before taking any action on any project:
 2. `DEV-CONTROL-PLANE.md` — portfolio boundary doctrine
 3. `docs/REVIEW-GRAMMAR.md` — command vocabulary: normalize, validate, verify, trace, adversarial audit, meta-audit, close-the-loop, de-stale
 4. `governance-commons/passes/dev-accord/DEV-ACCORD.02.md` — execution model: PASS, RUN, Evidence Bundle
-5. `governance-commons/agent-matrix/agent-matrix.yaml` — multi-agent governance: agent roles, capabilities, routing, trust levels
-6. `projects.yaml` — project registry and canonical plan pointers
-7. The specific project's `DEV-PATH.md` and `DEV-PLAN.md`
+5. `projects.yaml` — project registry and canonical plan pointers
+6. The specific project's `DEV-PATH.md` and `DEV-PLAN.md`
+
+**Read when coordinating with other agents:**
+`governance-commons/agent-matrix/agent-matrix.yaml` — agent roles, capabilities, routing, trust levels. Only needed when more than one agent is working on the same project in the same session.
 
 ---
 
