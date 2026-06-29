@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0013.00 — 2026-06-28
+
+**pass_id**: GC-PASS-0013.00
+**timestamp**: 2026-06-28T00:00:00Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: CLAUDE.md (c:\dev); all agents operating in this portfolio; future CODEX.md, COPILOT.md
+
+**what**: DEV-ACCORD.03 (GC:2011) — Agent Onboarding Protocol. Moves all portfolio governance (reading order, portfolio rules, ecosystem overview, planning doc roles) out of CLAUDE.md and into a GC standard. CLAUDE.md stripped to a three-line stub that points to this standard. Agent bootstrap files (CLAUDE.md, CODEX.md, COPILOT.md) are now thin wrappers only — no governance content belongs in them. DEV-ACCORD.03 is the single source of truth for any agent onboarding in this portfolio, regardless of which agent it is.
+**why**: All portfolio governance was living in CLAUDE.md, a Claude-specific file. Codex, Copilot, and any future agent had no access to the reading order, portfolio rules, or ecosystem overview — they would operate blind or require manual re-briefing each session. The design intent was always for GC standards to own governance and agent files to be thin wrappers. DEV-ACCORD.03 corrects the mistake and makes the system work as intended.
+**new_constraints**: (1) Agent bootstrap files must contain only a pointer to DEV-ACCORD.03 — no governance content. (2) Any new agent added to the portfolio must register a bootstrap file in the DEV-ACCORD.03 agent table before its first session. (3) All portfolio rules, reading order, and ecosystem overview live in DEV-ACCORD.03 and are updated there — never in agent-specific files.
+**reasoning**: CLAUDE.md was named after Claude and read only by Claude Code. Moving governance into it created a single-agent dependency on a multi-agent portfolio. The fix is structural: governance-commons owns governance, agent files own only the bootstrap pointer. This is the same separation applied to all other GC standards — the standard is portable; the adopter is agent-specific.
+
+---
+
 ## GC-PASS-0012.00 — 2026-06-28
 
 **pass_id**: GC-PASS-0012.00

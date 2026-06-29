@@ -237,6 +237,23 @@
       "superseded_by": null,
       "depends_on": ["GC:2008"],
       "originating_pass": "DEV-ACCORD.02"
+    },
+    {
+      "id": "GC:2011",
+      "alias": "DEV-ACCORD.03",
+      "legacy_ids": [],
+      "title": "Agent Onboarding Protocol",
+      "description": "Canonical agent-agnostic onboarding protocol for all agents operating in this portfolio. Defines reading order, portfolio rules, ecosystem overview, and planning doc roles. Agent-specific bootstrap files (CLAUDE.md, CODEX.md, COPILOT.md) are thin wrappers that point here.",
+      "layer": "standards",
+      "cluster": "DEV-ACCORD",
+      "parent": "GC:2008",
+      "status": "accepted",
+      "timestamp": "2026-06-28T00:00:00Z",
+      "path": "passes/dev-accord/DEV-ACCORD.03.md",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:2008", "GC:2010"],
+      "originating_pass": "DEV-ACCORD.03"
     }
   ]
 }
