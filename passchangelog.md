@@ -84,6 +84,38 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0015.00 — 2026-06-30
+
+**pass_id**: GC-PASS-0015.00
+**timestamp**: 2026-06-30T00:00:00Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: All portfolio commits and agents; DEV-ACCORD cluster; pre-commit/pre-push hooks; CI; DEV-ACCORD.05 trailer spec (superseded)
+
+**what**: DEV-ACCORD.06 (GC:2014) — Change Playbook. Declares four change classes: BUNT (tiny tactical, no behavioral effect), RUN (normal bounded work), DRIVE (meaningful milestone movement — version bumps, API changes, packaging, dependency changes, milestone closures), PASS (governed contract — multi-step, cross-cutting, standard-changing). Defines per-class obligations for DEV-DOCS updates, validation, and evidence. Declares escalation rules with an explicit trigger table and a highest-class-wins rule. Declares the unified commit trailer schema — absorbing the `Dev-Docs:` field introduced in DEV-ACCORD.05 — so that all trailer fields are owned in one place. Specifies enforcement at pre-commit, pre-push, agent, and CI layers. Adds cluster invariants CI-13 through CI-16.
+**why**: DEV-ACCORD.02 defined only PASS and RUN as a binary, leaving no classification for changes that are meaningful but don't warrant a full governance contract. This gap caused recurring DEV-DOCS drift — DRIVE-class changes (version bumps, formula completions, dependency additions) had no named obligation and routinely shipped without updating DEV-DOCS. DEV-ACCORD.05 introduced a `Dev-Docs:` trailer field in isolation; adding a `Change-Level:` field as a separate PASS would have produced two independent trailer specs that grow apart over time. DEV-ACCORD.06 closes both gaps: names the missing class (DRIVE), and unifies the trailer schema so future fields have one owner.
+**new_constraints**: (1) Every commit must carry `Change-Level:` and `Dev-Docs:` trailer fields. (2) DRIVE-trigger changes (version, API, packaging, install path, milestone, dependency) must be classified DRIVE at minimum. (3) Highest class wins when a commit spans multiple levels. (4) The commit trailer schema is owned by DEV-ACCORD.06; new fields require a DEV-ACCORD amendment. (5) The `Dev-Docs:` field defined in DEV-ACCORD.05 is now governed by DEV-ACCORD.06.
+**reasoning**: The DRIVE class was chosen over alternatives like "SIGNIFICANT RUN" because it continues the sports vocabulary (BUNT → RUN → DRIVE → PASS) and the metaphor holds: a drive in football is sustained forward movement that changes field position, just as a DRIVE change moves the project's release or state forward in a way that must be recorded. The unified trailer approach was chosen over piecemeal field introduction because trailer fields interact — `Dev-Docs: not-needed` only makes sense alongside a `Change-Level` that tells you why, and `Validation:` only makes sense for DRIVE and PASS. Declaring them together makes the schema coherent and prevents future PASSes from adding conflicting fields.
+
+---
+
+## GC-PASS-0014.00 — 2026-06-30
+
+**pass_id**: GC-PASS-0014.00
+**timestamp**: 2026-06-30T00:00:00Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: All portfolio projects and agents; DEV-ACCORD cluster; docs/REVIEW-GRAMMAR.md; dxp-init (Marlin); future GC-AUDIT tooling; pre-commit/pre-push hooks
+
+**what**: DEV-ACCORD.05 (GC:2013) — DEV-DOCS Suite and GC-AUDIT Declaration. Establishes a four-term vocabulary with no overlap: DEV-DOCS (the planning doc suite), DEV-ACCORD (the governing standard), GC-AUDIT (the validation/audit toolchain), and Marlin (install wizard only). Declares DEV-DOCS as the collective name for DEV-PATH, DEV-PLAN, DEV-TRACKS, and DEV-RELEASE. Declares GC-AUDIT as the portfolio-wide owner of validate, normalize, de-stale, adversarial audit, trace, and release-readiness operations. Promotes REVIEW-GRAMMAR.md from working grammar to GC standard component and canonical verb registry for GC-AUDIT. Declares existing validators (validate-planning, validate-bootstrap, validate-pointers, validate-debt) as GC-AUDIT implementations. Specifies GC-AUDIT invocation interface (`dcp audit <verb>`). Declares DEV-DOCS maintenance gate with `Dev-Docs:` commit trailer and pre-commit/pre-push enforcement layers. Declares stale reference rule and de-stale triggers. Specifies Marlin delegation pattern: Marlin calls GC-AUDIT, never reimplements it.
+**why**: The portfolio lacked a single term for the planning doc suite, causing agents and humans to use inconsistent language ("the planning docs", "development docs", "the four docs"). De-stale and other audit operations had no declared owner — ChatGPT's review suggested placing de-stale in Marlin, which is wrong (Marlin is an installer, not an auditor). DEV-DOCS drift after code changes was a recurring problem with no enforcement mechanism. Niji's v0.9 state demonstrated the exact failure: code was complete but README, DEV-TRACKS, DEV-RELEASE, and guidance docs told different stories because no gate existed to require updates. This PASS closes all three gaps: naming, ownership, and gate.
+**new_constraints**: (1) DEV-DOCS is the required term for the planning doc suite. (2) GC-AUDIT is the required term for the validation/audit toolchain; no other tool may own audit logic. (3) Marlin must not reimplement GC-AUDIT operations. (4) Commits with meaningful changes require `Dev-Docs: updated` or `Dev-Docs: not-needed` with reason. (5) REVIEW-GRAMMAR verb names are the standard for all GC-AUDIT implementations. (6) These constraints cannot be overridden by project-level instruction files.
+**reasoning**: Marlin as de-stale owner was rejected because it conflates install and audit concerns — Marlin's job is to set up an environment, not to be the portfolio's health-check authority. GC-AUDIT as a separate named concept allows the toolchain to run independently of whether Marlin was used to install a project. The commit trailer approach was chosen over blanket pre-commit blocks because blocks create friction on trivial commits (typos, comments) and get bypassed; trailers are auditable and low-ceremony. REVIEW-GRAMMAR promotion avoids defining verb names in two places — the PASS declares the registry, the registry defines the verbs.
+
+---
+
 ## GC-PASS-0013.00 — 2026-06-28
 
 **pass_id**: GC-PASS-0013.00
