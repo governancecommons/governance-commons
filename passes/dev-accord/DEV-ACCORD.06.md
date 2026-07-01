@@ -8,6 +8,7 @@
 **Timestamp:** 2026-06-30T00:00:00Z
 **Depends on:** GC:2010 (DEV-ACCORD.02), GC:2013 (DEV-ACCORD.05)
 **Supersedes:** Commit trailer spec introduced in DEV-ACCORD.05 (GC:2013) — DEV-ACCORD.06 now owns the full trailer schema.
+**Amended:** 2026-07-01 — declares DEV-PLAYBOOK and the PLAY.jsonl lifecycle/schema (see Amendment section below)
 
 ---
 
@@ -240,3 +241,89 @@ That field is now part of the unified trailer schema declared here. DEV-ACCORD.0
 remains authoritative for the DEV-DOCS suite declaration, GC-AUDIT declaration, and
 maintenance gate rule. The trailer spec section of DEV-ACCORD.05 is superseded by
 this PASS. When the two conflict on trailer format, DEV-ACCORD.06 governs.
+
+---
+
+## Amendment — 2026-07-01 — DEV-PLAYBOOK and PLAY.jsonl Lifecycle
+
+### 1. DEV-PLAYBOOK term declared
+
+**DEV-PLAYBOOK** is hereby declared the canonical term for the combined system this
+PASS owns: the four Change Playbook execution levels (BUNT, RUN, DRIVE, PASS) plus
+the PLAY declaration and lifecycle model defined below. DEV-PLAYBOOK does not replace
+or rename this PASS; it names what this PASS governs so agents and adopters have one
+word for "the execution-level and PLAY-tracking system," distinct from DEV-DOCS
+(the planning doc suite) and GC-AUDIT (the validation toolchain).
+
+### 2. PLAY definition and lifecycle
+
+A **PLAY** is an agent-declared unit of work mapped to exactly one Change Playbook
+execution level. Every PLAY is recorded as one line in an append-only `PLAY.jsonl`
+file at the portfolio or repository root — never rewritten, only appended.
+
+A PLAY has exactly one of three lifecycle states, held in its `status` field:
+
+| Status | Meaning |
+| --- | --- |
+| `open` | Declared and in progress. Timing categories may still be incomplete. |
+| `blocked` | Halted pending human authorization or an unresolved dependency. |
+| `closed` | Complete. DEV-DOCS check recorded. `commit_ref` present if a commit was produced. |
+
+Agents propose and declare the PLAY before work starts. Users authorize ambiguous,
+escalated, cross-project, or PASS-level PLAYs. Every PLAY closes with a DEV-DOCS
+check — either an update or an explicit `not-needed`/`deferred` note explaining why.
+
+### 3. PLAY.jsonl record schema
+
+Every PLAY.jsonl line is one JSON object. Required and conditional fields:
+
+| Field | Type | Required | Rule |
+| --- | --- | --- | --- |
+| `play_id` | string | Always | Unique across all records in the file. |
+| `repo` | string | Always | Repo the PLAY primarily targets. |
+| `level` | enum: `BUNT`\|`RUN`\|`DRIVE`\|`PASS` | Always | The Change Playbook execution level declared for this PLAY. |
+| `status` | enum: `open`\|`blocked`\|`closed` | Always for records created after this amendment | Records predating this amendment without `status` are legacy-tolerated. |
+| `declared_at` | ISO 8601 timestamp | Always | When the PLAY was declared. |
+| `time_loc` | string (time.loc format) | Required when time.loc is initialized in the repo | Omitted when time.loc is not initialized. |
+| `declared_by` | string | Optional | Agent or human identity that declared the PLAY. |
+| `authorized_by` | enum: `agent`\|`human` | Always | Who authorized this PLAY. |
+| `authorization_note` | string | Required when `authorized_by` is `human` | Empty or absent when `authorized_by` is `agent`. |
+| `scope` | string | Always | One-line description of the work. |
+| `touches` | array of strings | Required when the PLAY is cross-repo or cross-project | Lists every repo touched. |
+| `timing.read` / `timing.plan` / `timing.execute` / `timing.verify` / `timing.close` | object: `{started_at, ended_at, duration_ms}` | Always | All five timing categories present; `null` timestamps and zero duration are valid for pre-telemetry PLAYs. |
+| `dev_docs_check.status` | enum: `updated`\|`not-needed`\|`deferred` | Always | Mirrors the DEV-DOCS obligations declared per execution level above. |
+| `dev_docs_check.note` | string | Required when `dev_docs_check.status` is `not-needed` or `deferred` | Explains why no update was made. |
+| `commit_ref` | string | Required when the PLAY produced a commit | Omitted for read-only or investigation-only PLAYs. |
+| `preflight` | enum: `complete`\|`blocked`\|`not-yet-enforced` | Always | `not-yet-enforced` is valid only for PLAYs that predate AGENT-PREFLIGHT.md enforcement. |
+
+The GC-AUDIT implementation of this schema is
+`governance-commons/gc-audit/tools/validate-playbook.ps1`, registered as
+`gc-audit.playbook` in `GC-AUDIT-REGISTRY.yaml`. Per-level GC-AUDIT event
+obligations that follow a PLAY are declared in
+`governance-commons/gc-audit/PLAY-OBLIGATIONS.md`, not duplicated here.
+
+### 4. Cluster invariant additions
+
+**DEV-ACCORD-CI-30 — PLAY.jsonl is the canonical PLAY record store**
+`PLAY.jsonl` is append-only at the portfolio or repository root. The PLAY.jsonl
+schema fields declared in this amendment are owned by this PASS. No other document
+may redefine them without a DEV-ACCORD amendment.
+
+**DEV-ACCORD-CI-31 — Every PLAY declares a status**
+Every PLAY record created after this amendment must declare `status` as `open`,
+`blocked`, or `closed`. A record missing `status` is legacy-tolerated only when it
+predates this amendment.
+
+**DEV-ACCORD-CI-32 — DEV-PLAYBOOK subsumes execution levels and PLAY lifecycle**
+DEV-PLAYBOOK is the umbrella term for the four execution levels declared earlier in
+this PASS and the PLAY declaration/lifecycle model declared in this amendment. No
+other PASS or project instruction file may introduce a competing PLAY schema.
+
+### Outputs of this amendment
+
+- DEV-PLAYBOOK declared as the umbrella term for execution levels + PLAY lifecycle
+- PLAY lifecycle states declared: `open`, `blocked`, `closed`
+- Full PLAY.jsonl record schema declared with required/conditional field rules
+- GC-AUDIT implementation and obligations doc cross-referenced, not duplicated
+- 3 new cluster invariants: DEV-ACCORD-CI-30 through DEV-ACCORD-CI-32
+

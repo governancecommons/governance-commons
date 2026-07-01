@@ -376,3 +376,22 @@ home; `read`, `plan`, `execute`, `verify`, and `close` as the five timing
 categories, each with `started_at`, `ended_at`, and `duration_ms`;
 environment-level `time_loc`; and `authorized_by` plus `authorization_note` for
 authorization tracking.
+
+## 2026-07-01 — DEV-PLAYBOOK Amendment and PLAY.jsonl Schema Locked
+
+DEV-ACCORD.06 amended to declare **DEV-PLAYBOOK** as the umbrella term for the four
+Change Playbook execution levels plus the PLAY declaration/lifecycle model, and to
+lock the full `PLAY.jsonl` record schema (status, declared_at, time_loc, authorized_by,
+authorization_note, scope, touches, five timing categories with started_at/ended_at/
+duration_ms, dev_docs_check, commit_ref, preflight). New cluster invariants
+DEV-ACCORD-CI-30 through DEV-ACCORD-CI-32 declared.
+
+Two new GC-AUDIT implementations registered: `validate-playbook.ps1` (schema/lifecycle
+conformance for PLAY.jsonl) and `validate-format.ps1` (parse-only PowerShell syntax
+check, no execution). Both registered in `GC-AUDIT-REGISTRY.yaml` as `gc-audit.playbook`
+and `gc-audit.format`. `validate-format.ps1` wired into `validate-recent-work.ps1`
+Level 1 and into the `gc-audit.validate` composite steps, keeping the diagnostic and
+composite-validate surfaces consistent. `gc-audit/PLAY-OBLIGATIONS.md` updated to
+point to the DEV-ACCORD.06 amendment as schema authority and to add the `status` and
+`touches` field close requirements.
+

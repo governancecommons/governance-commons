@@ -60,6 +60,8 @@ tools:
         targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-ci-invariants.ps1
         targetArg: TargetPath
+      - script: governance-commons/gc-audit/tools/validate-format.ps1
+        targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-pointers.ps1
         targetArg: TargetPath
         portfolioOnly: true
@@ -200,6 +202,30 @@ tools:
       - script: governance-commons/gc-audit/tools/validate-ci-invariants.ps1
         targetArg: TargetPath
         supportsProject: true
+
+  - id: gc-audit.playbook
+    verb: validate
+    category: standards-grammar
+    status: active
+    title: Validate DEV-PLAYBOOK PLAY.jsonl records
+    description: Validate PLAY.jsonl records against the DEV-PLAYBOOK schema declared in the DEV-ACCORD.06 amendment.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-playbook.ps1
+        targetArg: TargetPath
+        supportsFilePath: true
+        supportsStrict: true
+
+  - id: gc-audit.format
+    verb: validate
+    category: repo-health
+    status: active
+    title: Validate PowerShell script format (parse-only)
+    description: Parse-only syntax check for GC-AUDIT PowerShell scripts. Does not execute any script.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-format.ps1
+        targetArg: TargetPath
 
   - id: gc-audit.verify
     verb: verify

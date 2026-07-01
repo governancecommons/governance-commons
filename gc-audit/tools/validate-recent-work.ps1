@@ -79,6 +79,7 @@ $validators = @(
     [PSCustomObject]@{ Name="debt registry";                  Script="validate-debt.ps1";           PortfolioOnly=$false }
     [PSCustomObject]@{ Name="git split authorization";         Script="validate-git-split.ps1";      PortfolioOnly=$false }
     [PSCustomObject]@{ Name="CI invariant uniqueness";         Script="validate-ci-invariants.ps1";  PortfolioOnly=$false }
+    [PSCustomObject]@{ Name="script format (parse-only)";      Script="validate-format.ps1";         PortfolioOnly=$false }
 )
 
 foreach ($v in $validators) {

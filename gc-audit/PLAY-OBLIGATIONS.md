@@ -6,6 +6,13 @@ Authority: DEV-ACCORD.05 and DEV-ACCORD.06
 This document defines which GC-AUDIT events must or should follow each PLAY.
 "Must" means non-conformance if skipped. "Should" means expected unless explicitly justified.
 
+The PLAY.jsonl record schema itself — field names, types, and conditional rules —
+is owned by the DEV-ACCORD.06 amendment (DEV-PLAYBOOK). This document only covers
+which GC-AUDIT events accompany a PLAY; it does not redefine schema fields.
+The GC-AUDIT implementation that checks the schema is
+`governance-commons/gc-audit/tools/validate-playbook.ps1`, registered as
+`gc-audit.playbook`.
+
 ## Before the PLAY starts
 
 | Event | Obligation |
@@ -30,16 +37,21 @@ This document defines which GC-AUDIT events must or should follow each PLAY.
 | PLAY is cross-project or cross-repo | `gc-audit zerotrust` recommended; human authorization required in PLAY record |
 | PLAY involves a git split (branch, PR chain, worktree, fork) | `gc-audit validate` on both sides; human authorization required per DEV-ACCORD.10 |
 | PLAY level is ambiguous or escalated | User authorizes before PLAY is declared; authorization recorded in PLAY.jsonl |
+| Any PLAY closes | Run `gc-audit playbook` (`validate-playbook.ps1`) to confirm PLAY.jsonl still conforms to the DEV-PLAYBOOK schema |
 
 ## PLAY record close requirements
 
-Every PLAY record in `PLAY.jsonl` must carry at close:
+Every PLAY record in `PLAY.jsonl` must carry at close. Field names, types, and
+conditional rules are declared in the DEV-ACCORD.06 amendment; this table is a
+summary, not the authority.
 
 | Field | Required when |
 | --- | --- |
+| `status` | Always for records created after the DEV-ACCORD.06 amendment — `open`, `blocked`, or `closed`. Missing status is legacy-tolerated only for pre-amendment records. |
 | `preflight` | Always - `complete`, `blocked`, or `not-yet-enforced` for pre-policy plays |
 | `dev_docs_check.status` | Always - `updated`, `not-needed`, or `deferred` |
 | `dev_docs_check.note` | Required when `not-needed` or `deferred` |
+| `touches` | Required when the PLAY is cross-repo or cross-project |
 | `commit_ref` | Required when the PLAY produced a commit |
 | `timing.read.started_at`, `timing.read.ended_at`, `timing.read.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
 | `timing.plan.started_at`, `timing.plan.ended_at`, `timing.plan.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
