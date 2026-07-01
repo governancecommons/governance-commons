@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-audit-normalize-report.schema.json",
+  "title": "GC-AUDIT normalization preview/apply report",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "tool", "mode", "target", "changes"],
+  "properties": {
+    "schema": { "const": "gc-audit.normalize-report.v1" },
+    "tool": { "type": "string" },
+    "mode": { "type": "string", "enum": ["preview", "apply"] },
+    "target": { "type": "string" },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["action", "path", "status"],
+        "properties": {
+          "action": { "type": "string" },
+          "path": { "type": "string" },
+          "status": { "type": "string", "enum": ["would-change", "changed", "skipped", "unfixable", "already-ok"] },
+          "before": { "type": ["string", "null"] },
+          "after": { "type": ["string", "null"] },
+          "reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "summary": { "type": "object" }
+  }
+}

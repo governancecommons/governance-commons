@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-audit-result.schema.json",
+  "title": "GC-AUDIT structured result",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "tool", "status", "target", "errors", "warnings"],
+  "properties": {
+    "schema": { "const": "gc-audit.result.v1" },
+    "tool": { "type": "string" },
+    "status": { "type": "string", "enum": ["pass", "warn", "fail", "skipped"] },
+    "target": { "type": "string" },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "summary": { "type": "object" },
+    "telemetry": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  }
+}

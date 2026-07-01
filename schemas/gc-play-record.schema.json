@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-play-record.schema.json",
+  "title": "GC DEV-PLAYBOOK PLAY record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "play_id",
+    "repo",
+    "level",
+    "status",
+    "declared_at",
+    "authorized_by",
+    "authorization_note",
+    "scope",
+    "timing",
+    "dev_docs_check",
+    "validation_profile",
+    "commit_ref",
+    "preflight"
+  ],
+  "properties": {
+    "play_id": { "type": "string", "minLength": 1 },
+    "repo": { "type": "string", "minLength": 1 },
+    "level": { "type": "string", "enum": ["BUNT", "RUN", "DRIVE", "PASS"] },
+    "status": { "type": "string", "enum": ["open", "blocked", "closed"] },
+    "declared_at": { "type": "string", "format": "date-time" },
+    "time_loc": { "type": "string" },
+    "declared_by": { "type": "string" },
+    "authorized_by": { "type": "string", "enum": ["agent", "human"] },
+    "authorization_note": { "type": "string" },
+    "scope": { "type": "string", "minLength": 1 },
+    "touches": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read", "plan", "execute", "verify", "close"],
+      "properties": {
+        "read": { "$ref": "#/$defs/timing_bucket" },
+        "plan": { "$ref": "#/$defs/timing_bucket" },
+        "execute": { "$ref": "#/$defs/timing_bucket" },
+        "verify": { "$ref": "#/$defs/timing_bucket" },
+        "close": { "$ref": "#/$defs/timing_bucket" }
+      }
+    },
+    "dev_docs_check": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["status", "note"],
+      "properties": {
+        "status": { "type": "string", "enum": ["updated", "not-needed", "deferred"] },
+        "note": { "type": "string" }
+      }
+    },
+    "validation_profile": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["profile", "checks"],
+      "properties": {
+        "profile": { "type": "string", "enum": ["BUNT", "RUN", "DRIVE", "PASS"] },
+        "checks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "commit_ref": { "type": "string" },
+    "preflight": { "type": "string", "enum": ["complete", "blocked", "not-yet-enforced"] }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "authorized_by": { "const": "human" } },
+        "required": ["authorized_by"]
+      },
+      "then": {
+        "properties": { "authorization_note": { "minLength": 1 } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dev_docs_check": {
+            "properties": { "status": { "enum": ["not-needed", "deferred"] } },
+            "required": ["status"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dev_docs_check": {
+            "properties": { "note": { "minLength": 1 } }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "timing_bucket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "ended_at", "duration_ms"],
+      "properties": {
+        "started_at": { "type": ["string", "null"], "format": "date-time" },
+        "ended_at": { "type": ["string", "null"], "format": "date-time" },
+        "duration_ms": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

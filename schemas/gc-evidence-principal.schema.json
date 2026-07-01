@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-evidence-principal.schema.json",
+  "title": "GC evidence principal record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["principal_id", "principal_type", "public_key", "algorithm", "created_at"],
+  "properties": {
+    "principal_id": { "type": "string", "minLength": 1 },
+    "principal_type": { "type": "string", "enum": ["human", "agent", "service"] },
+    "display_name": { "type": "string" },
+    "public_key": { "type": "string", "minLength": 1 },
+    "algorithm": { "type": "string", "enum": ["Ed25519", "ECDSA-P256", "RSA-PSS-SHA256"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": ["string", "null"], "format": "date-time" },
+    "status": { "type": "string", "enum": ["active", "revoked", "expired"] },
+    "revoked_at": { "type": ["string", "null"], "format": "date-time" },
+    "key_storage": {
+      "type": "string",
+      "enum": ["os-keystore", "hsm", "secure-enclave", "external-kms"]
+    }
+  }
+}

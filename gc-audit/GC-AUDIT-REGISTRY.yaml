@@ -15,7 +15,23 @@ security:
   evidenceBundles:
     enabled: false
     principalStore: .gc/evidence/principals
+    principalSchema: governance-commons/schemas/gc-evidence-principal.schema.json
+    bundleSchema: governance-commons/schemas/gc-compliance-evidence.schema.json
+    signingAlgorithms: ["Ed25519", "ECDSA-P256", "RSA-PSS-SHA256"]
     disabledReason: Evidence bundle signing is not enabled for this repository yet; when enabled, principalStore must contain at least one principal JSON record and private keys must remain outside the repo.
+  contracts:
+    auditResult: governance-commons/schemas/gc-audit-result.schema.json
+    normalizeReport: governance-commons/schemas/gc-audit-normalize-report.schema.json
+    playRecord: governance-commons/schemas/gc-play-record.schema.json
+  playValidationProfiles:
+    BUNT:
+      requiredChecks: ["dev-docs-check"]
+    RUN:
+      requiredChecks: ["dev-docs-check", "gc-audit.playbook"]
+    DRIVE:
+      requiredChecks: ["dev-docs-update", "gc-audit.validate", "gc-audit.zerotrust"]
+    PASS:
+      requiredChecks: ["dev-docs-update", "gc-audit.validate", "gc-audit.release", "evidence-bundle"]
   internalScripts:
     - script: governance-commons/gc-audit/tools/dev-status.ps1
       internal: true
@@ -58,6 +74,7 @@ tools:
     title: Validate governance health
     description: Run active GC-AUDIT validators against a repo or portfolio root.
     mutates: false
+    outputContract: governance-commons/schemas/gc-audit-result.schema.json
     steps:
       - script: governance-commons/gc-audit/tools/validate-bootstrap.ps1
         projectArg: Project
@@ -88,6 +105,8 @@ tools:
     description: Run safe normalizers. Marlin callers must dry-run unless --apply is explicit.
     mutates: true
     requiresExplicitApply: true
+    previewContract: governance-commons/schemas/gc-audit-normalize-report.schema.json
+    machineReadableDiffRequired: true
     steps:
       - script: governance-commons/gc-audit/tools/normalize-bootstrap.ps1
         targetArg: TargetPath
@@ -222,13 +241,16 @@ tools:
     category: standards-grammar
     status: active
     title: Validate DEV-PLAYBOOK PLAY.jsonl records
-    description: Validate PLAY.jsonl records against the DEV-PLAYBOOK schema declared in the DEV-ACCORD.06 amendment.
+    description: Validate PLAY.jsonl records against the DEV-PLAYBOOK schema declared in the DEV-ACCORD.06 amendment, including validation_profile requirements by PLAY level.
     mutates: false
+    recordSchema: governance-commons/schemas/gc-play-record.schema.json
+    outputContract: governance-commons/schemas/gc-audit-result.schema.json
     steps:
       - script: governance-commons/gc-audit/tools/validate-playbook.ps1
         targetArg: TargetPath
         supportsFilePath: true
         supportsStrict: true
+        supportsJson: true
 
   - id: gc-audit.format
     verb: validate

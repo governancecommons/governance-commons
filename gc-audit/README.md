@@ -29,6 +29,12 @@ PLAY execution-level obligations and close requirements live at:
 PLAY-OBLIGATIONS.md
 ```
 
+Machine-readable caller contracts live at:
+
+```text
+CONTRACTS.md
+```
+
 Authoritative GC-AUDIT scripts live under:
 
 ```text

@@ -419,3 +419,12 @@ surfaced through `validate-recent-work.ps1` Level 1 when `PLAY.jsonl` exists.
 The displayed buckets are read, plan, execute, verify, close, plus total duration,
 so agents can report the five approved timing categories at PLAY close.
 
+Follow-up DRIVE: the five remaining GC-AUDIT integration gaps are closed to
+first-enforcement level. `schemas/gc-play-record.schema.json` is the canonical
+PLAY record contract; `validate-playbook.ps1 -Json` emits `gc-audit.result.v1`;
+`validation_profile` is required and checked against the BUNT/RUN/DRIVE/PASS
+profile map in `GC-AUDIT-REGISTRY.yaml`; normalization preview/apply reports have
+`schemas/gc-audit-normalize-report.schema.json`; and evidence principals have
+`schemas/gc-evidence-principal.schema.json` for the future evidence-bundle
+signing path.
+
