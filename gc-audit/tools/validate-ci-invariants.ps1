@@ -5,9 +5,9 @@
 .DESCRIPTION
     Scans markdown files under TargetPath and extracts invariant definition lines of the form:
       DEV-ACCORD-CI-<n> - ...
-      DEV-ACCORD-CI-<n> — ...
+      DEV-ACCORD-CI-<n> <em dash> ...
       **DEV-ACCORD-CI-<n> - ...**
-      **DEV-ACCORD-CI-<n> — ...**
+      **DEV-ACCORD-CI-<n> <em dash> ...**
 
     Reports duplicate IDs with file and line locations. Exits non-zero on duplicates.
 
@@ -43,7 +43,7 @@ if (-not (Test-Path -LiteralPath $root)) {
 }
 
 $excludeRegex = '(?i)[\\/](\.git|node_modules|_archive|_tmp|dist|build|out|coverage|\.venv|\.pytest_cache)[\\/]'
-$definitionRegex = '^\s*(?:\*\*)?DEV-ACCORD-CI-(?<id>\d+)\s*(?:\*\*)?\s*[—-]\s+\S'
+$definitionRegex = '^\s*(?:\*\*)?DEV-ACCORD-CI-(?<id>\d+)(?!\s+(?:and|through)\b)(?:\*\*)?\s+\S'
 
 $findings = [System.Collections.Generic.List[object]]::new()
 

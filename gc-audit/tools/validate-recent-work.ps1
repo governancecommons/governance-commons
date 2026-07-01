@@ -258,22 +258,22 @@ if ($Level -ge 3) {
                 }
 
                 $playTotal++
-                $id    = if ($play.play_id) { $play.play_id } else { "unknown" }
-                $level = if ($play.level)   { $play.level }   else { "?" }
-                $pre   = $play.preflight
+                $id        = if ($play.play_id) { $play.play_id } else { "unknown" }
+                $playLevel = if ($play.level)   { $play.level }   else { "?" }
+                $pre       = $play.preflight
 
                 if (-not $pre) {
                     $playFail++
-                    Write-Fail "PLAY missing preflight field: $id ($level)"
+                    Write-Fail "PLAY missing preflight field: $id ($playLevel)"
                 } elseif ($pre -eq "not-yet-enforced") {
                     $playWarn++
-                    Write-Warn "PLAY predates preflight enforcement: $id ($level)"
+                    Write-Warn "PLAY predates preflight enforcement: $id ($playLevel)"
                 } elseif ($pre -eq "complete" -or $pre -eq "blocked") {
                     $playPass++
-                    if (-not $Summary) { Write-Info "PLAY preflight $pre : $id ($level)" }
+                    if (-not $Summary) { Write-Info "PLAY preflight $pre : $id ($playLevel)" }
                 } else {
                     $playFail++
-                    Write-Fail "PLAY has unrecognised preflight value '$pre': $id ($level)"
+                    Write-Fail "PLAY has unrecognised preflight value '$pre': $id ($playLevel)"
                 }
 
                 # DEV-DOCS deferred is a warning
@@ -318,7 +318,10 @@ if ($Level -ge 4) {
     }
 
     # 4b. Open PASS gates
-    $passDir = Join-Path $root "governance-commons\passes"
+    $passDir = Join-Path $root "passes"
+    if (-not (Test-Path $passDir)) {
+        $passDir = Join-Path $root "governance-commons\passes"
+    }
     if (Test-Path $passDir) {
         $openPasses = Get-ChildItem $passDir -Recurse -Filter "*.md" -ErrorAction SilentlyContinue |
             Where-Object { $_.FullName -notmatch '\\\.git\\' } |
@@ -337,7 +340,7 @@ if ($Level -ge 4) {
             }
         }
     } else {
-        Write-Info "governance-commons/passes not found; PASS gate check skipped"
+        Write-Info "passes directory not found; PASS gate check skipped"
     }
 }
 

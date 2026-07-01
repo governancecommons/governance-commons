@@ -8,7 +8,7 @@
 **Timestamp:** 2026-06-30T00:00:00Z
 **Depends on:** GC:2010 (DEV-ACCORD.02), GC:2013 (DEV-ACCORD.05)
 **Supersedes:** Commit trailer spec introduced in DEV-ACCORD.05 (GC:2013) — DEV-ACCORD.06 now owns the full trailer schema.
-**Amended:** 2026-07-01 — declares DEV-PLAYBOOK and the PLAY.jsonl lifecycle/schema (see Amendment section below)
+**Amended:** 2026-07-01 — declares DEV-PLAYBOOK and the PLAY.jsonl lifecycle/schema; adds universal PLAY closeout output rule (see Amendment sections below)
 
 ---
 
@@ -327,3 +327,64 @@ other PASS or project instruction file may introduce a competing PLAY schema.
 - GC-AUDIT implementation and obligations doc cross-referenced, not duplicated
 - 3 new cluster invariants: DEV-ACCORD-CI-30 through DEV-ACCORD-CI-32
 
+---
+
+## Amendment — 2026-07-01 — Universal PLAY Closeout Output
+
+### 1. Universal scope
+
+Every GC-conformant agent, runtime, adapter, host, environment, and platform MUST
+produce the universal PLAY closeout output after every PLAY. This rule is not
+specific to Codex, Claude, Copilot, Cockpit, Marlin, DCP, Windows, PowerShell, or
+any other local implementation.
+
+If an environment cannot run `validate-playbook.ps1`, it MUST produce an equivalent
+closeout from the PLAY record using the same required sections and fields. Human
+readable text, JSON, UI panels, and API responses are all acceptable surfaces only
+if they carry the same required content.
+
+### 2. Required closeout sections
+
+Every PLAY final response or closeout artifact MUST include, in this order:
+
+| Section | Required content |
+| --- | --- |
+| PLAY telemetry | The five timing buckets: `read`, `plan`, `execute`, `verify`, `close`, plus total duration. |
+| Latest PLAY summary | `play_id`, repo, level, status, scope, DEV-DOCS result, commit reference when produced, and validation checks. |
+| Next recommended step | One concrete next logical step, or the next required authorization/blocker if work cannot continue. |
+
+These sections are required even when the PLAY is a BUNT, read-only SCREEN/READ
+style investigation, blocked PLAY, or no-code documentation PLAY. If exact timing
+is unavailable, the agent records zero or null timing according to the PLAY schema
+and still displays the table.
+
+### 3. Tooling contract
+
+`gc-audit.playbook` is the reference implementation for this rule. Its human
+output and `gc-audit.result.v1` JSON output carry the required closeout sections.
+Other tools may render the sections differently, but they may not omit them or
+rename them in a way that prevents callers from finding them.
+
+### 4. Cluster invariant additions
+
+**DEV-ACCORD-CI-33 — PLAY closeout output is universal**
+Every GC-conformant agent, environment, platform, adapter, and runtime must output
+the PLAY telemetry table, latest PLAY summary, and next recommended step after
+every PLAY.
+
+**DEV-ACCORD-CI-34 — Closeout output is platform-neutral**
+The required PLAY closeout content may be emitted as text, JSON, UI, or API data,
+but it must contain the same required fields. A platform limitation is not a valid
+reason to omit the closeout.
+
+**DEV-ACCORD-CI-35 — Next-step recommendation is mandatory**
+Every PLAY closeout must include one concrete next recommended logical step or a
+specific blocker/authorization requirement. Ending a PLAY with validation status
+alone is non-conformant.
+
+### Outputs of this amendment
+
+- Universal PLAY closeout output rule declared for all GC-conformant agents and runtimes
+- Required closeout sections declared: telemetry, latest PLAY summary, next recommended step
+- Platform-neutral rendering rule declared for text, JSON, UI, and API surfaces
+- 3 new cluster invariants: DEV-ACCORD-CI-33 through DEV-ACCORD-CI-35

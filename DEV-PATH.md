@@ -432,3 +432,9 @@ Follow-up RUN: PLAY closeout output now requires three visible items after every
 PLAY: the five-bucket telemetry table, latest PLAY summary, and next recommended
 logical step. `validate-playbook.ps1` emits all three in human output and JSON.
 
+Follow-up PASS: DEV-ACCORD.06 now declares universal PLAY closeout output as a
+GC-wide rule for every GC-conformant agent, environment, platform, adapter, and
+runtime. Every PLAY closeout must include the telemetry table, latest PLAY summary,
+and next recommended step; platform/UI/API differences may change rendering but
+not content.
+

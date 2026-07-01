@@ -24,7 +24,9 @@ Other validators may continue to emit human output until they explicitly declare
 
 For PLAY closeout, `summary.latest_play`, `summary.next_recommended_step`, and
 `telemetry[]` are required output fields. Agents must surface those values in the
-final response after every PLAY.
+final response after every PLAY. DEV-ACCORD.06 declares this as universal GC
+behavior for every GC-conformant agent, environment, platform, adapter, and
+runtime.
 
 ## PLAY Records
 

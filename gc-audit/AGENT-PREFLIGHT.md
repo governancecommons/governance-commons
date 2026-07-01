@@ -37,6 +37,19 @@ If work starts before preflight completion:
 - Run full preflight in order.
 - Resume only after posting PREFLIGHT: complete.
 
+## Universal PLAY Closeout Rule
+
+After every PLAY, every GC-conformant agent in every environment and platform
+must include:
+
+1. PLAY telemetry table: read, plan, execute, verify, close, and total duration.
+2. Latest PLAY summary: play_id, repo, level, status, scope, DEV-DOCS result,
+   commit reference when produced, and validation checks.
+3. Next recommended logical step, or the specific blocker/authorization required.
+
+This rule is universal GC behavior declared by DEV-ACCORD.06. It is not optional
+and is not specific to one agent, shell, operating system, UI, or runtime.
+
 ## Project-Hop Rule
 
 When switching repos in one session, re-read that repo's DEV-PATH.md and DEV-PLAN.md and post a fresh stamp.
