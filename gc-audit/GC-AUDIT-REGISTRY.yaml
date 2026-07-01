@@ -12,6 +12,10 @@ security:
   path_policy: scripts must resolve under the portfolio root
   mutation_policy: mutating tools must support preview or require explicit apply
   owner: GC-AUDIT
+  evidenceBundles:
+    enabled: false
+    principalStore: .gc/evidence/principals
+    disabledReason: Evidence bundle signing is not enabled for this repository yet; when enabled, principalStore must contain at least one principal JSON record and private keys must remain outside the repo.
   internalScripts:
     - script: governance-commons/gc-audit/tools/dev-status.ps1
       internal: true

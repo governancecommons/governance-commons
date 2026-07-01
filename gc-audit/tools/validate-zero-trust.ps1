@@ -5,33 +5,33 @@
 .DESCRIPTION
     Audits zero-trust enforcement across the following domains:
 
-    ZT1 — Path containment
+    ZT1 - Path containment
           All allowlisted script paths resolve under the portfolio root.
           No absolute escapes or .. traversal.
 
-    ZT2 — Mutation safety
+    ZT2 - Mutation safety
           No mutates:false operation exposes a mutating switch.
           All mutates:true operations require explicit -Apply.
 
-    ZT3 — Allowlist coverage
+    ZT3 - Allowlist coverage
           No script in gc-audit/tools/ is unregistered and non-internal.
 
-    ZT4 — Shell delegation
+    ZT4 - Shell delegation
           No registered script spawns an unresolved child process.
           Internal delegation only via allowlisted resolved paths.
 
-    ZT5 — Fail-closed defaults
+    ZT5 - Fail-closed defaults
           Unimplemented (planned) verbs have no runnable steps.
           DXP profile fails closed. gc-audit.close is intentionally empty.
 
-    ZT6 — Explicit authorization
+    ZT6 - Explicit authorization
           Normalization-apply, schema-authority-change, and git-branch/split
           declare explicitAuthorizationRequired in the registry.
 
-    ZT7 — Network isolation
+    ZT7 - Network isolation
           No registered operation fetches from a network registry URL.
 
-    ZT8 — Principal presence
+    ZT8 - Principal presence
           If evidence bundles are enabled, a signed principal record exists.
 
 .PARAMETER TargetPath
@@ -67,7 +67,7 @@ function Add-Pass([string]$msg)  { $script:Passed.Add($msg) }
 function Add-Warn([string]$msg)  { $script:Warnings.Add($msg) }
 function Add-Error([string]$msg) { $script:Errors.Add($msg) }
 
-# ── Guards ────────────────────────────────────────────────────────────────────
+# Guards
 
 if (-not (Test-Path $RegistryFile)) {
     Write-Host "FAIL  GC-AUDIT-REGISTRY.yaml not found: $RegistryFile" -ForegroundColor Red
@@ -83,7 +83,7 @@ $RegistryRaw = Get-Content $RegistryFile -Raw
 $internalScripts = [regex]::Matches($RegistryRaw, 'script:\s+.+/tools/(.+\.ps1)[\s\S]*?internal:\s+true') |
     ForEach-Object { $_.Groups[1].Value.Trim() }
 
-# ── ZT1 — Path containment ────────────────────────────────────────────────────
+# ZT1 - Path containment
 
 $scriptPaths = [regex]::Matches($RegistryRaw, 'script:\s+(.+)') | ForEach-Object { $_.Groups[1].Value.Trim() }
 
@@ -99,7 +99,7 @@ foreach ($rel in $scriptPaths) {
     }
 }
 
-# ── ZT2 — Mutation safety ─────────────────────────────────────────────────────
+# ZT2 - Mutation safety
 
 # Check that validate-*.ps1 scripts don't expose mutating switches
 $validateScripts = Get-ChildItem $ToolsDir -Filter "validate-*.ps1"
@@ -128,7 +128,7 @@ foreach ($script in $normalizeScripts) {
     }
 }
 
-# ── ZT3 — Allowlist coverage ──────────────────────────────────────────────────
+# ZT3 - Allowlist coverage
 
 $registeredScripts = [regex]::Matches($RegistryRaw, 'script:\s+.+/tools/(.+\.ps1)') |
     ForEach-Object { $_.Groups[1].Value.Trim() }
@@ -145,7 +145,7 @@ foreach ($scriptName in $allScripts) {
     }
 }
 
-# ── ZT4 — Shell delegation ────────────────────────────────────────────────────
+# ZT4 - Shell delegation
 
 $shellPatterns = @('Start-Process\s+[''"]?(powershell|pwsh|cmd|bash|sh)[''"]?', 'Invoke-Expression', '& [''"]?(powershell|pwsh|cmd)[''"]?')
 
@@ -162,7 +162,7 @@ if (-not ($Warnings | Where-Object { $_ -match "ZT4" })) {
     Add-Pass "ZT4  No raw shell delegation patterns detected"
 }
 
-# ── ZT5 — Fail-closed defaults ────────────────────────────────────────────────
+# ZT5 - Fail-closed defaults
 
 if ($RegistryRaw -match "status:\s+planned[\s\S]*?steps:\s+\[\]") {
     Add-Pass "ZT5  Planned operations have empty steps (fail-closed)"
@@ -176,7 +176,7 @@ if ($RegistryRaw -match "dxp[\s\S]*?failClosed:\s+true") {
     Add-Error "ZT5  DXP profile missing failClosed: true"
 }
 
-# ── ZT6 — Explicit authorization ──────────────────────────────────────────────
+# ZT6 - Explicit authorization
 
 $requiredAuthClaims = @('normalization-apply', 'schema-authority-change', 'git-branch-or-remote-split')
 foreach ($claim in $requiredAuthClaims) {
@@ -187,7 +187,7 @@ foreach ($claim in $requiredAuthClaims) {
     }
 }
 
-# ── ZT7 — Network isolation ───────────────────────────────────────────────────
+# ZT7 - Network isolation
 
 if ($RegistryRaw -match 'networkRegistryFetch:\s+forbidden') {
     Add-Pass "ZT7  networkRegistryFetch: forbidden declared in registry"
@@ -195,21 +195,51 @@ if ($RegistryRaw -match 'networkRegistryFetch:\s+forbidden') {
     Add-Error "ZT7  networkRegistryFetch: forbidden not declared"
 }
 
-# ── ZT8 — Principal presence (advisory) ──────────────────────────────────────
+# ZT8 - Principal presence
 
-$keystorePath = Join-Path $ContainmentRoot "marlin\packages\marlin-dxp\keystore"
-if (Test-Path $keystorePath) {
-    $principals = Get-ChildItem $keystorePath -Filter "*.json" -ErrorAction SilentlyContinue
-    if ($principals.Count -gt 0) {
-        Add-Pass "ZT8  Signed principal record found in keystore"
-    } else {
-        Add-Warn "ZT8  Keystore exists but no principal records found"
-    }
+$evidenceConfig = [regex]::Match($RegistryRaw, 'evidenceBundles:\s*[\r\n]+(?<body>(?:\s{4}.+[\r\n]*)+)')
+if (-not $evidenceConfig.Success) {
+    Add-Error "ZT8  evidenceBundles policy missing from registry"
 } else {
-    Add-Warn "ZT8  Keystore not found at expected path - skip if evidence bundles not enabled"
+    $evidenceBody = $evidenceConfig.Groups["body"].Value
+    $enabledMatch = [regex]::Match($evidenceBody, 'enabled:\s*(true|false)', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+    $storeMatch = [regex]::Match($evidenceBody, 'principalStore:\s*(.+)')
+    if (-not $enabledMatch.Success) {
+        Add-Error "ZT8  evidenceBundles.enabled must be declared true or false"
+    } elseif ($enabledMatch.Groups[1].Value.ToLowerInvariant() -eq "false") {
+        if ($evidenceBody -match 'disabledReason:\s*\S') {
+            Add-Pass "ZT8  evidence bundles explicitly disabled with reason"
+        } else {
+            Add-Error "ZT8  evidence bundles disabled without disabledReason"
+        }
+    } else {
+        if (-not $storeMatch.Success) {
+            Add-Error "ZT8  evidenceBundles.principalStore missing while evidence bundles are enabled"
+        } else {
+            $principalStore = $storeMatch.Groups[1].Value.Trim().Trim('"').Trim("'")
+            if ([System.IO.Path]::IsPathRooted($principalStore) -or $principalStore -match '\.\.') {
+                Add-Error "ZT8  principalStore must be a contained relative path: $principalStore"
+            } else {
+                $principalPath = Join-Path $Root $principalStore
+                $resolvedPrincipalPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($principalPath)
+                if (-not $resolvedPrincipalPath.StartsWith($Root, [System.StringComparison]::OrdinalIgnoreCase)) {
+                    Add-Error "ZT8  principalStore escapes target root: $principalStore"
+                } elseif (-not (Test-Path -LiteralPath $resolvedPrincipalPath)) {
+                    Add-Error "ZT8  evidence bundles enabled but principalStore not found: $principalStore"
+                } else {
+                    $principals = Get-ChildItem -LiteralPath $resolvedPrincipalPath -Filter "*.json" -File -ErrorAction SilentlyContinue
+                    if ($principals.Count -gt 0) {
+                        Add-Pass "ZT8  Principal record found in configured principalStore"
+                    } else {
+                        Add-Error "ZT8  evidence bundles enabled but no principal JSON records found in principalStore"
+                    }
+                }
+            }
+        }
+    }
 }
 
-# ── Report ─────────────────────────────────────────────────────────────────────
+# Report
 
 Write-Host ""
 Write-Host "GC-AUDIT zero-trust posture audit" -ForegroundColor Cyan

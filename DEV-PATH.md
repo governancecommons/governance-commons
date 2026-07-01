@@ -407,3 +407,10 @@ uninitialized repos into false failures. The format validator remains named
 `validate-format.ps1`, but its documented scope is now provider-based script
 format validation with `powershell-script-parse` as the only active Phase 1 provider.
 
+Follow-up RUN: ZT8 evidence-bundle principal checks now key off explicit
+`security.evidenceBundles` registry policy instead of a hardcoded Marlin keystore
+path. Disabled evidence bundles pass only when `enabled: false` carries a reason;
+enabled bundles require a contained relative `principalStore` with principal JSON
+records. This closes the advisory keystore warning without weakening fail-closed
+behavior for repos that enable evidence signing.
+

@@ -30,6 +30,12 @@ tracking are reported as skipped instead of being treated as schema failures.
 | DRIVE | DEV-DOCS update (required, not optional); `gc-audit validate` | `gc-audit registry` if registry files changed |
 | PASS | DEV-DOCS update; `gc-audit validate`; evidence bundle | `gc-audit release` if release-facing; `gc-audit registry` if PASS or registry changed |
 
+Evidence bundle signing is controlled by `security.evidenceBundles` in
+`gc-audit/GC-AUDIT-REGISTRY.yaml`. Repos that have not enabled bundle signing
+must declare `enabled: false` with a reason. Repos that enable bundle signing
+must declare a contained relative `principalStore` with at least one principal
+JSON record; private keys must remain outside the repository.
+
 ## Trigger-specific obligations
 
 | Trigger condition | Required GC-AUDIT event |
