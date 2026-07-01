@@ -16,6 +16,10 @@
     Registry root path. For gc, this is the governance-commons repo root.
     For dcp, this is the DCP/portfolio root.
 
+.PARAMETER PortfolioRoot
+    Optional containment root for cross-repo registry paths. Defaults to the
+    parent of TargetPath for gc and to TargetPath for dcp.
+
 .PARAMETER ResolveExternal
     Resolve cross-namespace dependencies through external_registries entries.
 
@@ -26,6 +30,7 @@ param(
     [ValidateSet("gc", "dcp", "dxp")]
     [string] $Profile = "gc",
     [string] $TargetPath = ".",
+    [string] $PortfolioRoot,
     [switch] $ResolveExternal,
     [switch] $Strict,
     [switch] $Help
@@ -37,7 +42,14 @@ if ($Help) {
 }
 
 $Root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
-$PortfolioRoot = Split-Path -Parent $Root
+$ContainmentRoot = $null
+if ($PortfolioRoot) {
+    $ContainmentRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($PortfolioRoot)
+} elseif ($Profile -eq "dcp") {
+    $ContainmentRoot = $Root
+} else {
+    $ContainmentRoot = Split-Path -Parent $Root
+}
 $Errors = 0
 $Warnings = 0
 
@@ -198,7 +210,7 @@ function Validate-GcRegistry {
             Write-Finding "ERROR" $registryPath "entry '$($entry.id)' uses unknown layer '$($entry.layer)'"
         }
         if ($entry.path) {
-            $entryPath = Resolve-RelativePathWithin $Root $entry.path $PortfolioRoot "registry entry path for $($entry.id)"
+            $entryPath = Resolve-RelativePathWithin $Root $entry.path $ContainmentRoot "registry entry path for $($entry.id)"
             if (-not $entryPath) { continue }
             if (-not (Test-Path $entryPath)) {
                 Write-Finding "ERROR" $entry.path "registry path for $($entry.id) does not resolve"
@@ -292,7 +304,7 @@ function Resolve-ExternalDependency($registry, [string]$dependencyId) {
         Write-Finding "ERROR" "passes/passes.registry.json" "no external registry configured for dependency '$dependencyId'"
         return
     }
-    $externalPath = Resolve-RelativePathWithin $Root $external.registry_url $PortfolioRoot "external registry for '$namespace'"
+    $externalPath = Resolve-RelativePathWithin $Root $external.registry_url $ContainmentRoot "external registry for '$namespace'"
     if (-not $externalPath) { return }
     if (-not (Test-Path $externalPath)) {
         Write-Finding "ERROR" $external.registry_url "external registry for '$namespace' does not resolve"
@@ -313,6 +325,7 @@ function Resolve-ExternalDependency($registry, [string]$dependencyId) {
 Write-Host ""
 Write-Host "  GC-AUDIT REGISTRY VALIDATION - validate-registry.ps1" -ForegroundColor White
 Write-Host "  Profile: $Profile  Root: $Root" -ForegroundColor DarkGray
+Write-Host "  Containment root: $ContainmentRoot" -ForegroundColor DarkGray
 Write-Host ""
 
 if ($Profile -eq "gc") { Validate-GcRegistry }

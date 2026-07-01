@@ -20,6 +20,7 @@ zero_trust_alignment:
   path_model:
     registry_paths: must_be_local_relative_paths_under_portfolio_root
     external_registry_paths: must_be_local_relative_paths_under_portfolio_root
+    portfolio_root: explicit_parameter_or_layout_default
     network_fetch: forbidden
     absolute_paths: forbidden
   fail_closed:

@@ -101,6 +101,7 @@ tools:
     steps:
       - script: governance-commons/gc-audit/tools/validate-registry.ps1
         targetArg: TargetPath
+        containmentArg: PortfolioRoot
         supportsProfile: true
         profiles: ["gc", "dcp", "dxp"]
 

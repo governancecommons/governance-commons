@@ -30,10 +30,16 @@ Registry validation is validate-only by default and fails closed:
 - `dxp` remains blocked until package/tool schema authority is declared
 - normalization apply, schema authority changes, and git branch/remote splits require explicit human authorization
 
+The portfolio root is not machine-specific. Callers may pass `-PortfolioRoot`
+when GC-AUDIT is installed in CI, a packaged app, a nested workspace, or any
+layout where the governance-commons repository is not a direct child of the
+portfolio/control-plane root.
+
 ## Active Validator
 
 ```powershell
 governance-commons/gc-audit/tools/validate-registry.ps1 -Profile gc
+governance-commons/gc-audit/tools/validate-registry.ps1 -Profile gc -PortfolioRoot <portfolio-root>
 governance-commons/gc-audit/tools/validate-registry.ps1 -Profile dcp
 ```
 
