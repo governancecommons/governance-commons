@@ -17,6 +17,41 @@ The remaining gaps are mostly contract drift between the registry, scripts, and 
 - several scripts spawn PowerShell child processes even though the registry security model says shell execution is forbidden
 - there is no repeatable test suite for GC-AUDIT edge cases such as path containment and malicious registry paths
 
+## Method
+
+This analysis uses the portfolio 12-question framework from `docs/gap-analysis-framework.md`, plus the Stranger Test:
+
+> Can a stranger install this, run it, produce evidence, verify that evidence, and trust the release artifact?
+
+For GC-AUDIT, the answer is currently **not yet**. A portfolio insider can run the tools, but a new user cannot yet discover every command contract, get structured evidence, verify mutation safety, or trust release provenance without reading implementation details.
+
+## 12-Question Robust Gap Pass
+
+| Question | GC-AUDIT finding | Closure state | Priority |
+| --- | --- | --- | --- |
+| Q1 Regulatory Compliance | GC-AUDIT does not yet map validation/evidence outputs to EU AI Act Article 12 logging, Article 13 transparency, GDPR retention/data subject rights, or NIST AI RMF evidence expectations. | open | P1 |
+| Q2 Standards Compliance | No SLSA/SBOM/provenance contract for GC-AUDIT releases; no RFC 2119-style command contract; no formal JSON result schema for conformance tooling. | open | P1 |
+| Q3 De Facto Standards | No GitHub Actions/GitLab CI wrapper, no OpenTelemetry/CloudEvents emission, no standard JSON output for app/CLI integration. | open | P1 |
+| Q4 Industry Best Practice | No continuous self-audit of the allowlist registry, no fault-injection fixtures, and no mutation safety gate that fails if normalizers apply by omission. | open | P0 |
+| Q5 Security Posture | Zero-trust intent exists, but threat model coverage is incomplete: child shell delegation, mutating validation switches, path containment tests, and script allowlist self-validation remain gaps. | spec-complete | P0 |
+| Q6 Operational Maturity | There is no runbook for failed validators, no common diagnostic artifact, no stable machine-readable exit/finding contract, and no recovery guidance for partial normalization. | open | P1 |
+| Q7 Developer Experience / Adoption Friction | `SCRIPTS.md` pointer is stale inside GC, command discovery depends on reading YAML, normalizers do not have a clear preview/apply UX, and install/use docs are not stranger-proof. | open | P0 |
+| Q8 Ecosystem Interoperability | Cockpit, Marlin, and DCP can call scripts, but GC-AUDIT lacks a stable operation API contract for TypeScript/Node callers, CI systems, IDEs, or remote runners. | open | P1 |
+| Q9 Organizational / Process Maturity | DEV-ACCORD.05 declares ownership, but the implementation table is stale and there is no maintenance process for registry changes, new operations, or deprecation. | spec-complete | P1 |
+| Q10 Documentation / Discoverability | Registry, profile docs, and REVIEW-GRAMMAR exist, but the actual script reference is missing and wrappers/internal tools are not classified. | open | P0 |
+| Q11 Testing Strategy | No fixture-based regression suite exists for malicious paths, missing registry docs, dry-run/apply behavior, DXP fail-closed behavior, or validation mutation prevention. | open | P0 |
+| Q12 Ahead of the Curve | The category-defining move is governance diff + audit replay for GC-AUDIT: replay a past RUN/commit against current GC rules and show what would pass, warn, or fail. | open | P2 |
+
+## Stranger Test Breakdown
+
+| Capability | Current state | Gap |
+| --- | --- | --- |
+| Install GC-AUDIT | Available as repo scripts, not packaged. | Needs package/install surface or Marlin-managed install contract. |
+| Run GC-AUDIT | Scripts run locally and registry lists operations. | Needs a stable command adapter and script reference. |
+| Produce evidence | Console output exists. | Needs structured evidence output and optional signed bundle. |
+| Verify evidence | Exit codes exist for most validators. | Needs schema, provenance, and reproducible fixture tests. |
+| Trust artifact | Source is pushed to main. | Needs release provenance, SBOM, and self-validation of registry allowlist. |
+
 ## P0 Gaps
 
 ### 1. Explicit apply is not enforced by normalizers
