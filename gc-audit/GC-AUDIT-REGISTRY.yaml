@@ -86,13 +86,14 @@ tools:
     verb: registry
     category: repo-audit
     status: active
-    title: Audit registry pointers
-    description: Validate projects.yaml and planning pointer truth.
+    title: Audit registry profiles
+    description: Validate GC, DCP, and DXP registry profiles through GC-AUDIT.
     mutates: false
-    portfolioOnly: true
     steps:
-      - script: governance-commons/gc-audit/tools/validate-pointers.ps1
+      - script: governance-commons/gc-audit/tools/validate-registry.ps1
         targetArg: TargetPath
+        supportsProfile: true
+        profiles: ["gc", "dcp", "dxp"]
 
   - id: gc-audit.adversarial
     verb: adversarial

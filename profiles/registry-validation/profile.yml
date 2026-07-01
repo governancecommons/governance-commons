@@ -1,0 +1,78 @@
+profile_id: gc.profile.registry-validation
+profile_name: Governance Commons Registry Validation Profile
+version: 0.1.0
+status: draft
+repo_type: portfolio-or-standards-repository
+ons_required: false
+
+description: >
+  Defines registry validation and normalization profiles for GC, DCP, and DXP
+  registries under the GC-AUDIT toolchain.
+
+authority:
+  owner: GC-AUDIT
+  declared_by: DEV-ACCORD.05
+  implementation_home: governance-commons/gc-audit/tools
+
+profiles:
+  gc:
+    status: active
+    registry_files:
+      - passes/passes.registry.json
+      - passes/passes.registry.changelog.jsonl
+      - passes/namespace.yaml
+      - passes/layers.yaml
+    validates:
+      - registry_json_parses
+      - registry_changelog_jsonl_parses
+      - registry_paths_resolve
+      - pass_files_with_canonical_ids_exist_in_registry
+      - pass_header_alias_matches_registry
+      - pass_header_canonical_id_matches_registry
+      - pass_header_status_matches_registry
+      - pass_header_cluster_matches_registry
+      - pass_header_timestamp_matches_registry
+      - pass_header_depends_on_matches_registry
+      - registry_layers_exist_in_layers_yaml
+      - registry_namespace_matches_namespace_yaml
+      - local_dependencies_resolve
+      - external_dependencies_resolve_when_requested
+      - registry_entries_have_changelog_rows
+  dcp:
+    status: active
+    registry_files:
+      - projects.yaml
+    validates:
+      - project_paths_resolve
+      - planning_pointers_resolve
+      - notes_only_entries_are_allowed
+      - placeholder_paths_are_skipped
+    delegated_validator: governance-commons/gc-audit/tools/validate-pointers.ps1
+  dxp:
+    status: planned
+    blocker: DXP or Marlin package/tool registry schema is not defined yet.
+    registry_files: []
+    validates: []
+
+normalization_policy:
+  preview_first: true
+  apply_requires_explicit_authorization: true
+  safe_without_authority_change:
+    - path_separator_cleanup
+    - stale_tracks_to_dev_tracks_when_target_exists
+    - unambiguous_status_casing
+  requires_human_authorization:
+    - new_canonical_ids
+    - deleting_registry_entries
+    - authority_or_source_of_truth_changes
+    - dependency_graph_changes
+    - package_additions_or_removals
+    - branch_or_remote_corrections
+
+tooling_expectations:
+  validator: governance-commons/gc-audit/tools/validate-registry.ps1
+  normalizer: governance-commons/gc-audit/tools/normalize-registry.ps1
+  normalizer_status: planned
+  report_behavior: >
+    Validation reports pass/fail findings. Normalization must support preview and
+    must write a diff report before applying any change.

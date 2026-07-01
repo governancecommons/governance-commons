@@ -30,3 +30,17 @@ Registry rules:
 - Callers execute without a shell.
 - Mutating operations require preview or explicit apply.
 - Unimplemented verbs fail closed until an active allowlisted implementation is registered.
+
+## Registry Validation Profiles
+
+Registry validation is profile-based:
+
+```powershell
+governance-commons/gc-audit/tools/validate-registry.ps1 -Profile gc
+governance-commons/gc-audit/tools/validate-registry.ps1 -Profile dcp -TargetPath C:\dev
+governance-commons/gc-audit/tools/validate-registry.ps1 -Profile dxp
+```
+
+- `gc` validates GC PASS registry, namespace, layers, changelog, and PASS headers.
+- `dcp` validates portfolio `projects.yaml` pointer truth.
+- `dxp` fails closed until the DXP/Marlin package registry schema is defined.
