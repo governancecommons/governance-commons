@@ -366,3 +366,7 @@ agents should declare the current play before work, map it to BUNT/RUN/DRIVE/PAS
 and complete each play with a local DEV-DOCS update or explicit exemption. The
 working artifact is `gc-audit/GC-AUDIT-GAP-ANALYSIS.md`; the queued planning item
 is `GC-AUDIT-PLAY-01` in `DEV-PLAN.md`.
+
+Follow-up: user approved the direction that agents propose/declare the play,
+users authorize ambiguity or escalation, and every play ends with a DEV-DOCS
+check.

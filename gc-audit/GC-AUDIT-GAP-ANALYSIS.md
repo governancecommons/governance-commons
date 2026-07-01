@@ -71,7 +71,7 @@ Gap:
 - GC-AUDIT does not yet distinguish "commit trailer present" from "agent declared the play before acting"
 - the user/agent responsibility boundary is implicit: DEV-ACCORD.06 says agents determine the level, but it does not say when the user must authorize or override that determination
 
-Opinion:
+Approved direction:
 
 - Agents should propose and declare the play before work starts.
 - The user should authorize upgrades, ambiguity, or governance-sensitive cases, especially `PASS`, cross-project work, branch/split recommendations, or authority changes.
