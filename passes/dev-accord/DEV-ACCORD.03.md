@@ -7,6 +7,7 @@
 **Status:** ACCEPTED
 **Timestamp:** 2026-06-28T00:00:00Z
 **Depends on:** GC:2008 (DEV-ACCORD.00), GC:2010 (DEV-ACCORD.02)
+**Partially superseded by:** GC:2016 (DEV-ACCORD.08) — planning doc visibility table and private doc rule replaced
 
 ---
 
@@ -133,12 +134,93 @@ Each subdirectory is an independent project with its own planning docs. See
 
 ## Planning doc roles
 
-| Doc | Owns |
-| --- | --- |
-| `DEV-PATH.md` | Phase history, design decisions, PASS registry — append-only |
-| `DEV-PLAN.md` | Current execution state, active milestones, priority work queue |
-| `DEV-TRACKS.md` | Parallel workstreams and dependencies |
-| `passchangelog.md` | Ecosystem-level governance decisions — append-only |
+> **Superseded by DEV-ACCORD.08 (GC:2016).** The visibility column below is replaced.
+> See DEV-ACCORD.08 for the authoritative visibility table and revised private doc rule.
+
+| Doc | Owns | Visibility |
+| --- | --- | --- |
+| `DEV-PATH.md` | Phase history, design decisions, PASS registry — append-only | public repo |
+| `DEV-PLAN.md` | Current execution state, active milestones, priority work queue | public repo |
+| `DEV-TRACKS.md` | Parallel workstreams and dependencies | public repo |
+| `DEV-RELEASE.md` | External release table, entry conditions, release notes | public repo |
+| `passchangelog.md` | Ecosystem-level governance decisions — append-only | public repo |
+| `MARKET.md` | Positioning, audiences, channels, messaging — see schema below | private repo only |
+| `DIST.md` | Distribution tiers, revenue streams, commercial milestones — see schema below | private repo only |
+
+`DEV-RELEASE.md` is the authority for software release gates. `DIST.md` commercial milestones must reference `DEV-RELEASE.md` rather than duplicate version targets.
+
+### Private doc rule
+
+> **Superseded by DEV-ACCORD.08 (GC:2016).** The rule below is replaced by the expanded
+> private doc rule in DEV-ACCORD.08, which covers all DEV-DOCS, not just MARKET.md/DIST.md.
+
+`MARKET.md` and `DIST.md` must **never** be committed to a public repository. Canonical location: `C:\dev-private\strategy\{product}\`. If a project moves to a private repo, these docs may live inside it. No pointer files, redirects, or stubs for these docs should appear in public repos.
+
+No new strategy doc types may be introduced without a DEV-ACCORD update.
+
+### MARKET.md schema
+
+Every `MARKET.md` must contain these sections in order:
+
+```text
+# {Product} — Marketing Strategy
+[Owner / Classification / Updated header]
+
+## Positioning
+One sentence + the gap the product fills.
+
+## Target Audiences
+### Primary — {label}
+### Secondary — {label}
+### Tertiary — {label}  (omit if none)
+
+## Differentiators
+Table: Dimension | {Product} | Competitor… | Competitor…
+
+## Channels
+### Phase 1 — {label}
+### Phase 2 — {label}
+### Phase 3 — {label}  (omit if none)
+
+## Messaging by {Tier|Lane|Audience}
+Short copy per tier or product lane.
+
+## Key Narratives
+Bullet list — 3–5 narratives, one sentence each.
+```
+
+Sections may not be removed or reordered. Additional sections may be appended after Key Narratives.
+
+### DIST.md schema
+
+Every `DIST.md` must contain these sections in order:
+
+```text
+# {Product} — Distribution & Monetization Plan
+[Owner / Classification / Updated header]
+
+## Distribution Tiers
+### Tier 1 — Community ({licence}, free)
+### Tier 2 — {name} (paid)
+### Tier 3 — {name} (paid)  (omit if none)
+
+## Revenue Streams
+### Near-term
+### Mid-term
+### Long-term
+
+## Open-Source Strategy
+Why {licence choice}. CLA policy.
+
+## {Product-specific section}  (optional)
+e.g. "Marlin as Distribution for the Product Family"
+
+## Commercial Milestones
+Pointer: "Software release gates live in DEV-RELEASE.md in the {product} repo."
+Table: commercial-only milestones (first inquiry, first deal, first SLA…).
+```
+
+Sections may not be removed or reordered. The Commercial Milestones section must always include the DEV-RELEASE.md pointer before the table. Additional sections may be appended after Commercial Milestones.
 
 ---
 
