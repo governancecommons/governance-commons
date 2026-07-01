@@ -125,7 +125,7 @@ Each subdirectory is an independent project with its own planning docs. See
 | `lasso/` | Multi-agent orchestration platform (concept/design stage) |
 | `niji/` | Color palette generator — successor to CPM15 |
 | `kinjuu/` | Future app — financial/budget/deadline tracking |
-| `dxp-init/` | Marlin-DXP — governance adoption wizard and workbench; bin: marlin / marlin-dxp |
+| `dxp-init/` | Marlin — universal package manager and installer family. Four lanes: `marlin` (package manager — apps on machines) · `marlin-dxp` (installs and conforms repo(s) to GC and DXP standards) · `marlin-dcp` (workspace/org manager — DCP lifecycle, repo registry, portfolio sync) · marlin-ux (Cockpit GUI panels for all lanes). Migrating to `marlin/` repo. |
 
 ---
 
