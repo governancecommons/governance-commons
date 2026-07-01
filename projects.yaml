@@ -30,7 +30,7 @@ projects:
     planning:
       devpath: agent-dossier/DEV-PATH.md
       devplan: agent-dossier/DEV-PLAN.md
-      tracks: agent-dossier/TRACKS.md
+      tracks: agent-dossier/DEV-TRACKS.md
       passchangelog: agent-dossier/passchangelog.md
       changelog: agent-dossier/CHANGELOG.md
     pass_status:
@@ -51,7 +51,7 @@ projects:
     planning:
       devpath: agent-matrix/DEV-PATH.md
       devplan: agent-matrix/DEV-PLAN.md
-      tracks: agent-matrix/TRACKS.md
+      tracks: agent-matrix/DEV-TRACKS.md
       passchangelog: agent-matrix/passchangelog.md
       changelog: agent-matrix/CHANGELOG.md
     pass_status:
@@ -70,7 +70,7 @@ projects:
     planning:
       devpath: ons/DEV-PATH.md
       devplan: ons/DEV-PLAN.md
-      tracks: ons/TRACKS.md
+      tracks: ons/DEV-TRACKS.md
       passchangelog: ons/passchangelog.md
       changelog: ons/CHANGELOG.md
     pass_status:
@@ -91,7 +91,7 @@ projects:
     planning:
       devpath: agent-project-orchestrator/DEV-PATH.md
       devplan: agent-project-orchestrator/DEV-PLAN.md
-      tracks: agent-project-orchestrator/TRACKS.md
+      tracks: agent-project-orchestrator/DEV-TRACKS.md
       passchangelog: agent-project-orchestrator/passchangelog.md
       changelog: agent-project-orchestrator/CHANGELOG.md
     pass_status:
@@ -134,7 +134,7 @@ projects:
     planning:
       devpath: agent-roster/DEV-PATH.md
       devplan: agent-roster/DEV-PLAN.md
-      tracks: agent-roster/TRACKS.md
+      tracks: agent-roster/DEV-TRACKS.md
       passchangelog: agent-roster/passchangelog.md
       changelog: agent-roster/CHANGELOG.md
     pass_status:

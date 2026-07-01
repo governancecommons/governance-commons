@@ -56,6 +56,8 @@ tools:
         targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-debt.ps1
         targetArg: TargetPath
+      - script: governance-commons/gc-audit/tools/validate-git-split.ps1
+        targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-pointers.ps1
         targetArg: TargetPath
         portfolioOnly: true

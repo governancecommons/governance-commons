@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Validates agent bootstrap conformance against DEV-ACCORD.04 (GC:2012).
 
@@ -45,7 +45,8 @@ $Warnings = 0
 
 function Write-Finding([string]$level, [string]$code, [string]$path, [string]$message) {
     $rel = $path.Replace($Root + "\", "").Replace($Root + "/", "")
-    $color = if ($level -eq "ERROR") { "Red" } else { "DarkYellow" }
+    $color = "DarkYellow"
+    if ($level -eq "ERROR") { $color = "Red" }
     Write-Host "  [$level $code]" -NoNewline -ForegroundColor $color
     Write-Host " $rel" -NoNewline -ForegroundColor White
     Write-Host " — $message" -ForegroundColor $color

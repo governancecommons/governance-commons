@@ -66,6 +66,12 @@ user explicitly asks for a branch, PR, fork, worktree, or review chain.
 
 No GC rule, plugin habit, or generic GitHub workflow may override this default.
 
+### Tool and plugin precedence
+
+Any agent skill, plugin, connector, CLI helper, or publish workflow that normally
+creates a branch or pull request must yield to this PASS inside a GC-governed
+portfolio. Tool defaults are advisory. DEV-ACCORD.10 is authoritative.
+
 ---
 
 ## Authorization rule
@@ -112,6 +118,10 @@ Agents should recommend, but not perform, a split when any of the following is t
 
 If the human declines the split, the agent must either continue on the current branch
 or explain the concrete blocker that prevents safe progress.
+
+If repository policy blocks direct push to the current branch, the agent must stop
+and report the blocker. The blocker is a reason to ask for a split or review path;
+it is not permission to create one automatically.
 
 ---
 

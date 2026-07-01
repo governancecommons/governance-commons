@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Validates planning document conformance against DEV-ACCORD.00 (GC:2008).
 
@@ -122,7 +122,11 @@ function Test-PlanningDoc([string]$filePath) {
     }
 
     if (-not $firstLine -or -not $firstLine.StartsWith("# ")) {
-        Write-Error-Finding "E1" $filePath "H1 is not the first non-empty line (found: '$($firstLine?.Substring(0, [Math]::Min(60, $firstLine?.Length ?? 0)))')"
+        $found = "<none>"
+        if ($firstLine) {
+            $found = $firstLine.Substring(0, [Math]::Min(60, $firstLine.Length))
+        }
+        Write-Error-Finding "E1" $filePath "H1 is not the first non-empty line (found: '$found')"
         return
     }
 
@@ -268,8 +272,9 @@ Write-Host ""
 $checkedFiles = [System.Collections.Generic.HashSet[string]]::new()
 
 foreach ($path in $ScanPaths) {
-    $canonical = (Resolve-Path $path -ErrorAction SilentlyContinue)?.Path
-    if (-not $canonical) { continue }
+    $resolved = Resolve-Path $path -ErrorAction SilentlyContinue
+    if (-not $resolved) { continue }
+    $canonical = $resolved.Path
     if (-not $checkedFiles.Add($canonical)) { continue }
     Test-PlanningDoc $canonical
 }

@@ -38,6 +38,7 @@ foreach ($m in $matches) {
     $pointer = $m.Groups[2].Value.Trim().Trim('"')
     # Skip if it looks like a URL or inline note
     if ($pointer -match '^https?://' -or $pointer -match '^#') { continue }
+    if ($pointer -eq "~") { continue }
     $full = Join-Path $root $pointer
     if (Test-Path $full) {
         $ok += $pointer

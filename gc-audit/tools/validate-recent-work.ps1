@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Portfolio diagnostic check for recent work across a target root.
 
@@ -77,6 +77,7 @@ $validators = @(
     [PSCustomObject]@{ Name="pointers (projects.yaml)";       Script="validate-pointers.ps1";       PortfolioOnly=$true  }
     [PSCustomObject]@{ Name="review grammar";                 Script="validate-review-grammar.ps1"; PortfolioOnly=$false }
     [PSCustomObject]@{ Name="debt registry";                  Script="validate-debt.ps1";           PortfolioOnly=$false }
+    [PSCustomObject]@{ Name="git split authorization";         Script="validate-git-split.ps1";      PortfolioOnly=$false }
 )
 
 foreach ($v in $validators) {

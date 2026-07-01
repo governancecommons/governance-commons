@@ -95,6 +95,13 @@ function Resolve-GrammarContent([string]$file) {
 }
 
 if (-not $grammarFile) {
+    $portfolioRoot = Find-PortfolioRoot $root
+    if ($portfolioRoot) {
+        $grammarFile = Join-Path $portfolioRoot "docs\REVIEW-GRAMMAR.md"
+    }
+}
+
+if (-not $grammarFile) {
     $failures += "No review grammar file found. Expected one of: $($grammarCandidates -join ', ')"
 } else {
     $resolvedGrammar = Resolve-GrammarContent $grammarFile
@@ -156,7 +163,7 @@ if ($agentFiles.Count -eq 0) {
     $referencesGrammar = $false
     foreach ($agentFile in $agentFiles) {
         $text = Get-Content $agentFile -Raw
-        if ($text -match "REVIEW-GRAMMAR" -or $text -match "review grammar") {
+        if ($text -match "REVIEW-GRAMMAR" -or $text -match "review grammar" -or $text -match "DEV-ACCORD\.03") {
             $referencesGrammar = $true
             break
         }
