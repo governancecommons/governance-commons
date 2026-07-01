@@ -11,11 +11,14 @@
     E1 — AGENTS.md exists but does not reference DEV-ACCORD.03.
          Fix: prepend the canonical routing line.
 
-    Use -DryRun to preview changes without writing anything.
+    Defaults to preview mode. Use -Apply to write changes.
     Run validate-bootstrap.ps1 after to confirm.
 
 .PARAMETER DryRun
     Preview fixes; do not write any files.
+
+.PARAMETER Apply
+    Apply fixes. Without this switch, the script previews only.
 
 .PARAMETER TargetPath
     Portfolio root (default: current directory).
@@ -25,9 +28,16 @@
 #>
 param(
     [switch] $DryRun,
+    [switch] $Apply,
     [string] $TargetPath = ".",
     [string] $Project    = ""
 )
+
+if ($DryRun -and $Apply) {
+    Write-Host "Use either -DryRun or -Apply, not both." -ForegroundColor Red
+    exit 1
+}
+if (-not $Apply) { $DryRun = $true }
 
 $Root     = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
 $Accord03 = Join-Path $Root "governance-commons\passes\dev-accord\DEV-ACCORD.03.md"
@@ -44,7 +54,7 @@ function Write-Action([string]$verb, [string]$path, [string]$note = "") {
 
 function Write-Skip([string]$path, [string]$reason) {
     $rel = $path.Replace($Root + "\", "").Replace($Root + "/", "")
-    Write-Host "  SKIP  $rel — $reason" -ForegroundColor DarkGray
+    Write-Host "  SKIP  $rel - $reason" -ForegroundColor DarkGray
     $script:Skipped++
 }
 
@@ -64,7 +74,7 @@ function New-ThinAdapter([string]$repoRoot) {
     $relPath = Get-RelativeAccordPath $repoRoot
 
     $content = @"
-# AGENTS.md — GC bootstrap
+# AGENTS.md - GC bootstrap
 
 Read [$relPath]($relPath) before taking any action. That file is the canonical agent onboarding protocol for this portfolio.
 
@@ -156,7 +166,7 @@ if ($Project) {
 
 # ── run ───────────────────────────────────────────────────────────────────────
 
-$dryTag = if ($DryRun) { " [DRY RUN — no files written]" } else { "" }
+$dryTag = if ($DryRun) { " [PREVIEW - no files written]" } else { " [APPLY]" }
 Write-Host ""
 Write-Host "  normalize-bootstrap.ps1$dryTag" -ForegroundColor White
 Write-Host "  Standard: DEV-ACCORD.04 (GC:2012)  |  $($RepoRoots.Count) roots  |  $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor DarkGray
@@ -168,7 +178,7 @@ foreach ($r in $RepoRoots) {
 
 Write-Host ""
 if ($DryRun) {
-    Write-Host "  Dry run complete. Re-run without -DryRun to apply." -ForegroundColor Cyan
+    Write-Host "  Preview complete. Re-run with -Apply to write changes." -ForegroundColor Cyan
 } else {
     Write-Host "  $Fixed fix(es) applied. $Skipped skipped." -ForegroundColor $(if ($Fixed -gt 0) { "Green" } else { "DarkGray" })
     if ($Fixed -gt 0) {

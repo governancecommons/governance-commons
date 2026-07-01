@@ -16,19 +16,29 @@
     Pointers that are broken and have no fixable candidate are reported as
     UNFIXABLE and left unchanged; resolve them manually.
 
-    Use -DryRun to preview changes without modifying projects.yaml.
+    Defaults to preview mode. Use -Apply to write changes.
     Run validate-pointers.ps1 after to confirm.
 
 .PARAMETER DryRun
     Preview fixes; do not write projects.yaml.
+
+.PARAMETER Apply
+    Apply pointer fixes. Without this switch, the script previews only.
 
 .PARAMETER TargetPath
     Portfolio root (default: current directory).
 #>
 param(
     [switch] $DryRun,
+    [switch] $Apply,
     [string] $TargetPath = "."
 )
+
+if ($DryRun -and $Apply) {
+    Write-Host "Use either -DryRun or -Apply, not both." -ForegroundColor Red
+    exit 1
+}
+if (-not $Apply) { $DryRun = $true }
 
 $Root         = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
 $ProjectsFile = Join-Path $Root "projects.yaml"
@@ -60,7 +70,7 @@ $fixed     = 0
 $unfixable = 0
 $ok        = 0
 
-$dryTag = if ($DryRun) { " [DRY RUN — no files written]" } else { "" }
+$dryTag = if ($DryRun) { " [PREVIEW - no files written]" } else { " [APPLY]" }
 Write-Host ""
 Write-Host "  normalize-pointers.ps1$dryTag" -ForegroundColor White
 Write-Host "  source: $ProjectsFile  |  $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor DarkGray
@@ -114,7 +124,7 @@ if ($fixed -eq 0 -and $unfixable -eq 0) {
     $color = if ($unfixable -gt 0) { "Yellow" } else { "Green" }
     Write-Host "  $fixed fix(es) applied. $unfixable unfixable (manual). $ok already OK." -ForegroundColor $color
     if ($DryRun -and $fixed -gt 0) {
-        Write-Host "  Re-run without -DryRun to apply." -ForegroundColor Cyan
+        Write-Host "  Re-run with -Apply to apply." -ForegroundColor Cyan
     } elseif ($fixed -gt 0) {
         Write-Host "  Run validate-pointers.ps1 to confirm." -ForegroundColor DarkGray
     }

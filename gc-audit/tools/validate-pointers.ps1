@@ -2,12 +2,10 @@
 # Checks that all planning file pointers in projects.yaml resolve on disk.
 # Run manually or add to CI.
 #
-# Usage: pwsh -File validate-pointers.ps1 [-TargetPath C:\work] [-FixNotes]
-#   --fix-notes  Report projects with only a notes: pointer (no file to verify)
+# Usage: pwsh -File validate-pointers.ps1 [-TargetPath C:\work]
 
 param(
-    [string]$TargetPath = ".",
-    [switch]$FixNotes
+    [string]$TargetPath = "."
 )
 
 $root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
@@ -27,8 +25,6 @@ $yaml = Get-Content $projectsFile -Raw
 
 $broken = @()
 $ok = @()
-$noteOnly = @()
-
 # Extract all path-like values under planning: blocks
 # Matches lines like:  canonical: some/path.md
 $fileKeys = 'canonical|path|tracks|roadmap|implementation_plan|domain_plan|project|changelog|alternate_status|review_grammar'
@@ -59,11 +55,4 @@ if ($broken.Count -eq 0) {
     $ok | ForEach-Object { Write-Host "  OK    $_" -ForegroundColor DarkGray }
     Write-Host ""
     exit 1
-}
-
-if ($FixNotes) {
-    # Find projects with only notes: under planning (no file pointers)
-    $noteMatches = [regex]::Matches($yaml, "(?ms)planning:\s*\n(\s+notes:[^\n]+\n)(?!\s+($fileKeys):)")
-    Write-Host "`nProjects with notes-only planning ($($noteMatches.Count)):" -ForegroundColor Cyan
-    $noteMatches | ForEach-Object { Write-Host "  " $_.Groups[1].Value.Trim() }
 }

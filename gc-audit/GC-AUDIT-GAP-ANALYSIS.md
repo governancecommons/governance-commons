@@ -77,7 +77,7 @@ Approved direction:
 - The user should authorize upgrades, ambiguity, or governance-sensitive cases, especially `PASS`, cross-project work, branch/split recommendations, or authority changes.
 - Every play should end with a DEV-DOCS check. If DEV-DOCS are not updated, the agent should explicitly record why the local DEV-DOCS did not need an update.
 - PLAY records live in append-only `PLAY.jsonl` at the repository root. Evidence bundles reference PLAY records at close rather than duplicating them.
-- PLAY timing uses five fields: `read_ms`, `plan_ms`, `execute_ms`, `verify_ms`, and `close_ms`.
+- PLAY timing uses five categories: `read`, `plan`, `execute`, `verify`, and `close`. Each category carries `started_at`, `ended_at`, and `duration_ms`.
 - `time_loc` is required per environment when initialized in the repo; if time_loc is not initialized, the field is omitted.
 - User authorization is recorded with `authorized_by: agent | human` and `authorization_note`, where `authorization_note` is required when `authorized_by` is `human` and empty otherwise.
 - If the desired policy is "always update local DEV-DOCS after every play," DEV-ACCORD.06 needs an amendment because the current accepted rule allows `Dev-Docs: not-needed` for BUNT and some RUN changes.
@@ -147,7 +147,7 @@ Resolved policy direction:
 - Agents declare the PLAY; users authorize ambiguity, escalation, PASS, cross-project impact, branch/split recommendations, and authority changes.
 - Every PLAY ends with a DEV-DOCS check.
 - PLAY records live in append-only repo-root `PLAY.jsonl`.
-- Timing fields are `read_ms`, `plan_ms`, `execute_ms`, `verify_ms`, and `close_ms`.
+- Timing categories are `read`, `plan`, `execute`, `verify`, and `close`; each carries `started_at`, `ended_at`, and `duration_ms`.
 - `time_loc` is an environment-level requirement: include it when initialized, omit it otherwise.
 - Authorization fields are `authorized_by` and `authorization_note`.
 

@@ -78,6 +78,7 @@ $validators = @(
     [PSCustomObject]@{ Name="review grammar";                 Script="validate-review-grammar.ps1"; PortfolioOnly=$false }
     [PSCustomObject]@{ Name="debt registry";                  Script="validate-debt.ps1";           PortfolioOnly=$false }
     [PSCustomObject]@{ Name="git split authorization";         Script="validate-git-split.ps1";      PortfolioOnly=$false }
+    [PSCustomObject]@{ Name="CI invariant uniqueness";         Script="validate-ci-invariants.ps1";  PortfolioOnly=$false }
 )
 
 foreach ($v in $validators) {
@@ -201,6 +202,73 @@ if ($Level -ge 3) {
     }
     if ($staleCount -eq 0) {
         Write-Pass "DEV-PLAN.md files are current relative to recent commits"
+    }
+
+    # 3c. PLAY.jsonl preflight coverage
+    $playFiles = Get-ChildItem $root -Recurse -Filter "PLAY.jsonl" -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch '\\\.git\\|\\node_modules\\' }
+
+    if ($playFiles.Count -eq 0) {
+        Write-Warn "no PLAY.jsonl found under $root — PLAY preflight coverage unknown"
+    } else {
+        $playTotal   = 0
+        $playFail    = 0
+        $playWarn    = 0
+        $playPass    = 0
+
+        foreach ($pf in $playFiles) {
+            $lines = Get-Content $pf.FullName -ErrorAction SilentlyContinue
+            foreach ($line in $lines) {
+                $line = $line.Trim()
+                if (-not $line) { continue }
+                try {
+                    $play = $line | ConvertFrom-Json -ErrorAction Stop
+                } catch {
+                    Write-Warn "PLAY.jsonl parse error in $($pf.FullName): $line"
+                    continue
+                }
+
+                # Filter to the Hours window
+                if ($play.declared_at) {
+                    try {
+                        $playTime = [datetime]::Parse($play.declared_at)
+                        if ($playTime -lt $since) { continue }
+                    } catch { }
+                }
+
+                $playTotal++
+                $id    = if ($play.play_id) { $play.play_id } else { "unknown" }
+                $level = if ($play.level)   { $play.level }   else { "?" }
+                $pre   = $play.preflight
+
+                if (-not $pre) {
+                    $playFail++
+                    Write-Fail "PLAY missing preflight field: $id ($level)"
+                } elseif ($pre -eq "not-yet-enforced") {
+                    $playWarn++
+                    Write-Warn "PLAY predates preflight enforcement: $id ($level)"
+                } elseif ($pre -eq "complete" -or $pre -eq "blocked") {
+                    $playPass++
+                    if (-not $Summary) { Write-Info "PLAY preflight $pre : $id ($level)" }
+                } else {
+                    $playFail++
+                    Write-Fail "PLAY has unrecognised preflight value '$pre': $id ($level)"
+                }
+
+                # DEV-DOCS deferred is a warning
+                if ($play.dev_docs_check -and $play.dev_docs_check.status -eq "deferred") {
+                    Write-Warn "PLAY has deferred DEV-DOCS check: $id — $($play.dev_docs_check.note)"
+                }
+            }
+        }
+
+        if ($playTotal -eq 0) {
+            Write-Info "PLAY.jsonl found but no plays in the last $Hours h"
+        } elseif ($playFail -eq 0) {
+            Write-Pass "PLAY preflight coverage: $playPass pass, $playWarn warn, 0 fail of $playTotal play(s)"
+        } else {
+            Write-Fail "PLAY preflight gaps: $playFail fail, $playWarn warn of $playTotal play(s)"
+        }
     }
 }
 

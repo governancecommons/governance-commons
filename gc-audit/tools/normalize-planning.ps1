@@ -17,19 +17,29 @@
     Skips files already at the canonical name, and skips repos where the
     target canonical name already exists (no destructive overwrite).
 
-    Use -DryRun to preview without changing any files.
+    Defaults to preview mode. Use -Apply to write changes.
     Run validate-planning.ps1 after to confirm.
 
 .PARAMETER DryRun
     Preview renames; do not modify files.
+
+.PARAMETER Apply
+    Apply renames and projects.yaml updates. Without this switch, the script previews only.
 
 .PARAMETER TargetPath
     Portfolio root (default: current directory).
 #>
 param(
     [switch] $DryRun,
+    [switch] $Apply,
     [string] $TargetPath = "."
 )
+
+if ($DryRun -and $Apply) {
+    Write-Host "Use either -DryRun or -Apply, not both." -ForegroundColor Red
+    exit 1
+}
+if (-not $Apply) { $DryRun = $true }
 
 $Root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
 
@@ -51,7 +61,7 @@ $Renamed   = 0
 $Skipped   = 0
 $Conflicts = 0
 
-$dryTag = if ($DryRun) { " [DRY RUN — no files written]" } else { "" }
+$dryTag = if ($DryRun) { " [PREVIEW - no files written]" } else { " [APPLY]" }
 Write-Host ""
 Write-Host "  normalize-planning.ps1$dryTag" -ForegroundColor White
 Write-Host "  Standard: DEV-ACCORD.00 (GC:2008)  |  $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor DarkGray
@@ -140,7 +150,7 @@ if (-not $DryRun -and $Renamed -gt 0) {
 
 Write-Host ""
 if ($DryRun) {
-    Write-Host "  Dry run complete. Re-run without -DryRun to apply." -ForegroundColor Cyan
+    Write-Host "  Preview complete. Re-run with -Apply to write changes." -ForegroundColor Cyan
 } else {
     $color = if ($Conflicts -gt 0) { "Yellow" } else { "Green" }
     Write-Host "  $Renamed rename(s) applied. $Skipped skipped ($Conflicts conflict(s))." -ForegroundColor $color

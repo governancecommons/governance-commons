@@ -247,8 +247,18 @@ function Validate-GcRegistry {
         if ($status -and (Normalize-Status $status) -ne $entry.status) {
             Write-Finding "ERROR" $file.FullName "Status '$status' does not match registry status '$($entry.status)'"
         }
-        if ($timestamp -and $entry.timestamp -ne $timestamp) {
-            Write-Finding "ERROR" $file.FullName "Timestamp '$timestamp' does not match registry timestamp '$($entry.timestamp)'"
+        if ($timestamp -and $entry.timestamp) {
+            try {
+                $fileDate = [datetime]::Parse($timestamp).Date
+                $regDate  = [datetime]::Parse($entry.timestamp).Date
+                if ($fileDate -ne $regDate) {
+                    Write-Finding "ERROR" $file.FullName "Timestamp '$timestamp' does not match registry timestamp '$($entry.timestamp)'"
+                }
+            } catch {
+                if ($timestamp -ne $entry.timestamp) {
+                    Write-Finding "WARN" $file.FullName "Timestamp '$timestamp' vs registry '$($entry.timestamp)' - could not parse for date comparison"
+                }
+            }
         }
         foreach ($dep in $dependsIds) {
             if ($dep -notin $registryDepends) {

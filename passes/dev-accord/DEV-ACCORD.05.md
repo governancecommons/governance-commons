@@ -266,6 +266,50 @@ declaration, GC-AUDIT declaration, maintenance gate rule, and stale reference ru
 
 ---
 
+## Amendment — 2026-07-01
+
+### 1. Preflight verb added to REVIEW-GRAMMAR and GC-AUDIT
+
+`preflight` is hereby declared a GC-AUDIT verb, added to `docs/REVIEW-GRAMMAR.md`.
+
+**Meaning:** Validate that the named agent or current session declared and completed
+the GC agent-trail reading sequence before beginning work.
+
+**Expected output:** Pass/fail with missing files listed and required stamp format shown.
+
+The canonical preflight contract lives at `governance-commons/gc-audit/AGENT-PREFLIGHT.md`.
+The GC-AUDIT implementation is `governance-commons/gc-audit/tools/validate-agent-preflight.ps1`,
+registered as `gc-audit.preflight` in `GC-AUDIT-REGISTRY.yaml`.
+
+### 2. GC-AUDIT-REGISTRY.yaml is the current executable allowlist
+
+The implementation table in the original body of this PASS is the bootstrap/historical
+record. `governance-commons/gc-audit/GC-AUDIT-REGISTRY.yaml` is the current executable
+allowlist. Callers must discover operations from the registry file, not from the table
+in this PASS. The table below records all implementations declared after the original PASS.
+
+| Script | GC-AUDIT operation |
+| --- | --- |
+| `governance-commons/gc-audit/tools/validate-git-split.ps1` | validate git split authorization (DEV-ACCORD.10 rules) |
+| `governance-commons/gc-audit/tools/validate-registry.ps1` | registry audit — GC, DCP, and DXP registry profiles |
+| `governance-commons/gc-audit/tools/validate-agent-preflight.ps1` | preflight — agent-trail reading sequence conformance |
+| `governance-commons/gc-audit/tools/validate-zero-trust.ps1` | zero-trust posture audit across scripts, registry, mutation safety |
+| `governance-commons/gc-audit/tools/normalize-bootstrap.ps1` | normalize agent bootstrap files to DEV-ACCORD.04 conformance |
+| `governance-commons/gc-audit/tools/normalize-planning.ps1` | normalize planning doc file names to DEV-ACCORD.00 conventions |
+| `governance-commons/gc-audit/tools/normalize-pointers.ps1` | normalize broken file pointers in projects.yaml |
+| `governance-commons/gc-audit/tools/dev-status.ps1` | repo-status dashboard (registered under repo-status category) |
+| `governance-commons/gc-audit/tools/review-last-24h.ps1` | compatibility wrapper for validate-recent-work.ps1 |
+
+### 3. Cluster invariant addition
+
+**DEV-ACCORD-CI-29 — GC-AUDIT-REGISTRY.yaml is the executable allowlist**
+The implementation table in DEV-ACCORD.05 is historical. `GC-AUDIT-REGISTRY.yaml` is
+the authoritative runtime allowlist. All new GC-AUDIT script registrations are made
+there, not in this PASS. An amendment to this PASS is still required to add a new
+REVIEW-GRAMMAR verb.
+
+---
+
 ## Reversibility
 
 Reversing this PASS requires a future DEV-ACCORD PASS that supersedes DEV-ACCORD.05, renames or dissolves the suite terms, and provides migration guidance for all adopters. Until such a PASS exists, the four-term vocabulary and maintenance gate are binding.

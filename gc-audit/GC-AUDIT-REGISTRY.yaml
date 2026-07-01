@@ -58,6 +58,8 @@ tools:
         targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-git-split.ps1
         targetArg: TargetPath
+      - script: governance-commons/gc-audit/tools/validate-ci-invariants.ps1
+        targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-pointers.ps1
         targetArg: TargetPath
         portfolioOnly: true
@@ -158,6 +160,46 @@ tools:
         fixedArgs: ["-Level", "4"]
         supportsHours: true
         supportsSummary: true
+
+  - id: gc-audit.zerotrust
+    verb: zerotrust
+    category: repo-audit
+    status: active
+    title: Zero-trust posture audit
+    description: Audit zero-trust enforcement across scripts, registry, mutation safety, shell delegation, PLAY authorization, and fail-closed defaults.
+    mutates: false
+    zeroTrust:
+      selfApplying: true
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-zero-trust.ps1
+        targetArg: TargetPath
+        containmentArg: PortfolioRoot
+        supportsStrict: true
+
+  - id: gc-audit.preflight
+    verb: preflight
+    category: repo-health
+    status: active
+    title: Validate agent preflight stamp
+    description: Validate first response or session note stamp format declared by GC AGENT-PREFLIGHT.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-agent-preflight.ps1
+        supportsFilePath: true
+        supportsText: true
+        supportsMode: ["FirstResponse", "Session"]
+
+  - id: gc-audit.ci-invariants
+    verb: validate
+    category: standards-grammar
+    status: active
+    title: Validate DEV-ACCORD-CI uniqueness
+    description: Validate uniqueness of DEV-ACCORD-CI invariant IDs across markdown definition lines.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-ci-invariants.ps1
+        targetArg: TargetPath
+        supportsProject: true
 
   - id: gc-audit.verify
     verb: verify

@@ -372,6 +372,7 @@ users authorize ambiguity or escalation, and every play ends with a DEV-DOCS
 check.
 
 Follow-up: user approved repo-root append-only `PLAY.jsonl` as the PLAY record
-home; `read_ms`, `plan_ms`, `execute_ms`, `verify_ms`, and `close_ms` as the
-five timing fields; environment-level `time_loc`; and `authorized_by` plus
-`authorization_note` for authorization tracking.
+home; `read`, `plan`, `execute`, `verify`, and `close` as the five timing
+categories, each with `started_at`, `ended_at`, and `duration_ms`;
+environment-level `time_loc`; and `authorized_by` plus `authorization_note` for
+authorization tracking.

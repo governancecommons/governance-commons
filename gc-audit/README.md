@@ -17,10 +17,28 @@ The current gap analysis is:
 GC-AUDIT-GAP-ANALYSIS.md
 ```
 
+The testing strategy, vocabulary, and fixture approach live at:
+
+```text
+TESTING-STRATEGY.md
+```
+
+PLAY execution-level obligations and close requirements live at:
+
+```text
+PLAY-OBLIGATIONS.md
+```
+
 Authoritative GC-AUDIT scripts live under:
 
 ```text
 governance-commons/gc-audit/tools/
+```
+
+Agent preflight authority lives at:
+
+```text
+governance-commons/gc-audit/AGENT-PREFLIGHT.md
 ```
 
 Portfolio-root `.ps1` files are compatibility adapters only. Security-sensitive
@@ -36,6 +54,14 @@ Registry rules:
 - Callers execute without a shell.
 - Mutating operations require preview or explicit apply.
 - Unimplemented verbs fail closed until an active allowlisted implementation is registered.
+
+Preflight validator examples:
+
+```powershell
+governance-commons/gc-audit/tools/validate-agent-preflight.ps1 -Text "PREFLIGHT: complete | project=c:/dev | order=AGENTS>03>PROTECTED>CONTROL-PLANE>REVIEW-GRAMMAR>02>06>10>projects.yaml>DEV-PATH>DEV-PLAN" -Mode FirstResponse
+governance-commons/gc-audit/tools/validate-agent-preflight.ps1 -FilePath .\session-note.md -Mode Session
+governance-commons/gc-audit/tools/validate-ci-invariants.ps1 -TargetPath C:\dev\governance-commons
+```
 
 ## Registry Validation Profiles
 
