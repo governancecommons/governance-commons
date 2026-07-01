@@ -77,8 +77,23 @@ if ($lines.Count -eq 0) {
 
 $errors   = [System.Collections.Generic.List[string]]::new()
 $warnings = [System.Collections.Generic.List[string]]::new()
+$telemetryRows = [System.Collections.Generic.List[object]]::new()
 $seenIds  = [System.Collections.Generic.HashSet[string]]::new()
 $lineNo   = 0
+
+function Get-IntValue($Value) {
+    if ($null -eq $Value) { return 0 }
+    try { return [int64]$Value } catch { return 0 }
+}
+
+function Format-Duration([int64]$Milliseconds) {
+    if ($Milliseconds -lt 1000) { return "${Milliseconds}ms" }
+    $seconds = [math]::Round($Milliseconds / 1000, 1)
+    if ($seconds -lt 60) { return "${seconds}s" }
+    $minutes = [math]::Floor($seconds / 60)
+    $remaining = [math]::Round($seconds % 60, 1)
+    return "${minutes}m ${remaining}s"
+}
 
 foreach ($line in $lines) {
     $lineNo++
@@ -193,6 +208,25 @@ foreach ($line in $lines) {
     } elseif ($validPreflight -notcontains $play.preflight) {
         $errors.Add("$prefix ($id) invalid preflight '$($play.preflight)' - must be one of: $($validPreflight -join ', ')")
     }
+
+    if ($play.timing) {
+        $readMs = Get-IntValue $play.timing.read.duration_ms
+        $planMs = Get-IntValue $play.timing.plan.duration_ms
+        $executeMs = Get-IntValue $play.timing.execute.duration_ms
+        $verifyMs = Get-IntValue $play.timing.verify.duration_ms
+        $closeMs = Get-IntValue $play.timing.close.duration_ms
+        $telemetryRows.Add([PSCustomObject]@{
+            PlayId = [string]$id
+            Level = if ($play.level) { [string]$play.level } else { "?" }
+            Status = if ($play.status) { [string]$play.status } else { "?" }
+            ReadMs = $readMs
+            PlanMs = $planMs
+            ExecuteMs = $executeMs
+            VerifyMs = $verifyMs
+            CloseMs = $closeMs
+            TotalMs = ($readMs + $planMs + $executeMs + $verifyMs + $closeMs)
+        })
+    }
 }
 
 Write-Host "  $($lines.Count) record(s) checked" -ForegroundColor DarkGray
@@ -202,6 +236,26 @@ foreach ($w in $warnings) { Write-Host "  [WARN]  $w" -ForegroundColor DarkYello
 foreach ($e in $errors)   { Write-Host "  [ERROR] $e" -ForegroundColor Red }
 
 Write-Host ""
+
+if ($telemetryRows.Count -gt 0) {
+    Write-Host "  PLAY TELEMETRY (5 timing buckets)" -ForegroundColor White
+    Write-Host "  play_id                         level  status   read     plan     execute  verify   close    total" -ForegroundColor DarkGray
+    Write-Host "  -----------------------------------------------------------------------------------------------" -ForegroundColor DarkGray
+    foreach ($row in $telemetryRows) {
+        $shortId = if ($row.PlayId.Length -gt 30) { $row.PlayId.Substring(0, 27) + "..." } else { $row.PlayId }
+        Write-Host ("  {0,-30} {1,-6} {2,-8} {3,-8} {4,-8} {5,-8} {6,-8} {7,-8} {8,-8}" -f `
+            $shortId,
+            $row.Level,
+            $row.Status,
+            (Format-Duration $row.ReadMs),
+            (Format-Duration $row.PlanMs),
+            (Format-Duration $row.ExecuteMs),
+            (Format-Duration $row.VerifyMs),
+            (Format-Duration $row.CloseMs),
+            (Format-Duration $row.TotalMs)) -ForegroundColor DarkCyan
+    }
+    Write-Host ""
+}
 
 $hasFailure = ($errors.Count -gt 0) -or ($Strict -and $warnings.Count -gt 0)
 

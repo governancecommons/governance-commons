@@ -414,3 +414,8 @@ enabled bundles require a contained relative `principalStore` with principal JSO
 records. This closes the advisory keystore warning without weakening fail-closed
 behavior for repos that enable evidence signing.
 
+Follow-up RUN: PLAY telemetry is now displayed by `validate-playbook.ps1` and
+surfaced through `validate-recent-work.ps1` Level 1 when `PLAY.jsonl` exists.
+The displayed buckets are read, plan, execute, verify, close, plus total duration,
+so agents can report the five approved timing categories at PLAY close.
+

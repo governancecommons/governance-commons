@@ -66,3 +66,8 @@ summary, not the authority.
 | `timing.execute.started_at`, `timing.execute.ended_at`, `timing.execute.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
 | `timing.verify.started_at`, `timing.verify.ended_at`, `timing.verify.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
 | `timing.close.started_at`, `timing.close.ended_at`, `timing.close.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
+
+`validate-playbook.ps1` displays the five timing buckets for each checked PLAY so
+agents can report read, plan, execute, verify, and close telemetry at the end of
+the PLAY. `validate-recent-work.ps1` Level 1 surfaces that playbook output when
+`PLAY.jsonl` exists, while keeping other successful validator output compact.

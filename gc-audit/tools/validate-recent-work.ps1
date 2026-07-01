@@ -89,7 +89,7 @@ $validators = @(
     [PSCustomObject]@{ Name="git split authorization";         Script="validate-git-split.ps1";      PortfolioOnly=$false }
     [PSCustomObject]@{ Name="CI invariant uniqueness";         Script="validate-ci-invariants.ps1";  PortfolioOnly=$false }
     [PSCustomObject]@{ Name="script format providers";          Script="validate-format.ps1";         PortfolioOnly=$false }
-    [PSCustomObject]@{ Name="DEV-PLAYBOOK records";             Script="validate-playbook.ps1";       PortfolioOnly=$false; RequiresFile="PLAY.jsonl" }
+    [PSCustomObject]@{ Name="DEV-PLAYBOOK records";             Script="validate-playbook.ps1";       PortfolioOnly=$false; RequiresFile="PLAY.jsonl"; ShowOutputOnPass=$true }
 )
 
 foreach ($v in $validators) {
@@ -116,6 +116,9 @@ foreach ($v in $validators) {
     $out = Invoke-ReadOnlyValidator -ScriptPath $scriptPath -TargetRoot $root
     if ($LASTEXITCODE -eq 0) {
         Write-Pass $v.Name
+        if (-not $Summary -and $v.PSObject.Properties.Match("ShowOutputOnPass").Count -gt 0 -and $v.ShowOutputOnPass) {
+            $out | ForEach-Object { Write-Host "        $_" -ForegroundColor DarkGray }
+        }
     } else {
         Write-Fail $v.Name
         if (-not $Summary) {
