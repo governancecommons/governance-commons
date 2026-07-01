@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0016.00 — 2026-06-30
+
+**pass_id**: GC-PASS-0016.00
+**timestamp**: 2026-06-30T00:00:00Z
+**change_type**: fix
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD cluster; DEV-ACCORD.02 three-layer model; all agents and docs that reference the PASS tier; docs/REVIEW-GRAMMAR.md
+
+**problem**: DEV-ACCORD.02 declared a three-layer model (Governance / Execution / Audit) that omitted the planning structure entirely and misnamed the PASS tier. Listing PASS alongside Phase, Wave, and Track in the vocabulary table implied they were the same kind of thing — structural planning containers. They are not. Phase, Wave, and Track are structural containers that answer where work sits. PASS converts planning intent into a governed commitment. Conflating them caused agents to treat PASS as a fourth planning layer rather than a cross-cutting bridge, producing vocabulary confusion and incorrect DEV-DOCS structure.
+**fix**: DEV-ACCORD.07 (GC:2015) replaces the three-layer model with a four-tier model: Planning (Phase, Wave, Track) / Bridge (PASS, Sub-PASS) / Execution (RUN) / Audit (Evidence Bundle). PASS is formally declared the bridge tier. Phase, Wave, and Track are formally declared the planning tier. The vocabulary table is restructured by tier. DEV-ACCORD.02 is amended in place with forward pointers to DEV-ACCORD.07.
+**new_constraints**: (1) PASS is the bridge tier — not a planning layer. Docs and agents that treat PASS as a structural planning container are non-conformant. (2) Phase, Wave, and Track are the only three GC structural planning containers. A fourth requires a GC amendment. (3) A PASS may cross planning boundaries — spanning multiple Tracks or Waves is conformant.
+**reasoning**: The bridge framing resolves the long-standing ambiguity between "where work sits" and "what governs it". PASS has always been cross-cutting in practice — a PASS that touches CLI, schema, and docs spans three Tracks. Calling it a planning layer implies it should be confined to one. The bridge tier makes explicit what was always true: PASS is the handoff from planning to execution, not a position in the planning hierarchy.
+
+---
+
 ## GC-PASS-0015.00 — 2026-06-30
 
 **pass_id**: GC-PASS-0015.00

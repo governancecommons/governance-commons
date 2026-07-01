@@ -26,9 +26,86 @@ and Evidence Bundle before performing any planned work.
 | Execution | RUN | Who did what, when, in which commit? |
 | Audit | Evidence Bundle | Can this be verified without repo access? |
 
+*Phase, Wave, and Track are the structural planning containers. PASS is a governance
+contract that may span them. See DEV-ACCORD.07 (GC:2015) for the planning container lock.*
+
+---
+
+## Controlled DEV-DOCS flow vocabulary
+
+GC uses two separate axes:
+
+1. **Planning structure** — where work sits in the roadmap and DEV-DOCS.
+2. **Execution level** — how much governance a unit of work requires.
+
+DEV-ACCORD recognizes only these planning and execution unit terms:
+
+| Term | Answers | Why it exists |
+| --- | --- | --- |
+| Phase | What era is the project in? | Preserves product history and major evolution in `DEV-PATH.md`. |
+| Wave | What delivery batch is this? | Sequences work inside a phase without pretending every track ships at once. |
+| Track | What persistent workstream owns this? | Keeps CLI, schema, UI, runtime, release, docs, and similar streams distinct. |
+| PASS | What governed contract defines done? | Gives humans and agents shared scope, Done-when criteria, dependencies, and closure. |
+| Sub-PASS | What child contract can close or fail independently? | Splits a parent PASS only when a piece needs its own Done-when criteria. |
+| RUN | What execution event happened? | Records who did work, when, in which commit, and under what PASS if any. |
+| Evidence Bundle | How is the RUN or validation independently verifiable? | Carries signed or machine-checkable proof. |
+| Work Item | What local planning row tracks a task? | Lets plans list small items without promoting everything to a PASS. |
+| Gate | What check must pass before closure? | Prevents false closure of PASSes, releases, or RUNs. |
+| Release | What packaged version or distribution target ships? | Separates shipment from internal planning progress. |
+
+Agents must not invent new planning or execution unit types in GC-governed docs.
+Any unit term not listed in the table above is invalid for DEV-ACCORD taxonomy.
+
+DEV-ACCORD.06 adds the Change Playbook execution levels: `BUNT`, `RUN`, `DRIVE`,
+and `PASS`. These are valid execution levels, not additional Phase/Wave/Track
+planning units. When deciding DEV-DOCS obligations, validation, evidence, or
+trailer requirements, DEV-ACCORD.06 governs.
+
+`RUN` and `PASS` intentionally appear on both axes:
+
+| Term | Planning / execution meaning | Change Playbook execution-level meaning |
+| --- | --- | --- |
+| RUN | An execution event: work happened. | A normal bounded change with local impact. |
+| PASS | A governance contract: scope and Done-when are agreed. | Work whose governance weight requires PASS-level obligations. |
+
+`Flow` is not a DEV-ACCORD governance unit. It may appear only as ordinary prose
+for a user flow, command flow, data flow, or process flow. Governed work still
+maps to the planning structure above and to a DEV-ACCORD.06 execution level.
+
+If a new unit type is genuinely needed, it requires a GC amendment before use.
+Until then, map the work to Phase, Wave, Track, PASS, RUN, Evidence Bundle,
+Work Item, Gate, or Release.
+
+### Status vocabulary boundary
+
+PASS closure status is only `OPEN` or `CLOSED`.
+
+Document lifecycle status, such as `DRAFT`, `ACCEPTED`, or `SUPERSEDED`, may
+describe the governance document itself. It must not be used as PASS closure
+status unless a future DEV-ACCORD amendment changes the PASS status vocabulary.
+
+DEV-ACCORD also forbids invented status values in planning and registry docs.
+Agents must use the status vocabulary declared by the artifact they are editing.
+If the artifact does not declare a vocabulary, use the GC defaults:
+
+| Scope | Allowed statuses |
+| --- | --- |
+| Project registry | `active`, `stable`, `wip`, `scaffold`, `archive` |
+| PASS closure | `OPEN`, `CLOSED` |
+| Planning work item | `planned`, `queued`, `open`, `in-progress`, `blocked`, `done`, `deferred` |
+| Gap closure | `open`, `spec-complete`, `release-complete`, `runtime-complete` |
+| Release | `planned`, `in-progress`, `blocked`, `released`, `deferred` |
+| Document lifecycle | `draft`, `active`, `accepted`, `superseded`, `archived` |
+
+Any status value not listed in the relevant table above is invalid unless the
+target artifact explicitly declares it. Put nuance in notes or prose instead of
+inventing a new status.
+
 ---
 
 ## 1. PASS — governance contract
+
+*DEV-ACCORD.07 (GC:2015): PASS is a governance contract, not a structural planning container alongside Phase/Wave/Track. It may span multiple Tracks or Waves.*
 
 A PASS is the planning and governance unit for significant work. It defines a
 goal, declares when the work is done, and records what was built.

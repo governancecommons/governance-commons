@@ -13,9 +13,15 @@
 
 ## Summary
 
-The Change Playbook defines four work classes — BUNT, RUN, DRIVE, PASS — that classify
-the significance and required governance of any change in the portfolio. Each class
+The Change Playbook defines four execution levels — BUNT, RUN, DRIVE, PASS — that define
+the significance and required governance of any unit of work in the portfolio. Each level
 determines required DEV-DOCS updates, validation, evidence, and commit trailer fields.
+
+These are execution levels, not planning structure. DEV-ACCORD.02 owns Phase, Wave,
+Track, PASS, Sub-PASS, RUN, Evidence Bundle, Work Item, Gate, and Release as the
+planning/execution vocabulary. This playbook owns BUNT, RUN, DRIVE, and PASS as
+the execution-level vocabulary. Commit trailers record the execution level; they
+do not define it.
 
 This PASS also declares the unified commit trailer schema, absorbing the `Dev-Docs:`
 field introduced in DEV-ACCORD.05. All trailer fields are owned here. Future fields
@@ -23,18 +29,20 @@ require a DEV-ACCORD amendment, not a new independent PASS.
 
 ---
 
-## The Four Change Classes
+## The Four Change Playbook Execution Levels
 
-| Class | What it is | Typical examples |
+| Execution level | What it is | Typical examples |
 | --- | --- | --- |
 | BUNT | Tiny tactical change — no behavioral effect | Typo, comment, formatting, whitespace |
 | RUN | Normal bounded work — local, contained impact | Bug fix, small feature, local doc correction |
 | DRIVE | Meaningful milestone movement — visible or release-affecting | Version bump, new scheme, packaging, dependency change, public API surface, DEV-DOCS state change |
 | PASS | Governed contract — planned, multi-step, or cross-cutting | Multi-agent work, standard changes, cross-project changes, release-defining decisions |
 
-BUNT, RUN, and DRIVE are execution events. PASS is a governance contract that wraps
-one or more execution events. This replaces and extends the PASS/RUN binary in
-DEV-ACCORD.02 with a four-class spectrum.
+BUNT, RUN, and DRIVE are execution levels for the work being performed. PASS is
+the highest Change Playbook execution level and also refers to the governance
+contract that wraps one or more execution events. Commit trailers record the
+execution level for audit; the level itself is not limited to commits. This extends DEV-ACCORD.02 without replacing
+Phase, Wave, Track, or any other planning unit.
 
 ---
 
@@ -94,13 +102,13 @@ A change MUST escalate to the higher class if any of the following is true:
 | Changes a GC standard, governance rule, or authority document | PASS |
 | Affects more than one project in the portfolio | PASS at minimum |
 
-**Escalation is not optional.** A commit classified as BUNT that touches release truth
-is a misclassified BUNT. The pre-push hook treats a BUNT or RUN trailer on a DRIVE-trigger
-file as a warning; agents must not suppress it.
+**Escalation is not optional.** Work recorded as BUNT that touches release truth
+has the wrong execution level. The pre-push hook treats a BUNT or RUN trailer on
+a DRIVE-trigger file as a warning; agents must not suppress it.
 
-**Highest class wins.** When a single commit contains changes at multiple levels, the
-commit takes the classification of the highest class present. A commit with a typo fix
-and a version bump is a DRIVE, not a BUNT.
+**Highest execution level wins.** When a single commit contains work at multiple
+levels, the commit records the highest execution level present. A commit with a
+typo fix and a version bump is a DRIVE, not a BUNT.
 
 ---
 
@@ -172,27 +180,27 @@ Pass-ID: DEV-ACCORD.06
 | --- | --- |
 | Pre-commit hook | `Change-Level` and `Dev-Docs` fields present; `Reason` present when `not-needed`; warns if DRIVE-trigger files changed but class is BUNT or RUN |
 | Pre-push hook | Validates DRIVE/PASS trailers include `Validation`; runs GC-AUDIT validate; warns on stale refs |
-| Agent rule | Agent self-classifies before committing; declares class in trailer; does not suppress escalation warnings |
+| Agent rule | Agent determines execution level before committing; declares level in trailer; does not suppress escalation warnings |
 | CI | Full trailer schema validation on PR/push to main |
 
-The pre-commit hook must not block on uncertainty. When it cannot classify a file as
-a DRIVE trigger, it warns and defers to the agent.
+The pre-commit hook must not block on uncertainty. When it cannot determine
+whether a file triggers DRIVE obligations, it warns and defers to the agent.
 
 ---
 
 ## Cluster Invariants
 
-**DEV-ACCORD-CI-13 — Four classes, no gaps**
-Every change is a BUNT, RUN, DRIVE, or PASS. There is no unclassified change. Omitting
-`Change-Level` from a commit trailer is a non-conformant commit.
+**DEV-ACCORD-CI-13 — Four execution levels, no gaps**
+Every change is a BUNT, RUN, DRIVE, or PASS. No change may lack an execution
+level. Omitting `Change-Level` from a commit trailer is a non-conformant commit.
 
-**DEV-ACCORD-CI-14 — Highest class wins**
-When a commit contains changes at multiple levels, the commit takes the highest class.
+**DEV-ACCORD-CI-14 — Highest execution level wins**
+When a commit contains work at multiple levels, the commit records the highest execution level.
 No commit may be downgraded by splitting off the DRIVE-trigger change into a separate
 commit solely to avoid the DRIVE obligations.
 
 **DEV-ACCORD-CI-15 — Escalation is not optional**
-A BUNT or RUN on a DRIVE-trigger file is a misclassification. Agents must escalate.
+A BUNT or RUN on a DRIVE-trigger file is the wrong execution level. Agents must escalate.
 Suppressions require explicit human instruction recorded in the session.
 
 **DEV-ACCORD-CI-16 — Trailer schema is owned here**
@@ -204,7 +212,7 @@ trailer fields that conflict with or bypass this schema.
 
 ## Outputs
 
-- Change Playbook declared: BUNT, RUN, DRIVE, PASS as the four portfolio change classes
+- Change Playbook declared: BUNT, RUN, DRIVE, PASS as the four portfolio execution levels
 - Per-class obligations defined: DEV-DOCS, validation, evidence
 - Escalation rules declared with explicit trigger table
 - Highest-class-wins rule declared
