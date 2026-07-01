@@ -11,7 +11,9 @@ is owned by the DEV-ACCORD.06 amendment (DEV-PLAYBOOK). This document only cover
 which GC-AUDIT events accompany a PLAY; it does not redefine schema fields.
 The GC-AUDIT implementation that checks the schema is
 `governance-commons/gc-audit/tools/validate-playbook.ps1`, registered as
-`gc-audit.playbook`.
+`gc-audit.playbook`. `validate-recent-work.ps1` Level 1 also runs this check
+when a target repo has `PLAY.jsonl`; repos that have not initialized PLAY
+tracking are reported as skipped instead of being treated as schema failures.
 
 ## Before the PLAY starts
 

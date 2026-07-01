@@ -12,6 +12,13 @@ security:
   path_policy: scripts must resolve under the portfolio root
   mutation_policy: mutating tools must support preview or require explicit apply
   owner: GC-AUDIT
+  internalScripts:
+    - script: governance-commons/gc-audit/tools/dev-status.ps1
+      internal: true
+      reason: Legacy portfolio dashboard helper; not exposed as a GC-AUDIT operation.
+    - script: governance-commons/gc-audit/tools/review-last-24h.ps1
+      internal: true
+      reason: Legacy session-close wrapper around validate-recent-work; not exposed as a GC-AUDIT operation.
 
 categories:
   repo-status:
@@ -62,6 +69,9 @@ tools:
         targetArg: TargetPath
       - script: governance-commons/gc-audit/tools/validate-format.ps1
         targetArg: TargetPath
+      - script: governance-commons/gc-audit/tools/validate-playbook.ps1
+        targetArg: TargetPath
+        requiresFile: PLAY.jsonl
       - script: governance-commons/gc-audit/tools/validate-pointers.ps1
         targetArg: TargetPath
         portfolioOnly: true
@@ -220,9 +230,11 @@ tools:
     verb: validate
     category: repo-health
     status: active
-    title: Validate PowerShell script format (parse-only)
-    description: Parse-only syntax check for GC-AUDIT PowerShell scripts. Does not execute any script.
+    title: Validate script format providers
+    description: Provider-based format/syntax validation surface. Phase 1 active provider is powershell-script-parse: parse-only PowerShell syntax checks with no target execution. Future providers may add Markdown, JSON, JSONL, or YAML checks through the same read-only contract.
     mutates: false
+    activeProviders:
+      - powershell-script-parse
     steps:
       - script: governance-commons/gc-audit/tools/validate-format.ps1
         targetArg: TargetPath

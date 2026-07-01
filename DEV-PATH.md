@@ -387,11 +387,23 @@ duration_ms, dev_docs_check, commit_ref, preflight). New cluster invariants
 DEV-ACCORD-CI-30 through DEV-ACCORD-CI-32 declared.
 
 Two new GC-AUDIT implementations registered: `validate-playbook.ps1` (schema/lifecycle
-conformance for PLAY.jsonl) and `validate-format.ps1` (parse-only PowerShell syntax
-check, no execution). Both registered in `GC-AUDIT-REGISTRY.yaml` as `gc-audit.playbook`
-and `gc-audit.format`. `validate-format.ps1` wired into `validate-recent-work.ps1`
-Level 1 and into the `gc-audit.validate` composite steps, keeping the diagnostic and
-composite-validate surfaces consistent. `gc-audit/PLAY-OBLIGATIONS.md` updated to
-point to the DEV-ACCORD.06 amendment as schema authority and to add the `status` and
-`touches` field close requirements.
+conformance for PLAY.jsonl) and `validate-format.ps1` (provider-based format/syntax
+surface; Phase 1 active provider is parse-only PowerShell syntax, no execution).
+Both registered in `GC-AUDIT-REGISTRY.yaml` as `gc-audit.playbook` and
+`gc-audit.format`. `validate-format.ps1` and conditional `validate-playbook.ps1`
+checks are wired into `validate-recent-work.ps1` Level 1 and into the
+`gc-audit.validate` composite steps, keeping diagnostic and composite-validate
+surfaces consistent while allowing repos without PLAY.jsonl to skip cleanly.
+`gc-audit/PLAY-OBLIGATIONS.md` updated to point to the DEV-ACCORD.06 amendment as
+schema authority and to add the `status` and `touches` field close requirements.
+
+## 2026-07-01 - GC-AUDIT Validator Portability Hardening
+
+Follow-up DRIVE: executable GC-AUDIT PowerShell involved in Level 1 now avoids
+non-ASCII punctuation so Windows PowerShell and PowerShell 7 parse the same source.
+`validate-recent-work.ps1` runs `validate-playbook.ps1` only when the target repo
+has `PLAY.jsonl`, preserving zero-trust read-only validation without forcing
+uninitialized repos into false failures. The format validator remains named
+`validate-format.ps1`, but its documented scope is now provider-based script
+format validation with `powershell-script-parse` as the only active Phase 1 provider.
 

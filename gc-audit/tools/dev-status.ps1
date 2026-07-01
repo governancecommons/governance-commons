@@ -29,7 +29,7 @@ $Root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
 
 if ($Help) {
     Write-Host ""
-    Write-Host "  dev-status.ps1 — DevX Control Plane portfolio dashboard" -ForegroundColor White
+    Write-Host "  dev-status.ps1 - DevX Control Plane portfolio dashboard" -ForegroundColor White
     Write-Host ""
     Write-Host "  USAGE" -ForegroundColor Cyan
     Write-Host "    .\dev-status.ps1 [flags]"
@@ -55,7 +55,7 @@ if ($Help) {
     Write-Host "    name        Project name (from projects.yaml)"
     Write-Host "    status      active | wip | scaffold | stable  (project lifecycle)"
     Write-Host "    branch      Current git branch"
-    Write-Host "    dirty       ✓ clean | ● N work | ◇ N env  (working tree state)"
+    Write-Host "    dirty       clean | N work | N env  (working tree state)"
     Write-Host "    plan        plan = file-based docs  notes = notes-only  blank = none"
     Write-Host "    +N/-N       Commits ahead/behind upstream"
     Write-Host "    hash        Last commit short hash"
@@ -68,13 +68,13 @@ if ($Help) {
     Write-Host ""
     Write-Host "  DOCS" -ForegroundColor Cyan
     Write-Host "    README.md                   Portfolio overview and quick start"
-    Write-Host "    DEV-CONTROL-PLANE.md        Boundary doctrine — what lives where"
+    Write-Host "    DEV-CONTROL-PLANE.md        Boundary doctrine - what lives where"
     Write-Host "    docs/planning-normalization.md  Planning standard and vocabulary"
     Write-Host ""
     exit 0
 }
 
-# ── Parse projects.yaml (no external module needed) ──────────────────────────
+# Parse projects.yaml (no external module needed)
 function Read-Projects([string]$yamlPath) {
     $content = Get-Content $yamlPath -Raw
     # Split on list items: lines starting with "  - name:"
@@ -97,7 +97,7 @@ $YamlFile = Join-Path $Root "projects.yaml"
 $RawYaml  = Get-Content $YamlFile -Raw
 $RootDisplay = try { (Resolve-Path $Root).Path } catch { $Root }
 
-# ── Group display config ──────────────────────────────────────────────────────
+# Group display config
 $GroupMeta = @{
     "control-plane" = @{ Label = "CONTROL PLANE"; Color = "Green"   }
     "apps"          = @{ Label = "APPS";          Color = "Blue"    }
@@ -109,7 +109,7 @@ $GroupMeta = @{
 }
 $FallbackColors = @("Green", "Cyan", "Yellow", "Magenta", "Blue", "DarkCyan", "Gray")
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+# Helpers
 function Get-RelativeTime([datetime]$date) {
     $diff = (Get-Date) - $date
     if ($diff.TotalMinutes -lt 60)  { return "$([int]$diff.TotalMinutes)m ago" }
@@ -234,13 +234,13 @@ function Show-ProjectRow($project, [string]$color, [bool]$CountTotals = $true) {
     Write-Host ("{0,-10} " -f $branch) -NoNewline -ForegroundColor DarkCyan
 
     if ($dirtyCounts.Work -gt 0 -and $dirtyCounts.Env -gt 0) {
-        Write-Host ("● {0} work + {1} env  " -f $dirtyCounts.Work, $dirtyCounts.Env) -NoNewline -ForegroundColor Red
+        Write-Host ("! {0} work + {1} env  " -f $dirtyCounts.Work, $dirtyCounts.Env) -NoNewline -ForegroundColor Red
     } elseif ($dirtyCounts.Work -gt 0) {
-        Write-Host ("● {0,-3} work   " -f $dirtyCounts.Work) -NoNewline -ForegroundColor Red
+        Write-Host ("! {0,-3} work   " -f $dirtyCounts.Work) -NoNewline -ForegroundColor Red
     } elseif ($dirtyCounts.Env -gt 0) {
-        Write-Host ("◇ {0,-3} env    " -f $dirtyCounts.Env) -NoNewline -ForegroundColor DarkYellow
+        Write-Host ("~ {0,-3} env    " -f $dirtyCounts.Env) -NoNewline -ForegroundColor DarkYellow
     } else {
-        Write-Host "✓ clean     " -NoNewline -ForegroundColor DarkGreen
+        Write-Host "clean       " -NoNewline -ForegroundColor DarkGreen
     }
 
     switch ($planHealth) {
@@ -270,7 +270,7 @@ function Show-ProjectRow($project, [string]$color, [bool]$CountTotals = $true) {
     return $isDirty
 }
 
-# ── Load registry ─────────────────────────────────────────────────────────────
+# Load registry
 $allProjects = Read-Projects $YamlFile
 
 if (-not $allProjects) {
@@ -301,7 +301,7 @@ foreach ($groupName in $GroupOrder) {
     }
 }
 
-# ── Validate group filter ─────────────────────────────────────────────────────
+# Validate group filter
 if ($Group -and -not $GroupMeta.ContainsKey($Group)) {
     Write-Host "Unknown group '$Group'. Valid: $($GroupOrder -join ', ')" -ForegroundColor Red
     exit 1
@@ -309,7 +309,7 @@ if ($Group -and -not $GroupMeta.ContainsKey($Group)) {
 
 $scanGroups = if ($Group) { @($Group) } else { $GroupOrder | Where-Object { $_ -ne "archive" } }
 
-# ── Header ────────────────────────────────────────────────────────────────────
+# Header
 Write-Host ""
 Write-Host "  $RootDisplay  " -ForegroundColor White -BackgroundColor DarkGreen -NoNewline
 Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm')  " -ForegroundColor DarkGreen
@@ -338,7 +338,7 @@ foreach ($key in $scanGroups) {
         if (-not $hasAnyDirty) { continue }
     }
 
-    $bar = "─" * ([Math]::Max(2, 50 - $meta.Label.Length))
+    $bar = "-" * ([Math]::Max(2, 50 - $meta.Label.Length))
     Write-Host "  $($meta.Label) $bar" -ForegroundColor $meta.Color
     Write-Host ""
 
@@ -351,7 +351,7 @@ foreach ($key in $scanGroups) {
     Write-Host ""
 }
 
-# ── Archive summary or detail ─────────────────────────────────────────────────
+# Archive summary or detail
 $archiveProjects = $allProjects | Where-Object { $_.group -eq "archive" }
 $archiveDirty    = 0
 foreach ($p in $archiveProjects) {
@@ -369,21 +369,21 @@ foreach ($p in $archiveProjects) {
 
 if ($Group -eq "archive") {
     $meta = $GroupMeta["archive"]
-    $bar  = "─" * ([Math]::Max(2, 50 - $meta.Label.Length))
+    $bar  = "-" * ([Math]::Max(2, 50 - $meta.Label.Length))
     Write-Host "  $($meta.Label) $bar" -ForegroundColor $meta.Color
     Write-Host ""
     foreach ($p in $archiveProjects) { Show-ProjectRow $p $meta.Color $false | Out-Null }
     Write-Host ""
 } elseif (-not $Group) {
-    $archiveNote = if ($archiveDirty -gt 0) { "($archiveDirty dirty) — run -Group archive to inspect" } else { "all clean" }
-    Write-Host "  ARCHIVES — $archiveNote" -ForegroundColor DarkGray
+    $archiveNote = if ($archiveDirty -gt 0) { "($archiveDirty dirty) - run -Group archive to inspect" } else { "all clean" }
+    Write-Host "  ARCHIVES - $archiveNote" -ForegroundColor DarkGray
     Write-Host ""
 }
 
-# ── Summary ───────────────────────────────────────────────────────────────────
+# Summary
 $dirtyColor = if ($totalDirty -gt 0) { "Yellow" } else { "Green" }
-Write-Host "  ── $totalRepos repos  │  " -NoNewline -ForegroundColor DarkGray
+Write-Host "  -- $totalRepos repos  |  " -NoNewline -ForegroundColor DarkGray
 Write-Host "$totalDirty dirty" -NoNewline -ForegroundColor $dirtyColor
 Write-Host " ($totalWorkDirty work, $totalEnvOnly env-only)" -NoNewline -ForegroundColor DarkGray
-Write-Host "  │  source: projects.yaml  ──" -ForegroundColor DarkGray
+Write-Host "  |  source: projects.yaml  --" -ForegroundColor DarkGray
 Write-Host ""

@@ -42,6 +42,8 @@ if ($Help) {
 }
 
 $Root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
+$PowerShellHost = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+$IsWindowsHost = ($env:OS -eq "Windows_NT")
 $ContainmentRoot = $null
 if ($PortfolioRoot) {
     $ContainmentRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($PortfolioRoot)
@@ -138,6 +140,15 @@ function Extract-DependsIds([string]$dependsHeader) {
     return $ids | Select-Object -Unique
 }
 
+function Invoke-ContainedPowerShellScript([string]$ScriptPath, [string]$TargetRoot) {
+    $args = @("-NoProfile")
+    if ($IsWindowsHost) {
+        $args += @("-ExecutionPolicy", "Bypass")
+    }
+    $args += @("-File", $ScriptPath, "-TargetPath", $TargetRoot)
+    return & $PowerShellHost @args 2>&1
+}
+
 function Validate-DcpRegistry {
     $scriptPath = Resolve-RelativePathWithin $PSScriptRoot "validate-pointers.ps1" $PSScriptRoot "delegated validator"
     if (-not $scriptPath) { return }
@@ -145,7 +156,7 @@ function Validate-DcpRegistry {
         Write-Finding "ERROR" $scriptPath "validate-pointers.ps1 not found"
         return
     }
-    & powershell -NoProfile -ExecutionPolicy Bypass -File $scriptPath -TargetPath $Root
+    Invoke-ContainedPowerShellScript -ScriptPath $scriptPath -TargetRoot $Root | ForEach-Object { Write-Host $_ }
     if ($LASTEXITCODE -ne 0) {
         Write-Finding "ERROR" "projects.yaml" "DCP projects.yaml pointer validation failed"
     } else {

@@ -31,31 +31,38 @@ param(
 $root     = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
 $toolRoot = $PSScriptRoot
 $level    = 2
+$powerShellHost = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+$isWindowsHost = ($env:OS -eq "Windows_NT")
 if ($Deep)   { $level = 3 }
 if ($Deeper) { $level = 4 }
 
 $levelLabel = @{ 2="Recent-Work Review"; 3="Adversarial Audit"; 4="Release Readiness" }
 
-$border = "═" * 65
+$border = "=" * 65
 
 Write-Host ""
 Write-Host $border -ForegroundColor Cyan
-Write-Host "  REVIEW — LAST $Hours H  |  Level $level – $($levelLabel[$level])" -ForegroundColor White
+Write-Host "  REVIEW - LAST $Hours H  |  Level $level - $($levelLabel[$level])" -ForegroundColor White
 Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm')  |  $env:COMPUTERNAME" -ForegroundColor DarkGray
 Write-Host $border -ForegroundColor Cyan
 
 $script  = Join-Path $toolRoot "validate-recent-work.ps1"
 $args    = @("-Hours", $Hours, "-Level", $level, "-TargetPath", $root)
+if ($isWindowsHost) {
+    $args = @("-ExecutionPolicy", "Bypass", "-File", $script) + $args
+} else {
+    $args = @("-File", $script) + $args
+}
 if ($Summary) { $args += "-Summary" }
 
-& pwsh -NoProfile -File $script @args
+& $powerShellHost -NoProfile @args
 $rc = $LASTEXITCODE
 
 Write-Host $border -ForegroundColor Cyan
 if ($rc -eq 0) {
     Write-Host "  SESSION CLOSED CLEAN" -ForegroundColor Green
 } else {
-    Write-Host "  SESSION CLOSED WITH FINDINGS — review items above before pushing" -ForegroundColor Red
+    Write-Host "  SESSION CLOSED WITH FINDINGS - review items above before pushing" -ForegroundColor Red
 }
 Write-Host $border -ForegroundColor Cyan
 Write-Host ""

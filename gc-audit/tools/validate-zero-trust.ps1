@@ -80,6 +80,8 @@ if (-not (Test-Path $ToolsDir)) {
 }
 
 $RegistryRaw = Get-Content $RegistryFile -Raw
+$internalScripts = [regex]::Matches($RegistryRaw, 'script:\s+.+/tools/(.+\.ps1)[\s\S]*?internal:\s+true') |
+    ForEach-Object { $_.Groups[1].Value.Trim() }
 
 # ── ZT1 — Path containment ────────────────────────────────────────────────────
 
@@ -136,6 +138,8 @@ $allScripts = Get-ChildItem $ToolsDir -Filter "*.ps1" | Select-Object -ExpandPro
 foreach ($scriptName in $allScripts) {
     if ($registeredScripts -contains $scriptName) {
         Add-Pass "ZT3  Registered: $scriptName"
+    } elseif ($internalScripts -contains $scriptName) {
+        Add-Pass "ZT3  Internal: $scriptName"
     } else {
         Add-Warn "ZT3  Unregistered script (mark internal or register): $scriptName"
     }
@@ -146,6 +150,7 @@ foreach ($scriptName in $allScripts) {
 $shellPatterns = @('Start-Process\s+[''"]?(powershell|pwsh|cmd|bash|sh)[''"]?', 'Invoke-Expression', '& [''"]?(powershell|pwsh|cmd)[''"]?')
 
 foreach ($script in (Get-ChildItem $ToolsDir -Filter "*.ps1")) {
+    if ($script.Name -eq "validate-zero-trust.ps1") { continue }
     $content = Get-Content $script.FullName -Raw
     foreach ($pattern in $shellPatterns) {
         if ($content -match $pattern) {

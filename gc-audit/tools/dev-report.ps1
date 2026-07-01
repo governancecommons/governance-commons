@@ -1,4 +1,4 @@
-# dev-report.ps1 — Portfolio Planning Status Report
+# dev-report.ps1 - Portfolio Planning Status Report
 # Standard: GC:2008 / DEV-ACCORD.00
 
 param(
@@ -23,27 +23,39 @@ Usage:
   .\dev-report.ps1 -Output report.md    Write to file
 
 Output columns (gap table):
-  PROJECT   — folder name
-  STATUS    — from DEV-PLAN header (first 36 chars)
-  AL        — authority level
-  DONE/TOT  — work items done / total (from structured tables)
-  PCT       — % complete (— when no structured work items found)
-  PHASE     — current phase or active PASS/milestone
+  PROJECT   - folder name
+  STATUS    - from DEV-PLAN header (first 36 chars)
+  AL        - authority level
+  DONE/TOT  - work items done / total (from structured tables)
+  PCT       - % complete (- when no structured work items found)
+  PHASE     - current phase or active PASS/milestone
 
 Detail block fields:
-  Status     — header Status value
-  Authority  — AL:N
-  Phase      — active phase / milestone
-  Items      — done/total breakdown: active, blocked, planned
-  Next step  — highest-priority non-done work item
-  Next block — first unchecked admission criterion or explicit blocker
+  Status     - header Status value
+  Authority  - AL:N
+  Phase      - active phase / milestone
+  Items      - done/total breakdown: active, blocked, planned
+  Next step  - highest-priority non-done work item
+  Next block - first unchecked admission criterion or explicit blocker
 "@
     exit 0
 }
 
 $Root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
+$doneGlyph = [char]::ConvertFromUtf32(0x2705)
+$plannedGlyph = [char]::ConvertFromUtf32(0x2B1C)
+$activeGlyph = [char]::ConvertFromUtf32(0x1F535)
+$blockedGlyph = [char]::ConvertFromUtf32(0x1F534)
+$yellowGlyph = [char]::ConvertFromUtf32(0x1F7E1)
+$greenGlyph = [char]::ConvertFromUtf32(0x1F7E2)
+$statusGlyphPattern = [regex]::Escape($doneGlyph) + "|" +
+                      [regex]::Escape($plannedGlyph) + "|" +
+                      [regex]::Escape($activeGlyph) + "|" +
+                      [regex]::Escape($blockedGlyph) + "|" +
+                      [regex]::Escape($yellowGlyph) + "|" +
+                      [regex]::Escape($greenGlyph)
 
-# ─── Helpers ─────────────────────────────────────────────────────────────────
+# Helpers
 
 function Format-Md([string]$s) {
     ($s `
@@ -51,7 +63,7 @@ function Format-Md([string]$s) {
         -replace '\*\*([^*]+)\*\*', '$1' `
         -replace '\*([^*]+)\*', '$1' `
         -replace '`([^`]*)`', '$1' `
-        -replace '[✅⬜🔵⭕🔴🟡🟢]', '' `
+        -replace $statusGlyphPattern, '' `
         -replace '\s{2,}', ' '
     ).Trim()
 }
@@ -65,9 +77,9 @@ function Find-ColIdx([string[]]$headers, [string]$pattern) {
 
 function Get-RowStatus([string]$fullRow, [string[]]$cells, $statusIdx, $prioIdx) {
     # Priority 1: emoji in row
-    if ($fullRow -match '✅') { return 'done' }
-    if ($fullRow -match '⬜') { return 'planned' }
-    if ($fullRow -match '🔵') { return 'active' }
+    if ($fullRow.Contains($doneGlyph)) { return 'done' }
+    if ($fullRow.Contains($plannedGlyph)) { return 'planned' }
+    if ($fullRow.Contains($activeGlyph)) { return 'active' }
     # Priority 2: status column text
     if ($null -ne $statusIdx -and $statusIdx -lt $cells.Count) {
         $sv = $cells[$statusIdx].ToLower().Trim()
@@ -145,7 +157,7 @@ function Get-Phase([string]$content) {
     foreach ($pat in $checks) {
         if ($content -match $pat) { return Format-Md $Matches[1] }
     }
-    # Section-based fallback: only if first line under section is ≤ 60 chars (a phase name, not description prose)
+        # Section-based fallback: only if first line under section is <= 60 chars (a phase name, not description prose)
     if ($content -match '(?s)## (?:Current Phase|CURRENT PHASE)[^\n]*\n\n([^\n]{5,60})\n') {
         return Format-Md $Matches[1]
     }
@@ -209,7 +221,7 @@ function Get-Blockers([string]$releaseContent, [string]$planContent) {
     return $found | Select-Object -Unique -First 2
 }
 
-# ─── Per-project analysis ────────────────────────────────────────────────────
+# Per-project analysis
 
 function Get-ProjectData([string]$planPath) {
     $dir  = Split-Path $planPath -Parent
@@ -220,7 +232,7 @@ function Get-ProjectData([string]$planPath) {
         Name      = $name;  RelPath   = $rel
         Status    = '';     AL        = '';     Phase     = ''
         Done      = 0;      Active    = 0;      Blocked   = 0;     Planned   = 0;   Total = 0
-        Pct       = '—';    NextStep  = '';     NextBlock = ''
+        Pct       = '-';    NextStep  = '';     NextBlock = ''
     }
 
     $plan    = Get-Content $planPath -Raw -Encoding UTF8
@@ -268,7 +280,7 @@ function Get-ProjectData([string]$planPath) {
     return [pscustomobject]$p
 }
 
-# ─── Discovery ───────────────────────────────────────────────────────────────
+# Discovery
 
 $scanRoot = if ($Project) { Join-Path $Root $Project } else { $Root }
 if ($Project -and -not (Test-Path $scanRoot)) { Write-Error "Not found: $scanRoot"; exit 1 }
@@ -282,7 +294,7 @@ $planFiles = Get-ChildItem -Path $scanRoot -Recurse -File -Filter 'DEV-PLAN.md' 
 
 $projects = @($planFiles | ForEach-Object { Get-ProjectData $_.FullName })
 
-# ─── Render ──────────────────────────────────────────────────────────────────
+# Render
 
 $buf = [System.Collections.Generic.List[string]]::new()
 function L([string]$s = '') { $buf.Add($s) }
@@ -293,50 +305,50 @@ L '  Standard: GC:2008 / DEV-ACCORD.00'
 L "  $(Get-Date -Format 'yyyy-MM-dd HH:mm')  $Root"
 L ''
 
-# ── Gap analysis table ────────────────────────────────────────────────────────
+# Gap analysis table
 
 if (-not $DetailOnly) {
     $C1 = 30; $C2 = 24; $C3 = 7; $C4 = 9; $C5 = 6
 
     function Fit([string]$s, [int]$w) {
-        if ($s.Length -gt $w) { $s.Substring(0, $w - 1) + '…' } else { $s.PadRight($w) }
+        if ($s.Length -gt $w) { $s.Substring(0, $w - 3) + '...' } else { $s.PadRight($w) }
     }
 
     L ('  ' + 'PROJECT'.PadRight($C1) + 'STATUS'.PadRight($C2) + 'AL'.PadRight($C3) + 'DONE/TOT'.PadRight($C4) + 'PCT'.PadRight($C5) + '  PHASE')
-    L ('  ' + ('─' * ($C1 + $C2 + $C3 + $C4 + $C5 + 14)))
+    L ('  ' + ('-' * ($C1 + $C2 + $C3 + $C4 + $C5 + 14)))
 
     foreach ($p in $projects) {
         $n  = Fit $p.Name $C1
-        $sv = if ($p.Status) { $p.Status } else { '—' };         $s  = Fit $sv $C2
-        $av = if ($p.AL)     { $p.AL     } else { '—' };         $al = Fit $av $C3
-        $dv = if ($p.Total -gt 0) { "$($p.Done)/$($p.Total)" } else { '—' }; $dt = Fit $dv $C4
+        $sv = if ($p.Status) { $p.Status } else { '-' };         $s  = Fit $sv $C2
+        $av = if ($p.AL)     { $p.AL     } else { '-' };         $al = Fit $av $C3
+        $dv = if ($p.Total -gt 0) { "$($p.Done)/$($p.Total)" } else { '-' }; $dt = Fit $dv $C4
         L ('  ' + $n + $s + $al + $dt + $p.Pct.PadRight($C5) + '  ' + $p.Phase)
     }
 
     $tDone  = ($projects | ForEach-Object { [int]$_.Done    } | Measure-Object -Sum).Sum
     $tTotal = ($projects | ForEach-Object { [int]$_.Total   } | Measure-Object -Sum).Sum
     $tBlk   = ($projects | ForEach-Object { [int]$_.Blocked } | Measure-Object -Sum).Sum
-    $tPct   = if ($tTotal -gt 0) { "$([int](($tDone / $tTotal) * 100))%" } else { '—' }
+    $tPct   = if ($tTotal -gt 0) { "$([int](($tDone / $tTotal) * 100))%" } else { '-' }
 
-    L ('  ' + ('─' * ($C1 + $C2 + $C3 + $C4 + $C5 + 14)))
-    L ("  $($projects.Count) projects │ $tDone/$tTotal structured items ($tPct) │ $tBlk blocked")
+    L ('  ' + ('-' * ($C1 + $C2 + $C3 + $C4 + $C5 + 14)))
+    L ("  $($projects.Count) projects | $tDone/$tTotal structured items ($tPct) | $tBlk blocked")
     L ''
 }
 
-# ── Per-project detail ────────────────────────────────────────────────────────
+# Per-project detail
 
 if (-not $GapOnly) {
-    L '  ── PROJECT DETAIL ──────────────────────────────────────────────'
+    L '  -- PROJECT DETAIL ----------------------------------------------'
     L ''
 
     foreach ($p in $projects) {
-        $bar = '─' * ([Math]::Max(2, 64 - $p.Name.Length))
-        L "  ── $($p.Name) $bar"
+        $bar = '-' * ([Math]::Max(2, 64 - $p.Name.Length))
+        L "  -- $($p.Name) $bar"
         if ($p.Status)   { L "     Status:     $($p.Status)" }
         if ($p.AL)       { L "     Authority:  $($p.AL)" }
         if ($p.Phase)    { L "     Phase:      $($p.Phase)" }
         if ($p.Total -gt 0) {
-            L "     Items:      $($p.Done)/$($p.Total) ($($p.Pct)) — $($p.Active) active  $($p.Blocked) blocked  $($p.Planned) planned"
+            L "     Items:      $($p.Done)/$($p.Total) ($($p.Pct)) - $($p.Active) active  $($p.Blocked) blocked  $($p.Planned) planned"
         }
         if ($p.NextStep)  { L "     Next step:  $($p.NextStep)" }
         if ($p.NextBlock) { L "     Next block: $($p.NextBlock)" }

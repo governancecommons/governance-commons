@@ -5,16 +5,16 @@
 .DESCRIPTION
     Runs health checks and commit analysis at increasing depth.
 
-    Level 1 — Quick health: run all validators, report pass/fail.
-    Level 2 — Recent-work review: adds dirty repos, commit log, changed files.
-    Level 3 — Adversarial audit: adds TODO/TBD scan, planning doc staleness.
-    Level 4 — Release readiness: adds PASS gate and DEV-RELEASE pending checks.
+    Level 1 - Quick health: run all validators, report pass/fail.
+    Level 2 - Recent-work review: adds dirty repos, commit log, changed files.
+    Level 3 - Adversarial audit: adds TODO/TBD scan, planning doc staleness.
+    Level 4 - Release readiness: adds PASS gate and DEV-RELEASE pending checks.
 
 .PARAMETER Hours
     How far back to look for recent work (default 24).
 
 .PARAMETER Level
-    Diagnostic depth 1–4 (default 1).
+    Diagnostic depth 1-4 (default 1).
 
 .PARAMETER TargetPath
     Portfolio root (default current directory).
@@ -35,18 +35,29 @@ $toolRoot = $PSScriptRoot
 $since    = (Get-Date).AddHours(-$Hours)
 $sinceStr = $since.ToString("yyyy-MM-dd HH:mm:ss")
 $exitFail = $false
+$powerShellHost = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+$isWindowsHost = ($env:OS -eq "Windows_NT")
 
 $levelNames = @{ 1="Quick Health"; 2="Recent-Work Review"; 3="Adversarial Audit"; 4="Release Readiness" }
 
 function Write-Header([string]$text) {
     Write-Host ""
-    Write-Host "── $text" -ForegroundColor Cyan
+    Write-Host "-- $text" -ForegroundColor Cyan
 }
 function Write-Pass([string]$msg)  { Write-Host "  PASS  $msg" -ForegroundColor Green }
 function Write-Fail([string]$msg)  { Write-Host "  FAIL  $msg" -ForegroundColor Red; $script:exitFail = $true }
 function Write-Warn([string]$msg)  { Write-Host "  WARN  $msg" -ForegroundColor Yellow }
 function Write-Info([string]$msg)  { Write-Host "  INFO  $msg" -ForegroundColor DarkGray }
 function Write-Find([string]$msg)  { Write-Host "  FIND  $msg" -ForegroundColor Magenta }
+
+function Invoke-ReadOnlyValidator([string]$ScriptPath, [string]$TargetRoot) {
+    $args = @("-NoProfile")
+    if ($isWindowsHost) {
+        $args += @("-ExecutionPolicy", "Bypass")
+    }
+    $args += @("-File", $ScriptPath, "-TargetPath", $TargetRoot)
+    return & $powerShellHost @args 2>&1
+}
 
 function Get-GitRoots {
     $roots = @()
@@ -57,19 +68,17 @@ function Get-GitRoots {
     return $roots | Select-Object -Unique
 }
 
-# ── header ────────────────────────────────────────────────────────────────────
+# header
 
 Write-Host ""
-Write-Host ("validate-recent-work  |  Level {0} – {1}  |  window: last {2} h  |  since: {3}" -f `
+Write-Host ("validate-recent-work  |  Level {0} - {1}  |  window: last {2} h  |  since: {3}" -f `
     $Level, $levelNames[$Level], $Hours, $sinceStr) -ForegroundColor White
 Write-Host "portfolio root: $root" -ForegroundColor DarkGray
-Write-Host "─────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host "-------------------------------------------------------------" -ForegroundColor DarkGray
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# LEVEL 1 — VALIDATOR HEALTH
-# ═══════════════════════════════════════════════════════════════════════════════
+# LEVEL 1 - VALIDATOR HEALTH
 
-Write-Header "Level 1 — Validator Health"
+Write-Header "Level 1 - Validator Health"
 
 $validators = @(
     [PSCustomObject]@{ Name="bootstrap (DEV-ACCORD.04)";      Script="validate-bootstrap.ps1";      PortfolioOnly=$false }
@@ -79,20 +88,32 @@ $validators = @(
     [PSCustomObject]@{ Name="debt registry";                  Script="validate-debt.ps1";           PortfolioOnly=$false }
     [PSCustomObject]@{ Name="git split authorization";         Script="validate-git-split.ps1";      PortfolioOnly=$false }
     [PSCustomObject]@{ Name="CI invariant uniqueness";         Script="validate-ci-invariants.ps1";  PortfolioOnly=$false }
-    [PSCustomObject]@{ Name="script format (parse-only)";      Script="validate-format.ps1";         PortfolioOnly=$false }
+    [PSCustomObject]@{ Name="script format providers";          Script="validate-format.ps1";         PortfolioOnly=$false }
+    [PSCustomObject]@{ Name="DEV-PLAYBOOK records";             Script="validate-playbook.ps1";       PortfolioOnly=$false; RequiresFile="PLAY.jsonl" }
 )
 
 foreach ($v in $validators) {
     if ($v.PortfolioOnly -and -not (Test-Path (Join-Path $root "projects.yaml"))) {
-        Write-Info "$($v.Name) — portfolio-only, skipped for project target"
+        Write-Info "$($v.Name) - portfolio-only, skipped for project target"
+        continue
+    }
+    if ($v.PSObject.Properties.Match("RequiresFile").Count -gt 0 -and $v.RequiresFile) {
+        $requiredPath = Join-Path $root $v.RequiresFile
+        if (-not (Test-Path -LiteralPath $requiredPath)) {
+            Write-Info "$($v.Name) - $($v.RequiresFile) not found, skipped"
+            continue
+        }
+    }
+    if (-not (Test-Path -LiteralPath $root)) {
+        Write-Fail "target path not found: $root"
         continue
     }
     $scriptPath = Join-Path $toolRoot $v.Script
     if (-not (Test-Path $scriptPath)) {
-        Write-Info "$($v.Name) — script not found, skipped"
+        Write-Info "$($v.Name) - script not found, skipped"
         continue
     }
-    $out = & pwsh -NoProfile -File $scriptPath -TargetPath $root 2>&1
+    $out = Invoke-ReadOnlyValidator -ScriptPath $scriptPath -TargetRoot $root
     if ($LASTEXITCODE -eq 0) {
         Write-Pass $v.Name
     } else {
@@ -103,12 +124,10 @@ foreach ($v in $validators) {
     }
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# LEVEL 2 — RECENT-WORK REVIEW
-# ═══════════════════════════════════════════════════════════════════════════════
+# LEVEL 2 - RECENT-WORK REVIEW
 
 if ($Level -ge 2) {
-    Write-Header "Level 2 — Recent-Work Review (last $Hours h)"
+    Write-Header "Level 2 - Recent-Work Review (last $Hours h)"
 
     $gitRoots      = Get-GitRoots
     $dirtyRepos    = @()
@@ -151,16 +170,14 @@ if ($Level -ge 2) {
     if ($changedFiles.Count -gt 0 -and -not $Summary) {
         Write-Info "$($changedFiles.Count) file(s) in diff window:"
         $changedFiles | Select-Object -First 30 | ForEach-Object { Write-Host "        $_" -ForegroundColor DarkGray }
-        if ($changedFiles.Count -gt 30) { Write-Info "  … and $($changedFiles.Count - 30) more" }
+        if ($changedFiles.Count -gt 30) { Write-Info "  ... and $($changedFiles.Count - 30) more" }
     }
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# LEVEL 3 — ADVERSARIAL AUDIT
-# ═══════════════════════════════════════════════════════════════════════════════
+# LEVEL 3 - ADVERSARIAL AUDIT
 
 if ($Level -ge 3) {
-    Write-Header "Level 3 — Adversarial Audit (last $Hours h)"
+    Write-Header "Level 3 - Adversarial Audit (last $Hours h)"
 
     # 3a. Open markers in recently-touched markdown
     $openPattern = "TODO|FIXME|TBD|\[ \]|PLACEHOLDER|STUB"
@@ -210,7 +227,7 @@ if ($Level -ge 3) {
         Where-Object { $_.FullName -notmatch '\\\.git\\|\\node_modules\\' }
 
     if ($playFiles.Count -eq 0) {
-        Write-Warn "no PLAY.jsonl found under $root — PLAY preflight coverage unknown"
+        Write-Warn "no PLAY.jsonl found under $root - PLAY preflight coverage unknown"
     } else {
         $playTotal   = 0
         $playFail    = 0
@@ -258,7 +275,7 @@ if ($Level -ge 3) {
 
                 # DEV-DOCS deferred is a warning
                 if ($play.dev_docs_check -and $play.dev_docs_check.status -eq "deferred") {
-                    Write-Warn "PLAY has deferred DEV-DOCS check: $id — $($play.dev_docs_check.note)"
+                    Write-Warn "PLAY has deferred DEV-DOCS check: $id - $($play.dev_docs_check.note)"
                 }
             }
         }
@@ -273,12 +290,10 @@ if ($Level -ge 3) {
     }
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# LEVEL 4 — RELEASE READINESS
-# ═══════════════════════════════════════════════════════════════════════════════
+# LEVEL 4 - RELEASE READINESS
 
 if ($Level -ge 4) {
-    Write-Header "Level 4 — Release Readiness"
+    Write-Header "Level 4 - Release Readiness"
 
     # 4a. DEV-RELEASE.md pending items
     $releaseDocs = Get-ChildItem $root -Recurse -Filter "DEV-RELEASE.md" -ErrorAction SilentlyContinue |
@@ -323,14 +338,14 @@ if ($Level -ge 4) {
     }
 }
 
-# ── footer ────────────────────────────────────────────────────────────────────
+# footer
 
 Write-Host ""
-Write-Host "─────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+Write-Host "-------------------------------------------------------------" -ForegroundColor DarkGray
 if ($exitFail) {
-    Write-Host "Result: FAIL — one or more checks did not pass at Level $Level." -ForegroundColor Red
+    Write-Host "Result: FAIL - one or more checks did not pass at Level $Level." -ForegroundColor Red
     exit 1
 } else {
-    Write-Host "Result: PASS — all checks clean at Level $Level (last $Hours h)." -ForegroundColor Green
+    Write-Host "Result: PASS - all checks clean at Level $Level (last $Hours h)." -ForegroundColor Green
     exit 0
 }

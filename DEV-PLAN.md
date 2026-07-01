@@ -30,7 +30,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 **Recently completed:**
 
-- DEV-PLAYBOOK amendment (2026-07-01, DEV-ACCORD.06): PLAY.jsonl schema locked (status, declared_at, time_loc, authorized_by, authorization_note, scope, touches, 5 timing categories, dev_docs_check, commit_ref, preflight); CI-30 through CI-32 declared; `validate-playbook.ps1` and `validate-format.ps1` registered in GC-AUDIT-REGISTRY.yaml and wired into `validate-recent-work.ps1` Level 1; `gc-audit/PLAY-OBLIGATIONS.md` updated to point to the amendment as schema authority.
+- DEV-PLAYBOOK amendment (2026-07-01, DEV-ACCORD.06): PLAY.jsonl schema locked (status, declared_at, time_loc, authorized_by, authorization_note, scope, touches, 5 timing categories, dev_docs_check, commit_ref, preflight); CI-30 through CI-32 declared; `validate-playbook.ps1` and provider-based `validate-format.ps1` registered in GC-AUDIT-REGISTRY.yaml and wired into `validate-recent-work.ps1` Level 1; Level 1 runs playbook validation when PLAY.jsonl exists and skips cleanly when absent; `gc-audit/PLAY-OBLIGATIONS.md` updated to point to the amendment as schema authority.
 - OSS core baseline freeze decision recorded (2026-06-09): PASS-5 Batch 2 is the frozen open-source baseline for the first public GC release; no new baseline scope before release close-out; PASS-6 owns optional category-defining profiles and commercial-capability paths; forking deferred.
 - PASS-4 gate review passed (2026-06-08, GC-PASS-0015.00): all 7 exit criteria met; PASS-5 open. EU AI Act coverage satisfied via `control_frameworks` reference in `schemas/gc-compliance-evidence.schema.json`.
 - GC-3-E-03 closed (2026-06-08): `governance/iso-42001-mapping.yaml` v1.0.0 — ISO/IEC 42001:2023 AIMS full mapping; Sections 4–10 + Annex A controls A.2–A.10; coverage levels (full/partial/planned/out_of_scope); all GC artifacts cross-referenced per clause
@@ -737,7 +737,7 @@ Work registered but deferred past the active batch. Items are promoted to "Immed
 | ~~GC-2-C-02~~ | ~~TypeScript reference implementation for ONS~~ | Charlie | PASS-3 | VS Code extension | ✅ Done |
 | ~~GC-2-E-01~~ | ~~governance-commons-py: scaffold + PyPI publish infra~~ | Echo | PASS-3 | PyPI publish | ✅ Done |
 | ~~GC-2-E-02~~ | ~~governance-commons-js: scaffold + npm publish infra~~ | Echo | PASS-3 | npm publish | ✅ Done |
-| GC-AUDIT-PLAY-01 | GC-AUDIT Change Playbook / DEV-DOCS audit — decide whether `PLAY` becomes a formal pre-work declaration mapped to BUNT/RUN/DRIVE/PASS, and add validation that every play ends with local DEV-DOCS update or explicit exemption | GC-AUDIT | DEV-ACCORD.06 | agent session compliance | O |
+| GC-AUDIT-PLAY-01 | GC-AUDIT Change Playbook / DEV-DOCS audit — PLAY formalized as pre-work declaration mapped to BUNT/RUN/DRIVE/PASS; schema validator and conditional Level 1 hook active; broader close enforcement for commit/comment/push and per-level test assignment remains open | GC-AUDIT | DEV-ACCORD.06 | agent session compliance | O |
 
 ---
 
