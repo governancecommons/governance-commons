@@ -76,15 +76,32 @@ GC-AUDIT implementations must use REVIEW-GRAMMAR verb names. REVIEW-GRAMMAR.md m
 
 ### Existing validators declared as GC-AUDIT implementations
 
+The machine-readable GC-AUDIT registry lives at:
+
+```text
+governance-commons/gc-audit/GC-AUDIT-REGISTRY.yaml
+```
+
+Cockpit, Marlin, DCP, and agent tooling must use that registry to discover
+available audit/status/repair/planning operations. A command surface may present
+friendly menus, but it must not invent unregistered operations or execute scripts
+outside the allowlisted registry.
+
+Authoritative implementations live under `governance-commons/gc-audit/tools/`.
+Portfolio-root `.ps1` files are compatibility adapters only and must delegate to
+the authoritative GC-AUDIT tools.
+
 The following scripts are hereby declared GC-AUDIT implementations:
 
 | Script | GC-AUDIT operation |
 | --- | --- |
-| `validate-planning.ps1` | validate DEV-DOCS conformance (DEV-ACCORD.00 rules) |
-| `validate-bootstrap.ps1` | validate agent bootstrap conformance (DEV-ACCORD.04 rules) |
-| `validate-pointers.ps1` | registry audit — projects.yaml pointer truth |
-| `validate-debt.ps1` | validate open debt markers (TODO/FIXME/TBD) |
-| de-stale (future) | detect and remove stale references portfolio-wide |
+| `governance-commons/gc-audit/tools/validate-planning.ps1` | validate DEV-DOCS conformance (DEV-ACCORD.00 rules) |
+| `governance-commons/gc-audit/tools/validate-bootstrap.ps1` | validate agent bootstrap conformance (DEV-ACCORD.04 rules) |
+| `governance-commons/gc-audit/tools/validate-pointers.ps1` | registry audit — projects.yaml pointer truth |
+| `governance-commons/gc-audit/tools/validate-review-grammar.ps1` | validate REVIEW-GRAMMAR adoption |
+| `governance-commons/gc-audit/tools/validate-debt.ps1` | validate open debt markers (TODO/FIXME/TBD) |
+| `governance-commons/gc-audit/tools/validate-recent-work.ps1` | adversarial audit, release readiness, and de-stale detection |
+| `governance-commons/gc-audit/tools/dev-report.ps1` | meta-audit planning report |
 
 These scripts are GC-AUDIT. They are not Marlin features.
 
@@ -107,6 +124,7 @@ marlin audit de-stale
 ```
 
 A GC-AUDIT invocation that reimplements validator logic instead of calling the declared GC-AUDIT scripts is a violation of this standard.
+An invocation that executes a script not listed in the GC-AUDIT registry is also non-conformant.
 
 ---
 
@@ -191,6 +209,7 @@ marlin install niji
 ```
 
 The `marlin audit <verb>` surface is a thin delegation layer only. All logic executes inside GC-AUDIT scripts. Marlin must not duplicate validator implementations.
+Marlin audit runners must fail closed when a verb is registered without an active allowlisted implementation.
 
 ---
 
@@ -217,6 +236,7 @@ All GC-AUDIT operation names derive from REVIEW-GRAMMAR.md. No GC-AUDIT implemen
 - Four-term vocabulary table established: DEV-DOCS / DEV-ACCORD / GC-AUDIT / Marlin
 - REVIEW-GRAMMAR.md promoted to GC standard component; declared canonical verb registry for GC-AUDIT
 - Existing validators (validate-planning, validate-bootstrap, validate-pointers, validate-debt) declared as GC-AUDIT implementations
+- GC-AUDIT registry path declared: `governance-commons/gc-audit/GC-AUDIT-REGISTRY.yaml`
 - GC-AUDIT invocation interface specified: `dcp audit <verb>`
 - DEV-DOCS maintenance gate declared with commit trailer format and enforcement layers
 - Stale reference rule declared with de-stale triggers and detection scope
@@ -230,6 +250,7 @@ All GC-AUDIT operation names derive from REVIEW-GRAMMAR.md. No GC-AUDIT implemen
 - DEV-DOCS is now the required term for the planning doc suite. Informal references must migrate over time.
 - GC-AUDIT is the required term for the validation/audit toolchain. No other tool or agent may claim ownership of audit logic.
 - Marlin may not reimplement GC-AUDIT operations.
+- Marlin and Cockpit must discover GC-AUDIT menu/actions from the GC-AUDIT registry and fail closed for unimplemented verbs.
 - Commits with meaningful changes require the `Dev-Docs:` trailer — enforced at pre-push.
 - REVIEW-GRAMMAR verb names are the standard for all GC-AUDIT implementations.
 

@@ -1,0 +1,189 @@
+schema: gc-audit.registry.v1
+authority: DEV-ACCORD.05
+updated: "2026-07-01"
+description: >
+  Central registry for GC-AUDIT operations. Cockpit, Marlin, DCP, and agents
+  should discover audit/status/repair/planning tools here instead of inventing
+  command surfaces or duplicating validator logic.
+
+security:
+  execution_model: allowlist
+  shell: forbidden
+  path_policy: scripts must resolve under the portfolio root
+  mutation_policy: mutating tools must support preview or require explicit apply
+  owner: GC-AUDIT
+
+categories:
+  repo-status:
+    label: Repo Status
+    description: Dashboards and reports that explain current repo/portfolio state.
+  repo-health:
+    label: Repo Health
+    description: Validation checks that return pass/fail findings.
+  repo-repair:
+    label: Repo Repair
+    description: Normalizers that fix drift; default callers should dry-run first.
+  repo-audit:
+    label: Repo Audit
+    description: Review, adversarial, meta, registry, trace, and de-stale operations.
+  repo-planning:
+    label: Repo Planning
+    description: DEV-DOCS and registry planning surfaces.
+  setup-sync:
+    label: Setup / Sync
+    description: DCP setup and distribution synchronization.
+  evidence-trace:
+    label: Evidence / Trace
+    description: Evidence bundle generation and verification surfaces.
+  standards-grammar:
+    label: Standards / Grammar
+    description: DEV-ACCORD, REVIEW-GRAMMAR, and GC-AUDIT authority docs.
+
+tools:
+  - id: gc-audit.validate
+    verb: validate
+    category: repo-health
+    status: active
+    title: Validate governance health
+    description: Run active GC-AUDIT validators against a repo or portfolio root.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-bootstrap.ps1
+        projectArg: Project
+      - script: governance-commons/gc-audit/tools/validate-planning.ps1
+        projectArg: Project
+      - script: governance-commons/gc-audit/tools/validate-review-grammar.ps1
+        targetArg: TargetPath
+      - script: governance-commons/gc-audit/tools/validate-debt.ps1
+        targetArg: TargetPath
+      - script: governance-commons/gc-audit/tools/validate-pointers.ps1
+        targetArg: TargetPath
+        portfolioOnly: true
+
+  - id: gc-audit.normalize
+    verb: normalize
+    category: repo-repair
+    status: active
+    title: Normalize known drift
+    description: Run safe normalizers. Marlin callers must dry-run unless --apply is explicit.
+    mutates: true
+    requiresExplicitApply: true
+    steps:
+      - script: governance-commons/gc-audit/tools/normalize-bootstrap.ps1
+        targetArg: TargetPath
+        supportsDryRun: true
+      - script: governance-commons/gc-audit/tools/normalize-planning.ps1
+        targetArg: TargetPath
+        supportsDryRun: true
+      - script: governance-commons/gc-audit/tools/normalize-pointers.ps1
+        targetArg: TargetPath
+        supportsDryRun: true
+        portfolioOnly: true
+
+  - id: gc-audit.registry
+    verb: registry
+    category: repo-audit
+    status: active
+    title: Audit registry pointers
+    description: Validate projects.yaml and planning pointer truth.
+    mutates: false
+    portfolioOnly: true
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-pointers.ps1
+        targetArg: TargetPath
+
+  - id: gc-audit.adversarial
+    verb: adversarial
+    category: repo-audit
+    status: active
+    title: Adversarial recent-work audit
+    description: Run Level 3 recent-work diagnostic to find stale planning, open markers, and drift.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-recent-work.ps1
+        targetArg: TargetPath
+        fixedArgs: ["-Level", "3"]
+        supportsHours: true
+        supportsSummary: true
+
+  - id: gc-audit.meta
+    verb: meta
+    category: repo-audit
+    status: active
+    title: Meta-audit planning report
+    description: Review portfolio/project planning gap tables and tracker health.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/dev-report.ps1
+        projectArg: Project
+
+  - id: gc-audit.destale
+    verb: destale
+    category: repo-audit
+    status: active
+    title: Detect stale references
+    description: Detect stale planning/docs references with Level 3 diagnostics. Removal still requires a scoped repair pass.
+    mutates: false
+    mode: detect-only
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-recent-work.ps1
+        targetArg: TargetPath
+        fixedArgs: ["-Level", "3"]
+        supportsHours: true
+        supportsSummary: true
+
+  - id: gc-audit.release
+    verb: release
+    category: repo-health
+    status: active
+    title: Release readiness
+    description: Run Level 4 diagnostics for release gates and open PASS checks.
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-recent-work.ps1
+        targetArg: TargetPath
+        fixedArgs: ["-Level", "4"]
+        supportsHours: true
+        supportsSummary: true
+
+  - id: gc-audit.verify
+    verb: verify
+    category: repo-audit
+    status: planned
+    title: Verify implementation contracts
+    description: Planned GC-AUDIT operation; no active allowlisted implementation is registered yet.
+    mutates: false
+    steps: []
+
+  - id: gc-audit.trace
+    verb: trace
+    category: evidence-trace
+    status: planned
+    title: Trace claim lineage
+    description: Planned GC-AUDIT operation; no active allowlisted implementation is registered yet.
+    mutates: false
+    steps: []
+
+  - id: gc-audit.authority
+    verb: authority
+    category: standards-grammar
+    status: planned
+    title: Authority audit
+    description: Planned GC-AUDIT operation; no active allowlisted implementation is registered yet.
+    mutates: false
+    steps: []
+
+  - id: gc-audit.close
+    verb: close
+    category: repo-repair
+    status: planned
+    title: Close the loop
+    description: Planned GC-AUDIT operation; intentionally fail-closed until a safe repair workflow is registered.
+    mutates: true
+    requiresExplicitApply: true
+    steps: []
+
+docs:
+  review_grammar: docs/REVIEW-GRAMMAR.md
+  dev_accord: governance-commons/passes/dev-accord/
+  script_reference: SCRIPTS.md
