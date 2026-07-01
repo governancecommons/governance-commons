@@ -11,6 +11,12 @@ The current registry is:
 GC-AUDIT-REGISTRY.yaml
 ```
 
+The current gap analysis is:
+
+```text
+GC-AUDIT-GAP-ANALYSIS.md
+```
+
 Authoritative GC-AUDIT scripts live under:
 
 ```text
