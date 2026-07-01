@@ -370,3 +370,8 @@ is `GC-AUDIT-PLAY-01` in `DEV-PLAN.md`.
 Follow-up: user approved the direction that agents propose/declare the play,
 users authorize ambiguity or escalation, and every play ends with a DEV-DOCS
 check.
+
+Follow-up: user approved repo-root append-only `PLAY.jsonl` as the PLAY record
+home; `read_ms`, `plan_ms`, `execute_ms`, `verify_ms`, and `close_ms` as the
+five timing fields; environment-level `time_loc`; and `authorized_by` plus
+`authorization_note` for authorization tracking.
