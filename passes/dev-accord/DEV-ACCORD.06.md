@@ -186,6 +186,16 @@ Pass-ID: DEV-ACCORD.06
 The pre-commit hook must not block on uncertainty. When it cannot determine
 whether a file triggers DRIVE obligations, it warns and defers to the agent.
 
+### Git topology boundary
+
+This playbook governs change level, DEV-DOCS obligations, validation, evidence,
+and commit trailers. It does not authorize agents to create branches, PR chains,
+worktrees, forks, or alternate publish paths.
+
+DEV-ACCORD.10 governs git split authorization. A DRIVE or PASS-level change may
+justify recommending a split, but it does not permit performing one without
+explicit human approval.
+
 ---
 
 ## Cluster Invariants

@@ -30,8 +30,9 @@ Before taking any action on any project:
 3. `docs/REVIEW-GRAMMAR.md` — command vocabulary: normalize, validate, verify, trace, adversarial audit, meta-audit, close-the-loop, de-stale
 4. `governance-commons/passes/dev-accord/DEV-ACCORD.02.md` — execution model: PASS, RUN, Evidence Bundle
 5. `governance-commons/passes/dev-accord/DEV-ACCORD.06.md` — Change Playbook: BUNT/RUN/DRIVE/PASS classes, DEV-DOCS obligations, commit trailers
-6. `projects.yaml` — project registry and canonical plan pointers
-7. The specific project's `DEV-PATH.md` and `DEV-PLAN.md`
+6. `governance-commons/passes/dev-accord/DEV-ACCORD.10.md` — Git split authorization: no new branch, PR chain, worktree, or fork without explicit human approval
+7. `projects.yaml` — project registry and canonical plan pointers
+8. The specific project's `DEV-PATH.md` and `DEV-PLAN.md`
 
 **Read when coordinating with other agents:**
 `governance-commons/agent-matrix/agent-matrix.yaml` — agent roles, capabilities, routing, trust levels. Only needed when more than one agent is working on the same project in the same session.
@@ -57,6 +58,7 @@ Expanded to the full reading sequence:
 | Vocabulary | `docs/REVIEW-GRAMMAR.md` | Working command language for the session |
 | Execution model | `DEV-ACCORD.02.md` | PASS, RUN, and Evidence Bundle definitions |
 | Change Playbook | `DEV-ACCORD.06.md` | BUNT/RUN/DRIVE/PASS change classes, escalation rules, commit trailers |
+| Git split rule | `DEV-ACCORD.10.md` | Current-branch publish default; branches/PR chains/worktrees/forks require human authorization |
 | Registry | `projects.yaml` | Project index and canonical plan pointers |
 | Local context | `DEV-PATH.md` + `DEV-PLAN.md` | Project-specific decisions, current phase, active work |
 

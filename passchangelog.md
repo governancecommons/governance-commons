@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0017.00 — 2026-07-01
+
+**pass_id**: GC-PASS-0017.00
+**timestamp**: 2026-07-01T16:44:58Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD cluster; all GC-conformant agents; git publish workflows; DEV-ACCORD.03 reading order; DEV-ACCORD.06 Change Playbook
+
+**what**: DEV-ACCORD.10 (GC:2018) — Git Split Authorization Rule. Declares that agents must not create a new branch, PR chain, worktree, fork, draft PR, or equivalent git topology split without explicit human authorization. Establishes current-branch publish as the default for "commit", "push", "ship it", "close the loop", and equivalent requests. Defines when agents should recommend a split, what they must disclose before asking, and the dirty worktree obligation: inventory and classify existing changes rather than escaping them by branch creation. Adds DEV-ACCORD-CI-25 through DEV-ACCORD-CI-28.
+**why**: An agent converted a user request to commit and push Cockpit work into a new `codex/...` branch and draft PR without asking, despite the portfolio owner's preference to stay on `origin/main` unless a split is explicitly authorized. Generic GitHub plugin habits and branch-first workflows are not sufficient authority to change a repo's publish topology.
+**new_constraints**: (1) Git splits require explicit human authorization. (2) Current-branch publish is the default when the user asks to commit or push. (3) Agents may recommend a split only after explaining why, naming the proposed shape, and explaining what happens without it. (4) Dirty worktrees must be inventoried and understood; branch creation must not be used to avoid scope analysis.
+**reasoning**: Branches, PRs, forks, and worktrees are topology changes, not neutral implementation details. They alter review flow, history shape, and user expectations. The correct default depends on the owner's workflow, not on an agent or plugin's preferred habit. Requiring explicit authorization preserves agent ability to recommend safer split workflows while keeping the human in control of when the repo leaves the current-branch path.
+
+---
+
 ## GC-PASS-0016.00 — 2026-06-30
 
 **pass_id**: GC-PASS-0016.00
