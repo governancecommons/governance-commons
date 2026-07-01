@@ -19,6 +19,17 @@ across three registry profiles:
 The profile belongs to GC-AUDIT. DCP, Cockpit, Marlin, and agents may call the
 tools, but they must not duplicate registry validation logic.
 
+## Zero-Trust Alignment
+
+Registry validation is validate-only by default and fails closed:
+
+- runnable validation scripts are GC-AUDIT allowlist entries
+- registry paths must be local relative paths inside the portfolio root
+- external registry paths must be local relative paths inside the portfolio root
+- network registry fetches and absolute registry paths are forbidden
+- `dxp` remains blocked until package/tool schema authority is declared
+- normalization apply, schema authority changes, and git branch/remote splits require explicit human authorization
+
 ## Active Validator
 
 ```powershell

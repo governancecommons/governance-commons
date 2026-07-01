@@ -89,6 +89,15 @@ tools:
     title: Audit registry profiles
     description: Validate GC, DCP, and DXP registry profiles through GC-AUDIT.
     mutates: false
+    zeroTrust:
+      failClosed: true
+      networkRegistryFetch: forbidden
+      pathContainment: portfolio-root-for-registry-paths
+      schemaInference: forbidden
+      explicitAuthorizationRequired:
+        - normalization-apply
+        - schema-authority-change
+        - git-branch-or-remote-split
     steps:
       - script: governance-commons/gc-audit/tools/validate-registry.ps1
         targetArg: TargetPath

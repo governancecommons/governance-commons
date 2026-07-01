@@ -37,6 +37,7 @@ if ($Help) {
 }
 
 $Root = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
+$PortfolioRoot = Split-Path -Parent $Root
 $Errors = 0
 $Warnings = 0
 
@@ -60,6 +61,35 @@ function Write-Finding([string]$level, [string]$path, [string]$message) {
 function Get-TextOrEmpty([string]$path) {
     if (-not (Test-Path $path)) { return "" }
     return Get-Content -Raw -Encoding UTF8 $path
+}
+
+function Resolve-RelativePathWithin([string]$basePath, [string]$candidate, [string]$containmentRoot, [string]$label) {
+    if ([string]::IsNullOrWhiteSpace($candidate)) {
+        Write-Finding "ERROR" "." "$label path is empty"
+        return $null
+    }
+    if ($candidate -match "^[A-Za-z][A-Za-z0-9+.-]*://") {
+        Write-Finding "ERROR" $candidate "$label must be a local relative path; network registry resolution is not allowed"
+        return $null
+    }
+    if ([System.IO.Path]::IsPathRooted($candidate)) {
+        Write-Finding "ERROR" $candidate "$label must be relative, not absolute"
+        return $null
+    }
+
+    $resolved = [System.IO.Path]::GetFullPath((Join-Path $basePath $candidate))
+    $contained = [System.IO.Path]::GetFullPath($containmentRoot)
+    $separator = [System.IO.Path]::DirectorySeparatorChar
+    $containedPrefix = $contained
+    if (-not $containedPrefix.EndsWith($separator)) {
+        $containedPrefix = $containedPrefix + $separator
+    }
+
+    if (($resolved -ne $contained) -and (-not $resolved.StartsWith($containedPrefix, [System.StringComparison]::OrdinalIgnoreCase))) {
+        Write-Finding "ERROR" $candidate "$label escapes allowed root '$contained'"
+        return $null
+    }
+    return $resolved
 }
 
 function Get-YamlScalar([string]$text, [string]$key) {
@@ -97,7 +127,8 @@ function Extract-DependsIds([string]$dependsHeader) {
 }
 
 function Validate-DcpRegistry {
-    $scriptPath = Join-Path $PSScriptRoot "validate-pointers.ps1"
+    $scriptPath = Resolve-RelativePathWithin $PSScriptRoot "validate-pointers.ps1" $PSScriptRoot "delegated validator"
+    if (-not $scriptPath) { return }
     if (-not (Test-Path $scriptPath)) {
         Write-Finding "ERROR" $scriptPath "validate-pointers.ps1 not found"
         return
@@ -167,7 +198,8 @@ function Validate-GcRegistry {
             Write-Finding "ERROR" $registryPath "entry '$($entry.id)' uses unknown layer '$($entry.layer)'"
         }
         if ($entry.path) {
-            $entryPath = Join-Path $Root $entry.path
+            $entryPath = Resolve-RelativePathWithin $Root $entry.path $PortfolioRoot "registry entry path for $($entry.id)"
+            if (-not $entryPath) { continue }
             if (-not (Test-Path $entryPath)) {
                 Write-Finding "ERROR" $entry.path "registry path for $($entry.id) does not resolve"
             }
@@ -260,7 +292,8 @@ function Resolve-ExternalDependency($registry, [string]$dependencyId) {
         Write-Finding "ERROR" "passes/passes.registry.json" "no external registry configured for dependency '$dependencyId'"
         return
     }
-    $externalPath = Join-Path $Root $external.registry_url
+    $externalPath = Resolve-RelativePathWithin $Root $external.registry_url $PortfolioRoot "external registry for '$namespace'"
+    if (-not $externalPath) { return }
     if (-not (Test-Path $externalPath)) {
         Write-Finding "ERROR" $external.registry_url "external registry for '$namespace' does not resolve"
         return

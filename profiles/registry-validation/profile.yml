@@ -14,9 +14,32 @@ authority:
   declared_by: DEV-ACCORD.05
   implementation_home: governance-commons/gc-audit/tools
 
+zero_trust_alignment:
+  execution_model: allowlisted_gc_audit_scripts_only
+  mutation_model: validate_only_by_default
+  path_model:
+    registry_paths: must_be_local_relative_paths_under_portfolio_root
+    external_registry_paths: must_be_local_relative_paths_under_portfolio_root
+    network_fetch: forbidden
+    absolute_paths: forbidden
+  fail_closed:
+    - missing_required_registry_files
+    - malformed_registry_json_or_jsonl
+    - registry_paths_that_escape_allowed_roots
+    - unresolved_external_dependencies_when_resolution_is_requested
+    - dxp_profile_until_schema_exists
+  human_authorization_required_for:
+    - normalization_apply
+    - new_registry_schema_authority
+    - authority_or_source_of_truth_changes
+    - git_branch_or_remote_split
+
 profiles:
   gc:
     status: active
+    zero_trust_notes:
+      - registry paths must remain local relative paths inside the portfolio root
+      - external registry resolution is opt-in and local-only
     registry_files:
       - passes/passes.registry.json
       - passes/passes.registry.changelog.jsonl
@@ -40,6 +63,9 @@ profiles:
       - registry_entries_have_changelog_rows
   dcp:
     status: active
+    zero_trust_notes:
+      - DCP validation is delegated only to the GC-owned allowlisted pointer validator
+      - portfolio paths are checked as facts, not normalized by validation
     registry_files:
       - projects.yaml
     validates:
@@ -51,6 +77,9 @@ profiles:
   dxp:
     status: planned
     blocker: DXP or Marlin package/tool registry schema is not defined yet.
+    zero_trust_notes:
+      - fail closed until package/tool registry schema and authority are declared
+      - do not infer install sources, commands, or package metadata from conventions
     registry_files: []
     validates: []
 
