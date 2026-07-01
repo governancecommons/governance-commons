@@ -16,6 +16,7 @@ The remaining gaps are mostly contract drift between the registry, scripts, and 
 - the registry has no self-audit that checks its own allowlist, script paths, mutation contracts, and docs pointers
 - several scripts spawn PowerShell child processes even though the registry security model says shell execution is forbidden
 - there is no repeatable test suite for GC-AUDIT edge cases such as path containment and malicious registry paths
+- Change Playbook execution levels are commit-enforced, but GC-AUDIT does not yet audit whether every agent session declared a play before work or updated local DEV-DOCS after the play
 
 ## Method
 
@@ -37,9 +38,9 @@ For GC-AUDIT, the answer is currently **not yet**. A portfolio insider can run t
 | Q6 Operational Maturity | There is no runbook for failed validators, no common diagnostic artifact, no stable machine-readable exit/finding contract, and no recovery guidance for partial normalization. | open | P1 |
 | Q7 Developer Experience / Adoption Friction | `SCRIPTS.md` pointer is stale inside GC, command discovery depends on reading YAML, normalizers do not have a clear preview/apply UX, and install/use docs are not stranger-proof. | open | P0 |
 | Q8 Ecosystem Interoperability | Cockpit, Marlin, and DCP can call scripts, but GC-AUDIT lacks a stable operation API contract for TypeScript/Node callers, CI systems, IDEs, or remote runners. | open | P1 |
-| Q9 Organizational / Process Maturity | DEV-ACCORD.05 declares ownership, but the implementation table is stale and there is no maintenance process for registry changes, new operations, or deprecation. | spec-complete | P1 |
+| Q9 Organizational / Process Maturity | DEV-ACCORD.05 declares ownership, but the implementation table is stale and there is no maintenance process for registry changes, new operations, deprecation, or Change Playbook play declaration before agent work. | spec-complete | P1 |
 | Q10 Documentation / Discoverability | Registry, profile docs, and REVIEW-GRAMMAR exist, but the actual script reference is missing and wrappers/internal tools are not classified. | open | P0 |
-| Q11 Testing Strategy | No fixture-based regression suite exists for malicious paths, missing registry docs, dry-run/apply behavior, DXP fail-closed behavior, or validation mutation prevention. | open | P0 |
+| Q11 Testing Strategy | No fixture-based regression suite exists for malicious paths, missing registry docs, dry-run/apply behavior, DXP fail-closed behavior, validation mutation prevention, or Change Playbook/DEV-DOCS compliance. | open | P0 |
 | Q12 Ahead of the Curve | The category-defining move is governance diff + audit replay for GC-AUDIT: replay a past RUN/commit against current GC rules and show what would pass, warn, or fail. | open | P2 |
 
 ## Stranger Test Breakdown
@@ -51,6 +52,39 @@ For GC-AUDIT, the answer is currently **not yet**. A portfolio insider can run t
 | Produce evidence | Console output exists. | Needs structured evidence output and optional signed bundle. |
 | Verify evidence | Exit codes exist for most validators. | Needs schema, provenance, and reproducible fixture tests. |
 | Trust artifact | Source is pushed to main. | Needs release provenance, SBOM, and self-validation of registry allowlist. |
+
+## Quick Audit: Change Playbook and DEV-DOCS
+
+Current DEV-ACCORD.06 behavior:
+
+- every commit must carry `Change-Level: BUNT | RUN | DRIVE | PASS`
+- the agent determines the execution level before committing
+- DEV-DOCS update obligations vary by execution level
+- `DRIVE` and `PASS` require DEV-DOCS updates
+- `BUNT` and some `RUN` changes may use `Dev-Docs: not-needed` with a reason
+
+Gap:
+
+- the standard does not yet require a pre-work declaration of the current play
+- the standard does not yet define `PLAY` as the session/work-unit declaration that maps to BUNT, RUN, DRIVE, or PASS
+- GC-AUDIT does not yet validate whether local DEV-DOCS were updated after every play
+- GC-AUDIT does not yet distinguish "commit trailer present" from "agent declared the play before acting"
+- the user/agent responsibility boundary is implicit: DEV-ACCORD.06 says agents determine the level, but it does not say when the user must authorize or override that determination
+
+Opinion:
+
+- Agents should propose and declare the play before work starts.
+- The user should authorize upgrades, ambiguity, or governance-sensitive cases, especially `PASS`, cross-project work, branch/split recommendations, or authority changes.
+- Every play should end with a DEV-DOCS check. If DEV-DOCS are not updated, the agent should explicitly record why the local DEV-DOCS did not need an update.
+- If the desired policy is "always update local DEV-DOCS after every play," DEV-ACCORD.06 needs an amendment because the current accepted rule allows `Dev-Docs: not-needed` for BUNT and some RUN changes.
+
+Recommended GC-AUDIT addition:
+
+- add a Change Playbook/DEV-DOCS validator that audits recent commits and local planning docs together
+- validate that each recent commit has a Change-Level trailer
+- validate that DRIVE/PASS commits touched relevant DEV-DOCS
+- warn when RUN commits alter project truth without DEV-DOCS updates
+- support a future `PLAY` record once DEV-ACCORD defines where that declaration lives
 
 ## P0 Gaps
 
@@ -94,6 +128,21 @@ Checks should include:
 - no validate operation exposes mutating switches
 - docs pointers resolve, including `SCRIPTS.md`
 - unregistered scripts are either intentionally private helpers or registered
+
+### 4. Change Playbook PLAY and DEV-DOCS audit is missing
+
+**Current state:** DEV-ACCORD.06 defines BUNT, RUN, DRIVE, and PASS execution levels and says the agent determines the execution level before committing. It does not define a pre-work `PLAY` declaration, and GC-AUDIT does not yet audit whether local DEV-DOCS were updated after every play.
+
+**Why it matters:** Commit trailers are after-the-fact evidence. The portfolio needs a before/during/after loop: declare the play, perform the work, update or explicitly exempt DEV-DOCS, validate, then commit.
+
+**Recommended fix:** Audit DEV-ACCORD.06 and decide whether to amend it so every agent session declares a `PLAY` mapped to BUNT/RUN/DRIVE/PASS before work starts. Add a GC-AUDIT validator for Change Playbook and DEV-DOCS compliance.
+
+Open policy questions:
+
+- Is `PLAY` a new official term, or just a human-friendly alias for `Change-Level`?
+- Does the agent always declare the play, or does the user authorize the play before work starts?
+- Should every play update local DEV-DOCS, or should BUNT/RUN exemptions remain valid when explicitly justified?
+- Where does a pre-work PLAY declaration live: session transcript, RUN record, DEV-DOCS, commit trailer, or evidence bundle?
 
 ## P1 Gaps
 
@@ -194,15 +243,16 @@ Minimum tests:
 ## Suggested Repair Order
 
 1. Add GC-AUDIT registry self-validation.
-2. Change normalizers to require `-Apply`; default to preview.
-3. Remove mutating behavior from validation scripts.
-4. Create `gc-audit/SCRIPTS.md` and classify every script as registered, wrapper, or internal.
-5. Register or intentionally mark `dev-status.ps1` and `review-last-24h.ps1`.
-6. Clarify shell-forbidden/internal-delegation rule and update child process calls.
-7. Add fixture tests for zero-trust path containment and mutation safety.
-8. Append DEV-ACCORD.05 amendment for registry-vs-table authority.
-9. Add JSON output contract.
-10. Define DXP package/tool registry schema.
+2. Add Change Playbook/DEV-DOCS audit, including the proposed PLAY declaration question.
+3. Change normalizers to require `-Apply`; default to preview.
+4. Remove mutating behavior from validation scripts.
+5. Create `gc-audit/SCRIPTS.md` and classify every script as registered, wrapper, or internal.
+6. Register or intentionally mark `dev-status.ps1` and `review-last-24h.ps1`.
+7. Clarify shell-forbidden/internal-delegation rule and update child process calls.
+8. Add fixture tests for zero-trust path containment and mutation safety.
+9. Append DEV-ACCORD.05/06 amendments for registry authority and PLAY/DEV-DOCS policy if approved.
+10. Add JSON output contract.
+11. Define DXP package/tool registry schema.
 
 ## Zero-Trust Position
 

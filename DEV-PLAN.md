@@ -736,6 +736,7 @@ Work registered but deferred past the active batch. Items are promoted to "Immed
 | ~~GC-2-C-02~~ | ~~TypeScript reference implementation for ONS~~ | Charlie | PASS-3 | VS Code extension | ✅ Done |
 | ~~GC-2-E-01~~ | ~~governance-commons-py: scaffold + PyPI publish infra~~ | Echo | PASS-3 | PyPI publish | ✅ Done |
 | ~~GC-2-E-02~~ | ~~governance-commons-js: scaffold + npm publish infra~~ | Echo | PASS-3 | npm publish | ✅ Done |
+| GC-AUDIT-PLAY-01 | GC-AUDIT Change Playbook / DEV-DOCS audit — decide whether `PLAY` becomes a formal pre-work declaration mapped to BUNT/RUN/DRIVE/PASS, and add validation that every play ends with local DEV-DOCS update or explicit exemption | GC-AUDIT | DEV-ACCORD.06 | agent session compliance | O |
 
 ---
 

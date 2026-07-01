@@ -356,3 +356,13 @@ A gap is not closed until: (1) mechanism exists, (2) it is tested, (3) it is obs
 | Q12 | Ahead | High | `.governance/` as machine-readable business constitution — no product owns this space yet | open |
 
 *Do not add per-repo task tables here — update the relevant repo's planning docs instead.*
+
+---
+
+## 2026-07-01 — GC-AUDIT Change Playbook Gap Registered
+
+Registered a GC-AUDIT gap for auditing DEV-ACCORD.06 Change Playbook compliance:
+agents should declare the current play before work, map it to BUNT/RUN/DRIVE/PASS,
+and complete each play with a local DEV-DOCS update or explicit exemption. The
+working artifact is `gc-audit/GC-AUDIT-GAP-ANALYSIS.md`; the queued planning item
+is `GC-AUDIT-PLAY-01` in `DEV-PLAN.md`.
