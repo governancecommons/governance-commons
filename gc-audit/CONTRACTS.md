@@ -22,6 +22,10 @@ Current active implementation:
 Other validators may continue to emit human output until they explicitly declare
 `supportsJson: true` in the registry.
 
+For PLAY closeout, `summary.latest_play`, `summary.next_recommended_step`, and
+`telemetry[]` are required output fields. Agents must surface those values in the
+final response after every PLAY.
+
 ## PLAY Records
 
 PLAY records live in repo-root `PLAY.jsonl`.

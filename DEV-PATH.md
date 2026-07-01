@@ -428,3 +428,7 @@ profile map in `GC-AUDIT-REGISTRY.yaml`; normalization preview/apply reports hav
 `schemas/gc-evidence-principal.schema.json` for the future evidence-bundle
 signing path.
 
+Follow-up RUN: PLAY closeout output now requires three visible items after every
+PLAY: the five-bucket telemetry table, latest PLAY summary, and next recommended
+logical step. `validate-playbook.ps1` emits all three in human output and JSON.
+

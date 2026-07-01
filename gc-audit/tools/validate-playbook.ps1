@@ -114,6 +114,7 @@ $errors   = [System.Collections.Generic.List[string]]::new()
 $warnings = [System.Collections.Generic.List[string]]::new()
 $telemetryRows = [System.Collections.Generic.List[object]]::new()
 $profileRows = [System.Collections.Generic.List[object]]::new()
+$playSummaries = [System.Collections.Generic.List[object]]::new()
 $seenIds  = [System.Collections.Generic.HashSet[string]]::new()
 $lineNo   = 0
 
@@ -129,6 +130,49 @@ function Format-Duration([int64]$Milliseconds) {
     $minutes = [math]::Floor($seconds / 60)
     $remaining = [math]::Round($seconds % 60, 1)
     return "${minutes}m ${remaining}s"
+}
+
+function Get-StringOrDefault($Value, [string]$Default = "") {
+    if ($null -eq $Value) { return $Default }
+    $text = [string]$Value
+    if ($text.Trim().Length -eq 0) { return $Default }
+    return $text
+}
+
+function Get-LatestPlaySummary([object[]]$Summaries) {
+    if (-not $Summaries -or $Summaries.Count -eq 0) { return $null }
+    return $Summaries |
+        Sort-Object @{
+            Expression = {
+                try { [datetime]::Parse($_.declared_at) } catch { [datetime]::MinValue }
+            }
+        } |
+        Select-Object -Last 1
+}
+
+function Get-NextRecommendedStep([bool]$HasFailure, [int]$WarningCount, [object]$LatestPlay) {
+    if ($HasFailure) {
+        return "Fix DEV-PLAYBOOK validation errors before starting another PLAY."
+    }
+    if ($WarningCount -gt 0) {
+        return "Resolve DEV-PLAYBOOK warnings or explicitly document why they are acceptable before the next PLAY."
+    }
+    if (-not $LatestPlay) {
+        return "Declare the next PLAY before starting new work."
+    }
+    if ($LatestPlay.status -eq "blocked") {
+        return "Clear the blocker or get human authorization for the next move before continuing."
+    }
+    if ($LatestPlay.status -ne "closed") {
+        return "Close the active PLAY with DEV-DOCS, validation, commit, and push before starting another PLAY."
+    }
+    if ($LatestPlay.dev_docs_status -ne "updated") {
+        return "Update DEV-DOCS or record an explicit exemption before starting another PLAY."
+    }
+    if ($LatestPlay.level -eq "PASS") {
+        return "Run release/evidence review, then proceed only with the next authorized PASS or app-development PLAY."
+    }
+    return "Proceed to the next user-authorized development PLAY; use the latest DEV-DOCS and GC-AUDIT contracts as the starting context."
 }
 
 foreach ($line in $lines) {
@@ -301,6 +345,22 @@ foreach ($line in $lines) {
             TotalMs = ($readMs + $planMs + $executeMs + $verifyMs + $closeMs)
         })
     }
+
+    $validationChecks = @()
+    if ($play.validation_profile -and $play.validation_profile.checks) {
+        $validationChecks = @($play.validation_profile.checks | ForEach-Object { [string]$_ })
+    }
+    $playSummaries.Add([PSCustomObject]@{
+        play_id = [string]$id
+        repo = Get-StringOrDefault $play.repo "?"
+        level = Get-StringOrDefault $play.level "?"
+        status = Get-StringOrDefault $play.status "?"
+        declared_at = Get-StringOrDefault $play.declared_at ""
+        scope = Get-StringOrDefault $play.scope ""
+        dev_docs_status = if ($play.dev_docs_check) { Get-StringOrDefault $play.dev_docs_check.status "?" } else { "?" }
+        commit_ref = Get-StringOrDefault $play.commit_ref ""
+        validation_checks = @($validationChecks)
+    })
 }
 
 Write-Human "  $($lines.Count) record(s) checked" "DarkGray"
@@ -332,6 +392,24 @@ if ($telemetryRows.Count -gt 0) {
 }
 
 $hasFailure = ($errors.Count -gt 0) -or ($Strict -and $warnings.Count -gt 0)
+$latestPlay = Get-LatestPlaySummary @($playSummaries)
+$nextRecommendedStep = Get-NextRecommendedStep $hasFailure $warnings.Count $latestPlay
+
+if ($latestPlay) {
+    Write-Human "  LATEST PLAY SUMMARY" "White"
+    Write-Human ("  id:        {0}" -f $latestPlay.play_id) "DarkCyan"
+    Write-Human ("  repo:      {0}" -f $latestPlay.repo) "DarkCyan"
+    Write-Human ("  level:     {0}  status: {1}" -f $latestPlay.level, $latestPlay.status) "DarkCyan"
+    Write-Human ("  scope:     {0}" -f $latestPlay.scope) "DarkCyan"
+    Write-Human ("  dev-docs:  {0}  commit: {1}" -f $latestPlay.dev_docs_status, $latestPlay.commit_ref) "DarkCyan"
+    Write-Human ("  checks:    {0}" -f (($latestPlay.validation_checks) -join ", ")) "DarkCyan"
+    Write-Human ""
+}
+
+Write-Human "  NEXT RECOMMENDED STEP" "White"
+Write-Human ("  {0}" -f $nextRecommendedStep) "DarkCyan"
+Write-Human ""
+
 $summary = [PSCustomObject]@{
     records_checked = $lines.Count
     warnings = $warnings.Count
@@ -339,6 +417,8 @@ $summary = [PSCustomObject]@{
     strict = [bool]$Strict
     schema = "schemas/gc-play-record.schema.json"
     validation_profiles = @($profileRows)
+    latest_play = $latestPlay
+    next_recommended_step = $nextRecommendedStep
 }
 
 if (-not $hasFailure) {

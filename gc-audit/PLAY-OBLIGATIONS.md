@@ -75,3 +75,6 @@ summary, not the authority.
 agents can report read, plan, execute, verify, and close telemetry at the end of
 the PLAY. `validate-recent-work.ps1` Level 1 surfaces that playbook output when
 `PLAY.jsonl` exists, while keeping other successful validator output compact.
+Every PLAY closeout must include the playbook validator's telemetry table, the
+latest PLAY summary, and the next recommended step. This is mandatory for agent
+final responses after a PLAY, not optional narration.
