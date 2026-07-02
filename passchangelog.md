@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0018.00 — 2026-07-01
+
+**pass_id**: GC-PASS-0018.00
+**timestamp**: 2026-07-01T19:00:00Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD.06 (Change Playbook amendment); DEV-ACCORD.02 compound PASS numbering (referenced, not altered); `gc-audit/PLAY-OBLIGATIONS.md`; `gc-audit/CONTRACTS.md`; all GC-conformant agents
+
+**what**: DEV-ACCORD.11 — Compound PASS Operating Rhythm Hardening, declared as an amendment to DEV-ACCORD.06. Declares a compound-PASS-default trigger table (batch language, "all N", parallelize, cross-repo work all default to proposing a compound PASS rather than a chain of single PASSes); a required compound PASS brief (goal / sub-PASS lanes / repos / files / validation gates / commit plan / blockers) that the human must explicitly confirm before any file edit begins; next-recommended-step classification (`Compound PASS` / `Single PASS` / `DRIVE` / `RUN` / `BUNT` / `Blocked`), refining DEV-ACCORD-CI-35; and a release/evidence-review threshold limiting full release/evidence review to compound-PASS close, release-gate/version change, or explicit human request. Adds DEV-ACCORD-CI-36 through DEV-ACCORD-CI-38.
+**why**: The portfolio owner reported that single-lane PASS-by-PASS execution was too slow for "do as much as possible" requests, and that release/evidence review after every small PLAY was adding drag without adding safety. Independent review (ChatGPT, requested by the owner) converged on the same diagnosis: GC's governance obligations are sound but under-batched. The brief-before-execution requirement (CI-38) exists because an agent attempted this exact change directly against DEV-ACCORD.06 without declaring a PLAY or presenting a brief first; the owner caught and reverted it before any commit.
+**new_constraints**: (1) Batch-language and cross-repo requests default to a compound PASS proposal, not a single-PASS chain. (2) A compound PASS may not begin execution, including file edits, until the human confirms the compound PASS brief. (3) Every PLAY closeout's next recommended step must be classified as Compound PASS, Single PASS, DRIVE, RUN, BUNT, or Blocked — an unclassified next step is non-conformant. (4) Full release/evidence review is required only at compound-PASS close, release-gate/version change, or explicit request — not after every small RUN or BUNT.
+**reasoning**: The fix preserves every existing per-lane obligation (DEV-DOCS, validation, commit trailer) while removing the planning-granularity tax that was making batchable work feel like a chain of single PASSes. Requiring a confirmed brief before execution closes the exact gap that produced the incident this PASS responds to: GC's rules were previously enforced by an agent's voluntary compliance with prose instructions, with no explicit human-confirmation checkpoint before a PASS-level file edit. Naming the release/evidence-review threshold explicitly (rather than leaving it to agent judgment) prevents the fix from drifting into skipped validation.
+
+---
+
 ## GC-PASS-0017.00 — 2026-07-01
 
 **pass_id**: GC-PASS-0017.00

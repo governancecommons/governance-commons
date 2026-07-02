@@ -388,3 +388,115 @@ alone is non-conformant.
 - Required closeout sections declared: telemetry, latest PLAY summary, next recommended step
 - Platform-neutral rendering rule declared for text, JSON, UI, and API surfaces
 - 3 new cluster invariants: DEV-ACCORD-CI-33 through DEV-ACCORD-CI-35
+
+---
+
+## Amendment — 2026-07-01 — Compound-PASS-Default and Next-Step Classification (DEV-ACCORD.11)
+
+### 1. Batch-language default: propose a compound PASS
+
+When a human request implies more than one coherent unit of work in one go, the
+agent's default proposal is a **compound PASS** (`CLUSTER.NN.10`, `.20`, … per the
+DEV-ACCORD.02 numbering), not a chain of separate single PASSes. The compound PASS
+names the parallel batch at the PASS level; its sub-PASSes (`.01`–`.09`) are the
+lanes. This amendment does not redefine compound/sub-PASS numbering — that is owned
+by DEV-ACCORD.02 (GC:2010) — it declares *when to reach for it by default*.
+
+The following request phrasings are **compound-PASS triggers** unless the human
+contradicts them or the work genuinely reduces to a single lane:
+
+| Trigger phrasing (or equivalent intent) | Default proposal |
+| --- | --- |
+| "as much as possible", "do the most you can" | Compound PASS |
+| "batch it", "group these", "all together" | Compound PASS |
+| "all N", "all of them", "the whole list" | Compound PASS |
+| "parallelize this", "run these in parallel" | Compound PASS |
+| "go for all", "next pass do everything" | Compound PASS |
+| Work that spans more than one repo or project | Compound PASS (escalation table: PASS minimum) |
+| A single, narrow, one-lane change | Single PASS / DRIVE / RUN / BUNT as the level fits |
+
+Defaulting to a compound PASS does **not** lower any obligation. Each sub-PASS
+still carries its own Done-when, DEV-DOCS check, validation, and commit trailer.
+The compound wrapper plans and validates the lanes as one coherent contract — it
+does not skip per-lane governance or collapse validation.
+
+### 2. Compound PASS brief — required pre-execution artifact
+
+Before executing a compound PASS, the agent declares a **compound PASS brief**
+with these fields, in order:
+
+```text
+Goal:              one sentence — what the compound PASS accomplishes
+Proposed PASS ID:  CLUSTER.NN (primary .00) with sub-PASS lanes .01-.09
+Sub-PASS lanes:    table — lane ID | scope
+Repos touched:     list
+Files:             list, grouped by repo when cross-repo
+Validation gates:  what runs, mapped to the highest execution level present
+Commit plan:       branch/current-branch per DEV-ACCORD.10, trailer fields
+Blockers:          open judgment calls or missing authorization, named explicitly
+```
+
+This brief is the shared surface the human authorizes against. It replaces
+ad-hoc "I'll do a few things" planning for multi-lane work. A compound PASS
+must not begin execution — including file edits — before the human confirms
+the brief. Presenting the brief is not authorization; explicit confirmation is.
+
+### 3. Next recommended step must be classified
+
+The mandatory "Next recommended step" closeout section (DEV-ACCORD-CI-35) must
+classify the recommendation as exactly one of:
+
+- `Next Recommended Step: Compound PASS — <name>` — several lanes can move together.
+- `Next Recommended Step: Single PASS — <name>` — the next thing is one governed slice.
+- `Next Recommended Step: DRIVE | RUN | BUNT — <name>` — the next thing is a single
+  execution-level change below PASS.
+- `Next Recommended Step: Blocked — <authorization or dependency required>` — work
+  cannot continue until a human resolves it.
+
+A bare next-step sentence with no PASS/level label is non-conformant. When the
+current PLAY was itself opened from batch-language, the closeout should scope the
+largest coherent compound PASS that can be validated, committed, and pushed
+cleanly in the next pass.
+
+### 4. Release/evidence-review threshold
+
+A release/evidence review (`gc-audit release` + zero-trust evidence posture +
+playbook validation together) is required only when one of the following is true:
+
+- A compound PASS is closing.
+- The change touches a release gate, version number, or ship status (the DRIVE
+  escalation trigger for release truth).
+- The human explicitly requests it.
+
+Outside those three conditions, the per-level GC-AUDIT obligations in
+`gc-audit/PLAY-OBLIGATIONS.md` already apply and are sufficient — running a full
+release/evidence review after every small RUN or BUNT is not required and should
+not be treated as the default closeout ritual.
+
+### 5. Cluster invariant additions
+
+**DEV-ACCORD-CI-36 — Batch-language defaults to a compound PASS**
+When a human request implies multiple coherent lanes of work — including the
+trigger phrasings tabled above and any cross-repo work — the agent's default
+proposal is a compound PASS, unless the human contradicts it or the work reduces
+to a single lane. Proposing a chain of separate single PASSes for clearly
+batchable work is non-conformant planning.
+
+**DEV-ACCORD-CI-37 — Next recommended step is classified**
+Every PLAY closeout's next recommended step must be labeled as a Compound PASS, a
+Single PASS, a sub-PASS execution level (DRIVE / RUN / BUNT), or a specific
+blocker. An unclassified next step is non-conformant.
+
+**DEV-ACCORD-CI-38 — Compound PASS brief precedes execution**
+A compound PASS must not begin execution, including file edits, before the human
+confirms the compound PASS brief declared in this amendment. Presenting the brief
+is not itself authorization.
+
+### Outputs of this amendment
+
+- Compound PASS declared as the default proposal for batch-language and cross-repo requests
+- Compound-PASS trigger table declared
+- Compound PASS brief format declared as the required pre-execution, human-confirmed artifact
+- Next-recommended-step classification declared, refining DEV-ACCORD-CI-35
+- Release/evidence-review threshold declared: compound-PASS close, release-gate change, or explicit request only
+- 3 new cluster invariants: DEV-ACCORD-CI-36 through DEV-ACCORD-CI-38

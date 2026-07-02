@@ -48,6 +48,24 @@ JSON record; private keys must remain outside the repository.
 | PLAY involves a git split (branch, PR chain, worktree, fork) | `gc-audit validate` on both sides; human authorization required per DEV-ACCORD.10 |
 | PLAY level is ambiguous or escalated | User authorizes before PLAY is declared; authorization recorded in PLAY.jsonl |
 | Any PLAY closes | Run `gc-audit playbook` (`validate-playbook.ps1`) to confirm PLAY.jsonl still conforms to the DEV-PLAYBOOK schema |
+| Human request implies multiple coherent lanes ("as much as possible", "batch it", "all N", "parallelize", cross-repo work) | Agent proposes a compound PASS and declares a compound PASS brief before execution — see DEV-ACCORD.06 amendment (DEV-ACCORD.11) |
+| A compound PASS is closing, a release gate/version changes, or the human explicitly requests it | Run the release/evidence review (`gc-audit release` + zero-trust evidence posture + playbook validation together). Outside these three conditions, per-level obligations above are sufficient — do not run a full release/evidence review after every small RUN or BUNT. |
+
+## Compound PASS brief
+
+Required before a compound PASS begins execution, including any file edit. The
+human must confirm the brief; presenting it is not authorization. Fields, in
+order: `Goal`, `Proposed PASS ID` (primary `.00` + sub-PASS lanes `.01`-`.09`),
+`Sub-PASS lanes` (table), `Repos touched`, `Files`, `Validation gates`,
+`Commit plan`, `Blockers`. Full field definitions and the compound-PASS trigger
+table are declared in the DEV-ACCORD.06 amendment (DEV-ACCORD.11) — this section
+is a summary, not the authority.
+
+## Next recommended step classification
+
+Every PLAY closeout's `Next Recommended Step` must be labeled as one of:
+`Compound PASS`, `Single PASS`, `DRIVE`, `RUN`, `BUNT`, or `Blocked`. An
+unclassified next step is non-conformant (DEV-ACCORD-CI-37).
 
 ## PLAY record close requirements
 

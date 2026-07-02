@@ -28,6 +28,14 @@ final response after every PLAY. DEV-ACCORD.06 declares this as universal GC
 behavior for every GC-conformant agent, environment, platform, adapter, and
 runtime.
 
+`summary.next_recommended_step` must be classified as `Compound PASS`,
+`Single PASS`, `DRIVE`, `RUN`, `BUNT`, or `Blocked` (DEV-ACCORD-CI-37, added by
+the DEV-ACCORD.06 amendment declaring DEV-ACCORD.11). When a human request
+implies multiple coherent lanes of work, callers should expect agents to
+propose a compound PASS and present a compound PASS brief before any file edit
+— see `gc-audit/PLAY-OBLIGATIONS.md` for the summary and DEV-ACCORD.06 for the
+authoritative rule.
+
 ## PLAY Records
 
 PLAY records live in repo-root `PLAY.jsonl`.

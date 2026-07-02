@@ -438,3 +438,25 @@ runtime. Every PLAY closeout must include the telemetry table, latest PLAY summa
 and next recommended step; platform/UI/API differences may change rendering but
 not content.
 
+## 2026-07-01 - DEV-ACCORD.11 - Compound PASS Operating Rhythm Hardening (GC-PASS-0018.00)
+
+PASS: batch-language now defaults to a compound PASS proposal instead of a chain
+of separate single PASSes. DEV-ACCORD.06 is amended to declare (1) a
+compound-PASS trigger-phrase table ("as much as possible", "batch it", "all N",
+"parallelize", cross-repo work), (2) a required compound PASS brief (goal /
+sub-PASS lanes / repos / files / validation gates / commit plan / blockers) that
+the human must confirm before any file edit begins, (3) next-recommended-step
+classification (`Compound PASS` / `Single PASS` / `DRIVE` / `RUN` / `BUNT` /
+`Blocked`) refining DEV-ACCORD-CI-35, and (4) a release/evidence-review threshold
+— required only at compound-PASS close, release-gate/version change, or explicit
+request, not after every small RUN or BUNT. Adds DEV-ACCORD-CI-36 through
+DEV-ACCORD-CI-38. `gc-audit/PLAY-OBLIGATIONS.md` and `gc-audit/CONTRACTS.md`
+updated to summarize the brief format and classification rule, pointing to
+DEV-ACCORD.06 as authority.
+
+This PASS was itself preceded by a confirmed compound PASS brief after an agent
+incident: an earlier attempt at this same change was made directly to
+DEV-ACCORD.06 without declaring a PLAY or presenting a brief, was caught by the
+portfolio owner, and was reverted before any commit. DEV-ACCORD-CI-38 (compound
+PASS brief precedes execution) exists directly because of that incident.
+
