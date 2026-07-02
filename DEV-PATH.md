@@ -613,3 +613,19 @@ validation profiles without a separate human-authorized GC-AUDIT or DEV-ACCORD
 PLAY. New invariants CI-42 through CI-44 make honest blocked validation closure
 conformant and unauthorized scope expansion non-conformant.
 
+## 2026-07-02 - Git remote identity correction guard added to DEV-ACCORD.06 (DRIVE)
+
+After the validation-loop amendment, a repo-topology correction was still
+misapplied: the actual defect was that `C:\dev` had the wrong `origin` URL, while
+`C:\dev\marlin-registry` correctly pointed to the Marlin Registry repo. The
+correct fix was only `git remote set-url` on the incorrect repo. Moving or
+detaching `.git` was not authorized and was the wrong failure model.
+
+DEV-ACCORD.06 now declares the remote-first correction rule. If ambiguity is
+caused by an incorrect Git remote URL, the first fix is to update only that
+remote after reporting the current path, current remote, intended remote, and
+duplicate child-repo remote status. Nested repos are explicitly valid when the
+portfolio design permits them. `.git` directory operations now require exact
+human authorization naming the operation; broad "topology" or "repo identity"
+authorization is not enough. New invariants CI-45 and CI-46 cover the rule.
+

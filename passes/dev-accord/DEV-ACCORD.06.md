@@ -716,3 +716,68 @@ expansion to force a clean validation profile is not.
 - Product PLAY validation-blocker closure declared as acceptable and required
   when scope boundaries are reached
 - 3 new cluster invariants: DEV-ACCORD-CI-42 through DEV-ACCORD-CI-44
+
+---
+
+## Amendment — 2026-07-02 — Git Remote Identity Correction Guard
+
+### 1. Gap this amendment closes
+
+The validation loop stop rule above gates broad scope expansion, but it does not
+state the simplest safe correction for a repo-identity ambiguity caused by an
+incorrect Git remote. That gap allowed an agent to treat a wrong `origin` URL as
+a repository-structure problem and attempt to detach the workspace root from Git,
+even though the correct fix was only to point the incorrect repo at the correct
+remote.
+
+This amendment declares the remote-first rule for Git identity corrections.
+Nested repos are allowed when the portfolio design permits them. The presence of
+a child repo inside a parent repo is not itself a defect. The defect is a repo
+claiming the wrong remote identity.
+
+### 2. Remote-first correction rule
+
+When repo ambiguity is caused by an incorrect remote URL, the only allowed first
+fix is to change the incorrect repo's remote URL with `git remote set-url` or an
+equivalent Git remote-configuration operation. The agent must not move, delete,
+rename, detach, reinitialize, replace, or regenerate `.git` directories as part
+of that first fix.
+
+Before changing a remote URL, the agent must verify and report:
+
+- the current repo path;
+- the current remote URL;
+- the intended remote URL, sourced from local project docs, project registry, or
+  user instruction;
+- whether any child repo already uses that same intended remote, so the human can
+  decide whether duplicate remotes are intentional.
+
+If the intended remote is unclear, the agent must stop and ask. If the intended
+remote is clear, the agent may update only the incorrect remote URL.
+
+### 3. `.git` directory protection
+
+Agents must not move, delete, rename, detach, reinitialize, replace, or regenerate
+any `.git` directory unless the human explicitly authorizes that exact `.git`
+operation in plain language. Authorization to "fix topology", "fix repo
+identity", "point repos at the right place", or "clean up remotes" is not
+authorization to modify `.git` directory placement or existence.
+
+### 4. Cluster invariant additions
+
+**DEV-ACCORD-CI-45 — Wrong remote is fixed by changing the remote first**
+When the failure class is an incorrect Git remote URL, the conformant first fix
+is a remote URL correction on the incorrect repo only. Treating that condition as
+authorization to alter `.git` directory topology is non-conformant.
+
+**DEV-ACCORD-CI-46 — `.git` directory operations require exact human authorization**
+Moving, deleting, renaming, detaching, reinitializing, replacing, or regenerating
+a `.git` directory requires explicit human authorization naming that exact
+operation. Broader topology or repo-identity authorization is insufficient.
+
+### Outputs of this amendment
+
+- Remote-first Git identity correction rule declared
+- Nested repos clarified as valid unless a separate policy forbids them
+- `.git` directory operations protected behind exact human authorization
+- 2 new cluster invariants: DEV-ACCORD-CI-45 and DEV-ACCORD-CI-46

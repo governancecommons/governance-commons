@@ -52,6 +52,7 @@ JSON record; private keys must remain outside the repository.
 | Human request implies multiple coherent lanes ("as much as possible", "batch it", "all N", "parallelize", cross-repo work) | Agent proposes a compound PASS and declares a compound PASS brief before execution — see DEV-ACCORD.06 amendment (DEV-ACCORD.11) |
 | A compound PASS is closing, a release gate/version changes, or the human explicitly requests it | Run the release/evidence review (`gc-audit release` + zero-trust evidence posture + playbook validation together). Outside these three conditions, per-level obligations above are sufficient — do not run a full release/evidence review after every small RUN or BUNT. |
 | A validator/profile fails twice with the same failure class, or the fix would require validator/tooling/topology/policy changes outside the authorized PLAY | Stop, report a validation blocker, and request human authorization for a separate GC-AUDIT/DEV-ACCORD or topology/policy PLAY. Agents must not invent, edit, register, or run new validation scripts as part of product/app closeout. |
+| Repo ambiguity is caused by an incorrect Git remote URL | Fix the incorrect remote first with `git remote set-url` after reporting current path, current remote, intended remote, and any duplicate child repo remote. Do not move, delete, detach, reinitialize, or replace `.git` unless the human explicitly authorizes that exact `.git` operation. |
 
 ## Validation loop stop / tooling authorization
 
@@ -67,6 +68,15 @@ authority, GC-AUDIT internals, or suspected validator defects, the agent must
 stop after one narrow remediation attempt and close or mark the PLAY blocked
 with the exact command, failure class, last safe commit/state, and proposed next
 authorized PLAY.
+
+## Git remote identity correction
+
+DEV-ACCORD.06 also owns the remote-first rule. Nested repos are allowed when the
+portfolio design permits them; a parent repo containing child repos is not itself
+a defect. If repo ambiguity is caused by the wrong `origin` URL, the conformant
+first fix is to update only the incorrect remote URL. Agents must not move,
+delete, rename, detach, reinitialize, replace, or regenerate `.git` directories
+unless the human explicitly authorizes that exact `.git` operation.
 
 ## Compound PASS brief
 
