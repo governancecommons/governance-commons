@@ -260,8 +260,20 @@ function Validate-GcRegistry {
         }
         if ($timestamp -and $entry.timestamp) {
             try {
-                $fileDate = [datetime]::Parse($timestamp).Date
-                $regDate  = [datetime]::Parse($entry.timestamp).Date
+                $styles = [System.Globalization.DateTimeStyles]::AdjustToUniversal -bor [System.Globalization.DateTimeStyles]::AssumeUniversal
+                $fileDate = [datetime]::Parse($timestamp, [System.Globalization.CultureInfo]::InvariantCulture, $styles).Date
+
+                # ConvertFrom-Json auto-converts ISO 8601 timestamp strings to [datetime] on some
+                # PowerShell versions. Normalize both possible shapes (string or DateTime) to UTC
+                # before comparing dates, so a local-timezone shift on one side does not produce a
+                # false mismatch against the other.
+                if ($entry.timestamp -is [datetime]) {
+                    $regDateTime = if ($entry.timestamp.Kind -eq [System.DateTimeKind]::Utc) { $entry.timestamp } else { $entry.timestamp.ToUniversalTime() }
+                } else {
+                    $regDateTime = [datetime]::Parse([string]$entry.timestamp, [System.Globalization.CultureInfo]::InvariantCulture, $styles)
+                }
+                $regDate = $regDateTime.Date
+
                 if ($fileDate -ne $regDate) {
                     Write-Finding "ERROR" $file.FullName "Timestamp '$timestamp' does not match registry timestamp '$($entry.timestamp)'"
                 }

@@ -460,3 +460,17 @@ DEV-ACCORD.06 without declaring a PLAY or presenting a brief, was caught by the
 portfolio owner, and was reverted before any commit. DEV-ACCORD-CI-38 (compound
 PASS brief precedes execution) exists directly because of that incident.
 
+## 2026-07-01 - validate-registry.ps1 timestamp comparison fix (DRIVE)
+
+Fixed a false-positive bug in `gc-audit/tools/validate-registry.ps1`'s timestamp
+comparison: `ConvertFrom-Json` on this PowerShell version auto-converts ISO 8601
+registry timestamp strings to `[datetime]` objects with `Kind=Utc`, while the
+file-side PASS-header timestamp was parsed with a plain `[datetime]::Parse()`
+that converts `Z`-suffixed UTC timestamps to local time — shifting the date
+backward for any machine west of UTC. Registry data and PASS-header timestamps
+were both already correct; only the validator's comparison logic was wrong. Fix
+normalizes both sides to UTC (`AdjustToUniversal`/`AssumeUniversal` styles,
+explicit Kind check) before comparing dates. `validate-registry.ps1` now passes
+cleanly with 0 errors on the `gc` profile (previously 9 false-positive errors
+across DEV-ACCORD.01-.09).
+
