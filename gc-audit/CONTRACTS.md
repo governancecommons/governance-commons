@@ -42,9 +42,11 @@ PLAY records live in repo-root `PLAY.jsonl`.
 
 Schema: `schemas/gc-play-record.schema.json`
 
-Each closed PLAY must declare a `validation_profile` whose `profile` matches the
-PLAY `level`. Minimum required checks are declared in
-`security.playValidationProfiles` in the GC-AUDIT registry:
+Each closed PLAY created after the validation_profile amendment (DEV-ACCORD.06,
+2026-07-02) must declare a `validation_profile` whose `profile` matches the PLAY
+`level`; records predating that amendment without `validation_profile` are
+legacy-tolerated (a warning, not a validation failure). Minimum required checks
+are declared in `security.playValidationProfiles` in the GC-AUDIT registry:
 
 | Level | Required checks |
 | --- | --- |

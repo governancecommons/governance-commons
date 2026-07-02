@@ -86,8 +86,8 @@ summary, not the authority.
 | `timing.execute.started_at`, `timing.execute.ended_at`, `timing.execute.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
 | `timing.verify.started_at`, `timing.verify.ended_at`, `timing.verify.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
 | `timing.close.started_at`, `timing.close.ended_at`, `timing.close.duration_ms` | Always; null timestamps and zero duration are valid for pre-telemetry plays |
-| `validation_profile.profile` | Always; must match PLAY `level` |
-| `validation_profile.checks` | Always; must include the minimum checks for the PLAY level declared in `GC-AUDIT-REGISTRY.yaml` |
+| `validation_profile.profile` | Always for records created after the validation_profile amendment (DEV-ACCORD.06, 2026-07-02) — must match PLAY `level`. Missing `validation_profile` is legacy-tolerated only for records predating that amendment. |
+| `validation_profile.checks` | Required when `validation_profile` is present — must include the minimum checks for the PLAY level declared in `GC-AUDIT-REGISTRY.yaml` |
 
 `validate-playbook.ps1` displays the five timing buckets for each checked PLAY so
 agents can report read, plan, execute, verify, and close telemetry at the end of

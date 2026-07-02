@@ -16,6 +16,10 @@
         each with started_at, ended_at, duration_ms
       - dev_docs_check.note required when dev_docs_check.status is not-needed or deferred
       - commit_ref is only checked as a warning when status is closed and absent
+      - validation_profile required for records created after the validation_profile
+        amendment; missing validation_profile is a legacy-tolerated warning, not a
+        failure - when present, its shape and per-level minimum checks are still
+        enforced as hard errors
 
     Does not execute PLAY.jsonl content. Read-only JSON parsing only.
 
@@ -26,7 +30,8 @@
     Explicit path to a PLAY.jsonl file. Overrides TargetPath discovery.
 
 .PARAMETER Strict
-    Treat legacy-tolerated warnings (missing status, missing commit_ref on closed PLAYs) as failures.
+    Treat legacy-tolerated warnings (missing status, missing commit_ref on closed PLAYs,
+    missing validation_profile) as failures.
 
 .PARAMETER Json
     Emit a machine-readable gc-audit.result.v1 JSON object.
@@ -289,9 +294,12 @@ foreach ($line in $lines) {
         $errors.Add("$prefix ($id) invalid preflight '$($play.preflight)' - must be one of: $($validPreflight -join ', ')")
     }
 
-    # validation_profile - required; enforces minimum checks by PLAY level
+    # validation_profile - required going forward; missing is legacy-tolerated (same
+    # treatment as status, per the DEV-ACCORD.06 amendment that formally declared this
+    # field). When present, its internal shape and per-level minimum checks are still
+    # enforced as hard errors.
     if (-not $play.validation_profile) {
-        $errors.Add("$prefix ($id) missing validation_profile")
+        $warnings.Add("$prefix ($id) missing validation_profile - legacy-tolerated only for records predating the validation_profile amendment")
     } else {
         $profile = $play.validation_profile.profile
         if (-not $profile) {

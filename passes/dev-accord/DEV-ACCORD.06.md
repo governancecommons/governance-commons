@@ -500,3 +500,67 @@ is not itself authorization.
 - Next-recommended-step classification declared, refining DEV-ACCORD-CI-35
 - Release/evidence-review threshold declared: compound-PASS close, release-gate change, or explicit request only
 - 3 new cluster invariants: DEV-ACCORD-CI-36 through DEV-ACCORD-CI-38
+
+---
+
+## Amendment — 2026-07-02 — validation_profile Schema Field and Legacy Tolerance
+
+### 1. Gap this amendment closes
+
+A prior DRIVE (governance-commons `gc-play-2026-07-01-005`, GC-AUDIT caller-contract
+closure) added a hard-required `validation_profile` field to
+`schemas/gc-play-record.schema.json` and to the PLAY.jsonl validation logic in
+`validate-playbook.ps1`, without adding it to the PLAY.jsonl record schema table in
+this PASS (section 3 of the 2026-07-01 DEV-PLAYBOOK amendment above) and without any
+legacy-tolerance carve-out. This put `validate-playbook.ps1` in direct conflict with
+DEV-ACCORD-CI-30 and DEV-ACCORD-CI-32 — a validator enforced an undeclared schema
+field as a hard failure, and every PLAY record predating the field's introduction
+(including the portfolio-root `PLAY.jsonl` bootstrap record) failed validation with
+exit code 1 instead of being legacy-tolerated the way `status` was. This amendment
+declares the field retroactively and applies the same legacy-tolerance treatment
+already established for `status`.
+
+### 2. `validation_profile` added to the PLAY.jsonl record schema
+
+| Field | Type | Required | Rule |
+| --- | --- | --- | --- |
+| `validation_profile.profile` | enum: `BUNT`\|`RUN`\|`DRIVE`\|`PASS` | Always for records created after this amendment | Must match the record's `level`. Records predating this amendment without `validation_profile` are legacy-tolerated. |
+| `validation_profile.checks` | array of strings | Always when `validation_profile` is present | Must include the minimum checks for the PLAY level declared in `security.playValidationProfiles` in `GC-AUDIT-REGISTRY.yaml`. |
+
+This is a clarifying addition to the schema table declared in section 3 of the
+2026-07-01 DEV-PLAYBOOK amendment, not a replacement of it. `validation_profile` was
+already summarized in `gc-audit/PLAY-OBLIGATIONS.md` and `gc-audit/CONTRACTS.md`;
+this amendment is the DEV-ACCORD-owning declaration those documents pointed to but
+that did not yet exist.
+
+### 3. Legacy tolerance
+
+A PLAY record missing `validation_profile` is legacy-tolerated exactly like a record
+missing `status`: `validate-playbook.ps1` reports it as a warning, not an error, and
+does not fail the run. `-Strict` mode treats this warning as a failure, consistent
+with how `-Strict` already treats a missing `status`. When `validation_profile` is
+present, its internal shape (`profile` matching `level`, non-empty `checks`, and the
+per-level minimum checks) is still enforced as a hard error — legacy tolerance covers
+absence only, not malformed presence.
+
+### 4. Cluster invariant additions
+
+**DEV-ACCORD-CI-39 — `validation_profile` is a declared PLAY.jsonl schema field**
+`validation_profile.profile` and `validation_profile.checks` are PLAY.jsonl schema
+fields owned by DEV-ACCORD.06, declared by this amendment. A validator enforcing a
+PLAY.jsonl field as a hard error without a corresponding DEV-ACCORD.06 declaration is
+non-conformant with DEV-ACCORD-CI-30 and DEV-ACCORD-CI-32.
+
+**DEV-ACCORD-CI-40 — New required PLAY.jsonl fields default to legacy-tolerated**
+When a future DEV-ACCORD.06 amendment adds a new required PLAY.jsonl field, the
+default treatment for records predating that amendment is a legacy-tolerated
+warning, not a hard failure, unless the amendment explicitly states otherwise. This
+prevents the `validation_profile` gap — an undocumented hard-required field breaking
+every pre-existing PLAY record — from recurring with future schema additions.
+
+### Outputs of this amendment
+
+- `validation_profile.profile` and `validation_profile.checks` formally added to the PLAY.jsonl record schema table, closing the CI-30/CI-32 conflict
+- Legacy tolerance for missing `validation_profile` declared, matching the existing `status` treatment
+- `validate-playbook.ps1` updated: missing `validation_profile` is now a warning, not a hard error; malformed `validation_profile` remains a hard error
+- 2 new cluster invariants: DEV-ACCORD-CI-39 and DEV-ACCORD-CI-40 (the latter is a standing rule for all future PLAY.jsonl schema amendments)

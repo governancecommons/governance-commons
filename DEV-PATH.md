@@ -500,3 +500,26 @@ are unchanged; the correction entry documents the collision and adds a
 pre-assignment collision-check constraint for future row numbers. Full-file scan
 confirms `GC-PASS-0014.00` onward are unique.
 
+## 2026-07-02 - validation_profile DEV-ACCORD-CI-30/32 conflict fixed (DRIVE)
+
+An earlier DRIVE (GC-AUDIT caller-contract closure) added a hard-required
+`validation_profile` field to `validate-playbook.ps1` and
+`schemas/gc-play-record.schema.json` without adding it to the DEV-ACCORD.06
+PLAY.jsonl schema table or giving it the legacy-tolerance carve-out `status`
+received — a direct conflict with DEV-ACCORD-CI-30/32 (schema fields are owned
+by DEV-ACCORD.06; no other artifact may redefine them undocumented). This broke
+real Level 1 runs against any pre-amendment PLAY.jsonl, including the
+portfolio-root file, with a hard `[FAIL]` and exit code 1. Fixed: DEV-ACCORD.06
+amended to formally declare `validation_profile.profile` and
+`validation_profile.checks` in the schema table (retroactive declaration
+closing the CI-30/32 gap); `validate-playbook.ps1` changed to treat missing
+`validation_profile` as a legacy-tolerated warning, matching `status` — malformed
+`validation_profile` (present but wrong shape) remains a hard error.
+`PLAY-OBLIGATIONS.md` and `CONTRACTS.md` updated to match. Two new cluster
+invariants declared in DEV-ACCORD.06 (CI-39: validation_profile is a declared
+schema field; CI-40: future PLAY.jsonl schema additions default to
+legacy-tolerated for pre-existing records, preventing this exact gap from
+recurring) — see DEV-ACCORD.06 for full invariant text. Verified:
+`pwsh -File validate-playbook.ps1` at the portfolio root now exits 0 with 2
+warnings instead of exiting 1 with 1 error.
+
