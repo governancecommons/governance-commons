@@ -51,6 +51,22 @@ JSON record; private keys must remain outside the repository.
 | Any commit citing a PASS ID (heading citation or `Pass-ID:` trailer) | `gc-audit pass-citations` (`validate-pass-citations.ps1`) runs automatically via `.pre-commit-config.yaml` at both the `pre-commit` stage (staged diff) and `commit-msg` stage (trailer block) — no manual invocation needed for normal commits |
 | Human request implies multiple coherent lanes ("as much as possible", "batch it", "all N", "parallelize", cross-repo work) | Agent proposes a compound PASS and declares a compound PASS brief before execution — see DEV-ACCORD.06 amendment (DEV-ACCORD.11) |
 | A compound PASS is closing, a release gate/version changes, or the human explicitly requests it | Run the release/evidence review (`gc-audit release` + zero-trust evidence posture + playbook validation together). Outside these three conditions, per-level obligations above are sufficient — do not run a full release/evidence review after every small RUN or BUNT. |
+| A validator/profile fails twice with the same failure class, or the fix would require validator/tooling/topology/policy changes outside the authorized PLAY | Stop, report a validation blocker, and request human authorization for a separate GC-AUDIT/DEV-ACCORD or topology/policy PLAY. Agents must not invent, edit, register, or run new validation scripts as part of product/app closeout. |
+
+## Validation loop stop / tooling authorization
+
+DEV-ACCORD.06 owns the universal rule: validation failures are evidence, not
+automatic authorization to expand scope. Agents may run existing registered
+validators, repo test commands, and ordinary inspection commands inside an
+authorized PLAY. Agents must not create new validation scripts, edit GC-AUDIT
+tooling, register new validators, or introduce new validation profiles unless a
+separate human-authorized GC-AUDIT or DEV-ACCORD PLAY names that tooling change.
+
+When validation crosses into repo topology, branch-protection policy, registry
+authority, GC-AUDIT internals, or suspected validator defects, the agent must
+stop after one narrow remediation attempt and close or mark the PLAY blocked
+with the exact command, failure class, last safe commit/state, and proposed next
+authorized PLAY.
 
 ## Compound PASS brief
 

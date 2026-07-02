@@ -593,3 +593,23 @@ git-tracked). Re-verified against the full commit-history self-test
 (`33c24ef`/`6e5eca5`/`91cb208`/`c48fea3` pass, `2d4a24d` correctly fails) -
 no regression from the widening.
 
+## 2026-07-02 - Validation loop stop rule added to DEV-ACCORD.06 (PASS)
+
+After a Cockpit/Marlin/Niji compound PASS, final validation surfaced two separate
+conditions: a real repo-topology/policy issue and an agent-loop failure. The real
+issue was that validation crossed into repository identity/topology and branch
+protection policy instead of remaining inside the authorized product work. The
+agent-loop failure was continuing to chase the higher-level validation profile
+and attempting GC-AUDIT validator changes instead of stopping, reporting a
+blocker, and asking for explicit authorization.
+
+DEV-ACCORD.06 now declares the validation loop stop rule and tooling-change
+authorization rule. Agents must stop validation escalation after the same failure
+class repeats or when the fix would require validator/tooling/topology/policy
+changes outside the authorized PLAY. Product/app PLAYs may run existing
+registered validators and ordinary inspection commands, but they must not invent
+new validation scripts, edit audit tooling, register validators, or introduce new
+validation profiles without a separate human-authorized GC-AUDIT or DEV-ACCORD
+PLAY. New invariants CI-42 through CI-44 make honest blocked validation closure
+conformant and unauthorized scope expansion non-conformant.
+

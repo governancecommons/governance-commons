@@ -627,3 +627,92 @@ DEV-PATH.md's 2026-07-02 entry for the automated-gate follow-up.
 - Correction note added in place above the misattributed "DEV-ACCORD.11" heading
 - `passchangelog.md` GC-PASS-0020.00 records the full citation-error history
 - 1 new cluster invariant: DEV-ACCORD-CI-41
+
+---
+
+## Amendment — 2026-07-02 — Validation Loop Stop and Tooling-Change Authorization
+
+### 1. Gap this amendment closes
+
+A product or portfolio PLAY can surface a real validation blocker that is outside
+the authorized scope of the PLAY: repository topology, branch-protection policy,
+registry authority, a validator defect, or GC-AUDIT implementation drift. In that
+case, continuing to chase a green validation profile by editing validator tooling
+or widening the work scope turns a bounded PLAY into an unauthorized tooling
+experiment. That is non-conformant even when the original validation failure is
+real.
+
+This amendment makes the stop condition explicit. A failed validator is evidence;
+it is not automatic authorization to create scripts, edit audit tooling, change
+repo topology, change branch policy, or mutate unrelated repos.
+
+### 2. Validation loop stop rule
+
+A GC-conformant agent must stop validation escalation and report a blocker when
+any of the following occurs:
+
+- the same validator or validation profile fails twice with the same failure
+  class after one narrow remediation attempt;
+- the failure points outside the current authorized PLAY scope, including repo
+  topology, branch protection, registry authority, GC-AUDIT internals, or a
+  suspected validator bug;
+- resolving the failure would require creating, editing, or registering
+  validation/audit tooling;
+- resolving the failure would require changing git topology, branch-protection
+  policy, registry authority, or another repo not named in the authorized brief.
+
+When this stop rule triggers, the agent closes or marks the current PLAY blocked,
+records the exact command, failure class, last safe commit/state, and proposed
+next PLAY, then asks the human for authorization before any tooling or topology
+change.
+
+### 3. Tooling-change authorization rule
+
+Agents must not create new validation scripts, edit validation/audit scripts,
+register new validators, or introduce new validation profiles inside an app,
+product, or ordinary docs PLAY. Those changes require a separate
+human-authorized GC-AUDIT or DEV-ACCORD PLAY whose scope explicitly names the
+tooling change.
+
+Agents may still run already-registered validators, existing repo test commands,
+and ordinary inspection commands such as `git status`, `git diff`, `rg`, and
+file reads when those actions are within the authorized PLAY. Ad hoc inspection
+is not a license to create unregistered validator scripts or to treat a one-off
+command as a new validation authority.
+
+### 4. Product PLAY closure with validation blockers
+
+A product PLAY may close with a documented validation blocker when the remaining
+failure is pre-existing, topology/policy-related, or outside the authorized
+scope. The closeout must not hide the blocker, but it also must not mutate
+GC-AUDIT or unrelated repos merely to force a clean higher-level profile. The
+next recommended step must be labeled `Blocked`, `DRIVE`, `Single PASS`, or
+`Compound PASS` according to the scope needed to resolve the blocker.
+
+### 5. Cluster invariant additions
+
+**DEV-ACCORD-CI-42 — Validation loops must stop at scope boundaries**
+A validator failure that repeats after one narrow remediation attempt, or that
+points outside the authorized PLAY scope, is a blocker until the human authorizes
+a new scope. Continuing to edit tooling, topology, policy, or unrelated repos to
+make validation green is non-conformant.
+
+**DEV-ACCORD-CI-43 — Tooling changes require their own authorization**
+Creating, editing, registering, or redefining validation/audit tooling requires a
+separate human-authorized GC-AUDIT or DEV-ACCORD PLAY. Product and app PLAYs may
+run existing registered tools, but they must not smuggle tooling changes into
+closeout.
+
+**DEV-ACCORD-CI-44 — Validation blockers can be honest closure**
+A PLAY closeout may report a validation blocker when the blocker is outside the
+authorized scope. Honest blocked closure is conformant; unauthorized scope
+expansion to force a clean validation profile is not.
+
+### Outputs of this amendment
+
+- Validation loop stop rule declared for all GC-conformant agents
+- Tooling-change authorization rule declared: no new or modified validators
+  inside product/app PLAYs
+- Product PLAY validation-blocker closure declared as acceptable and required
+  when scope boundaries are reached
+- 3 new cluster invariants: DEV-ACCORD-CI-42 through DEV-ACCORD-CI-44
