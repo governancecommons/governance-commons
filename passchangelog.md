@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0019.00 — 2026-07-02
+
+**pass_id**: GC-PASS-0019.00
+**timestamp**: 2026-07-02T02:15:00Z
+**change_type**: fix
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: passchangelog.md row-number index only; no PASS identity, alias, or canonical ID changed
+
+**problem**: Row number `GC-PASS-0006.00` was assigned twice — once to the CANON cluster founding entry (2026-06-20, CANON.00/CANON cluster establishment) and once to the PASS-6 opening entry (2026-06-16, Doc Vault Plane track). Row number `GC-PASS-0013.00` was also assigned twice — once to DEV-ACCORD.03 (2026-06-28, Agent Onboarding Protocol) and once to DEV-ACCORD.04 (2026-06-28, Agent Bootstrap Standard). Both collisions predate this fix and were caught during a validator hardening review, not during original entry creation.
+**reasoning**: Per DEV-ACCORD.02, `GC-PASS-NNNN.NN` is a passchangelog row index, not a PASS identity — the PASS identity of every affected entry (`DEV-ACCORD.03` / `GC:2011`, `DEV-ACCORD.04` / `GC:2012`, `CANON.00`, the PASS-6 opening record) is unambiguous and unaffected by this collision; only the row-index column has a duplicate value. `passchangelog.md` is append-only (PROTECTED.md Rule 1) and CANON.01 R-IM-6 requires superseded or corrected PASSes to remain in the registry permanently rather than be edited in place. The correct fix is therefore a pointer-only correction, not a renumbering of the four existing entries.
+**what**: This entry records the collision for the audit trail. The four affected entries keep their original row numbers, timestamps, and content unchanged: `GC-PASS-0006.00 — 2026-06-20` (CANON.00), `GC-PASS-0006.00 — 2026-06-16` (PASS-6 opening), `GC-PASS-0013.00 — 2026-06-28` (DEV-ACCORD.03), `GC-PASS-0013.00 — 2026-06-28` (DEV-ACCORD.04). Readers must disambiguate by date and title, not row number alone, for these four entries specifically. All row numbers assigned from `GC-PASS-0014.00` onward are confirmed unique (verified by full-file scan as part of this fix).
+**new_constraints**: (1) Row-number collisions in `passchangelog.md` are corrected by an append-only pointer entry, never by editing the colliding rows. (2) Before assigning the next `GC-PASS-NNNN.NN` row number, the agent must confirm no existing entry already uses it (a `grep '^## GC-PASS-NNNN'` check is sufficient) — this collision happened because that check was skipped at least twice.
+
+---
+
 ## GC-PASS-0018.00 — 2026-07-01
 
 **pass_id**: GC-PASS-0018.00

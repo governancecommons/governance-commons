@@ -474,3 +474,29 @@ explicit Kind check) before comparing dates. `validate-registry.ps1` now passes
 cleanly with 0 errors on the `gc` profile (previously 9 false-positive errors
 across DEV-ACCORD.01-.09).
 
+## 2026-07-02 - validate-recent-work.ps1 24h window UTC normalization (DRIVE, same bug class)
+
+Audited every `[datetime]::Parse()` call site in `gc-audit/tools/` for the same
+timezone bug class as the registry fix above. Three of four sites were safe
+(single-source or uniform-treatment comparisons). `validate-recent-work.ps1`'s
+24-hour PLAY window filter compared `$play.declared_at` (from `ConvertFrom-Json`,
+which auto-converts `Z`-suffixed timestamps to naive-equivalent local values on
+reparse) against `$since` (local `Get-Date`) without UTC normalization — the same
+bug class, capable of shifting the effective cutoff by a full UTC offset for
+`Z`-suffixed `declared_at` values. Fixed by introducing `$sinceUtc` and
+normalizing `$playTime` to UTC before comparison, leaving the existing
+`$since`-based file-mtime comparisons (lines 188, 214) untouched since those are
+already Local-vs-Local and were never affected.
+
+## 2026-07-02 - passchangelog.md row-number collision correction (fix, GC-PASS-0019.00)
+
+`GC-PASS-0006.00` and `GC-PASS-0013.00` were each assigned twice in
+`passchangelog.md` (pre-existing, not introduced by recent work). Per
+DEV-ACCORD.02, the row number is not a PASS identity, so no PASS reference is
+broken, but the collision is a data-integrity defect in the audit log. Fixed
+with an append-only correction entry (`GC-PASS-0019.00`) per CANON.01 R-IM-6 and
+PROTECTED.md's append-only rule for `passchangelog.md` — the four original rows
+are unchanged; the correction entry documents the collision and adds a
+pre-assignment collision-check constraint for future row numbers. Full-file scan
+confirms `GC-PASS-0014.00` onward are unique.
+

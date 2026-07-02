@@ -34,6 +34,7 @@ $root     = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSP
 $toolRoot = $PSScriptRoot
 $since    = (Get-Date).AddHours(-$Hours)
 $sinceStr = $since.ToString("yyyy-MM-dd HH:mm:ss")
+$sinceUtc = $since.ToUniversalTime()
 $exitFail = $false
 $powerShellHost = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
 $isWindowsHost = ($env:OS -eq "Windows_NT")
@@ -249,11 +250,20 @@ if ($Level -ge 3) {
                     continue
                 }
 
-                # Filter to the Hours window
+                # Filter to the Hours window. declared_at may already be a [datetime] with
+                # Kind Utc or Local (ConvertFrom-Json auto-converts ISO 8601 strings on some
+                # PowerShell versions) or still a raw string. Normalize to UTC before comparing
+                # against $sinceUtc so a Z-suffixed timestamp is not silently treated as naive
+                # local time - see the validate-registry.ps1 timestamp fix for the same bug class.
                 if ($play.declared_at) {
                     try {
-                        $playTime = [datetime]::Parse($play.declared_at)
-                        if ($playTime -lt $since) { continue }
+                        if ($play.declared_at -is [datetime]) {
+                            $playTime = if ($play.declared_at.Kind -eq [System.DateTimeKind]::Utc) { $play.declared_at } else { $play.declared_at.ToUniversalTime() }
+                        } else {
+                            $styles = [System.Globalization.DateTimeStyles]::AdjustToUniversal -bor [System.Globalization.DateTimeStyles]::AssumeUniversal
+                            $playTime = [datetime]::Parse([string]$play.declared_at, [System.Globalization.CultureInfo]::InvariantCulture, $styles)
+                        }
+                        if ($playTime -lt $sinceUtc) { continue }
                     } catch { }
                 }
 
