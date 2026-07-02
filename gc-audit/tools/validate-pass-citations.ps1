@@ -18,14 +18,18 @@
                         than whole-file content means pre-existing citations are
                         not retroactively flagged every time an unrelated edit
                         touches the same file - only new or changed citation
-                        lines are gated. Looks for heading citations like
-                        "## ... (CLUSTER.NN)" and "Pass-ID:" lines. Each captured
-                        alias must resolve to passes.registry.json, unless the
-                        line also contains the escape phrase "not yet registered"
-                        or "working name" (DEV-ACCORD-CI-41 permits marking a
-                        name as pending registration). GC-PASS-NNNN.NN tokens are
-                        never treated as aliases - that format is a passchangelog
-                        row index, not a PASS identity (DEV-ACCORD.02).
+                        lines are gated. Looks for heading citations in either
+                        convention used across the portfolio - trailing
+                        parenthetical "## Amendment - ... (DEV-ACCORD.11)"
+                        (governance-commons) or leading alias "## CKP.08.04
+                        Closure - Title" (cockpit) - and "Pass-ID:" lines. Each
+                        captured alias must resolve to passes.registry.json,
+                        unless the line also contains the escape phrase "not
+                        yet registered" or "working name" (DEV-ACCORD-CI-41
+                        permits marking a name as pending registration).
+                        GC-PASS-NNNN.NN tokens are never treated as aliases -
+                        that format is a passchangelog row index, not a PASS
+                        identity (DEV-ACCORD.02).
       -Mode CommitMsg   Reads a commit message file (-MessageFile) and checks any
                         "Pass-ID:" trailer line the same way. "standalone", "N/A",
                         and "none" (case-insensitive) are valid non-citation
@@ -133,7 +137,11 @@ function Test-Citation([string]$Alias, [string]$Line, [string]$Source) {
     }
 }
 
+# Two heading conventions are recognized across the portfolio:
+# - trailing parenthetical, e.g. "## Amendment - ... (DEV-ACCORD.11)" (governance-commons)
+# - leading alias, e.g. "## CKP.08.04 Closure - Title" (cockpit)
 $headingRegex = '^#{1,6}\s.*\(([A-Z][A-Za-z0-9-]*\.\d{2})\)\s*$'
+$leadingHeadingRegex = '^#{1,6}\s+([A-Z][A-Za-z0-9-]*\.\d{2}(?:\.\d{2})?)\b'
 $passIdLineRegex = '^\*{0,2}Pass-ID:\*{0,2}\s*(\S+)'
 
 if ($Mode -eq "Files") {
@@ -151,6 +159,8 @@ if ($Mode -eq "Files") {
                 $content = $Matches[1]
                 $checked++
                 if ($content -match $headingRegex) {
+                    Test-Citation $Matches[1] $content "${currentFile} (staged)"
+                } elseif ($content -match $leadingHeadingRegex) {
                     Test-Citation $Matches[1] $content "${currentFile} (staged)"
                 }
                 if ($content -match $passIdLineRegex) {
@@ -171,6 +181,8 @@ if ($Mode -eq "Files") {
                 $lineNum++
                 $checked++
                 if ($line -match $headingRegex) {
+                    Test-Citation $Matches[1] $line "${path}:${lineNum}"
+                } elseif ($line -match $leadingHeadingRegex) {
                     Test-Citation $Matches[1] $line "${path}:${lineNum}"
                 }
                 if ($line -match $passIdLineRegex) {

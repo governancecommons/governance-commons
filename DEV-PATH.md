@@ -571,3 +571,25 @@ history: correctly PASSes on `33c24ef`, `6e5eca5`, `91cb208`, `c48fea3`, and
 correctly FAILs on `2d4a24d` (the actual historical bad commit) when re-checked
 directly, without altering that commit.
 
+## 2026-07-02 - validate-pass-citations.ps1 widened for the leading-alias heading convention
+
+`cockpit`'s own heading convention (`## CKP.08.04 Closure - Title`, alias
+first, no wrapping parens) was not recognized by this validator's heading
+regex, which only matched governance-commons' trailing-parenthetical style
+(`## Amendment - ... (DEV-ACCORD.11)`). Found and flagged (not fixed) during
+cockpit's `CKP.08.06` PLAY; fixed here as part of a follow-on compound PASS.
+Added a second regex, `$leadingHeadingRegex`, checked as a fallback when the
+trailing-parenthetical pattern doesn't match. Verified against real content:
+correctly resolves `cockpit/docs/specifications/CKP.08.04-feature-parity-audit.md`'s
+`# CKP.08.04 Feature-Parity Audit` heading (now registered) when scoped to
+cockpit's own registry; correctly still flags the same pre-existing
+uncorrected headings this validator already found before the widening
+(`DEV-ACCORD.06.md`'s historical `(DEV-ACCORD.11)` heading, cockpit's
+uncorrected `## CKP.08.04a Implementation Note` heading, and residual
+single-level `CKP.03`/`CKP.04`/`CKP.05`/`CKP.06`/`CKP.08` headings in
+cockpit's `DEV-PLAN.md` that predate the two-level registration - flagged,
+not bulk-fixed, since that file is caution-tagged for bulk edits and not
+git-tracked). Re-verified against the full commit-history self-test
+(`33c24ef`/`6e5eca5`/`91cb208`/`c48fea3` pass, `2d4a24d` correctly fails) -
+no regression from the widening.
+
