@@ -393,6 +393,19 @@ alone is non-conformant.
 
 ## Amendment — 2026-07-01 — Compound-PASS-Default and Next-Step Classification (DEV-ACCORD.11)
 
+> **Correction (2026-07-02, GC-PASS-0020.00):** `DEV-ACCORD.11` in this heading was
+> an unregistered working name — it was never assigned a canonical ID, never given
+> its own file, and never entered in `passes/passes.registry.json`. Per
+> DEV-ACCORD.02, a PASS identity requires both an alias (`CLUSTER.NN`) and a
+> canonical ID (`GC:NNNN`), assigned through the registered process, not casual
+> naming during drafting. The governed identity of this amendment (and the
+> `validation_profile` amendment below it) is **DEV-ACCORD.06 / GC:2014** — cite
+> it that way. Do not cite `DEV-ACCORD.11` as a PASS reference; it does not exist
+> in the registry. See GC-PASS-0020.00 in `passchangelog.md` for the full record,
+> including the one commit trailer (`2d4a24d`) that carries the incorrect
+> `Pass-ID: DEV-ACCORD.11` value — left unamended per this portfolio's git-history
+> policy, corrected here instead.
+
 ### 1. Batch-language default: propose a compound PASS
 
 When a human request implies more than one coherent unit of work in one go, the
@@ -564,3 +577,49 @@ every pre-existing PLAY record — from recurring with future schema additions.
 - Legacy tolerance for missing `validation_profile` declared, matching the existing `status` treatment
 - `validate-playbook.ps1` updated: missing `validation_profile` is now a warning, not a hard error; malformed `validation_profile` remains a hard error
 - 2 new cluster invariants: DEV-ACCORD-CI-39 and DEV-ACCORD-CI-40 (the latter is a standing rule for all future PLAY.jsonl schema amendments)
+
+---
+
+## Amendment — 2026-07-02 — PASS-ID Citation Must Resolve to the Registry
+
+### 1. Gap this amendment closes
+
+The 2026-07-01 compound-PASS-default amendment above was drafted under the
+working name "DEV-ACCORD.11" — used in its section heading, in a `passchangelog.md`
+entry, in a `DEV-PATH.md` note, and in one commit trailer (`Pass-ID: DEV-ACCORD.11`,
+commit `2d4a24d`) — without ever being assigned a canonical ID, given its own file,
+or entered in `passes/passes.registry.json`. `validate-registry.ps1` did not catch
+this because it only checks `.md` files under `passes/` that declare their own
+`Canonical ID:` header; a name used in prose or a commit trailer with no
+corresponding file is invisible to that check. This is the same class of failure
+that CI-8 (no casual number assignment outside a migration PASS) exists to
+prevent, reached by a different path: not assigning an unauthorized number, but
+citing a PASS-shaped name that was never assigned one at all.
+
+### 2. Correction, not renumbering
+
+Per DEV-ACCORD.02, PASS identity requires both an alias (`CLUSTER.NN`) and a
+canonical ID (`GC:NNNN`), assigned through the registered process. `DEV-ACCORD.11`
+was never assigned either. The governed identity of the 2026-07-01 compound-PASS
+amendment and the 2026-07-02 `validation_profile` amendment is **DEV-ACCORD.06 /
+GC:2014** — both are amendment sections within this PASS, not a separate PASS.
+This is recorded as a correction note in place (see above), and as a `fix`-type
+entry in `passchangelog.md` (GC-PASS-0020.00). The one commit trailer carrying
+`Pass-ID: DEV-ACCORD.11` is left unamended, consistent with this portfolio's
+git-history policy — the correction lives in governed documents, not in a rewritten
+commit.
+
+### 3. Cluster invariant addition
+
+**DEV-ACCORD-CI-41 — A cited PASS-ID must resolve to a registry entry**
+Any `Pass-ID:` commit trailer value, PASS-shaped section heading, or PASS
+cross-reference in a GC-governed document must resolve to an actual entry in
+`passes/passes.registry.json` (or be explicitly marked as a working name pending
+registration). Citing a PASS-shaped name with no registry entry is non-conformant,
+independent of whether the cited content is itself sound.
+
+### Outputs of this amendment
+
+- Correction note added in place above the misattributed "DEV-ACCORD.11" heading
+- `passchangelog.md` GC-PASS-0020.00 records the full citation-error history
+- 1 new cluster invariant: DEV-ACCORD-CI-41

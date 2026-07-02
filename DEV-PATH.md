@@ -523,3 +523,21 @@ recurring) — see DEV-ACCORD.06 for full invariant text. Verified:
 `pwsh -File validate-playbook.ps1` at the portfolio root now exits 0 with 2
 warnings instead of exiting 1 with 1 error.
 
+## 2026-07-02 - PASS-ID citation correction: "DEV-ACCORD.11" was never registered (fix, GC-PASS-0020.00)
+
+The 2026-07-01 compound-PASS-default amendment above was drafted and cited under
+the working name "DEV-ACCORD.11" in its DEV-ACCORD.06.md heading, in the
+passchangelog GC-PASS-0018.00 entry, in this file's 2026-07-01 note, and in
+commit `2d4a24d`'s `Pass-ID: DEV-ACCORD.11` trailer — without ever being assigned
+a canonical ID, given its own file, or entered in `passes/passes.registry.json`.
+`validate-registry.ps1` did not catch it: that validator only cross-checks `.md`
+files under `passes/` that declare their own `Canonical ID:` header, and no such
+file existed for this name. Corrected in place: a note now sits above the
+misattributed heading in DEV-ACCORD.06.md, and `passchangelog.md` GC-PASS-0020.00
+records the full history. The governed identity of both the compound-PASS-default
+content and the validation_profile content is DEV-ACCORD.06 / GC:2014, not a
+separate PASS. The `2d4a24d` commit trailer is left unamended per this
+portfolio's git-history policy. New cluster invariant DEV-ACCORD-CI-41 requires
+any future PASS-ID citation (trailer, heading, or cross-reference) to resolve to
+an actual registry entry.
+

@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0020.00 — 2026-07-02
+
+**pass_id**: GC-PASS-0020.00
+**timestamp**: 2026-07-02T02:55:00Z
+**change_type**: fix
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD.06.md (correction note added); one commit trailer (`2d4a24d`, left unamended); passchangelog.md GC-PASS-0018.00 entry; DEV-PATH.md 2026-07-01 note
+
+**problem**: The 2026-07-01 compound-PASS-default amendment (commit `2d4a24d`, `GC-PASS-0018.00`) was drafted and cited under the working name "DEV-ACCORD.11" in its `DEV-ACCORD.06.md` section heading, in the `passchangelog.md` GC-PASS-0018.00 entry, in a `DEV-PATH.md` note, and in the commit's own `Pass-ID: DEV-ACCORD.11` trailer — without ever being assigned a canonical ID, given its own `passes/dev-accord/DEV-ACCORD.11.md` file, or entered in `passes/passes.registry.json`. `validate-registry.ps1` did not catch this because it only cross-checks `.md` files under `passes/` that declare a `Canonical ID:` header; a name used only in prose or a commit trailer is invisible to that check. Caught during a portfolio-owner review questioning whether PASS labeling discipline was actually being enforced.
+**why**: Reaching for a fresh `CLUSTER.NN` name while drafting a governance amendment, without running the registration step, is exactly the failure mode DEV-ACCORD-CI-8 (no casual number assignment outside a migration PASS) exists to prevent — reached from a different direction: not an unauthorized number assignment, but a PASS-shaped citation with no registry entry behind it at all.
+**new_constraints**: (1) Any `Pass-ID:` trailer, PASS-shaped heading, or PASS cross-reference must resolve to an actual `passes/passes.registry.json` entry, or be explicitly marked as a working name pending registration (DEV-ACCORD-CI-41, declared in the corresponding DEV-ACCORD.06 amendment). (2) The governed identity of the 2026-07-01 compound-PASS-default content and the 2026-07-02 `validation_profile` content is DEV-ACCORD.06 / GC:2014 — cite it that way, not `DEV-ACCORD.11`.
+**reasoning**: The correction is applied in place (a note above the misattributed heading in `DEV-ACCORD.06.md`) and via this append-only changelog entry, not by rewriting the `2d4a24d` commit trailer or editing the historical `GC-PASS-0018.00` entry — consistent with this portfolio's append-only doctrine (PROTECTED.md) and git-history policy (no rewriting commits without explicit authorization). Retroactively manufacturing a `DEV-ACCORD.11.md` file and registry entry to match the mistaken name was considered and rejected: it would misrepresent the actual decision sequence (implying a separately reviewed and accepted PASS that never happened) and itself be exactly the casual number assignment DEV-ACCORD-CI-8 forbids.
+
+---
+
 ## GC-PASS-0019.00 — 2026-07-02
 
 **pass_id**: GC-PASS-0019.00
