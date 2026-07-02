@@ -616,7 +616,11 @@ Any `Pass-ID:` commit trailer value, PASS-shaped section heading, or PASS
 cross-reference in a GC-governed document must resolve to an actual entry in
 `passes/passes.registry.json` (or be explicitly marked as a working name pending
 registration). Citing a PASS-shaped name with no registry entry is non-conformant,
-independent of whether the cited content is itself sound.
+independent of whether the cited content is itself sound. Enforced automatically
+by `gc-audit/tools/validate-pass-citations.ps1` (`gc-audit.pass-citations`),
+wired into `.pre-commit-config.yaml` at both the `pre-commit` stage (staged diff
+heading/citation lines) and `commit-msg` stage (trailer block) — see
+DEV-PATH.md's 2026-07-02 entry for the automated-gate follow-up.
 
 ### Outputs of this amendment
 

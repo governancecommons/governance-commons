@@ -12,3 +12,27 @@ repos:
           Governed by anti_stall.lint_compliance.MD060 in
           agent-project-orchestrator/governance/multi-agent.yaml.
           Fix with: python scripts/fix_md_tables.py
+      - id: pass-citations-staged
+        name: DEV-ACCORD-CI-41 — PASS-ID citations must resolve to the registry
+        language: system
+        entry: pwsh -NoProfile -File gc-audit/tools/validate-pass-citations.ps1
+        types: [markdown]
+        pass_filenames: false
+        stages: [pre-commit]
+        description: >
+          Scans the staged diff's added lines for PASS-shaped heading citations
+          and "Pass-ID:" lines; each must resolve to an alias in
+          passes/passes.registry.json, or be marked "working name, not yet
+          registered". Declared by the DEV-ACCORD.06 amendment adding
+          DEV-ACCORD-CI-41 (2026-07-02), after an unregistered "DEV-ACCORD.11"
+          citation reached a doc heading and a commit trailer undetected.
+      - id: pass-citations-commit-msg
+        name: DEV-ACCORD-CI-41 — commit trailer Pass-ID must resolve to the registry
+        language: system
+        entry: pwsh -NoProfile -File gc-audit/tools/validate-pass-citations.ps1 -Mode CommitMsg -MessageFile
+        pass_filenames: true
+        stages: [commit-msg]
+        description: >
+          Reads the commit message's trailing trailer block and checks any
+          Pass-ID: value against passes/passes.registry.json. "standalone",
+          "N/A", and "none" are valid non-citation values.

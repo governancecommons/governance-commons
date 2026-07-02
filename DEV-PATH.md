@@ -541,3 +541,33 @@ portfolio's git-history policy. New cluster invariant DEV-ACCORD-CI-41 requires
 any future PASS-ID citation (trailer, heading, or cross-reference) to resolve to
 an actual registry entry.
 
+## 2026-07-02 - DEV-ACCORD-CI-41 turned into an automated pre-commit gate (DRIVE)
+
+New validator `gc-audit/tools/validate-pass-citations.ps1` (registered as
+`gc-audit.pass-citations`) checks that PASS-shaped heading citations and
+`Pass-ID:` commit trailers resolve to `passes/passes.registry.json`, catching
+the exact failure class that let "DEV-ACCORD.11" through undetected. Wired into
+`.pre-commit-config.yaml` at two stages: `pre-commit` (scans only the added
+lines of the staged diff for markdown files - not whole-file content, so
+pre-existing citations like the historical DEV-ACCORD.11 heading are not
+retroactively flagged every time the file is touched again) and `commit-msg`
+(scans the commit message's trailing trailer block for a `Pass-ID:` value).
+`standalone`, `N/A`, and `none` remain valid non-citation trailer values.
+GC-PASS-NNNN.NN row-index tokens and `<...>` schema-example placeholders are
+explicitly excluded from citation matching. Both git hook types installed via
+`pre-commit install --hook-type pre-commit --hook-type commit-msg`.
+
+Two false positives were found and fixed during verification, both the same
+bug class fixed elsewhere this session: (1) whole-file scanning would have
+retroactively failed on the pre-existing DEV-ACCORD.11 heading on every future
+unrelated edit to DEV-ACCORD.06.md - fixed by scanning only the staged diff by
+default. (2) commit-msg trailer detection initially matched a line-wrapped
+prose sentence in a commit body that happened to start with "Pass-ID:" (quoting
+the historical bug for explanation) - fixed by restricting the scan to the
+actual trailing trailer block, merging consecutive trailer-shaped paragraphs
+(this repo's convention places a blank line before `Co-Authored-By:`, splitting
+the true trailer block across two paragraphs). Verified against real commit
+history: correctly PASSes on `33c24ef`, `6e5eca5`, `91cb208`, `c48fea3`, and
+correctly FAILs on `2d4a24d` (the actual historical bad commit) when re-checked
+directly, without altering that commit.
+

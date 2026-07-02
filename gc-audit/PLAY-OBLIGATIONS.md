@@ -48,6 +48,7 @@ JSON record; private keys must remain outside the repository.
 | PLAY involves a git split (branch, PR chain, worktree, fork) | `gc-audit validate` on both sides; human authorization required per DEV-ACCORD.10 |
 | PLAY level is ambiguous or escalated | User authorizes before PLAY is declared; authorization recorded in PLAY.jsonl |
 | Any PLAY closes | Run `gc-audit playbook` (`validate-playbook.ps1`) to confirm PLAY.jsonl still conforms to the DEV-PLAYBOOK schema |
+| Any commit citing a PASS ID (heading citation or `Pass-ID:` trailer) | `gc-audit pass-citations` (`validate-pass-citations.ps1`) runs automatically via `.pre-commit-config.yaml` at both the `pre-commit` stage (staged diff) and `commit-msg` stage (trailer block) — no manual invocation needed for normal commits |
 | Human request implies multiple coherent lanes ("as much as possible", "batch it", "all N", "parallelize", cross-repo work) | Agent proposes a compound PASS and declares a compound PASS brief before execution — see DEV-ACCORD.06 amendment (DEV-ACCORD.11) |
 | A compound PASS is closing, a release gate/version changes, or the human explicitly requests it | Run the release/evidence review (`gc-audit release` + zero-trust evidence posture + playbook validation together). Outside these three conditions, per-level obligations above are sufficient — do not run a full release/evidence review after every small RUN or BUNT. |
 

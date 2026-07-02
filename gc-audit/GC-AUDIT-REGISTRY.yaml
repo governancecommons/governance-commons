@@ -96,6 +96,9 @@ tools:
       - script: governance-commons/gc-audit/tools/validate-pointers.ps1
         targetArg: TargetPath
         portfolioOnly: true
+      - script: governance-commons/gc-audit/tools/validate-pass-citations.ps1
+        containmentArg: PortfolioRoot
+        supportsPaths: true
 
   - id: gc-audit.normalize
     verb: normalize
@@ -251,6 +254,19 @@ tools:
         supportsFilePath: true
         supportsStrict: true
         supportsJson: true
+
+  - id: gc-audit.pass-citations
+    verb: validate
+    category: standards-grammar
+    status: active
+    title: Validate PASS-ID citations resolve to the registry
+    description: Checks PASS-shaped heading citations and Pass-ID commit trailers against passes/passes.registry.json, per the DEV-ACCORD.06 amendment declaring DEV-ACCORD-CI-41. Wired into .pre-commit-config.yaml at the pre-commit stage (staged diff) and commit-msg stage (trailer block).
+    mutates: false
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-pass-citations.ps1
+        containmentArg: PortfolioRoot
+        supportsPaths: true
+        supportsMode: ["Files", "CommitMsg"]
 
   - id: gc-audit.format
     verb: validate
