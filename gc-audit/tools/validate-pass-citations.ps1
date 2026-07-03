@@ -111,6 +111,9 @@ try {
 $validAliases = @{}
 foreach ($entry in $registry.entries) {
     if ($entry.alias) { $validAliases[$entry.alias] = $true }
+    if ($entry.legacy_ids) {
+        foreach ($legacyId in $entry.legacy_ids) { $validAliases[$legacyId] = $true }
+    }
 }
 
 # Values that are valid trailer content but are not PASS citations.
