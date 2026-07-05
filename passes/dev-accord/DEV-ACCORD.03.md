@@ -23,7 +23,7 @@ DEV-ACCORD.04.
 
 ## Reading order
 
-Before taking any action on any project:
+The full agent-trail for governed project work is:
 
 1. `PROTECTED.md` — files that cannot be touched without explicit instruction
 2. `DEV-CONTROL-PLANE.md` — portfolio boundary doctrine
@@ -36,6 +36,25 @@ Before taking any action on any project:
 
 **Read when coordinating with other agents:**
 `governance-commons/agent-matrix/agent-matrix.yaml` — agent roles, capabilities, routing, trust levels. Only needed when more than one agent is working on the same project in the same session.
+
+### Bootstrap router
+
+The reading order above defines the full agent-trail. Agents may use the router
+below to avoid expanding every reference before low-risk work. If the task
+escalates, read the additional authority before editing further.
+
+| Task shape | Read now | Defer unless needed |
+| --- | --- | --- |
+| Read-only answer, orientation, or file lookup | `PROTECTED.md`, `DEV-CONTROL-PLANE.md`, relevant `REVIEW-GRAMMAR` verb | Project `DEV-PATH.md` / `DEV-PLAN.md`, Change Playbook details |
+| BUNT: typo, formatting, comment-only, no state change | `PROTECTED.md`, `DEV-CONTROL-PLANE.md`, `DEV-ACCORD.06` BUNT obligations | Project planning docs, PASS/RUN evidence details |
+| RUN: bounded single-repo work | Full reading order through `projects.yaml`; project `DEV-PLAN.md` when the change affects project state | Agent Matrix, evidence-bundle details unless significant |
+| DRIVE or PASS-trigger work | Full reading order, relevant PASS authority, project `DEV-PATH.md` and `DEV-PLAN.md` | Nothing material; escalate before editing if authority is unclear |
+| Client/repo cleanup with no GC standard change | `PROTECTED.md`, `DEV-CONTROL-PLANE.md`, relevant local instructions, `DEV-ACCORD.06` level check | Full GC taxonomy unless the cleanup touches DEV-DOCS, release truth, or protected files |
+| Multi-agent or cross-repo work | Full reading order plus `agent-matrix.yaml` | None |
+
+The router does not override `PROTECTED.md`, DEV-ACCORD.06 escalation rules, or
+DEV-ACCORD.10 git split authorization. A direct edit to a GC standard remains a
+PASS-trigger change.
 
 ---
 
@@ -134,31 +153,23 @@ Each subdirectory is an independent project with its own planning docs. See
 
 ---
 
-## Planning doc roles
+## Planning doc visibility
 
-> **Superseded by DEV-ACCORD.08 (GC:2016).** The visibility column below is replaced.
-> See DEV-ACCORD.08 for the authoritative visibility table and revised private doc rule.
+DEV-ACCORD.08 (GC:2016) replaces the original planning-doc visibility table and
+private doc rule from this PASS. Use DEV-ACCORD.08 as the authority for:
 
-| Doc | Owns | Visibility |
-| --- | --- | --- |
-| `DEV-PATH.md` | Phase history, design decisions, PASS registry — append-only | public repo |
-| `DEV-PLAN.md` | Current execution state, active milestones, priority work queue | public repo |
-| `DEV-TRACKS.md` | Parallel workstreams and dependencies | public repo |
-| `DEV-RELEASE.md` | External release table, entry conditions, release notes | public repo |
-| `passchangelog.md` | Ecosystem-level governance decisions — append-only | public repo |
-| `MARKET.md` | Positioning, audiences, channels, messaging — see schema below | private repo only |
-| `DIST.md` | Distribution tiers, revenue streams, commercial milestones — see schema below | private repo only |
+- DEV-DOCS private-by-default handling
+- public-safe bootstrap stubs
+- required public distribution `.gitignore` block
+- `MARKET.md` and `DIST.md` private-repo-only handling
 
-`DEV-RELEASE.md` is the authority for software release gates. `DIST.md` commercial milestones must reference `DEV-RELEASE.md` rather than duplicate version targets.
-
-### Private doc rule
-
-> **Superseded by DEV-ACCORD.08 (GC:2016).** The rule below is replaced by the expanded
-> private doc rule in DEV-ACCORD.08, which covers all DEV-DOCS, not just MARKET.md/DIST.md.
-
-`MARKET.md` and `DIST.md` must **never** be committed to a public repository. Canonical location: `C:\dev-private\strategy\{product}\`. If a project moves to a private repo, these docs may live inside it. No pointer files, redirects, or stubs for these docs should appear in public repos.
+`DEV-RELEASE.md` remains the authority for software release gates. `DIST.md`
+commercial milestones must reference `DEV-RELEASE.md` rather than duplicate
+version targets.
 
 No new strategy doc types may be introduced without a DEV-ACCORD update.
+
+## Strategy doc schemas
 
 ### MARKET.md schema
 
