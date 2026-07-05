@@ -84,6 +84,22 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0021.00 — 2026-07-05
+
+**pass_id**: GC-PASS-0021.00
+**timestamp**: 2026-07-05T00:00:00Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD.06 (Change Playbook amendment); all GC-conformant agents; PLAY.jsonl closeout obligations; compound-PASS-brief gate
+
+**what**: Amendment to DEV-ACCORD.06 / GC:2014 declaring three overhead-relief changes: (1) BUNT PLAYs are exempt from the PLAY.jsonl record and five-bucket timing table required by CI-33 — a commit trailer and one-line next step is sufficient; (2) single-repo, single-lane RUN PLAYs may record `timing` as one collapsed `{started_at, ended_at, duration_ms}` object instead of the five-bucket breakdown; (3) the compound-PASS-brief gate (CI-38) now triggers only for batches that are cross-repo, cross-agent, touch more than 3 files, or contain a DRIVE/PASS-trigger change (governance-standard-file edits always count as PASS-trigger regardless of size). Adds DEV-ACCORD-CI-47 through DEV-ACCORD-CI-49.
+**why**: The portfolio owner reported spending more session time on governance bookkeeping (PLAY telemetry, closeout sections, blocking briefs) than on the underlying dev work. Review of DEV-ACCORD.06's closeout amendments found that CI-33/34/35 had erased BUNT's intended lightweight tier by requiring the full closeout on every PLAY regardless of level, and that CI-38's brief gate had no size floor, blocking trivial same-repo batches the same as genuine cross-repo/multi-agent work.
+**new_constraints**: (1) BUNT closeout is commit-trailer-only; PLAY.jsonl and timing tables apply to RUN/DRIVE/PASS. (2) Single-lane RUN may use collapsed timing. (3) Compound-PASS-brief gate applies only above the stated size/scope floor; edits to GC standard files remain PASS-trigger regardless of size.
+**reasoning**: Preserves DRIVE/PASS-level rigor (full timing, full closeout, blocking brief for genuinely cross-cutting work) while removing the bookkeeping tax on trivial, single-repo, single-lane work — the exact case the BUNT tier was originally meant to cover before the closeout amendments made it universal. The governance-standard-file carve-out in CI-49 keeps this change from reopening the CI-38 incident: an agent still cannot use the size floor as a loophole to edit DEV-ACCORD/CANON files without a brief.
+
+---
+
 ## GC-PASS-0020.00 — 2026-07-02
 
 **pass_id**: GC-PASS-0020.00

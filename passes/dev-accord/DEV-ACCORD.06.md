@@ -781,3 +781,84 @@ operation. Broader topology or repo-identity authorization is insufficient.
 - Nested repos clarified as valid unless a separate policy forbids them
 - `.git` directory operations protected behind exact human authorization
 - 2 new cluster invariants: DEV-ACCORD-CI-45 and DEV-ACCORD-CI-46
+
+---
+
+## Amendment — 2026-07-05 — BUNT Closeout Exemption, RUN Timing Relief, and Compound-Brief Threshold
+
+### 1. Gap this amendment closes
+
+The universal PLAY closeout rule (CI-33/34/35) applied the full closeout — five-bucket
+timing table, PLAY summary, classified next step — to every PLAY without exception,
+including BUNT. BUNT's per-class obligations declared earlier in this PASS already
+require only "commit only," but the closeout rule layered a PLAY.jsonl entry and
+timing table on top of that, erasing the lightweight tier in practice. Separately,
+the compound-PASS-brief requirement (CI-38) blocked file edits for any batch-shaped
+request regardless of size, including small same-repo batches. The portfolio owner
+reported spending more session time on governance bookkeeping than on the underlying
+dev work. This amendment narrows both rules to the cases they were written for.
+
+### 2. BUNT closeout exemption
+
+A PLAY declared at BUNT level is exempt from the PLAY.jsonl record and the
+five-bucket timing table required by CI-33. A BUNT closeout requires only the
+commit trailer (`Change-Level: BUNT`, `Dev-Docs: not-needed` or `updated`,
+`Reason:` when not-needed) and a one-line next step. CI-33's universal closeout
+now applies to RUN, DRIVE, and PASS; BUNT keeps the "commit only" obligation from
+the Per-Class Obligations table above.
+
+If a BUNT is later found to have touched release truth or a DRIVE-trigger file,
+the escalation rule still applies retroactively — the PLAY is re-recorded at the
+correct level, not exempted after the fact.
+
+### 3. RUN timing relief
+
+A RUN PLAY that is single-repo and single-lane (not part of a compound PASS, not
+touching more than one project) may record `timing` as one
+`{started_at, ended_at, duration_ms}` object instead of the
+`read`/`plan`/`execute`/`verify`/`close` five-bucket breakdown. DRIVE and PASS
+retain the full five-bucket requirement unchanged.
+
+### 4. Compound-PASS-brief threshold
+
+The compound-PASS-brief gate (CI-38) triggers only when a batch-shaped request
+meets at least one of:
+
+- spans more than one repo or project,
+- requires coordination between more than one agent,
+- touches more than 3 files,
+- contains a DRIVE-trigger or PASS-trigger change per the Escalation Rules table
+  above — a direct edit to a DEV-ACCORD, CANON, or other GC standard file is
+  always a PASS-trigger regardless of file count.
+
+A batch that stays within a single repo, a single lane, 3 files or fewer, and no
+DRIVE/PASS trigger may proceed without a blocking brief — it is declared and
+executed as an ordinary RUN or BUNT with its normal closeout. This does not
+repeal CI-38 for the cases it was written for.
+
+### 5. Cluster invariant additions
+
+**DEV-ACCORD-CI-47 — BUNT is exempt from PLAY.jsonl and timing-table closeout**
+A PLAY declared at BUNT level requires only the commit trailer and a one-line
+next step. The PLAY.jsonl record and five-bucket timing table required by CI-33
+apply to RUN, DRIVE, and PASS; they do not apply to BUNT. Retroactive escalation
+still applies if a BUNT is later found to touch release truth.
+
+**DEV-ACCORD-CI-48 — Single-lane RUN may use collapsed timing**
+A RUN PLAY that is single-repo, single-lane, and not part of a compound PASS may
+record `timing` as one `{started_at, ended_at, duration_ms}` object instead of
+the five-bucket breakdown. DRIVE and PASS retain the full breakdown.
+
+**DEV-ACCORD-CI-49 — Compound-brief gate has a size floor**
+The compound-PASS-brief requirement (CI-38) triggers only for batches that are
+cross-repo, cross-agent, touch more than 3 files, or contain a DRIVE/PASS-trigger
+change — governance-standard-file edits are always a PASS-trigger regardless of
+size. Batches under that floor proceed as ordinary RUN/BUNT work without a
+blocking brief.
+
+### Outputs of this amendment
+
+- BUNT closeout exemption declared, narrowing CI-33 scope to RUN/DRIVE/PASS
+- Single-lane RUN collapsed-timing option declared
+- Compound-PASS-brief size/scope floor declared, refining CI-38
+- 3 new cluster invariants: DEV-ACCORD-CI-47 through DEV-ACCORD-CI-49
