@@ -59,7 +59,7 @@ All of the following are complete at spec/schema/test-vector level. The gap is p
 **Status:** In progress — PASS-5 Batch 3/4 remaining  
 **PASS:** PASS-5 (Public Release Train)  
 **Open question:** Rename to v1.0.0 for public clarity? Maintainer decision required before Batch 4.  
-**Blocker:** LLC filing — GitHub Releases and PyPI/npm publish are gated on this.
+**Blocker:** none — Osprey Strategic Holdings LLC has been live since 2026-06-15; the LLC-filing gate below is resolved.
 
 ### What ships
 
@@ -85,7 +85,7 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 
 ### Admission criteria (all must be true before v1.2.0 ships)
 
-- [ ] LLC filing complete (unblocks GitHub Releases and PyPI/npm)
+- [x] LLC filing complete (unblocks GitHub Releases and PyPI/npm) — Osprey Strategic Holdings LLC live since 2026-06-15
 - [ ] `gc-validate --spec ons` passes cleanly in CI on a fresh clone
 - [ ] `gc-validate --spec dossier` passes cleanly in CI on a fresh clone
 - [ ] `governance-commons-py` publishes successfully via OIDC trusted publisher workflow

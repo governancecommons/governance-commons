@@ -121,11 +121,11 @@ spec surface required for a credible v1.0 public release.
 
 **PASS-5 Batch 3 (parallel — after Batch 2):**
 
-1. GC-5-G-02 — GitHub Releases: create tagged releases for agent-dossier v1.1.0 and APO v1.1.0; release notes for all four v1.2.0 specs — **O** _(agent-dossier + APO tags exist; releases held pending LLC filing)_
+1. GC-5-G-02 — GitHub Releases: create tagged releases for agent-dossier v1.1.0 and APO v1.1.0; release notes for all four v1.2.0 specs — **O** _(agent-dossier + APO tags exist; LLC filing gate resolved 2026-06-15 — Osprey Strategic Holdings LLC live — releases can now proceed)_
 2. GC-5-G-03 — governancecommons.org: live ecosystem landing page with per-standard pages; links to spec repos, validator packages, and conformance badge instructions — **O**
 3. GC-5-G-04 — OSS baseline freeze notice: document the frozen OSS core scope on governancecommons.org and in release notes; clarify that PASS-6 profiles are optional extensions, not baseline requirements — **O**
 
-**PASS-5 Batch 4 — End-game publish (final; gated on Batch 2 complete + LLC filing):**
+**PASS-5 Batch 4 — End-game publish (final; gated on Batch 2 complete; LLC filing gate resolved 2026-06-15):**
 
 1. GC-5-F-02 — governance-commons-py: publish to PyPI via OIDC trusted publisher workflow — **O**
 2. GC-5-F-03 — governance-commons-js: publish to npm via provenance workflow — **O**
