@@ -58,5 +58,5 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         # No api-token needed — uses OIDC trusted publisher.
         # Configure at: https://pypi.org/manage/project/governance-commons/settings/publishing/
-        # Publisher settings: owner=governancecommons repo=governance-commons-sdk
+        # Publisher settings: owner=governancecommons repo=governance-commons-registry
         # workflow=publish-py.yml environment=pypi

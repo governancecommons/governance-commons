@@ -145,7 +145,7 @@ projects:
 
   - name: governance-commons-sdk
     path: governance-commons-sdk
-    github: governancecommons/governance-commons-sdk
+    github: governancecommons/governance-commons-registry
     group: sdk
     description: "Code-level implementation of Governance Commons standards — ONS TypeScript/Python validators, npm + PyPI package scaffolds"
     status: wip

@@ -103,7 +103,7 @@ All 19 PASS-1 immediate tasks closed. See CHANGELOG entries PASS-2026-0004 throu
 **PASS-5 Batch 1 (parallel) — immediate next tasks:**
 
 1. ~~GC-5-F-01~~ — Release train manifest format — DONE: `schemas/gc-release-manifest.schema.json` v1.0.0 (status lifecycle planned→ready→deprecated; pinning contract with compat-hold enforcement); `releases/gc-v1.2.0.yaml` declared (status: planned; advances to ready after registry publish + GC-5-G-02) — **C**
-2. ~~GC-5-G-01~~ — GitHub org (governancecommons) — DONE: org exists; all 11 repos transferred (agent-dossier, agent-matrix, ons, agent-project-orchestrator, agent-team-protocol, governance-commons, governance-commons-sdk, agent-roster, agent-dossier-www, governance-commons-www, governance-commons-vscode) — **C**
+2. ~~GC-5-G-01~~ — GitHub org (governancecommons) — DONE: org exists; all 11 repos transferred (agent-dossier, agent-matrix, ons, agent-project-orchestrator, agent-team-protocol, governance-commons, governance-commons-registry, agent-roster, agent-dossier-www, governance-commons-www, governance-commons-vscode) — **C** _(governance-commons-sdk renamed to governance-commons-registry 2026-07-11)_
 3. ~~GC-5-H-01~~ — RFC process — DONE: `rfcs/RFC-PROCESS.md` (lifecycle, numbering, required sections, two-week comment window, acceptance/rejection rules) + `rfcs/RFC-0000-template.md` (all required sections pre-scaffolded) — **C**
 4. ~~GC-5-H-02~~ — `ADOPTERS.md` + conformance badge criteria — DONE: `ADOPTERS.md` (self-declaration format, adopter table, profile summary); `docs/conformance/badge-criteria.md` (per-spec criteria for advisory/standard/strict, shields.io badge patterns, declaration process) — **C**
 
