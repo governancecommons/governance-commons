@@ -59,7 +59,8 @@ All of the following are complete at spec/schema/test-vector level. The gap is p
 **Status:** In progress — PASS-5 Batch 3/4 remaining  
 **PASS:** PASS-5 (Public Release Train)  
 **Open question:** Rename to v1.0.0 for public clarity? Maintainer decision required before Batch 4.  
-**Blocker:** none — Osprey Strategic Holdings LLC has been live since 2026-06-15; the LLC-filing gate below is resolved.
+**Blocker:** none structural — Osprey Strategic Holdings LLC has been live since 2026-06-15; the LLC-filing gate below is resolved.
+**Paused, priority to resume (2026-07-11):** PyPI trusted-publisher registration and npm token setup are on hold on the maintainer's side (external account-level actions, not something an agent can perform). Cross-platform artifact proof (Python wheel + npm tarball + npm CLI, all three OSes) is already done and does not depend on this. **Resume this first** once the maintainer can concentrate on the PyPI/npm account setup — everything else in this section can proceed in parallel.
 
 ### What ships
 
