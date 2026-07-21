@@ -629,3 +629,20 @@ portfolio design permits them. `.git` directory operations now require exact
 human authorization naming the operation; broad "topology" or "repo identity"
 authorization is not enough. New invariants CI-45 and CI-46 cover the rule.
 
+## 2026-07-21 - DEV-PLAN.md corrected against releases/gc-v1.2.0.yaml (fix, from ECOSYSTEM-BOUNDARY.00 Phase 1)
+
+A cross-repo stranger-proof audit (`c:\dev\docs\ecosystem-roadmap.md`,
+Phase 1) found `DEV-PLAN.md` disagreeing with the actual release
+artifact: `releases/gc-v1.2.0.yaml` has carried `status: ready` since
+2026-06-17, with `pinned_version` populated and `compat_status: ok` for
+all four specs, while `DEV-PLAN.md`'s own PASS-5 Batch 4 task list still
+listed GC-5-F-04 ("advance status from planned to ready...") as open, and
+the Release Train Status table still labeled GC v1.2.0 "Planned."
+
+Corrected both to match the artifact: GC-5-F-04 marked done, the Batch 1
+GC-5-F-01 entry's stale parenthetical updated, and the status table row
+changed from "Planned" to "Ready (M2) since 2026-06-17." GC-5-F-02 and
+GC-5-F-03 (PyPI/npm publish) remain genuinely open — they are blocked on
+external OIDC/NPM_TOKEN account setup, which this fix does not touch and
+cannot resolve from inside a repo edit.
+

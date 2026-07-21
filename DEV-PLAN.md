@@ -102,7 +102,7 @@ All 19 PASS-1 immediate tasks closed. See CHANGELOG entries PASS-2026-0004 throu
 
 **PASS-5 Batch 1 (parallel) — immediate next tasks:**
 
-1. ~~GC-5-F-01~~ — Release train manifest format — DONE: `schemas/gc-release-manifest.schema.json` v1.0.0 (status lifecycle planned→ready→deprecated; pinning contract with compat-hold enforcement); `releases/gc-v1.2.0.yaml` declared (status: planned; advances to ready after registry publish + GC-5-G-02) — **C**
+1. ~~GC-5-F-01~~ — Release train manifest format — DONE: `schemas/gc-release-manifest.schema.json` v1.0.0 (status lifecycle planned→ready→deprecated; pinning contract with compat-hold enforcement); `releases/gc-v1.2.0.yaml` declared (status advanced to `ready` 2026-06-17, ahead of registry publish + GC-5-G-02 — see GC-5-F-04 below) — **C**
 2. ~~GC-5-G-01~~ — GitHub org (governancecommons) — DONE: org exists; all 11 repos transferred (agent-dossier, agent-matrix, ons, agent-project-orchestrator, agent-team-protocol, governance-commons, governance-commons-registry, agent-roster, agent-dossier-www, governance-commons-www, governance-commons-vscode) — **C** _(governance-commons-sdk renamed to governance-commons-registry 2026-07-11)_
 3. ~~GC-5-H-01~~ — RFC process — DONE: `rfcs/RFC-PROCESS.md` (lifecycle, numbering, required sections, two-week comment window, acceptance/rejection rules) + `rfcs/RFC-0000-template.md` (all required sections pre-scaffolded) — **C**
 4. ~~GC-5-H-02~~ — `ADOPTERS.md` + conformance badge criteria — DONE: `ADOPTERS.md` (self-declaration format, adopter table, profile summary); `docs/conformance/badge-criteria.md` (per-spec criteria for advisory/standard/strict, shields.io badge patterns, declaration process) — **C**
@@ -129,7 +129,7 @@ spec surface required for a credible v1.0 public release.
 
 1. GC-5-F-02 — governance-commons-py: publish to PyPI via OIDC trusted publisher workflow — **O**
 2. GC-5-F-03 — governance-commons-js: publish to npm via provenance workflow — **O**
-3. GC-5-F-04 — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — **O**
+3. ~~GC-5-F-04~~ — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — DONE: `status: ready` since 2026-06-17; all four specs (agent-dossier, agent-matrix, ons, agent-project-orchestrator) have `pinned_version` populated and `compat_status: ok`; `compat_hold_items: []`. This DEV-PLAN.md row had gone stale against the artifact (caught by the ECOSYSTEM-BOUNDARY.00 cross-repo audit, `c:\dev\docs\ecosystem-roadmap.md` Phase 1) — GC-5-F-02/03 (PyPI/npm publish) remain genuinely open, blocked on external OIDC/NPM_TOKEN setup, not on this item — **C**
 
 > **Release strategy note (updated 2026-06-09):** PASS-5 Batch 2 completion freezes the OSS baseline. PASS-6 dev work may begin from that frozen baseline and does NOT wait for the end-game publish sequence. The public launch and PASS-6 development run in parallel. Open question: whether the first public release is labeled GC v1.2.0 or renamed GC v1.0.0 for public clarity — requires maintainer decision before Batch 4. No fork is planned at this point; versioning happens at the GC release-manifest boundary.
 
@@ -509,7 +509,7 @@ portability tracking item needed; ONS-PC items cover the one real gap (platform 
 | GC Release | Status | Requires |
 | --- | --- | --- |
 | GC v1.0.0 | Implied (current) | Current published versions of each spec |
-| GC v1.2.0 | Planned (M2) — manifest declared (`releases/gc-v1.2.0.yaml`) | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1.1.0 |
+| GC v1.2.0 | Ready (M2) since 2026-06-17 — manifest `status: ready` (`releases/gc-v1.2.0.yaml`); PyPI/npm publish (GC-5-F-02/03) still open, blocked on external OIDC/NPM_TOKEN setup | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1.1.0 |
 | GC v1.3.0 | Planned (M3) | agent-dossier >=1.2.0 + agent-matrix >=1.4.0 + ONS >=1.3.0 |
 | GC v2.0.0 | Planned (M4) | Major version — breaking changes allowed |
 
