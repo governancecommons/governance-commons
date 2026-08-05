@@ -646,3 +646,82 @@ GC-5-F-03 (PyPI/npm publish) remain genuinely open — they are blocked on
 external OIDC/NPM_TOKEN account setup, which this fix does not touch and
 cannot resolve from inside a repo edit.
 
+## 2026-08-05 - GC-AUDIT.01.00 (working name, not yet registered) — diagnostic accuracy fixes in validate-recent-work.ps1 and validate-format.ps1 (fix)
+
+Prompted by a real, observed defect: `marlin audit release --project cockpit`
+reported "no pending items in DEV-RELEASE.md files" and "no open PASS gates"
+even though cockpit's `DEV-RELEASE.md` intentionally retains real, unfinished
+v1.0.0 entry conditions. Confirmed as a validator classification defect, not
+a reason to close those gates — the fix corrects diagnostic accuracy, it does
+not close or alter any repo's actual release state.
+
+Four real, reproduced bugs, all in `validate-recent-work.ps1` except the
+last:
+
+1. **PASS-status parsing (GC-AUDIT.01.01).** Level 4's "open PASS gates"
+   check did a whole-file substring match for `status:\s*(open|draft|
+   in.progress|pending)` instead of reading a PASS file's own authoritative
+   header field. Reproduced live: `CANON.02.md` (real `Status: ACCEPTED`)
+   was flagged as open because its body separately discusses registry
+   *entry* statuses in passing ("a binding entry (status: draft, accepted,
+   sealed, or reserved)"). Fixed with `Get-PassStatus`, a line-anchored
+   reader for the two real header conventions in this portfolio
+   (`**Status:**` and NP-METADATA `- Status:`).
+
+2. **Release-readiness semantics (GC-AUDIT.01.02).** The DEV-RELEASE.md
+   check only grepped for the literal words pending/blocked/not ready/tbd/
+   todo. Reproduced live against cockpit: real `- [ ]` entry-condition
+   gates and `⬜`/"In progress" status cells contain none of those words,
+   so real open gates were invisible. Fixed with `Get-ActiveReleaseVersion`
+   (the Release Table row whose status cell contains "in progress" — the
+   convention already in real use in cockpit's and marlin's own
+   DEV-RELEASE.md files) and `Get-ActiveReleaseGaps` (counts real unchecked
+   `- [ ]` items scoped to that version's own section only — a future or
+   historical release's unchecked items are not this version's gate).
+
+3. **Repository and archive boundaries (GC-AUDIT.01.03).** This script's
+   own `Get-GitRoots` had no exclusion filter, unlike every sibling script
+   in this tool family. Reproduced live: `lasso_archive` and
+   `lasso-mvp_archive` are real git repos at the portfolio root with no
+   archive marker the old filter recognized, so a portfolio-root run mixed
+   them into "dirty repos" and "recent commits" as active work. Fixed with
+   one `$excludeRegex` (matching the standard convention, extended to also
+   match a whole segment ending in `_archive`/`-archive`, bare or nested),
+   applied consistently to every `Get-ChildItem -Recurse` call and
+   `Get-GitRoots` in this file.
+
+4. **Marker and script signal quality (GC-AUDIT.01.04).** Two separate
+   fixes. First, Level 3's open-marker scan matched `\[ \]` (any markdown
+   checkbox) case-insensitively, plus ordinary prose uses of "placeholder"/
+   "stub"/"TBD" — reproduced live against cockpit at a 720h window: 16
+   "hits," all 16 false (9 were DEV-RELEASE.md's legitimate future/active
+   checklists, already handled correctly and separately by item 2 above;
+   the rest were ordinary English sentences using these words normally, or
+   quoted mentions like `"TBD" again` — discussing the term, not marking
+   something as "TBD"). Fixed by removing `[ ]` from the pattern, requiring
+   case-sensitive matches (genuine markers in this portfolio are
+   conventionally shouted), and excluding matches wrapped in quotes on
+   both sides. Second, `validate-format.ps1` line 106's
+   `$scriptFiles = $scriptFiles | Select-Object -Unique` unwrapped to a
+   bare string when exactly one file survived, and `Set-StrictMode
+   -Version Latest` then threw `PropertyNotFoundException` on `.Count`,
+   silently printing a blank count. Fixed with `@(...)` around the
+   pipeline. Root `*.ps1` scripts were re-validated as part of this fix
+   (all 20 real scripts in this repo still parse cleanly), not as a
+   separate sweep.
+
+**New regression suite (GC-AUDIT.01.05):** `gc-audit/tests/*.Tests.ps1`,
+Pester (brownfield black-box, per `TESTING-STRATEGY.md`) — 11 tests across
+5 fixture files, each building a real minimal fixture directory (real
+`.git` repos for the archive-boundary fixture, real PLAY.jsonl/DEV-RELEASE.md/
+PASS.md shapes for the others) rather than mocking the scripts under test.
+Covers: the CANON.02-shaped metadata false positive, a future release's
+gates correctly not counted alongside a genuine open gate that is still
+caught, an archived repo excluded from active-repo scanning, a malformed
+PLAY record warning instead of crashing the scan, and the single-file
+format-check count. All 11 pass; all four fixes verified live against the
+real repos that exposed them (governance-commons, cockpit) in addition to
+the fixture suite.
+
+No repo's release state, PASS status, or gate was altered by this work —
+only how accurately those real states are reported.

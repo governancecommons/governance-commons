@@ -39,6 +39,20 @@ $exitFail = $false
 $powerShellHost = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
 $isWindowsHost = ($env:OS -eq "Windows_NT")
 
+# Same exclusion convention already standard across this tool family
+# (validate-format.ps1, validate-bootstrap.ps1, validate-ci-invariants.ps1,
+# etc.) - this script was the one exception, scanning node_modules/.venv/
+# dist/build scratch trees that every sibling script already skips.
+#
+# The last alternative additionally matches a whole segment ending in
+# "_archive"/"-archive" (lasso_archive, lasso-mvp_archive, ...), whether it
+# is a bare directory name with no trailing separator (Get-GitRoots'
+# top-level scan) or a segment nested inside a longer path
+# (...\lasso_archive\DEV-PLAN.md) - checked via a following separator or
+# end-of-string, so a file merely containing "-archive" mid-name (e.g.
+# "archive-notes.md") is not falsely excluded.
+$excludeRegex = '(?i)[\\/](\.git|node_modules|_tmp|dist|build|out|coverage|\.venv|\.pytest_cache|[^\\/]*[_-]archive)(?:[\\/]|$)'
+
 $levelNames = @{ 1="Quick Health"; 2="Recent-Work Review"; 3="Adversarial Audit"; 4="Release Readiness" }
 
 function Write-Header([string]$text) {
@@ -62,11 +76,76 @@ function Invoke-ReadOnlyValidator([string]$ScriptPath, [string]$TargetRoot) {
 
 function Get-GitRoots {
     $roots = @()
-    if (Test-Path (Join-Path $root ".git")) { $roots += $root }
+    if ((Test-Path (Join-Path $root ".git")) -and $root -notmatch $excludeRegex) { $roots += $root }
     Get-ChildItem $root -Directory -Depth 2 -ErrorAction SilentlyContinue | ForEach-Object {
+        if ($_.FullName -match $excludeRegex) { return }
         if (Test-Path (Join-Path $_.FullName ".git")) { $roots += $_.FullName }
     }
-    return $roots | Select-Object -Unique
+    return @($roots | Select-Object -Unique)
+}
+
+function Get-PassStatus([string]$FilePath) {
+    # Reads only the authoritative PASS metadata field - a line-anchored
+    # **Status:** (DEV-ACCORD style) or NP-METADATA "- Status:" (CANON
+    # style) declaration - never prose that merely contains the word
+    # "status" elsewhere in the body. Real example: CANON.02.md's own
+    # header says "Status: ACCEPTED", but its body also discusses registry
+    # *entry* statuses in passing ("a binding entry (status: draft,
+    # accepted, sealed, or reserved)") - a whole-file substring match
+    # cannot tell those apart; a line-anchored field read can.
+    $lines = Get-Content -LiteralPath $FilePath -ErrorAction SilentlyContinue
+    foreach ($line in $lines) {
+        if ($line -match '^\*\*Status:\*\*\s*(.+?)\s*$') { return $Matches[1].Trim() }
+        if ($line -match '^-\s*Status:\s*(.+?)\s*$') { return $Matches[1].Trim() }
+    }
+    return $null
+}
+
+function Get-ActiveReleaseVersion([string[]]$Lines) {
+    # The active release candidate is the Release Table row whose status
+    # cell contains "in progress" - the convention already in real use
+    # across this portfolio's DEV-RELEASE.md files (cockpit, marlin). Rows
+    # marked Done, planned, open, or bare unchecked are historical or
+    # future work, not this repo's current gate.
+    foreach ($line in $Lines) {
+        if ($line -notmatch '^\s*\|') { continue }
+        $cells = $line.Trim().Trim('|') -split '\|' | ForEach-Object { $_.Trim() }
+        if ($cells.Count -lt 2) { continue }
+        $versionCell = $cells[0]
+        $statusCell  = $cells[-1]
+        if ($versionCell -notmatch '^v?\d+(\.\d+)+') { continue }
+        if ($statusCell -match '(?i)in.?progress') { return $versionCell }
+    }
+    return $null
+}
+
+function Get-ActiveReleaseGaps([string]$FilePath) {
+    # Counts real unchecked "- [ ]" items, scoped to the active release
+    # candidate's own section only (a heading naming that version). A
+    # future or historical release's unchecked entry conditions are not
+    # this version's gate and must not be reported as one.
+    $lines = Get-Content -LiteralPath $FilePath -ErrorAction SilentlyContinue
+    if (-not $lines) { return @() }
+
+    $activeVersion = Get-ActiveReleaseVersion $lines
+    if (-not $activeVersion) { return @() }
+
+    $escaped   = [regex]::Escape($activeVersion)
+    $gaps      = @()
+    $inSection = $false
+    foreach ($line in $lines) {
+        if ($line -match ('^#{1,4}\s.*' + $escaped + '\b')) {
+            $inSection = $true
+            continue
+        }
+        if ($inSection -and $line -match '^#{1,4}\s') {
+            $inSection = $false
+        }
+        if ($inSection -and $line -match '^\s*-\s*\[\s\]\s*(.+?)\s*$') {
+            $gaps += $Matches[1]
+        }
+    }
+    return @($gaps)
 }
 
 # header
@@ -184,14 +263,29 @@ if ($Level -ge 3) {
     Write-Header "Level 3 - Adversarial Audit (last $Hours h)"
 
     # 3a. Open markers in recently-touched markdown
-    $openPattern = "TODO|FIXME|TBD|\[ \]|PLACEHOLDER|STUB"
+    #
+    # Real false positives found live against this portfolio, fixed here:
+    #   - "[ ]" matched every markdown checkbox, including DEV-RELEASE.md's
+    #     legitimate, intentional entry-condition checklists - already
+    #     counted correctly (scoped to the active release only) by 4a's
+    #     Get-ActiveReleaseGaps. Removed from this pattern entirely; this
+    #     scan is for stray debt markers, not planning checklists.
+    #   - Case-insensitive matching caught ordinary prose using these words
+    #     normally ("a footer placeholder", "leave it stubbed") - genuine
+    #     markers in this portfolio are conventionally shouted (TODO,
+    #     STUB, PLACEHOLDER); requiring exact case removes the prose hits
+    #     without losing a real marker anyone actually writes that way.
+    #   - Quoted mentions ("TBD" as the subject of a sentence prohibiting
+    #     its use, not TBD used as a live marker) are excluded via
+    #     lookaround - a marker is never wrapped in quotes on both sides.
+    $openPattern = '(?<!["''`])\b(TODO|FIXME|TBD|PLACEHOLDER|STUB)\b(?!["''`])'
     $mdFiles = Get-ChildItem $root -Recurse -Filter "*.md" -ErrorAction SilentlyContinue |
-        Where-Object { $_.LastWriteTime -gt $since -and $_.FullName -notmatch '\\node_modules\\|\\\.git\\' }
+        Where-Object { $_.LastWriteTime -gt $since -and $_.FullName -notmatch $excludeRegex }
 
     $markerHits = 0
     foreach ($f in $mdFiles) {
         $hits = Get-Content $f.FullName -ErrorAction SilentlyContinue |
-            Select-String -Pattern $openPattern
+            Select-String -Pattern $openPattern -CaseSensitive
         foreach ($h in $hits) {
             $markerHits++
             if (-not $Summary) {
@@ -201,14 +295,14 @@ if ($Level -ge 3) {
         }
     }
     if ($markerHits -eq 0) {
-        Write-Pass "no open markers (TODO/FIXME/TBD/STUB) in recently-touched markdown"
+        Write-Pass "no open markers (TODO/FIXME/TBD/STUB/PLACEHOLDER) in recently-touched markdown"
     } else {
         Write-Warn "$markerHits open marker(s) in recently-touched markdown"
     }
 
     # 3b. DEV-PLAN.md staleness: plan not touched but repo has new commits
     $planDocs = Get-ChildItem $root -Recurse -Filter "DEV-PLAN.md" -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch '\\\.git\\' }
+        Where-Object { $_.FullName -notmatch $excludeRegex }
 
     $staleCount = 0
     foreach ($pd in $planDocs) {
@@ -228,7 +322,7 @@ if ($Level -ge 3) {
 
     # 3c. PLAY.jsonl preflight coverage
     $playFiles = Get-ChildItem $root -Recurse -Filter "PLAY.jsonl" -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch '\\\.git\\|\\node_modules\\' }
+        Where-Object { $_.FullName -notmatch $excludeRegex }
 
     if ($playFiles.Count -eq 0) {
         Write-Warn "no PLAY.jsonl found under $root - PLAY preflight coverage unknown"
@@ -308,36 +402,55 @@ if ($Level -ge 3) {
 if ($Level -ge 4) {
     Write-Header "Level 4 - Release Readiness"
 
-    # 4a. DEV-RELEASE.md pending items
+    # 4a. DEV-RELEASE.md real unchecked gates - structural, scoped to the
+    # active release candidate (Get-ActiveReleaseVersion / -Gaps above),
+    # not a keyword scan of the whole file. A future release's own
+    # unchecked entry conditions (e.g. cockpit's v1.1.0/v2.0.0 rows) are
+    # not this repo's current gate and must not be reported as one; a
+    # real open gate in the *active* release (cockpit's real, unfinished
+    # v1.0.0 checklist) must still be caught.
     $releaseDocs = Get-ChildItem $root -Recurse -Filter "DEV-RELEASE.md" -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -notmatch '\\\.git\\' }
+        Where-Object { $_.FullName -notmatch $excludeRegex }
 
     $pendingCount = 0
     foreach ($rd in $releaseDocs) {
-        $c = Get-Content $rd.FullName -Raw -ErrorAction SilentlyContinue
-        if ($c -match "(?i)(pending|blocked|not ready|tbd|todo)") {
+        $gaps = Get-ActiveReleaseGaps $rd.FullName
+        if ($gaps.Count -gt 0) {
             $rel = $rd.FullName.Replace($root, "").TrimStart("\")
-            Write-Find "pending release items: $rel"
+            Write-Find "$($gaps.Count) unchecked gate(s) in the active release: $rel"
+            if (-not $Summary) {
+                foreach ($g in $gaps) { Write-Host "        - [ ] $g" -ForegroundColor DarkYellow }
+            }
             $pendingCount++
         }
     }
     if ($pendingCount -eq 0) {
-        Write-Pass "no pending items in DEV-RELEASE.md files"
+        Write-Pass "no unchecked gates in any active release candidate"
     } else {
-        Write-Warn "$pendingCount DEV-RELEASE.md file(s) with pending items"
+        Write-Warn "$pendingCount DEV-RELEASE.md file(s) with unchecked gates in their active release"
     }
 
-    # 4b. Open PASS gates
+    # 4b. Open PASS gates - reads each file's own authoritative Status
+    # field (Get-PassStatus above), never a whole-file substring match,
+    # which false-positives on prose that merely mentions the word inside
+    # an example (CANON.02's real Status is ACCEPTED; its body separately
+    # discusses registry *entry* statuses, unrelated to its own).
     $passDir = Join-Path $root "passes"
     if (-not (Test-Path $passDir)) {
         $passDir = Join-Path $root "governance-commons\passes"
     }
     if (Test-Path $passDir) {
-        $openPasses = Get-ChildItem $passDir -Recurse -Filter "*.md" -ErrorAction SilentlyContinue |
-            Where-Object { $_.FullName -notmatch '\\\.git\\' } |
-            Where-Object {
-                $c = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-                $c -match "(?i)status:\s*(open|draft|in.progress|pending)"
+        $openPasses    = @()
+        $unknownStatus = @()
+        Get-ChildItem $passDir -Recurse -Filter "*.md" -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -notmatch $excludeRegex } |
+            ForEach-Object {
+                $status = Get-PassStatus $_.FullName
+                if ($null -eq $status) {
+                    $unknownStatus += $_
+                } elseif ($status -match "(?i)(open|draft|in.progress|pending)") {
+                    $openPasses += $_
+                }
             }
         if ($openPasses.Count -eq 0) {
             Write-Pass "no open PASS gates"
@@ -347,6 +460,11 @@ if ($Level -ge 4) {
                 foreach ($p in $openPasses) {
                     Write-Find $p.FullName.Replace($root, "").TrimStart("\")
                 }
+            }
+        }
+        if ($unknownStatus.Count -gt 0 -and -not $Summary) {
+            foreach ($p in $unknownStatus) {
+                Write-Info "no recognized Status field: $($p.FullName.Replace($root, '').TrimStart('\'))"
             }
         }
     } else {

@@ -71,6 +71,16 @@ Minimum fixture set:
 | `valid-preflight-blocked/` | Valid `PREFLIGHT: blocked` stamp — must exit 0 |
 | `duplicate-ci-id/` | Two markdown files declaring the same `DEV-ACCORD-CI-9` — must exit 1 |
 
+GC-AUDIT.01 fixtures (`validate-recent-work.ps1` and `validate-format.ps1` diagnostic-accuracy fixes, added 2026-08-05 — the first fixtures actually implemented under this strategy):
+
+| Fixture | What it tests |
+| --- | --- |
+| `pass-status-metadata.Tests.ps1` | A PASS file with real `Status: ACCEPTED` whose body separately quotes an unrelated `status: draft` example — must not be reported as an open PASS gate |
+| `release-gate-semantics.Tests.ps1` | A Release Table with a Done version, an "In progress" version with real unchecked gates, and a "Planned" version with its own unstarted gates — the active version's gates must be reported; the future version's must not |
+| `repo-archive-boundaries.Tests.ps1` | A real git repo named `*_archive` alongside an ordinary active repo, both dirty — the archived one must not appear in Level 2's dirty-repo output |
+| `malformed-play-record.Tests.ps1` | A `PLAY.jsonl` with one malformed JSON line followed by one valid record — must warn on the bad line, not crash, and still count the valid one |
+| `format-check-single-file.Tests.ps1` | Exactly one `.ps1` file in scope — the single-item pipeline collapse under `Set-StrictMode` must not throw `PropertyNotFoundException` |
+
 Fixture location: `governance-commons/gc-audit/tests/`
 
 Test runner: Pester (preferred) or a plain PowerShell runner if Pester is not available.

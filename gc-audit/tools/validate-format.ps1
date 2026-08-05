@@ -103,7 +103,7 @@ Get-ChildItem -Path $root -Filter *.ps1 -File -ErrorAction SilentlyContinue |
     Where-Object { $_.FullName -notmatch $excludeRegex } |
     ForEach-Object { $scriptFiles.Add($_.FullName) }
 
-$scriptFiles = $scriptFiles | Select-Object -Unique
+$scriptFiles = @($scriptFiles | Select-Object -Unique)
 
 Write-Host ""
 Write-Host "  GC-AUDIT FORMAT CHECK (provider-based, parse-only) - validate-format.ps1" -ForegroundColor White
