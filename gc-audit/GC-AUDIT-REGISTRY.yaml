@@ -273,7 +273,7 @@ tools:
     category: repo-health
     status: active
     title: Validate script format providers
-    description: Provider-based format/syntax validation surface. Phase 1 active provider is powershell-script-parse: parse-only PowerShell syntax checks with no target execution. Future providers may add Markdown, JSON, JSONL, or YAML checks through the same read-only contract.
+    description: "Provider-based format/syntax validation surface. Phase 1 active provider is powershell-script-parse: parse-only PowerShell syntax checks with no target execution. Future providers may add Markdown, JSON, JSONL, or YAML checks through the same read-only contract."
     mutates: false
     activeProviders:
       - powershell-script-parse
