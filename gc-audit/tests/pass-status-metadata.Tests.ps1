@@ -53,3 +53,31 @@ Describe "GC-AUDIT.01.01 - PASS-status parsing reads the metadata field, not pro
 
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
+
+function New-OpenPassFixture([string]$Root) {
+    $passesDir = Join-Path $Root "passes"
+    New-Item -ItemType Directory -Path $passesDir -Force | Out-Null
+    @"
+# PASS EXAMPLE.02 - Real Open Gate
+
+**Status:** OPEN
+"@ | Set-Content -LiteralPath (Join-Path $passesDir "EXAMPLE.02.md") -Encoding utf8
+}
+
+Describe "GC-AUDIT.01.01 - a real open PASS fails release readiness" {
+    $fixtureRoot = Join-Path $env:TEMP ("gc-audit-fixture-open-pass-" + [guid]::NewGuid().ToString("N"))
+    New-OpenPassFixture $fixtureRoot
+    $output = & pwsh -NoProfile -File $toolPath -TargetPath $fixtureRoot -Level 4 2>&1 | Out-String
+    $exitCode = $LASTEXITCODE
+
+    It "reports the authoritative OPEN status" {
+        $output | Should Match "1 open PASS gate\(s\)"
+    }
+
+    It "returns a failing release-readiness exit code" {
+        $exitCode | Should Be 1
+        $output | Should Match "Result: FAIL"
+    }
+
+    Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
+}

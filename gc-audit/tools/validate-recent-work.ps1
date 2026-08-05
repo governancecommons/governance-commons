@@ -51,7 +51,7 @@ $isWindowsHost = ($env:OS -eq "Windows_NT")
 # (...\lasso_archive\DEV-PLAN.md) - checked via a following separator or
 # end-of-string, so a file merely containing "-archive" mid-name (e.g.
 # "archive-notes.md") is not falsely excluded.
-$excludeRegex = '(?i)[\\/](\.git|node_modules|_tmp|dist|build|out|coverage|\.venv|\.pytest_cache|[^\\/]*[_-]archive)(?:[\\/]|$)'
+$excludeRegex = '(?i)[\\/](\.git|node_modules|_tmp|dist|build|out|coverage|\.venv|\.pytest_cache|\.(?:pytest|test)[_-]tmp[^\\/]*|[^\\/]*[_-]archive)(?:[\\/]|$)'
 
 $levelNames = @{ 1="Quick Health"; 2="Recent-Work Review"; 3="Adversarial Audit"; 4="Release Readiness" }
 
@@ -102,11 +102,11 @@ function Get-PassStatus([string]$FilePath) {
 }
 
 function Get-ActiveReleaseVersion([string[]]$Lines) {
-    # The active release candidate is the Release Table row whose status
-    # cell contains "in progress" - the convention already in real use
-    # across this portfolio's DEV-RELEASE.md files (cockpit, marlin). Rows
-    # marked Done, planned, open, or bare unchecked are historical or
-    # future work, not this repo's current gate.
+    # The active release candidate is either a Release Table row whose status
+    # cell contains "in progress" (cockpit/marlin convention) or a version
+    # section whose own Status metadata says the same (governance-commons
+    # convention). Done/planned releases are not the current gate.
+    $sectionVersion = $null
     foreach ($line in $Lines) {
         if ($line -notmatch '^\s*\|') { continue }
         $cells = $line.Trim().Trim('|') -split '\|' | ForEach-Object { $_.Trim() }
@@ -115,6 +115,23 @@ function Get-ActiveReleaseVersion([string[]]$Lines) {
         $statusCell  = $cells[-1]
         if ($versionCell -notmatch '^v?\d+(\.\d+)+') { continue }
         if ($statusCell -match '(?i)in.?progress') { return $versionCell }
+    }
+
+    # Some authoritative release documents (including governance-commons')
+    # declare each release as a section and put **Status:** directly below
+    # the version heading instead of maintaining a Release Table. Preserve
+    # the same structural rule: only a version section whose own metadata is
+    # in progress is active.
+    foreach ($line in $Lines) {
+        if ($line -match '^#{1,4}\s+(?:Release\s+)?(v?\d+(?:\.\d+)+)\b') {
+            $sectionVersion = $Matches[1]
+            continue
+        }
+        if ($sectionVersion -and
+            $line -match '^\s*(?:\*\*Status:\*\*|-\s*Status:|Status:)\s*(.+?)\s*$' -and
+            $Matches[1] -match '(?i)in.?progress') {
+            return $sectionVersion
+        }
     }
     return $null
 }
@@ -132,14 +149,19 @@ function Get-ActiveReleaseGaps([string]$FilePath) {
 
     $escaped   = [regex]::Escape($activeVersion)
     $gaps      = @()
-    $inSection = $false
+    $inSection   = $false
+    $sectionLevel = 0
     foreach ($line in $lines) {
-        if ($line -match ('^#{1,4}\s.*' + $escaped + '\b')) {
-            $inSection = $true
-            continue
-        }
-        if ($inSection -and $line -match '^#{1,4}\s') {
-            $inSection = $false
+        if ($line -match '^(#{1,4})\s') {
+            $headingLevel = $Matches[1].Length
+            if (-not $inSection -and $line -match ('^#{1,4}\s.*' + $escaped + '\b')) {
+                $inSection = $true
+                $sectionLevel = $headingLevel
+                continue
+            }
+            if ($inSection -and $headingLevel -le $sectionLevel) {
+                break
+            }
         }
         if ($inSection -and $line -match '^\s*-\s*\[\s\]\s*(.+?)\s*$') {
             $gaps += $Matches[1]
@@ -428,6 +450,7 @@ if ($Level -ge 4) {
         Write-Pass "no unchecked gates in any active release candidate"
     } else {
         Write-Warn "$pendingCount DEV-RELEASE.md file(s) with unchecked gates in their active release"
+        $exitFail = $true
     }
 
     # 4b. Open PASS gates - reads each file's own authoritative Status
@@ -456,6 +479,7 @@ if ($Level -ge 4) {
             Write-Pass "no open PASS gates"
         } else {
             Write-Warn "$($openPasses.Count) open PASS gate(s):"
+            $exitFail = $true
             if (-not $Summary) {
                 foreach ($p in $openPasses) {
                     Write-Find $p.FullName.Replace($root, "").TrimStart("\")

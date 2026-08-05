@@ -51,6 +51,7 @@ Describe "GC-AUDIT.01.02 - active-release gates are reported structurally, futur
     $fixtureRoot = Join-Path $env:TEMP ("gc-audit-fixture-release-" + [guid]::NewGuid().ToString("N"))
     New-Fixture $fixtureRoot
     $output = & pwsh -NoProfile -File $toolPath -TargetPath $fixtureRoot -Level 4 2>&1 | Out-String
+    $exitCode = $LASTEXITCODE
 
     It "reports the active (In progress) release's real unchecked gates" {
         $output | Should Match "2 unchecked gate\(s\) in the active release"
@@ -65,6 +66,62 @@ Describe "GC-AUDIT.01.02 - active-release gates are reported structurally, futur
     It "does not report the future (Planned) release's unstarted gates as a current blocker" {
         $output | Should Not Match "future gate, not started"
         $output | Should Not Match "another future gate"
+    }
+
+    It "fails release readiness while the active release has unchecked gates" {
+        $exitCode | Should Be 1
+        $output | Should Match "Result: FAIL"
+    }
+
+    Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+function New-SectionMetadataFixture([string]$Root) {
+    New-Item -ItemType Directory -Path $Root -Force | Out-Null
+    @"
+# DEV-RELEASE - Section Metadata Fixture
+
+## Release v1.2.0 - Public Release
+
+**Status:** In progress - publication remaining
+
+### What ships
+
+- packages
+
+### Admission criteria
+
+- [ ] real section-metadata gate
+- [x] completed section gate
+
+## Release v1.3.0 - Future Release
+
+**Status:** Planned
+
+### Admission criteria
+
+- [ ] future section gate
+"@ | Set-Content -LiteralPath (Join-Path $Root "DEV-RELEASE.md") -Encoding utf8
+}
+
+Describe "GC-AUDIT.01.02 - section-scoped release metadata is authoritative" {
+    $fixtureRoot = Join-Path $env:TEMP ("gc-audit-fixture-release-section-" + [guid]::NewGuid().ToString("N"))
+    New-SectionMetadataFixture $fixtureRoot
+    $output = & pwsh -NoProfile -File $toolPath -TargetPath $fixtureRoot -Level 4 2>&1 | Out-String
+    $exitCode = $LASTEXITCODE
+
+    It "finds gates nested below subheadings in the active version section" {
+        $output | Should Match "1 unchecked gate\(s\) in the active release"
+        $output | Should Match "real section-metadata gate"
+    }
+
+    It "does not cross the peer release heading into future gates" {
+        $output | Should Not Match "future section gate"
+    }
+
+    It "returns a failing release-readiness exit code" {
+        $exitCode | Should Be 1
+        $output | Should Match "Result: FAIL"
     }
 
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue

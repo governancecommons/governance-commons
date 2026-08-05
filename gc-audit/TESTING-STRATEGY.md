@@ -75,9 +75,9 @@ GC-AUDIT.01 fixtures (`validate-recent-work.ps1` and `validate-format.ps1` diagn
 
 | Fixture | What it tests |
 | --- | --- |
-| `pass-status-metadata.Tests.ps1` | A PASS file with real `Status: ACCEPTED` whose body separately quotes an unrelated `status: draft` example — must not be reported as an open PASS gate |
-| `release-gate-semantics.Tests.ps1` | A Release Table with a Done version, an "In progress" version with real unchecked gates, and a "Planned" version with its own unstarted gates — the active version's gates must be reported; the future version's must not |
-| `repo-archive-boundaries.Tests.ps1` | A real git repo named `*_archive` alongside an ordinary active repo, both dirty — the archived one must not appear in Level 2's dirty-repo output |
+| `pass-status-metadata.Tests.ps1` | An accepted PASS whose body quotes an unrelated `status: draft` example must remain closed; a PASS whose authoritative metadata is `OPEN` must be reported and make Level 4 exit nonzero. |
+| `release-gate-semantics.Tests.ps1` | Both supported active-release conventions: a Release Table row and a version section with its own `Status` metadata and nested admission criteria. Active gates must be reported, future gates excluded, and Level 4 must exit nonzero while active gates remain. |
+| `repo-archive-boundaries.Tests.ps1` | Real active, `*_archive`, `.pytest-tmp-*`, and `.test-tmp-*` git repos plus malformed scratch PLAY fixtures — active work must be scanned; archive and scratch trees must not appear in repository or recursive content scans. |
 | `malformed-play-record.Tests.ps1` | A `PLAY.jsonl` with one malformed JSON line followed by one valid record — must warn on the bad line, not crash, and still count the valid one |
 | `format-check-single-file.Tests.ps1` | Exactly one `.ps1` file in scope — the single-item pipeline collapse under `Set-StrictMode` must not throw `PropertyNotFoundException` |
 

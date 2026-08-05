@@ -43,8 +43,13 @@ Describe "GC-AUDIT.01.03 - archived repos are excluded from active-repo scanning
     New-Item -ItemType Directory -Path $fixtureRoot -Force | Out-Null
     New-GitRepo (Join-Path $fixtureRoot "active-repo")
     New-GitRepo (Join-Path $fixtureRoot "some-product_archive")
+    New-GitRepo (Join-Path $fixtureRoot ".pytest-tmp-provider")
+    New-GitRepo (Join-Path $fixtureRoot ".test-tmp-bridge")
+    "{ malformed fixture json" | Set-Content -LiteralPath (Join-Path $fixtureRoot ".pytest-tmp-provider\PLAY.jsonl") -Encoding utf8
+    "{ malformed fixture json" | Set-Content -LiteralPath (Join-Path $fixtureRoot ".test-tmp-bridge\PLAY.jsonl") -Encoding utf8
 
     $output = & pwsh -NoProfile -File $toolPath -TargetPath $fixtureRoot -Level 2 -Hours 720 2>&1 | Out-String
+    $level3Output = & pwsh -NoProfile -File $toolPath -TargetPath $fixtureRoot -Level 3 -Hours 720 2>&1 | Out-String
 
     It "reports the active repo as dirty" {
         $output | Should Match "dirty: active-repo"
@@ -52,6 +57,17 @@ Describe "GC-AUDIT.01.03 - archived repos are excluded from active-repo scanning
 
     It "does not scan the archived repo at all" {
         $output | Should Not Match "some-product_archive"
+    }
+
+    It "does not scan custom pytest or test scratch repositories" {
+        $output | Should Not Match "\.pytest-tmp-provider"
+        $output | Should Not Match "\.test-tmp-bridge"
+    }
+
+    It "does not parse PLAY fixtures inside custom scratch trees" {
+        $level3Output | Should Not Match "PLAY\.jsonl parse error"
+        $level3Output | Should Not Match "\.pytest-tmp-provider"
+        $level3Output | Should Not Match "\.test-tmp-bridge"
     }
 
     Remove-Item -LiteralPath $fixtureRoot -Recurse -Force -ErrorAction SilentlyContinue

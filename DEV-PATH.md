@@ -725,3 +725,26 @@ the fixture suite.
 
 No repo's release state, PASS status, or gate was altered by this work —
 only how accurately those real states are reported.
+
+## 2026-08-05 — GC-AUDIT.01.00 Corrective Closure and Registration
+
+Independent review confirmed the original fixes but found four closure gaps.
+The active-release reader only supported table rows, so this repo's own
+section-scoped `**Status:** In progress` declaration and nested v1.2.0
+admission criteria were invisible. Reported active gates were warnings that
+still ended with a misleading clean `Result: PASS`. The shared exclusion
+policy omitted the real `.pytest-tmp-*` and `.test-tmp-*` scratch conventions.
+Finally, the compound PASS was declared closed but left under a working name.
+
+The release reader now supports both table and section-metadata conventions,
+keeps nested subsections inside the active version until the next peer release
+section, and makes active release or PASS gates fail Level 4. Custom pytest and
+test scratch trees are excluded from repository discovery and every recursive
+content scan. Brownfield fixtures cover both release shapes, nonzero gate exit
+semantics, nested admission criteria, future-release isolation, and malformed
+PLAY files inside both scratch conventions.
+
+The compound PASS is registered at closure as `GC:2019`
+(`GC-AUDIT.01.00`), with lanes `GC:2020` through `GC:2024`
+(`GC-AUDIT.01.01`-.05). This supersedes the earlier working-name note; no
+product release gate was closed by the diagnostic work.
