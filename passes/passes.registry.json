@@ -3,7 +3,7 @@
   "namespace": "GC",
   "meta": {
     "created_at": "2026-06-20T00:00:00Z",
-    "updated_at": "2026-08-05T17:35:31Z",
+    "updated_at": "2026-08-10T18:56:12Z",
     "allocation_authority": "jj-ervin",
     "namespace_file": "passes/namespace.yaml",
     "layers_file": "passes/layers.yaml",
@@ -475,6 +475,57 @@
       "superseded_by": null,
       "depends_on": ["GC:2020", "GC:2021", "GC:2022", "GC:2023"],
       "originating_pass": "GC-AUDIT.01.05"
+    },
+    {
+      "id": "GC:3001",
+      "alias": "GC-SITE.01.00",
+      "legacy_ids": ["PASS-5"],
+      "title": "Governance Commons Public Site Launch",
+      "description": "Publishes the Governance Commons ecosystem site with release-pinned standard pages, validator and schema links, conformance guidance, and a verified custom-domain deployment.",
+      "layer": "platform",
+      "cluster": "GC-SITE",
+      "parent": null,
+      "status": "draft",
+      "timestamp": "2026-08-10T18:56:12Z",
+      "path": "DEV-PATH.md",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:2014", "GC:2018"],
+      "originating_pass": "GC:3001"
+    },
+    {
+      "id": "GC:3002",
+      "alias": "GC-SITE.01.01",
+      "legacy_ids": [],
+      "title": "PLAY Commit Reference Correction",
+      "description": "Replaces the prior PASS-5 walkthrough PLAY record's pending commit reference with the actual closing commit.",
+      "layer": "platform",
+      "cluster": "GC-SITE",
+      "parent": "GC:3001",
+      "status": "draft",
+      "timestamp": "2026-08-10T18:56:12Z",
+      "path": "PLAY.jsonl",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:3001"],
+      "originating_pass": "GC:3001"
+    },
+    {
+      "id": "GC:3003",
+      "alias": "GC-SITE.01.02",
+      "legacy_ids": ["GC-5-G-03"],
+      "title": "Ecosystem Site and Per-Standard Pages",
+      "description": "Builds and deploys the Governance Commons landing page, four per-standard pages, validator and schema resources, and conformance badge instructions at governancecommons.org.",
+      "layer": "platform",
+      "cluster": "GC-SITE",
+      "parent": "GC:3001",
+      "status": "draft",
+      "timestamp": "2026-08-10T18:56:12Z",
+      "path": "governance-commons-www/site/src/pages/index.astro",
+      "supersedes": [],
+      "superseded_by": null,
+      "depends_on": ["GC:3001"],
+      "originating_pass": "GC:3001"
     }
   ]
 }

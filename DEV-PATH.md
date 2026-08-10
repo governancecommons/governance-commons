@@ -773,3 +773,30 @@ token setup are still pending human account-level action per the
 2026-07-11 pause note (`1c79553`). No product release gate was opened or
 closed by this fix — only DEV-PLAN.md's accuracy against already-existing
 GitHub state.
+
+## 2026-08-10 - GC-SITE.01.00 Public Site Launch Opened
+
+**PASS ID:** GC-SITE.01.00
+**Canonical ID:** GC:3001
+**Status:** OPEN
+**Track:** Golf - public web presence
+**Wave:** PASS-5 Batch 3
+**Timestamp:** 2026-08-10T18:56:12Z
+**Authority:** AL:1
+**Author:** Codex, authorized by jj-ervin
+
+**Goal:** Correct the prior PLAY closeout reference and publish the complete
+Governance Commons ecosystem site at `governancecommons.org`.
+
+**Sub-PASS lanes:**
+
+- GC-SITE.01.01 / GC:3002 - replace the prior PLAY record's `pending`
+  commit reference with `d035bd9`.
+- GC-SITE.01.02 / GC:3003 - publish an ecosystem landing page, per-standard
+  pages, validator and schema links, conformance badge instructions, and a
+  verified HTTPS custom-domain deployment.
+
+**Done when:** both repositories validate and publish from their current
+`main` branches; the organization website repo owns the Pages deployment;
+the legacy personal Pages binding is removed; the domain serves the Astro
+site over valid HTTPS; and DEV-DOCS record GC-5-G-03 as done.
