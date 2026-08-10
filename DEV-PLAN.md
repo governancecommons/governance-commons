@@ -121,9 +121,9 @@ spec surface required for a credible v1.0 public release.
 
 **PASS-5 Batch 3 (parallel — after Batch 2):**
 
-1. GC-5-G-02 — GitHub Releases: create tagged releases for agent-dossier v1.1.0 and APO v1.1.0; release notes for all four v1.2.0 specs — **O** _(agent-dossier + APO tags exist; LLC filing gate resolved 2026-06-15 — Osprey Strategic Holdings LLC live — releases can now proceed)_
-2. GC-5-G-03 — governancecommons.org: live ecosystem landing page with per-standard pages; links to spec repos, validator packages, and conformance badge instructions — **O**
-3. GC-5-G-04 — OSS baseline freeze notice: document the frozen OSS core scope on governancecommons.org and in release notes; clarify that PASS-6 profiles are optional extensions, not baseline requirements — **O**
+1. ~~GC-5-G-02~~ — GitHub Releases: create tagged releases for agent-dossier v1.1.0 and APO v1.1.0; release notes for all four v1.2.0 specs — DONE: GitHub Releases with substantive release notes exist for all four v1.2.0-pinned specs — agent-dossier v1.1.0 (published 2026-06-18), agent-matrix v1.4.0 (published 2026-06-09), ons v1.2.0 + v1.3.0 (published 2026-06-09), agent-project-orchestrator v1.1.0 (published 2026-06-18). This row had gone stale against the actual GitHub state (never updated after the releases were cut); verified live via `gh release list`/`gh release view` 2026-08-10 — **C**
+2. GC-5-G-03 — governancecommons.org: live ecosystem landing page with per-standard pages; links to spec repos, validator packages, and conformance badge instructions — **O** _(verified 2026-08-10: `governance-commons-www` repo exists, private, `has_pages: false`, no GitHub Pages configured, last pushed 2026-06-09 — genuinely not live)_
+3. GC-5-G-04 — OSS baseline freeze notice: document the frozen OSS core scope on governancecommons.org and in release notes; clarify that PASS-6 profiles are optional extensions, not baseline requirements — **O** _(blocked on GC-5-G-03 — no live site exists yet to carry the notice)_
 
 **PASS-5 Batch 4 — End-game publish (final; gated on Batch 2 complete; LLC filing gate resolved 2026-06-15):**
 

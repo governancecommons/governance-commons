@@ -748,3 +748,28 @@ The compound PASS is registered at closure as `GC:2019`
 (`GC-AUDIT.01.00`), with lanes `GC:2020` through `GC:2024`
 (`GC-AUDIT.01.01`-.05). This supersedes the earlier working-name note; no
 product release gate was closed by the diagnostic work.
+
+## 2026-08-10 - DEV-PLAN.md GC-5-G-02 staleness corrected (fix)
+
+A PASS-5 Batch 3/4 walkthrough (live `gh release list`/`gh release view`/
+`gh api` checks against the `governancecommons` org, not just a re-read of
+DEV-PLAN.md) found GC-5-G-02 marked open with a stale note ("agent-dossier +
+APO tags exist") when GitHub Releases with substantive release notes have
+existed for all four v1.2.0-pinned specs since 2026-06-09 through
+2026-06-18: agent-dossier v1.1.0, agent-matrix v1.4.0, ons v1.2.0 + v1.3.0,
+agent-project-orchestrator v1.1.0. The row was never updated after the
+releases were cut. Corrected in `DEV-PLAN.md` PASS-5 Batch 3 to `C` with the
+verified publish dates.
+
+The same walkthrough confirmed GC-5-G-03 (governancecommons.org live site)
+and GC-5-G-04 (freeze notice) are genuinely still open, not stale:
+`governance-commons-www` exists but is private, `has_pages: false`, no
+GitHub Pages configured, last pushed 2026-06-09. Verification notes added
+to both rows in `DEV-PLAN.md`. GC-5-F-02/GC-5-F-03 (PyPI/npm publish)
+remain genuinely blocked — `publish-py.yml`/`publish-js.yml` exist and are
+active in `governance-commons-registry` but have zero runs, since they only
+trigger on `sdk-v*` tags and PyPI trusted-publisher registration / npm
+token setup are still pending human account-level action per the
+2026-07-11 pause note (`1c79553`). No product release gate was opened or
+closed by this fix — only DEV-PLAN.md's accuracy against already-existing
+GitHub state.
