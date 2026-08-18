@@ -150,6 +150,7 @@ Each subdirectory is an independent project with its own planning docs. See
 | `niji/` | Color palette generator — successor to CPM15 |
 | `kinjuu/` | Future app — financial/budget/deadline tracking |
 | `dxp-init/` | Marlin — universal package manager and installer family. Four lanes: `marlin` (package manager — apps on machines) · `marlin-dxp` (installs and conforms repo(s) to GC and DXP standards) · `marlin-dcp` (workspace/org manager — DCP lifecycle, repo registry, portfolio sync) · marlin-ux (Cockpit GUI panels for all lanes). Migrating to `marlin/` repo. |
+| `bax/` | BAX — governed NCAA tournament structural-evaluation and prediction system (BAX-CORE MACRO/MESO/MICRO factors, BAX-EDGE matchup/bracket layer). Onboarded into GC governance 2026-08-18; see `bax/DEV-PATH.md`. |
 
 ---
 
