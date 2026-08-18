@@ -127,8 +127,8 @@ spec surface required for a credible v1.0 public release.
 
 **PASS-5 Batch 4 — End-game publish (final; gated on Batch 2 complete; LLC filing gate resolved 2026-06-15):**
 
-1. GC-5-F-02 — governance-commons-py: publish to PyPI via OIDC trusted publisher workflow — **O**
-2. GC-5-F-03 — governance-commons-js: publish to npm via provenance workflow — **O**
+1. ~~GC-5-F-02~~ — governance-commons-py: publish to PyPI via OIDC trusted publisher workflow — DONE 2026-08-16: `governance-commons` v0.1.1 live at pypi.org/project/governance-commons/. (v0.1.0 published first via a GitHub-UI-added workflow before README/metadata fixes landed, so its page is frozen with stale placeholder text; v0.1.1 carries the real README and correct project URLs and is what the project page now shows.) — **C**
+2. GC-5-F-03 — governance-commons-js: publish to npm via provenance workflow — still open, blocked on `NPM_TOKEN` repo secret (owner needs to generate it on npmjs.com) — **O**
 3. ~~GC-5-F-04~~ — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — DONE: `status: ready` since 2026-06-17; all four specs (agent-dossier, agent-matrix, ons, agent-project-orchestrator) have `pinned_version` populated and `compat_status: ok`; `compat_hold_items: []`. This DEV-PLAN.md row had gone stale against the artifact (caught by the ECOSYSTEM-BOUNDARY.00 cross-repo audit, `c:\dev\docs\ecosystem-roadmap.md` Phase 1) — GC-5-F-02/03 (PyPI/npm publish) remain genuinely open, blocked on external OIDC/NPM_TOKEN setup, not on this item — **C**
 
 > **Release strategy note (updated 2026-06-09):** PASS-5 Batch 2 completion freezes the OSS baseline. PASS-6 dev work may begin from that frozen baseline and does NOT wait for the end-game publish sequence. The public launch and PASS-6 development run in parallel. Open question: whether the first public release is labeled GC v1.2.0 or renamed GC v1.0.0 for public clarity — requires maintainer decision before Batch 4. No fork is planned at this point; versioning happens at the GC release-manifest boundary.
