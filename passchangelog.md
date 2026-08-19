@@ -101,6 +101,38 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0023.00 — 2026-08-17 (backfilled 2026-08-19)
+
+**pass_id**: GC-PASS-0023.00
+**timestamp**: 2026-08-17T17:32:47Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: `dev-docs/_root/contracts/` (new), `dev-docs/_root/DEV-CAPABILITIES.md` + companion DEV-* scaffolds, `governance-commons-sdk` (new `capabilities.py`/`capabilities_cli.py`/`gc-validate`/`gc-discover`), niji and devxtoolkit-v1-x (pilot declarations)
+
+**what**: Capability Contract v0.1 — a discovery-only, machine-readable declaration layer (`.governance/contracts/capabilities.yaml` per repo, dotted `<domain>.<resource>.<action>` grammar) for what a project provides/consumes/prohibits for another project. Built across `dev-docs` (spec, JSON Schema, `CAPABILITY-CONTRACT-SPEC.md`, `COMPANION-CONTRACTS.md`, `IMPLEMENTATION-PLAN.md`, canonical `DEV-CAPABILITIES.md`/`DEV-INTERFACES.md`/`DEV-SECURITY.md`/`DEV-OPERATIONS.md` templates) and `governance-commons-sdk` (validator + `gc-validate --spec capabilities`/`gc-discover` CLI, Python v0.2.0). Reviewed via an adversarial Claude review (`CLAUDE-CAPABILITY-CONTRACT-REVIEW.md`) before freeze — verdict "proceed with changes," blocking issues resolved (`provides.minItems` relaxed to 0, ID-segment-count contradiction resolved, YAML-quoting rule documented) before v0.1 was frozen. Piloted in niji (`522b5d4`) and devxtoolkit-v1-x (`e53ed29`) only. Core invariant: discovery does not grant authority. Three companion layers (`interfaces.yaml`, `authority.yaml`, `operations.yaml`) are deliberately reserved as inactive schema stubs, not implemented.
+**why**: The portfolio owner had already hit this exact failure mode once — mid-task on marlin's INIT.30.08, an agent found three uncoordinated ad-hoc "capability" vocabularies already in use (`agentRoster.ts`, `repairContract.ts`, plus the intended canonical one) and nearly built a fourth. The Capability Contract exists to give agents one place to check before naming or declaring any cross-project capability, so that overlap stops recurring.
+
+**Backfill note**: This entry was not logged in real time; it was reconstructed on 2026-08-19 from `dev-docs` and `governance-commons-sdk` commit history after the portfolio owner found this changelog had no entries between 2026-07-05 and today despite substantial ecosystem-level work in that window. Timestamp reflects the v0.1 freeze commit, not the logging time. Several other commits in that window (Osprey LLC blocker clearance, PyPI/npm account-setup status, `gc-audit` diagnostic fixes, DEV-PLAN staleness corrections) were reviewed and judged to be RUN/BUNT-tier hygiene rather than ecosystem-level governance decisions, per this file's own stated scope — not backfilled here. Flag if that judgment call should be revisited.
+
+---
+
+## GC-PASS-0024.00 — 2026-07-05 (backfilled 2026-08-19)
+
+**pass_id**: GC-PASS-0024.00
+**timestamp**: 2026-07-05T14:29:02Z
+**change_type**: build
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD.03 (GC:2011) reading order, Agent-Trail table
+
+**what**: Added the "Bootstrap router" table to DEV-ACCORD.03 — a task-shape-to-reading-list lookup (read-only/BUNT/RUN/DRIVE/cleanup/multi-agent rows) letting agents avoid expanding the full reading order for low-risk work, while requiring escalation to the full trail once a task's risk class changes. Reworded the reading-order intro from "Before taking any action on any project" to "The full agent-trail for governed project work is," to distinguish the full trail from the new router's shortcuts.
+**why**: Reading the full agent-trail before every action, including trivial read-only or BUNT-tier work, was pure overhead with no governance benefit at that risk tier. The router keeps the full trail mandatory for anything that touches state or portfolio standards while letting low-risk work proceed without it.
+
+**Backfill note**: This entry was not logged in real time; reconstructed on 2026-08-19 from commit `6d99455` after the same changelog-gap discovery described in GC-PASS-0023.00's backfill note. Commit message already carried `Change-Level: PASS` and `Pass-ID: DEV-ACCORD.03`, confirming it was always intended to be logged here.
+
+---
+
 ## GC-PASS-0021.00 — 2026-07-05
 
 **pass_id**: GC-PASS-0021.00
