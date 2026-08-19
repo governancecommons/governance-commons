@@ -84,6 +84,23 @@ For passes that open/close phases, register authority decisions, or record ecosy
 
 ---
 
+## GC-PASS-0022.00 — 2026-08-19
+
+**pass_id**: GC-PASS-0022.00
+**timestamp**: 2026-08-19T00:00:00Z
+**change_type**: fix
+**authority_level**: AL:1
+**status**: ACCEPTED
+**affected_surfaces**: DEV-ACCORD.03 (GC:2011) reading order, Agent-Trail table, bootstrap router
+
+**problem**: The Capability Contract package (`dev-docs/_root/contracts/`) — the portfolio's shared `<domain>.<resource>.<action>` vocabulary for what a project provides/consumes/prohibits for another — was frozen at v0.1 on 2026-08-17 with a working validator and two pilot adoptions, but DEV-ACCORD.03's mandatory reading order never referenced it.
+**why_problem**: An agent following the onboarding protocol exactly as written had no path to discovering the package existed. This produced the exact failure the package was built to prevent: mid-task on marlin's INIT.30.08, an agent (Claude) found marlin already had three uncoordinated ad-hoc "capability" vocabularies and, lacking any pointer to the canonical one, began drafting a fourth reconciliation scheme instead of the correct action (flag the overlap, do nothing further without instruction).
+**fix_approach**: Add the package as its own reading-order step rather than folding it into an existing step (e.g. `projects.yaml`), since its trigger condition (about to name/declare a cross-project capability) is narrower and more specific than "read the registry." Mirror the addition in the Agent-Trail table (kept in sync with reading order by convention) and add a dedicated bootstrap-router row so low-risk/read-only tasks aren't forced to load it unless the task shape actually matches.
+**what_was_done**: Inserted reading-order step 8 (`dev-docs/_root/contracts/README.md`), renumbered the former step 8 to 9; added a matching "Capability vocabulary" row to the Agent-Trail table; added a router row for "Naming/declaring what a project provides, consumes, or prohibits for another project"; added an `Amended by` line to the file header.
+**prevention**: Any future portfolio-wide shared-vocabulary package (interfaces.yaml, authority.yaml, operations.yaml, when built) should be added to this same reading order at creation time, not retrofitted after a drift incident.
+
+---
+
 ## GC-PASS-0021.00 — 2026-07-05
 
 **pass_id**: GC-PASS-0021.00

@@ -8,6 +8,7 @@
 **Timestamp:** 2026-06-28T00:00:00Z
 **Depends on:** GC:2008 (DEV-ACCORD.00), GC:2010 (DEV-ACCORD.02)
 **Partially superseded by:** GC:2016 (DEV-ACCORD.08) — planning doc visibility table and private doc rule replaced
+**Amended by:** GC-PASS-0022.00 (2026-08-19) — added Capability Contract package to reading order and router
 
 ---
 
@@ -32,7 +33,8 @@ The full agent-trail for governed project work is:
 5. `governance-commons/passes/dev-accord/DEV-ACCORD.06.md` — Change Playbook: BUNT/RUN/DRIVE/PASS classes, DEV-DOCS obligations, commit trailers
 6. `governance-commons/passes/dev-accord/DEV-ACCORD.10.md` — Git split authorization: no new branch, PR chain, worktree, or fork without explicit human approval
 7. `projects.yaml` — project registry and canonical plan pointers
-8. The specific project's `DEV-PATH.md` and `DEV-PLAN.md`
+8. `dev-docs/_root/contracts/README.md` — Capability Contract package: shared vocabulary for what a project provides/consumes/prohibits for another. Read before declaring, naming, or extending any cross-project capability, and before writing or editing any project's `DEV-CAPABILITIES.md`.
+9. The specific project's `DEV-PATH.md` and `DEV-PLAN.md`
 
 **Read when coordinating with other agents:**
 `governance-commons/agent-matrix/agent-matrix.yaml` — agent roles, capabilities, routing, trust levels. Only needed when more than one agent is working on the same project in the same session.
@@ -51,6 +53,7 @@ escalates, read the additional authority before editing further.
 | DRIVE or PASS-trigger work | Full reading order, relevant PASS authority, project `DEV-PATH.md` and `DEV-PLAN.md` | Nothing material; escalate before editing if authority is unclear |
 | Client/repo cleanup with no GC standard change | `PROTECTED.md`, `DEV-CONTROL-PLANE.md`, relevant local instructions, `DEV-ACCORD.06` level check | Full GC taxonomy unless the cleanup touches DEV-DOCS, release truth, or protected files |
 | Multi-agent or cross-repo work | Full reading order plus `agent-matrix.yaml` | None |
+| Naming/declaring what a project provides, consumes, or prohibits for another project | `dev-docs/_root/contracts/README.md` (Capability Contract package) | Full reading order unless the change also touches PASS/governance authority |
 
 The router does not override `PROTECTED.md`, DEV-ACCORD.06 escalation rules, or
 DEV-ACCORD.10 git split authorization. A direct edit to a GC standard remains a
@@ -79,6 +82,7 @@ Expanded to the full reading sequence:
 | Change Playbook | `DEV-ACCORD.06.md` | BUNT/RUN/DRIVE/PASS change classes, escalation rules, commit trailers |
 | Git split rule | `DEV-ACCORD.10.md` | Current-branch publish default; branches/PR chains/worktrees/forks require human authorization |
 | Registry | `projects.yaml` | Project index and canonical plan pointers |
+| Capability vocabulary | `dev-docs/_root/contracts/README.md` | Shared cross-project capability grammar; read before naming/declaring what a project can do for another |
 | Local context | `DEV-PATH.md` + `DEV-PLAN.md` | Project-specific decisions, current phase, active work |
 
 **Properties:**
