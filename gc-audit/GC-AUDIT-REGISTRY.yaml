@@ -284,11 +284,18 @@ tools:
   - id: gc-audit.verify
     verb: verify
     category: repo-audit
-    status: planned
-    title: Verify implementation contracts
-    description: Planned GC-AUDIT operation; no active allowlisted implementation is registered yet.
+    status: active
+    title: Verify normalization remediation took effect
+    description: Re-run validate checks for bootstrap, planning, and pointers drift after a normalize apply, to confirm the remediation actually stuck.
     mutates: false
-    steps: []
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-bootstrap.ps1
+        projectArg: Project
+      - script: governance-commons/gc-audit/tools/validate-planning.ps1
+        projectArg: Project
+      - script: governance-commons/gc-audit/tools/validate-pointers.ps1
+        targetArg: TargetPath
+        portfolioOnly: true
 
   - id: gc-audit.trace
     verb: trace
