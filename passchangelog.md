@@ -531,4 +531,21 @@ auto-discovered.
 
 ---
 
+## GC-PASS-0025.00 — 2026-08-29
+
+**pass_id**: GC-PASS-0025.00
+**timestamp**: 2026-08-29T08:58:20Z
+**change_type**: fix
+**authority_level**: AL:3
+**status**: ACCEPTED
+**affected_surfaces**: `rfcs/RFC-PROCESS.md`, RFC acceptance timing, `DEV-PLAN.md` PASS-5 Track Hotel record
+
+**problem**: The bootstrap RFC process imposed a universal two-week comment window without a recorded rationale, external requirement, community decision, or participating adopter body. Because the process also requires an RFC to change itself, the fixed delay created a circular barrier to correcting the process.
+**why_problem**: A context-free waiting period treated elapsed time as evidence of review, blocked a sole maintainer even when no external participant was affected, and was mistakenly interpreted as preventing unrelated preparation and repair work.
+**fix_approach**: Preserve numbered public RFCs, required sections, documented review, objection handling, and acceptance records while replacing the fixed delay with proportional review. Maintainer review has no universal minimum. A declared public-comment period is required when a known external adopter or contributor is materially affected or when the maintainer determines the proposal's risk or reach warrants broader review.
+**what_was_done**: The founder and AL:2 maintainer explicitly authorized a one-time bootstrap correction. `RFC-PROCESS.md` now defines maintainer-review and public-comment modes, requires the selected mode and rationale in the PR description, and requires acceptance records to identify actual review rather than infer review from silence. `DEV-PLAN.md` now records the corrected PASS-5 process truth.
+**prevention**: Future process rules that impose elapsed-time gates must state the affected stakeholder, purpose, and evidence expected from the delay. This correction does not authorize bypassing unresolved objections, affected adopters, accepted RFCs, or future multi-maintainer governance.
+
+---
+
 <!-- New entries go above this line, newest first -->

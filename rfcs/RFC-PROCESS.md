@@ -3,6 +3,7 @@
 **Status:** Active  
 **Authority:** AL:2  
 **time.loc:** 2026-06-08T00:00:00Z
+**Amended:** 2026-08-29 — fixed two-week delay replaced with proportional review
 
 ---
 
@@ -39,7 +40,7 @@ draft → open-for-comment → accepted
 | State | Meaning |
 | --- | --- |
 | `draft` | Author is still writing; not open for comment |
-| `open-for-comment` | Two-week comment window is running; community feedback welcome |
+| `open-for-comment` | A declared public review window is running; community feedback welcome |
 | `accepted` | AL:2 maintainer accepted the RFC; implementation may begin |
 | `rejected` | RFC was reviewed and declined; reason recorded in the file |
 | `withdrawn` | Author withdrew before or during comment window |
@@ -75,19 +76,28 @@ Every RFC file MUST include the following sections (use `RFC-0000-template.md` a
 
 ---
 
-## Comment window
+## Review and comment window
 
-Once an RFC is marked `open-for-comment`, a **two-week** comment window begins. The PR
-description MUST include the comment window end date.
+Every RFC requires documented maintainer review before acceptance. There is no universal
+minimum waiting period.
 
-During this window:
+The maintainer selects and records one of two review modes in the PR description:
+
+- **Maintainer review** — appropriate when no known external adopter or contributor is
+  materially affected. The RFC may be accepted as soon as the documented review is complete
+  and no unresolved objection remains.
+- **Public comment** — required when a known external adopter or contributor is materially
+  affected, or when the maintainer determines that the proposal's risk or reach warrants
+  broader review. The PR description states the end date and the reason for the chosen period.
+
+During a public comment window:
 - Anyone may comment on the PR
 - The author may revise the RFC in response to feedback
-- The AL:2 maintainer may extend the window for complex proposals
+- The AL:2 maintainer may extend the window when unresolved material questions remain
 
-After the window closes, the maintainer merges (accepted) or closes (rejected) the PR.
-An RFC that receives no substantive objection and no requests for extension is eligible
-for acceptance at window close.
+After required review is complete, the maintainer merges (accepted) or closes (rejected) the
+PR. Silence alone is not evidence of review; the acceptance record MUST identify the review
+performed and address any substantive objections received.
 
 ---
 
@@ -99,6 +109,20 @@ acceptance; it MUST NOT begin before.
 
 If an RFC requires coordinated changes across multiple specs, the maintainer records a
 compat-hold in `DEV-PLAN.md` until all named consumers confirm compatibility (DDR-1).
+
+---
+
+## 2026-08-29 maintainer correction
+
+The original fixed two-week window was introduced during the PASS-5 bootstrap batch without
+a recorded rationale, external requirement, community decision, or participating adopter
+body. It also made correction of the RFC process circular: changing this process requires an
+RFC, while the process itself imposed a fixed delay before that correction could take effect.
+
+The founder and AL:2 maintainer explicitly authorized replacement of that fixed delay with the
+proportional review rule above. This is a correction to a pre-adoption bootstrap process, not a
+general precedent for bypassing accepted RFCs, unresolved objections, affected adopters, or
+future multi-maintainer governance.
 
 ---
 

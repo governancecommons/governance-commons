@@ -104,7 +104,7 @@ All 19 PASS-1 immediate tasks closed. See CHANGELOG entries PASS-2026-0004 throu
 
 1. ~~GC-5-F-01~~ — Release train manifest format — DONE: `schemas/gc-release-manifest.schema.json` v1.0.0 (status lifecycle planned→ready→deprecated; pinning contract with compat-hold enforcement); `releases/gc-v1.2.0.yaml` declared (status advanced to `ready` 2026-06-17, ahead of registry publish + GC-5-G-02 — see GC-5-F-04 below) — **C**
 2. ~~GC-5-G-01~~ — GitHub org (governancecommons) — DONE: org exists; all 11 repos transferred (agent-dossier, agent-matrix, ons, agent-project-orchestrator, agent-team-protocol, governance-commons, governance-commons-registry, agent-roster, agent-dossier-www, governance-commons-www, governance-commons-vscode) — **C** _(governance-commons-sdk renamed to governance-commons-registry 2026-07-11)_
-3. ~~GC-5-H-01~~ — RFC process — DONE: `rfcs/RFC-PROCESS.md` (lifecycle, numbering, required sections, two-week comment window, acceptance/rejection rules) + `rfcs/RFC-0000-template.md` (all required sections pre-scaffolded) — **C**
+3. ~~GC-5-H-01~~ — RFC process — DONE: `rfcs/RFC-PROCESS.md` (lifecycle, numbering, required sections, proportional review, acceptance/rejection rules) + `rfcs/RFC-0000-template.md` (all required sections pre-scaffolded). Fixed two-week delay replaced by explicit maintainer correction on 2026-08-29; no universal minimum now applies. — **C**
 4. ~~GC-5-H-02~~ — `ADOPTERS.md` + conformance badge criteria — DONE: `ADOPTERS.md` (self-declaration format, adopter table, profile summary); `docs/conformance/badge-criteria.md` (per-spec criteria for advisory/standard/strict, shields.io badge patterns, declaration process) — **C**
 
 **PASS-5 Batch 2 — Spec completion (prerequisite for end-game; parallel within batch):**
@@ -421,11 +421,13 @@ affected spec. This file records the coordinated update. Affected specs enter co
 the dependent work. The GC release milestone that includes the breaking change is blocked until
 all listed consumers confirm compatibility.
 
-**RFC process (target: PASS-5).** Public-facing changes to Governance Commons standards will
-eventually go through a numbered RFC process. Format: `RFC-NNNN-<slug>.md` filed in a public
-`rfcs/` directory. Acceptance requires: problem statement, proposal, alternatives considered,
-and a two-week comment window before merge. This process does not exist yet — it is a PASS-5
-exit criterion.
+**RFC process (PASS-5 history; amended 2026-08-29).** The initial target called for numbered
+`RFC-NNNN-<slug>.md` files and a fixed two-week comment window. The numbered public process now
+exists at `rfcs/RFC-PROCESS.md`. On 2026-08-29 the founder and AL:2 maintainer replaced the
+fixed delay with proportional review: documented maintainer review is always required, while
+a timed public-comment period is required only when known external participants are materially
+affected or proposal risk warrants it. The correction and its bootstrap rationale are recorded
+in the process document and GC-PASS-0025.00.
 
 **What conformance means.** A project conforms to a Governance Commons standard when:
 it satisfies all `MUST` requirements in the spec for its declared conformance profile
