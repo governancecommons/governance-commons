@@ -7,6 +7,7 @@ status: ready
 ready_at: "2026-06-17T00:00:00Z"
 milestone: M2
 gc_pass_id: GC-PASS-0015.00
+release_notes_ref: releases/gc-v1.2.0-notes.md
 
 specs:
   - spec: agent-dossier
@@ -37,8 +38,9 @@ specs:
 compat_hold_items: []
 
 notes: >
-  GC v1.2.0 is ready. GitHub Releases exist for all four specs. PyPI and npm
-  publish (GC-5-F-02, GC-5-F-03) require OIDC trusted publisher setup on PyPI
-  and NPM_TOKEN in repo secrets before the sdk-v* tag trigger will succeed.
-  agent-team-protocol is not included in v1.2.0; it requires agent-matrix >=1.4.0
-  which is targeted for GC v1.3.0.
+  GC v1.2.0 is the public release-train boundary. GitHub Releases exist for
+  all four specs. The Python reference package has published successfully;
+  npm publication remains an external account-secret gate until the required
+  NPM_TOKEN is available to the repository workflow. The website publishes the
+  v1.2.0 baseline and freeze notice. agent-team-protocol is not included in
+  v1.2.0; it is targeted for GC v1.3.0.
