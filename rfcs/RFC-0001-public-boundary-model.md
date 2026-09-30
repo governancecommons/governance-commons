@@ -10,7 +10,7 @@ Number assigned 2026-08-29 in [governancecommons/governance-commons#1](https://g
 | --- | --- |
 | RFC number | `RFC-0001` |
 | Title | Governance Commons Public Boundary Model |
-| Status | `draft` |
+| Status | `open-for-comment` |
 | Author | jj-ervin |
 | Created | 2026-08-28 |
 | Target specs | Agent Dossier, Agent Matrix, ONS, Agent Team Protocol, Agent Project Orchestrator |
@@ -172,7 +172,9 @@ A2A defines cross-platform agent communication and task exchange, and was accept
 
 ### 5.6 Sources
 
-Cited from primary sources and re-verified on 2026-08-29. External endpoints are point-in-time evidence and should be refreshed before a later acceptance if material time has passed.
+Cited from primary sources and refreshed for review on 2026-10-01. External endpoints are point-in-time evidence and should be refreshed again before acceptance if material facts change.
+
+**Review refresh (2026-10-01):** The AAIF submission page now describes the foundation as having **250+ member organizations**; the 2026-08-12 AAIF announcement recorded **247** members at that earlier point in time. AAIF's current Identity & Trust working-group page explicitly covers **delegation protocols, cross-domain identity, and permission flow**. AAIF's current working-group landscape also includes Governance, Risk & Regulatory Alignment, Observability & Traceability, Workflows & Process Integration, and Taxonomy & Landscape. These current pages reinforce rather than remove the overlap described in Alternative 4.4. MCP's current documented revision is **2026-07-28**, with Draft / Current / Final revision states and a documented deprecation lifecycle. CloudEvents currently lists **v1.0.2** as its latest released core specification while maintaining a working draft, and its SDK requirements continue to distinguish SDK governance from the core specification and maintain a feature-support table. OpenTelemetry's current stability documentation continues to document the schema-transformation moratorium and published schema URLs.
 
 | Claim | Primary source |
 | --- | --- |
