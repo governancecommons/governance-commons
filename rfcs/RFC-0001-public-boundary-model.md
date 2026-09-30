@@ -1,6 +1,6 @@
 # RFC-0001 — Governance Commons Public Boundary Model
 
-Number assigned 2026-08-29 in [governancecommons/governance-commons#1](https://github.com/governancecommons/governance-commons/issues/1). This draft is not accepted and does not activate the proposed boundary model.
+Number assigned 2026-08-29 in [governancecommons/governance-commons#1](https://github.com/governancecommons/governance-commons/issues/1). This RFC has been accepted by the documented maintainer on 2026-10-01. Acceptance authorizes the transition described in Section 3; the proposed public boundary remains inactive until G-1 through G-5 are verified.
 
 ---
 
@@ -10,7 +10,7 @@ Number assigned 2026-08-29 in [governancecommons/governance-commons#1](https://g
 | --- | --- |
 | RFC number | `RFC-0001` |
 | Title | Governance Commons Public Boundary Model |
-| Status | `open-for-comment` |
+| Status | `accepted` |
 | Author | jj-ervin |
 | Created | 2026-08-28 |
 | Target specs | Agent Dossier, Agent Matrix, ONS, Agent Team Protocol, Agent Project Orchestrator |
@@ -110,7 +110,7 @@ Fold the differentiated material into an established vendor-neutral foundation r
 
 This alternative was not in the original set and was surfaced by the prior-art research below. It is included because reviewers are likely to ask it first.
 
-The Agentic AI Foundation hosts Model Context Protocol, goose, and AGENTS.md; Agent2Agent was accepted as a hosted project on **2026-08-17**. As of the membership announcement of 2026-08-12 it comprises **247 member organizations**. Its working groups overlap Governance Commons directly — including **Identity & Trust**, **Observability & Traceability**, **Governance/Risk/Regulatory Alignment**, and **Taxonomy & Landscape**.
+The Agentic AI Foundation hosts Model Context Protocol, goose, and AGENTS.md; Agent2Agent was accepted as a hosted project on **2026-08-17**. As of the membership announcement of 2026-08-12 it comprises **247 member organizations**. Its working groups overlap Governance Commons directly — including **Identity & Trust**, **Observability & Traceability**, **Governance/Risk & Regulatory Alignment**, and **Taxonomy & Landscape**.
 
 **A scope-based defence is not available.** AAIF's Identity & Trust working group explicitly covers delegation protocols and permission flow. Any argument that AAIF concerns interoperability while Governance Commons concerns authority is disproved by AAIF's own program and MUST NOT be used in this RFC.
 
@@ -222,3 +222,31 @@ Non-normative.
 - **A-5's rename is cosmetic; the composition rule is not.** The rule is a security property — without it, delegation could route around a `requires_human_approval_for` constraint. It warrants its own review attention regardless of ATP's family status.
 - **Consider adopting a feature support table** for GC Toolkit, following CloudEvents. It is a small artifact that prevents a whole class of false conformance claim.
 - **Consider MCP-style revision states** (Draft / Current / Final) for Governance Commons specifications. Immutability at Final is what makes a citation stable, and it is currently the property the family most visibly lacks.
+
+---
+
+## 8. Maintainer review and acceptance record
+
+**Review mode:** Maintainer review  
+**Reviewer:** Jesse Ervin — documented Governance Commons maintainer  
+**Review date:** 2026-10-01  
+**Review basis:** RFC-0001, RFC-PROCESS.md, DEV-PLAN.md, Issue #1, the current GC v1.2.0/A7/Phase B state, and the refreshed primary-source evidence recorded in this RFC.
+
+### Review findings
+
+1. **Process compliance.** RFC-0001 contains the required header, problem statement, proposal, alternatives, prior art, compatibility impact, and implementation material. The RFC is numbered and stored at the canonical path.
+2. **Review mode.** No known external adopter or independent contributor is materially affected at this time. Maintainer review is therefore the proportional review mode defined by RFC-PROCESS.md.
+3. **Substantive review.** The proposed five-layer boundary is internally coherent with the documented goal of separating the GC umbrella, independently adoptable specifications, tooling, publication infrastructure, and maintainer workspace.
+4. **External-evidence review.** The prior-art and ecosystem claims were refreshed against current primary sources before acceptance. The refresh is recorded in Section 5 and does not establish authority for GC over external ecosystems.
+5. **Activation separation.** Acceptance is explicitly separated from public activation. A-1 through A-5 are authorized by acceptance; G-1 through G-5 remain the activation gate.
+6. **Compatibility.** Because the proposal coordinates changes across multiple components, the compat-hold requirement under DDR-1 remains in force until the named consumers confirm compatibility.
+7. **Objections.** Issue #1 contains the maintainer assignment record and no unresolved substantive objection from an external adopter or contributor. No unresolved substantive objection was identified during this maintainer review.
+
+### Decision
+
+**ACCEPTED.**
+
+Acceptance is a binding AL:2 decision for implementation of A-1 through A-5. It does not, by itself, activate the public boundary. Activation remains contingent on successful verification of G-1 through G-5.
+
+**Maintainer:** Jesse Ervin  
+**Recorded:** 2026-10-01
