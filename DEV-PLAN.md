@@ -22,12 +22,26 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 ## CURRENT EXECUTION POSITION
 
 **Current state (reconciled 2026-09-30):** PASS-5's original release/site checklist is substantially superseded by the live v1.2.0 baseline and the RFC-0001 public-boundary transition. A7 and Phase B cross-spec reconciliation are CLOSED.
-**Active governance decision:** RFC-0001 — Governance Commons Public Boundary Model (draft, not yet accepted).
+**Active governance decision:** RFC-0001 — Governance Commons Public Boundary Model (**accepted 2026-10-01** by Jesse Ervin, documented maintainer).
 **GC v1.2.0:** release-train manifest is READY (not formally FINAL/activated); all four pinned components report compat_status: ok and compat_hold_items: []. The v1.2.0 website baseline/freeze notice is published. Python package publication is complete; npm publication remains a separately verified release gate.
-**Next execution objective:** RFC-0001 review/acceptance → implement A-1–A-5 → verify G-1–G-5 → activate the public boundary. Do not reopen A7/Phase B unless a concrete defect is found.
+**Next execution objective:** implement A-1–A-5 → verify G-1–G-5 → activate the public boundary. RFC-0001 acceptance is CLOSED. Do not reopen A7/Phase B unless a concrete defect is found.
 **Strategic checkpoint:** Before opening a new broad GC capability track, validate whether GC should remain a standalone agent-governance standards umbrella versus narrowing to a differentiated interoperability/evidence layer or contributing mature artifacts to an existing ecosystem.
 **OSS baseline:** FROZEN. New category-defining capability is not automatically authorized merely because PASS-6 exists.
 **Product path:** standards + reference tooling + publication infrastructure; adoption must be earned by a small, independently useful entry point rather than assumed from the umbrella.
+
+
+### RFC-0001 ACCEPTANCE — 2026-10-01
+
+- **RFC:** RFC-0001 — Governance Commons Public Boundary Model
+- **Decision:** ACCEPTED
+- **Maintainer:** Jesse Ervin — documented Governance Commons maintainer
+- **Review mode:** Maintainer review under `rfcs/RFC-PROCESS.md`
+- **Review record:** `rfcs/RFC-0001-maintainer-review.md` and Section 8 of the RFC
+- **Effect:** A-1 through A-5 implementation is authorized.
+- **Activation:** NOT YET ACTIVE. G-1 through G-5 remain the public-boundary activation gate.
+- **Compat-hold:** REQUIRED under DDR-1 until the named consumers confirm compatibility.
+- **Review finding:** No unresolved substantive objection was identified. External ecosystem claims were refreshed against primary sources before acceptance.
+
 
 ## SEPTEMBER 2026 CURRENT-STATE RECONCILIATION
 
