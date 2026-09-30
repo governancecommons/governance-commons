@@ -21,12 +21,40 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 ## CURRENT EXECUTION POSITION
 
-**Active PASS:** PASS-5 (Public Release Train) — opened 2026-06-08 via GC-PASS-0015.00
-**Primary active tracks:** Track Foxtrot (PyPI + npm publish, release train manifest, GitHub Releases) · Track Golf (GitHub org, governancecommons.org, release notes) · Track Hotel (RFC process, ADOPTERS.md, conformance badge criteria)
-**Completed tracks:** Track Alpha PASS-1 + PASS-2 + PASS-4 closed · Track Bravo PASS-2 + PASS-4 closed · Track Charlie PASS-1 + PASS-3 closed · Track Delta PASS-1 + PASS-2 closed · Track Echo PASS-3 + PASS-4 closed
-**Next milestone:** PASS-5 close-out → GC v1.2.0 declaration → PASS-6 (Category-Defining Profile)
-**OSS baseline:** FROZEN as of 2026-06-09 after PASS-5 Batch 2. PASS-5 may finish release/site/publish mechanics and fix baseline defects; new category-defining capability scope moves to PASS-6 optional profiles.
-**Product path:** governancecommons.org first → PASS-6 optional profiles → VS Code extension/control-plane adoption surface. No fork now; version at the GC release-manifest boundary.
+**Current state (reconciled 2026-09-30):** PASS-5's original release/site checklist is substantially superseded by the live v1.2.0 baseline and the RFC-0001 public-boundary transition. A7 and Phase B cross-spec reconciliation are CLOSED.
+**Active governance decision:** RFC-0001 — Governance Commons Public Boundary Model (draft, not yet accepted).
+**GC v1.2.0:** release-train manifest is READY (not formally FINAL/activated); all four pinned components report compat_status: ok and compat_hold_items: []. The v1.2.0 website baseline/freeze notice is published. Python package publication is complete; npm publication remains a separately verified release gate.
+**Next execution objective:** RFC-0001 review/acceptance → implement A-1–A-5 → verify G-1–G-5 → activate the public boundary. Do not reopen A7/Phase B unless a concrete defect is found.
+**Strategic checkpoint:** Before opening a new broad GC capability track, validate whether GC should remain a standalone agent-governance standards umbrella versus narrowing to a differentiated interoperability/evidence layer or contributing mature artifacts to an existing ecosystem.
+**OSS baseline:** FROZEN. New category-defining capability is not automatically authorized merely because PASS-6 exists.
+**Product path:** standards + reference tooling + publication infrastructure; adoption must be earned by a small, independently useful entry point rather than assumed from the umbrella.
+
+## SEPTEMBER 2026 CURRENT-STATE RECONCILIATION
+
+**Reconciliation date:** 2026-09-30  
+**Authority:** live GitHub state, release manifest, release/site commits, RFC-0001, and completed A7/Phase B commits.
+
+### Closed
+- **A7 — delegation lifecycle / revocation evidence:** CLOSED. Registry implementation and verification runs passed.
+- **Phase B — ecosystem/cross-spec reconciliation:** CLOSED. Final reconciliation landed 2026-09-17.
+- **GC v1.2.0 baseline publication:** website baseline/freeze notice published 2026-09-17.
+- **GC v1.2.0 release manifest:** READY with all four pinned components compatible and no compat-hold items.
+- **Registry SDK publication workflow:** npm publication was moved to trusted publishing; the resulting workflow runs are green. Actual package publication remains a separate observable gate and must not be inferred from CI success.
+
+### Reclassified / stale planning corrected
+- Old PASS-5 wording that treated the website as not live is stale; the live site baseline was published 2026-09-17.
+- Old PASS-5 wording that treated the npm gate as permanently blocked on NPM_TOKEN is stale; the workflow was changed to npm trusted publishing on 2026-09-18.
+- The old “PASS-5 close-out → v1.2.0 declaration → PASS-6” sequence is no longer the controlling next-step chain. RFC-0001 is now the active governance decision.
+
+### Remaining actual gates
+1. **RFC-0001 acceptance decision** — human governance decision.
+2. **A-1 through A-5 implementation** — only after acceptance.
+3. **G-1 through G-5 activation gate** — verify canonical schemas, licensing, ONS version identity, public website family, and Agent Matrix compatibility.
+4. **Independent adoption evidence** — not a release gate, but the strategic gate for deciding whether GC should expand as a standalone ecosystem.
+5. **Package/public distribution verification** — verify npm artifact publication independently of workflow success.
+
+### Strategic note
+The original PASS-6 document-vault/profile direction remains a product exploration, not an automatic continuation of the GC standards roadmap. It should not be expanded into another large implementation program until there is a clear adoption wedge and evidence that the work is differentiated from existing agent-governance efforts.
 
 **Recently completed:**
 
@@ -122,13 +150,13 @@ spec surface required for a credible v1.0 public release.
 **PASS-5 Batch 3 (parallel — after Batch 2):**
 
 1. ~~GC-5-G-02~~ — GitHub Releases: create tagged releases for agent-dossier v1.1.0 and APO v1.1.0; release notes for all four v1.2.0 specs — DONE: GitHub Releases with substantive release notes exist for all four v1.2.0-pinned specs — agent-dossier v1.1.0 (published 2026-06-18), agent-matrix v1.4.0 (published 2026-06-09), ons v1.2.0 + v1.3.0 (published 2026-06-09), agent-project-orchestrator v1.1.0 (published 2026-06-18). This row had gone stale against the actual GitHub state (never updated after the releases were cut); verified live via `gh release list`/`gh release view` 2026-08-10 — **C**
-2. GC-5-G-03 — governancecommons.org: live ecosystem landing page with per-standard pages; links to spec repos, validator packages, and conformance badge instructions — **O** _(verified 2026-08-10: `governance-commons-www` repo exists, private, `has_pages: false`, no GitHub Pages configured, last pushed 2026-06-09 — genuinely not live)_
-3. GC-5-G-04 — OSS baseline freeze notice: document the frozen OSS core scope on governancecommons.org and in release notes; clarify that PASS-6 profiles are optional extensions, not baseline requirements — **O** _(blocked on GC-5-G-03 — no live site exists yet to carry the notice)_
+2. ~~GC-5-G-03~~ — governancecommons.org: live ecosystem landing page with per-standard pages; links to spec repos, validator packages, and conformance badge instructions — **C** _(v1.2.0 baseline/freeze publication landed 2026-09-17; prior 2026-08-10 “not live” note is superseded)_
+3. ~~GC-5-G-04~~ — OSS baseline freeze notice: document the frozen OSS core scope on governancecommons.org and in release notes; clarify that PASS-6 profiles are optional extensions, not baseline requirements — **C** _(bound to v1.2.0 release notes/site publication on 2026-09-17)_
 
 **PASS-5 Batch 4 — End-game publish (final; gated on Batch 2 complete; LLC filing gate resolved 2026-06-15):**
 
 1. ~~GC-5-F-02~~ — governance-commons-py: publish to PyPI via OIDC trusted publisher workflow — DONE 2026-08-16: `governance-commons` v0.1.1 live at pypi.org/project/governance-commons/. (v0.1.0 published first via a GitHub-UI-added workflow before README/metadata fixes landed, so its page is frozen with stale placeholder text; v0.1.1 carries the real README and correct project URLs and is what the project page now shows.) — **C**
-2. GC-5-F-03 — governance-commons-js: publish to npm via provenance workflow — still open, blocked on `NPM_TOKEN` repo secret (owner needs to generate it on npmjs.com) — **O**
+2. GC-5-F-03 — governance-commons-js: publish to npm via trusted publishing workflow — **O / verification pending**. The old NPM_TOKEN blocker is obsolete; workflow was migrated to npm trusted publishing on 2026-09-18. Verify the actual public package artifact separately.
 3. ~~GC-5-F-04~~ — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — DONE: `status: ready` since 2026-06-17; all four specs (agent-dossier, agent-matrix, ons, agent-project-orchestrator) have `pinned_version` populated and `compat_status: ok`; `compat_hold_items: []`. This DEV-PLAN.md row had gone stale against the artifact (caught by the ECOSYSTEM-BOUNDARY.00 cross-repo audit, `c:\dev\docs\ecosystem-roadmap.md` Phase 1) — GC-5-F-02/03 (PyPI/npm publish) remain genuinely open, blocked on external OIDC/NPM_TOKEN setup, not on this item — **C**
 
 > **Release strategy note (updated 2026-06-09):** PASS-5 Batch 2 completion freezes the OSS baseline. PASS-6 dev work may begin from that frozen baseline and does NOT wait for the end-game publish sequence. The public launch and PASS-6 development run in parallel. Open question: whether the first public release is labeled GC v1.2.0 or renamed GC v1.0.0 for public clarity — requires maintainer decision before Batch 4. No fork is planned at this point; versioning happens at the GC release-manifest boundary.
