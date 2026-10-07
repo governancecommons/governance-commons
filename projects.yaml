@@ -15,7 +15,7 @@ root: "c:/dev/governance-commons"
 projects:
 
   # ─── SPECS ───────────────────────────────────────────────────────────────────
-  # The four independently versioned, project-neutral standards.
+  # The three independently versioned, project-neutral standards.
 
   - name: agent-dossier
     path: agent-dossier
@@ -80,8 +80,8 @@ projects:
   - name: agent-project-orchestrator
     path: agent-project-orchestrator
     github: governancecommons/agent-project-orchestrator
-    group: specs
-    description: "Runtime execution contract for project-level orchestrators — task graph, dispatch, handoff, audit"
+    group: runtime
+    description: "Reference runtime candidate for project-level orchestrators — task graph, dispatch, handoff, audit"
     status: active
     version: "1.x"
     branch: main

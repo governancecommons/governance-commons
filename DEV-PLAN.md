@@ -171,7 +171,7 @@ spec surface required for a credible v1.0 public release.
 
 1. ~~GC-5-F-02~~ — governance-commons-py: publish to PyPI via OIDC trusted publisher workflow — DONE 2026-08-16: `governance-commons` v0.1.1 live at pypi.org/project/governance-commons/. (v0.1.0 published first via a GitHub-UI-added workflow before README/metadata fixes landed, so its page is frozen with stale placeholder text; v0.1.1 carries the real README and correct project URLs and is what the project page now shows.) — **C**
 2. GC-5-F-03 — governance-commons-js: publish to npm via trusted publishing workflow — **O / verification pending**. The old NPM_TOKEN blocker is obsolete; workflow was migrated to npm trusted publishing on 2026-09-18. Verify the actual public package artifact separately.
-3. ~~GC-5-F-04~~ — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — DONE: `status: ready` since 2026-06-17; all four specs (agent-dossier, agent-matrix, ons, agent-project-orchestrator) have `pinned_version` populated and `compat_status: ok`; `compat_hold_items: []`. This DEV-PLAN.md row had gone stale against the artifact (caught by the ECOSYSTEM-BOUNDARY.00 cross-repo audit, `c:\dev\docs\ecosystem-roadmap.md` Phase 1) — GC-5-F-02/03 (PyPI/npm publish) remain genuinely open, blocked on external OIDC/NPM_TOKEN setup, not on this item — **C**
+3. ~~GC-5-F-04~~ — advance `releases/gc-v1.2.0.yaml` status from `planned` to `ready`; populate `pinned_version` for all four specs — DONE: `status: ready` since 2026-06-17; all four specs (agent-dossier, agent-matrix, ons, agent-project-orchestrator) have `pinned_version` populated and `compat_status: ok`; `compat_hold_items: []`. This DEV-PLAN.md row had gone stale against the artifact (caught by the ECOSYSTEM-BOUNDARY.00 cross-repo audit, `c:\dev\docs\ecosystem-roadmap.md` Phase 1). Python 0.2.0 is published; npm 0.2.0 remains unpublished after the workflow moved to Trusted Publishing/OIDC, so package publication proof remains open but is not a manifest-readiness blocker. — **C**
 
 > **Release strategy note (updated 2026-06-09):** PASS-5 Batch 2 completion freezes the OSS baseline. PASS-6 dev work may begin from that frozen baseline and does NOT wait for the end-game publish sequence. The public launch and PASS-6 development run in parallel. Open question: whether the first public release is labeled GC v1.2.0 or renamed GC v1.0.0 for public clarity — requires maintainer decision before Batch 4. No fork is planned at this point; versioning happens at the GC release-manifest boundary.
 
@@ -471,10 +471,11 @@ a timed public-comment period is required only when known external participants 
 affected or proposal risk warrants it. The correction and its bootstrap rationale are recorded
 in the process document and GC-PASS-0025.00.
 
-**What conformance means.** A project conforms to a Governance Commons standard when:
-it satisfies all `MUST` requirements in the spec for its declared conformance profile
-(advisory / standard / strict), and its conformance declaration passes the validator for that
-spec version. Conformance is self-declared until a certification program exists (PASS-5).
+**What conformance means.** A declaration names a Governance Commons specification, version,
+subject, profile, and evidence. Where a published validator explicitly supports that target, the
+declaration records its result. Otherwise the evidence is manual or provisional. Governance
+Commons does not operate a certification program, and conformance is never claimed for the
+umbrella itself.
 
 **What a release includes.** A GC release is a named manifest that pins the minimum compatible
 version of each included spec. It is not a monorepo tag. Each spec can still patch independently
@@ -553,7 +554,7 @@ portability tracking item needed; ONS-PC items cover the one real gap (platform 
 | GC Release | Status | Requires |
 | --- | --- | --- |
 | GC v1.0.0 | Implied (current) | Current published versions of each spec |
-| GC v1.2.0 | Ready (M2) since 2026-06-17 — manifest `status: ready` (`releases/gc-v1.2.0.yaml`); PyPI/npm publish (GC-5-F-02/03) still open, blocked on external OIDC/NPM_TOKEN setup | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1.1.0 |
+| GC v1.2.0 | Ready (M2) since 2026-06-17 — manifest `status: ready` (`releases/gc-v1.2.0.yaml`); Python 0.2.0 is published, while npm 0.2.0 publication remains open under Trusted Publishing/OIDC | agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1.1.0 |
 | GC v1.3.0 | Planned (M3) | agent-dossier >=1.2.0 + agent-matrix >=1.4.0 + ONS >=1.3.0 |
 | GC v2.0.0 | Planned (M4) | Major version — breaking changes allowed |
 
@@ -801,3 +802,36 @@ Reconciliation validation receipt (2026-10-05): SDK 219 Python tests and Node ch
 ## 2026-10-06 — Release authority and commit-readiness review
 
 Kinjuu header format repaired under Jesse's explicit narrow exception; historical body unchanged. GC release ownership is `governance-commons/DEV-RELEASE.md`; the retained dev-docs copy is historical. Four historical completion checkboxes are reconciled against published registries, existing notes and ready manifest. Public Python 0.2.0 and npm 0.1.1 remain divergent from coordinated current SDK source. Website HTTPS proof remains open. SDK/Matrix/ONS working-tree changes are reviewed for commit readiness, not automatically committed or published.
+
+## 2026-10-07 — RFC-0001 implementation checkpoint
+
+RFC-0001 remains accepted and not active. The bounded public-boundary batch advances A-2 by
+splitting normative specification compatibility from tested runtimes, implements A-3 and A-4 in
+the charter, completes the ATP field/composition change in
+A-5, and replaces the website's equal-status four-component presentation with explicit role,
+maturity, version, evidence, and authority boundaries. A-1 remains open: APO's vendored Agent
+Dossier schemas do not yet record release tag, immutable commit SHA, schema path, content digest,
+and automated drift verification, so APO remains a reference-runtime candidate.
+The A-2 requirement to generate or validate umbrella releases from component compatibility data
+also remains open; the historical v1.2.0 manifest is not silently rewritten.
+
+Activation gate state after the local batch:
+
+- G-1 open: canonical Agent Dossier schema URLs return 404.
+- G-2 locally satisfied candidate: Agent Matrix has an MIT license file consistent with its
+  README and package metadata; remote/public verification waits on commit and publication.
+- G-3 locally satisfied candidate: ONS README, canonical YAML, schema IDs, and latest release tag
+  agree on v1.3.0; remote/public verification waits on commit and publication.
+- G-4 locally implemented candidate: the site presents the three released specifications and
+  separates runtime candidates, pre-release work, evidence contracts, and tooling. Public deploy
+  verification remains open.
+- G-5 open: current Agent Matrix main still aligns its current row to unreleased Agent Dossier
+  v1.4.0. Do not change that compatibility claim without coordinated release/compatibility proof.
+
+Additional release-truth blocker: published Python toolkit 0.2.0 reports ONS v1.4.0 while the ONS
+repository's latest release and canonical surfaces are v1.3.0. Reconcile the toolkit ruleset and
+release identity before using automated ONS output as proof for the v1.3.0 baseline. npm 0.2.0 is
+not published; npm 0.1.1 remains latest despite the Trusted Publishing/OIDC workflow migration.
+The v1.2.0 manifest also fails its current JSON Schema because `ready_at` is not declared and its
+legacy `gc_pass_id` value does not match the schema pattern; reconcile that identifier contract
+without erasing release history before treating manifest validation as clean.

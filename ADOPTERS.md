@@ -1,19 +1,25 @@
 # Adopters — Governance Commons
 
 This file lists projects and organizations that have declared conformance with one or more
-Governance Commons standards. Conformance is self-declared until a certification program
-exists (targeted for PASS-6).
+named Governance Commons specifications at named versions. Declarations are self-reported;
+Governance Commons does not operate a certification program.
 
 ---
 
 ## How to add your project
 
-1. Verify your conformance level using the GC validator:
+1. Choose the named specification and exact version your system implements.
+2. Check the support matrix in
+   [docs/conformance/badge-criteria.md](docs/conformance/badge-criteria.md). When the published
+   Python toolkit supports the selected specification, run:
    ```
    gc-validate --spec <spec-name> --profile <advisory|standard|strict>
    ```
-2. Open a pull request adding a row to the table below.
-3. Include your conformance report (output of `gc-report`) as a PR attachment or linked artifact.
+3. Where no published validator supports the selected specification and version, label the
+   declaration `manual` or `provisional` and document the checks performed. Do not present a
+   repository test suite as independent certification.
+4. Open a pull request adding a row to the table below.
+5. Include the generated ConformanceReport or documented manual evidence as a linked artifact.
 
 See [docs/conformance/badge-criteria.md](docs/conformance/badge-criteria.md) for the full
 criteria matrix and badge embedding instructions.
@@ -33,7 +39,7 @@ criteria matrix and badge embedding instructions.
 | Profile | Meaning |
 | --- | --- |
 | **advisory** | Aware of the standard; structure and naming follow GC conventions |
-| **standard** | Passes `gc-validate` for all `MUST` rules at the standard profile |
-| **strict** | Passes `gc-validate` at the strict profile; submits a signed evidence bundle |
+| **standard** | Passes an available published validator for all evaluated `MUST` rules |
+| **strict** | Passes an available published strict profile and retains the required signed evidence bundle |
 
 Full criteria: [docs/conformance/badge-criteria.md](docs/conformance/badge-criteria.md)

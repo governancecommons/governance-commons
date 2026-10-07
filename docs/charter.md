@@ -38,19 +38,27 @@ The canonical project name is **Governance Commons**. The canonical domain is **
 - All schema `$id` URLs MUST use the `governancecommons.org` base domain
 - The GitHub organization MUST be `governancecommons` when created
 - Per-standard subdomains (`agent-dossier.org`, etc.) redirect to `governancecommons.org/{standard}/`
-- No third party may use the name "Governance Commons" to describe a competing or incompatible
-  standard without prior written consent from the founding maintainer
+- Naming policy: Adopters may make accurate nominative statements (e.g., "compatible with Agent Dossier"), but implied endorsement, certification, or official affiliation is prohibited. No official certification program currently exists.
+- Publication namespaces: `governance-commons` on PyPI is a transitional exception; it will be deprecated once a functional `@governancecommons/toolkit` (or equivalent GC Toolkit package) exists and has carried a deprecation notice for at least one release cycle. Other package registries MUST use scoped names (e.g., `@governancecommons/toolkit` for npm).
 
 ---
 
 ## GC-CHARTER-004 — Standard Independence
 
-Each Governance Commons standard (agent-dossier, agent-matrix, ONS, agent-project-orchestrator)
+The active Governance Commons specification family consists of Agent Dossier, Agent Matrix,
+and ONS. Each specification
 is independently versioned and independently releasable. No standard requires another to
-release in lock-step.
+release in lock-step. Agent Team Protocol is emerging pre-release work and is not part of the
+GC v1.2.0 pinned baseline.
+
+Agent Project Orchestrator is classified as a reference-runtime candidate, not a
+specification. It earns the reference-runtime label only once it consumes canonical released
+Agent Dossier schemas. Vendoring remains permitted for offline use where each vendored schema
+records its release tag, immutable commit SHA, schema path, and content digest, with automated
+drift detection.
 
 GC ecosystem release milestones (e.g., GC v1.2.0) are informational pinning contracts for adopters.
-They do not gate or block any standard's own release cadence.
+They do not gate or block any standard's own release cadence. Compatibility tables are split into normative standards compatibility (from which umbrella releases are derived) and non-normative "tested with" runtime and tooling versions. Tooling or runtime versions (such as `min_orchestrator_version`) no longer determine an umbrella standards release. Umbrella releases are generated or validated from component compatibility data, not hand-authored.
 
 This invariant (DDR-2 at AL:2) is promoted to AL:3 because collapsing standard independence would
 require migrating all standards and all adopters simultaneously — a class of change that cannot be

@@ -13,8 +13,12 @@ profile it satisfies across each spec it adopts.
 | Profile | Requirements |
 | --- | --- |
 | **advisory** | Structure and naming follow GC conventions; no validator run required |
-| **standard** | `gc-validate --spec <name> --profile standard` passes with zero failures |
-| **strict** | `gc-validate --spec <name> --profile strict` passes with zero failures; a signed `gc-compliance-evidence` bundle is produced and retained |
+| **standard** | An available published validator for the named specification and version passes with zero required-rule failures |
+| **strict** | An available published strict profile passes with zero failures and the required signed evidence bundle is produced and retained |
+
+Profiles are scoped to a named specification and version. They are not umbrella-level
+certification. If no published validator supports a target, evidence must be labeled manual or
+provisional; a `standard` or `strict` badge is not available on automated grounds.
 
 ---
 
@@ -33,7 +37,7 @@ profile it satisfies across each spec it adopts.
 | Profile | Criteria |
 | --- | --- |
 | advisory | A `dossier.yaml` (or equivalent) file exists and follows dossier schema structure |
-| standard | `gc-validate --spec dossier` passes; PASS IDs follow `PASS-YYYY-NNNN` format; handoff envelopes carry `emitted_at` |
+| standard | Python `governance-commons` 0.2.0 `gc-validate --spec dossier` passes for a supported Agent Dossier document; any additional PASS or handoff checks are documented separately |
 | strict | standard + signed handoff envelopes (JWS/Ed25519); signed evidence bundle submitted |
 
 ### Agent Matrix
@@ -41,16 +45,19 @@ profile it satisfies across each spec it adopts.
 | Profile | Criteria |
 | --- | --- |
 | advisory | An `agent-matrix.yaml` (or equivalent) file exists; capability profiles are declared |
-| standard | `gc-validate --spec matrix` passes; SLO/SLI fields present; MCP tool scopes declared |
-| strict | standard + A2A and CloudEvents bindings present; signed evidence bundle submitted |
+| standard | Not currently available through the published shared `gc-validate` tool; use the source validator for development checks and label any public declaration manual or provisional |
+| strict | Not currently available |
 
-### Agent Project Orchestrator (APO)
+### Agent Project Orchestrator (APO) reference-runtime candidate
 
 | Profile | Criteria |
 | --- | --- |
-| advisory | A `runtime-contract.yaml` (or equivalent) exists; task graph follows APO schema |
-| standard | `gc-validate --spec apo` passes; `time_loc` present in all `telemetry.emit()` calls |
-| strict | standard + per-agent resource budgets enforced; signed evidence bundle submitted |
+| advisory | Implementation relationship may be described, but APO is not a Governance Commons specification |
+| standard | Not available |
+| strict | Not available |
+
+Agent Team Protocol is pre-release and outside GC v1.2.0. Public conformance badges are not
+available for it yet.
 
 ---
 
@@ -75,21 +82,18 @@ Badges use [shields.io](https://shields.io) static badge format. Replace `<profi
 | standard | green | `green` |
 | strict | bright green | `brightgreen` |
 
-**Ecosystem badge** (lowest profile declared across all adopted specs):
-```markdown
-![Governance Commons: standard](https://img.shields.io/badge/Governance%20Commons-standard-green)
-```
-
 ---
 
 ## Declaring conformance
 
 To appear in [ADOPTERS.md](../../ADOPTERS.md):
 
-1. Run `gc-validate` and capture the conformance report: `gc-report --output report.json`
-2. Open a PR against `governancecommons/governance-commons` adding your row to `ADOPTERS.md`
-3. Attach or link your conformance report in the PR description
-4. For `strict` profile: attach the signed `gc-compliance-evidence` bundle
+1. Name the specification and version being claimed.
+2. Run an available published validator and retain its ConformanceReport, or document manual
+   checks and label the result manual/provisional.
+3. Open a PR against `governancecommons/governance-commons` adding your row to `ADOPTERS.md`.
+4. Attach or link the evidence in the PR description.
+5. For an available `strict` profile, attach the required signed evidence bundle.
 
-Conformance declarations are self-certified. The GC maintainer reviews for completeness,
-not for re-validation of your results.
+Conformance declarations are self-reported. The GC maintainer reviews submissions for
+completeness, not as an independent certifier.

@@ -40,7 +40,6 @@ compat_hold_items: []
 notes: >
   GC v1.2.0 is the public release-train boundary. GitHub Releases exist for
   all four specs. The Python reference package has published successfully;
-  npm publication remains an external account-secret gate until the required
-  NPM_TOKEN is available to the repository workflow. The website publishes the
+  npm 0.2.0 publication is pending via Trusted Publishing/OIDC. The website publishes the
   v1.2.0 baseline and freeze notice. agent-team-protocol is not included in
   v1.2.0; it is targeted for GC v1.3.0.
