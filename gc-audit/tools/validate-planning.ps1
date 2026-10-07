@@ -247,8 +247,8 @@ if ($Project) {
             $_.FullName -notmatch '(?i)(archive|_archive|lasso_archive|lasso-mvp_archive|devtoolkit-legacy)' -and
             # Exclude git worktrees
             $_.FullName -notmatch '(?i)[\\/]\.claude[\\/]worktrees[\\/]' -and
-            # Exclude .eco runtime artifact folders (hidden dot-folders that are runtime output)
-            $_.FullName -notmatch '[\\/]\.eco[\\/]' -and
+            # Exclude runtime and preserved reconciliation artifacts; neither is an active planning owner.
+            $_.FullName -notmatch '[\\/](\.eco|\.reconciliation)[\\/]' -and
             # Exclude state-snapshot directories
             $_.FullName -notmatch '(?i)state-snapshot' -and
             # Exclude node_modules, .venv, dist
@@ -260,6 +260,67 @@ if ($Project) {
             $ScanPaths.Add($f.FullName)
         }
     }
+}
+
+# A portfolio registry chooses active planning owners. Preserved copies remain
+# inspectable through -Project; they must not compete with the declared owner.
+$PlanningOwners = @{}
+$RegistryProjects = @{}
+$registryPath = Join-Path $Root "projects.yaml"
+if (-not $Project -and (Test-Path -LiteralPath $registryPath)) {
+    $current = $null
+    $planning = $false
+    foreach ($line in (Get-Content -LiteralPath $registryPath -Encoding UTF8)) {
+        if ($line -match '^  - name:\s*(.+?)\s*$') {
+            $current = @{ Name=$Matches[1].Trim('"', "'"); Path=""; Docs=@{} }
+            $RegistryProjects[$current.Name] = $current
+            $planning = $false
+        } elseif ($current -and $line -match '^    path:\s*(.+?)\s*$') {
+            $current.Path = $Matches[1].Trim('"', "'")
+        } elseif ($current -and $line -match '^    planning:\s*$') {
+            $planning = $true
+        } elseif ($current -and $planning -and $line -match '^      (?:canonical|path|tracks|release):\s*(.+?)\s*$') {
+            $pointer = $Matches[1].Trim('"', "'")
+            $fileName = Split-Path $pointer -Leaf
+            if ($fileName -cmatch '^DEV-(PATH|PLAN|RELEASE|TRACKS)\.md$') { $current.Docs[$fileName] = $pointer }
+        } elseif ($line -match '^    \S') { $planning = $false }
+    }
+    foreach ($entry in $RegistryProjects.Values) {
+        if (-not $entry.Path) { continue }
+        foreach ($type in $ValidTypes) {
+            $fileName = "$type.md"
+            $explicit = $entry.Docs.ContainsKey($fileName)
+            $pointer = if ($explicit) { $entry.Docs[$fileName] } else { Join-Path $entry.Path $fileName }
+            $owner = [IO.Path]::GetFullPath((Join-Path $Root $pointer))
+            if ($owner -match '(?i)([\\/]\.eco[\\/]|archive|state-snapshot)') { continue }
+            $boundary = $Root.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+            if (-not $owner.StartsWith($boundary, [StringComparison]::OrdinalIgnoreCase)) {
+                Write-Host "[ERROR] Planning pointer escapes portfolio: $pointer" -ForegroundColor Red; $Errors++; continue
+            }
+            if (-not (Test-Path -LiteralPath $owner -PathType Leaf)) {
+                if ($explicit) { Write-Host "[ERROR] Missing registered planning owner: $pointer" -ForegroundColor Red; $Errors++ }
+                continue
+            }
+            $PlanningOwners["$($entry.Path)|$fileName"] = $owner
+            if (-not $ScanPaths.Contains($owner)) { $ScanPaths.Add($owner) }
+        }
+    }
+}
+
+function Get-DeclaredPlanningOwner([string]$file) {
+    $relative = [IO.Path]::GetRelativePath($Root, $file).Replace('\', '/')
+    $fileName = Split-Path $file -Leaf
+    foreach ($entry in $RegistryProjects.Values) {
+        if (-not $entry.Path) { continue }
+        $projectPath = $entry.Path.Replace('\', '/').TrimEnd('/')
+        $inProject = $relative.Equals("$projectPath/$fileName", [StringComparison]::OrdinalIgnoreCase) -or $relative.Equals("$projectPath/docs/$fileName", [StringComparison]::OrdinalIgnoreCase)
+        $inPreservedCopy = $relative.StartsWith("dev-docs/$($entry.Name)/", [StringComparison]::OrdinalIgnoreCase)
+        if ($inProject -or $inPreservedCopy) {
+            $owner = $PlanningOwners["$($entry.Path)|$fileName"]
+            if ($owner -and $owner -ne $file) { return $owner }
+        }
+    }
+    return $null
 }
 
 # ── Run checks ────────────────────────────────────────────────────────────────
@@ -276,6 +337,11 @@ foreach ($path in $ScanPaths) {
     if (-not $resolved) { continue }
     $canonical = $resolved.Path
     if (-not $checkedFiles.Add($canonical)) { continue }
+    $owner = Get-DeclaredPlanningOwner $canonical
+    if ($owner) {
+        Write-Host "  [INFO] Non-canonical copy retained: $canonical -> $owner" -ForegroundColor DarkGray
+        continue
+    }
     Test-PlanningDoc $canonical
 }
 

@@ -800,3 +800,14 @@ Governance Commons ecosystem site at `governancecommons.org`.
 `main` branches; the organization website repo owns the Pages deployment;
 the legacy personal Pages binding is removed; the domain serves the Astro
 site over valid HTTPS; and DEV-DOCS record GC-5-G-03 as done.
+
+
+## 2026-10-05 — Local reconciliation receipt
+
+Authorized continuation: Jesse directed "DO IT" for the recommended Governance Commons reconciliation and governance debt work. Changes remain local and uncommitted. Current SDK remote 0.2.0 supersedes the older local working tree as canonical implementation; the unpublished local TypeScript parity/version draft is preserved separately. Agent Matrix examples are aligned with current schemas; the unsupported additional compliance event mapping remains queued. ONS lint whitespace and bootstrap authority pointers are repaired. GC-AUDIT recognizes public-safe stubs, existing local onboarding authority and registry-selected planning owners, with regression tests. Protected histories and queued ideas are retained. No RFC activation gate, release gate, public publication or trading action is completed by this work.
+
+Reconciliation validation receipt (2026-10-05): SDK 219 Python tests and Node checks pass; Matrix nine CI validations and 232 tests pass; ONS validation and lint pass; 13 new authority regression fixtures plus 19 existing fixtures pass with compatible Pester runtimes. SDK draft files and 24 stale generated files are preserved; final wheel/sdist/npm archives exclude unpublished drafts. Bootstrap: zero errors, eight warnings. Planning: two errors, twelve warnings, both errors at protected Kinjuu DEV-PATH header. Registry: 126 pointers resolve. Governed closure remains OPEN; unchecked release gates remain unchecked. No commit or push.
+
+## 2026-10-06 — Release authority and commit-readiness review
+
+Kinjuu header format repaired under Jesse's explicit narrow exception; historical body unchanged. GC release ownership is `governance-commons/DEV-RELEASE.md`; the retained dev-docs copy is historical. Four historical completion checkboxes are reconciled against published registries, existing notes and ready manifest. Public Python 0.2.0 and npm 0.1.1 remain divergent from coordinated current SDK source. Website HTTPS proof remains open. SDK/Matrix/ONS working-tree changes are reviewed for commit readiness, not automatically committed or published.

@@ -60,12 +60,12 @@ All of the following are complete at spec/schema/test-vector level. The gap is p
 **PASS:** PASS-5 (Public Release Train)  
 **Open question:** Rename to v1.0.0 for public clarity? Maintainer decision required before Batch 4.  
 **Blocker:** none structural — Osprey Strategic Holdings LLC has been live since 2026-06-15; the LLC-filing gate below is resolved.
-**Paused, priority to resume (2026-07-11):** PyPI trusted-publisher registration and npm token setup are on hold on the maintainer's side (external account-level actions, not something an agent can perform). Cross-platform artifact proof (Python wheel + npm tarball + npm CLI, all three OSes) is already done and does not depend on this. **Resume this first** once the maintainer can concentrate on the PyPI/npm account setup — everything else in this section can proceed in parallel.
+**Current publication state (2026-10-06):** Public Python `governance-commons` is 0.2.0; public npm `governance-commons` is 0.1.1. Current SDK source is coordinated 0.2.0 and contains newer functionality than the published Python wheel. npm publication history has matching provenance attestations; the current workflow uses Trusted Publishing, so the old NPM_TOKEN setup note is superseded. Current publisher-account configuration is not independently asserted. A coordinated source release and clean published-artifact proof remain separate work.
 
 ### What ships
 
-- `governance-commons-py` published to PyPI (GC-5-F-02)
-- `governance-commons-js` published to npm (GC-5-F-03)
+- Python `governance-commons` published to PyPI (GC-5-F-02)
+- npm `governance-commons` published to npm (GC-5-F-03)
 - GitHub Releases: agent-dossier v1.1.0, APO v1.1.0; release notes for all four v1.2.0 specs (GC-5-G-02)
 - `gc-v1.2.0.yaml` status advanced from `planned` to `ready`; `pinned_version` populated for all four specs (GC-5-F-04)
 - governancecommons.org live — per-standard pages, validator packages, conformance badge instructions (GC-5-G-03)
@@ -80,7 +80,7 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 ### Gap closures
 
 - **Q2 Standards:** PyPI/npm with OIDC provenance (partial SLSA), signed releases — closes the `release-complete` gap on all spec-complete standards items
-- **Q7 DevEx:** `pip install governance-commons-py` / `npm install governance-commons-js` — stranger install path open
+- **Q7 DevEx:** `pip install governance-commons` / `npm install governance-commons` — stranger install path open
 - **Q9 Process:** RFC process and conformance badge publicly accessible on governancecommons.org
 - **Q10 Docs:** governancecommons.org as the public entry point; "which repo do I need?" resolved by the site
 
@@ -89,13 +89,13 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 - [x] LLC filing complete (unblocks GitHub Releases and PyPI/npm) — Osprey Strategic Holdings LLC live since 2026-06-15
 - [ ] `gc-validate --spec ons` passes cleanly in CI on a fresh clone
 - [ ] `gc-validate --spec dossier` passes cleanly in CI on a fresh clone
-- [ ] `governance-commons-py` publishes successfully via OIDC trusted publisher workflow
-- [ ] `governance-commons-js` publishes successfully via npm provenance workflow
+- [x] Python package `governance-commons` has published successfully via Trusted Publishing — public PyPI 0.2.0 and upload provenance verified 2026-10-06; this does not publish newer source changes
+- [x] npm package `governance-commons` has a public published artifact with registry attestations — public version 0.1.1 verified 2026-10-06; coordinated SDK 0.2.0 publication remains open
 - [ ] PyPI and npm packages install and run `gc-validate` on a clean machine (stranger test)
 - [ ] governancecommons.org live with install instructions
-- [ ] Release notes drafted for all four specs
+- [x] Release-train notes are drafted in `releases/gc-v1.2.0-notes.md` and the four pinned spec releases are recorded in DEV-PLAN — verified 2026-10-06
 - [ ] Versioning question resolved (v1.2.0 vs v1.0.0 public label)
-- [ ] `releases/gc-v1.2.0.yaml` status: `ready`
+- [x] `releases/gc-v1.2.0.yaml` status: `ready`; all four spec pins populated and compatibility holds empty — artifact verified 2026-10-06
 
 ### Downstream unlocks (what this release enables)
 
@@ -213,3 +213,13 @@ Every item in the spec-complete table above is confirmed — the work is real. T
 - [`docs/DEV-RELEASE.md`](../docs/DEV-RELEASE.md) — portfolio master, priority order, dependency graph
 - [`docs/gap-analysis-framework.md`](../docs/gap-analysis-framework.md) — 12-question gap framework
 - [`docs/sessions/2026-06-09-combined-synthesis.md`](../docs/sessions/2026-06-09-combined-synthesis.md) — synthesis source
+
+## Release truth reconciliation — 2026-10-06
+
+This file is the canonical GC release contract, selected by `C:\dev\projects.yaml` and the portfolio master `C:\dev\docs\DEV-RELEASE.md`. `dev-docs/governance-commons/DEV-RELEASE.md` is a retained historical copy; its obsolete LLC blocker and extra unchecked item do not create a second independent release obligation. It has not been overwritten or removed.
+
+The four checkboxes above are repaired historical completion records, not a declaration that the current SDK source has shipped. Public package names are `governance-commons` in both registries, replacing the older descriptive `-py`/`-js` labels. PyPI latest is 0.2.0 (published August 19); npm latest is 0.1.1. SDK source metadata is coordinated 0.2.0, but the public registries are not coordinated at that version. Published Python 0.2.0 predates the current source; do not infer feature parity from matching version strings or attempt to overwrite that existing release.
+
+Remaining release work: verify the exact release candidate in fresh-clone CI, test the actually published artifacts from a clean environment, restore/verify the website over valid HTTPS, resolve the ecosystem public version-label decision, and authorize an appropriately versioned coordinated SDK release. The current successful SDK cross-platform workflow is source/build proof, not evidence that current source was published. No release, version bump, tag, deployment or publication was performed by this reconciliation.
+
+Website HTTPS verification failed in this environment. Earlier site-launch records are retained; current public availability/install instructions remain unverified, so that gate stays open.

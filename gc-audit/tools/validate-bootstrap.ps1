@@ -78,6 +78,30 @@ function Test-PointsToBootstrapAuthority([string]$text, [switch]$AllowAgentsPoin
     )
 }
 
+function Test-PublicSafeStub([string]$text) {
+    # DEV-ACCORD.08 permits public stubs without private onboarding pointers.
+    $first = @($text -split '\r?\n' | Where-Object { $_.Trim() })[0]
+    return ($first -match '(?i)^#.*public[- ](?:safe[- ])?stub' -and
+        $text -match '(?i)\[[^\]]+\]\((?:README|CONTRIBUTING)\.md\)' -and
+        $text -match '(?i)private' -and
+        $text -match '(?is)ask.{0,80}(?:owner|maintainer).{0,80}(?:context|bootstrap|instruction)')
+}
+
+function Test-LocalOnboardingPointer([string]$text, [string]$repoRoot) {
+    # DEV-ACCORD.04 names DEV-ACCORD.03 as an example, not the only authority.
+    $links = [regex]::Matches($text, '(?im)^Read\s+\[[^\]]+\]\(([^)]+)\)')
+    foreach ($link in $links) {
+        $relative = $link.Groups[1].Value
+        if ([IO.Path]::IsPathRooted($relative) -or $relative -match '^[a-z]+:') { continue }
+        $candidate = [IO.Path]::GetFullPath((Join-Path $repoRoot $relative))
+        $boundary = [IO.Path]::GetFullPath($repoRoot).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+        if ($candidate.StartsWith($boundary, [StringComparison]::OrdinalIgnoreCase) -and
+            (Test-Path -LiteralPath $candidate -PathType Leaf) -and
+            $relative -match '(?i)(agent[-_]guidance|onboarding|instructions|CONTRIBUTING\.md)') { return $true }
+    }
+    return $false
+}
+
 function Test-UniversalAutoReadClaim([string]$text) {
     $patterns = @(
         '(?i)all agents .*auto(?:matically)?[- ]?read',
@@ -117,7 +141,7 @@ function Test-RepoBootstrap([string]$repoRoot) {
 
     if ($hasAgents) {
         $text = Get-Text $agents
-        if (-not (Test-PointsToBootstrapAuthority $text)) {
+        if (-not ((Test-PointsToBootstrapAuthority $text) -or (Test-PublicSafeStub $text) -or (Test-LocalOnboardingPointer $text $repoRoot))) {
             Write-Finding "ERROR" "E1" $agents "AGENTS.md does not point to AGENTS.md authority or DEV-ACCORD.03"
         }
         if (Test-UniversalAutoReadClaim $text) {
