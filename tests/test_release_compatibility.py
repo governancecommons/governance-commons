@@ -26,7 +26,7 @@ class ReleaseCompatibilityTests(unittest.TestCase):
                     "compat_status": "ok",
                 }
                 for name, pin in [
-                    ("agent-dossier", "1.0.2"),
+                    ("agent-dossier", "1.1.0"),
                     ("agent-matrix", "1.4.0"),
                     ("ons", "1.3.0"),
                 ]
@@ -37,7 +37,7 @@ class ReleaseCompatibilityTests(unittest.TestCase):
                 "normative_compatibility": [
                     {
                         "matrix_version": "1.4.0",
-                        "dossier_specification_alignment": "1.0.2",
+                        "dossier_specification_alignment": "1.1.0",
                         "status": "supported",
                     }
                 ],
@@ -49,7 +49,7 @@ class ReleaseCompatibilityTests(unittest.TestCase):
         self.assertEqual(check_compatibility(self.manifest, self.matrix), [])
 
     def test_alignment_disagreement_requires_evidence(self):
-        self.manifest["specs"][0]["pinned_version"] = "1.1.0"
+        self.manifest["specs"][0]["pinned_version"] = "1.0.2"
         self.assertTrue(
             any(
                 "declared alignment" in e
@@ -112,10 +112,15 @@ class ManifestReadinessTests(unittest.TestCase):
             pin["compat_status"] = "ok"
         return candidate
 
-    def test_held_manifest_is_structurally_valid(self):
+    def test_planned_compatible_manifest_is_structurally_valid(self):
         self.assertEqual(list(self.validator.iter_errors(self.manifest)), [])
         self.assertEqual(self.manifest["status"], "planned")
-        self.assertTrue(self.manifest["compat_hold_items"])
+        self.assertEqual(self.manifest["compat_hold_items"], [])
+        compatibility = {
+            pin["spec"]: pin["compat_status"] for pin in self.manifest["specs"]
+        }
+        self.assertEqual(compatibility["agent-dossier"], "ok")
+        self.assertEqual(compatibility["agent-matrix"], "ok")
         self.assertEqual(self.manifest["ready_at"], "2026-06-17T00:00:00Z")
         self.assertNotIn("gc_pass_id", self.manifest)
         self.assertEqual(

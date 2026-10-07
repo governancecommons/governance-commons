@@ -10,7 +10,7 @@ With the component repositories present beneath this checkout:
 
 ```sh
 python -m pip install PyYAML==6.0.3 jsonschema==4.26.0
-python scripts/validate_release.py releases/gc-v1.2.0.yaml --matrix-ref 478a31db62726cf67822762552b48234e4f9b1db
+python scripts/validate_release.py releases/gc-v1.2.0.yaml --matrix-ref 296c587da1488c95e17f9627c343f0d67e72211a
 python -m unittest discover -s tests -p test_release_compatibility.py -v
 ```
 
@@ -20,16 +20,21 @@ not become compatibility evidence. Missing release tags or compatibility rows
 fail verification. The JSON report records resolved commit identities. Preserve
 the report with release-review evidence; the command does not modify the manifest.
 
-The v1.2.0 manifest now passes structural schema validation and is `planned`
-with explicit compatibility and review-provenance holds. It retains its original
-pins and `ready_at` timestamp. The ambiguous `GC-PASS-0015.00` citation is preserved
+The v1.2.0 manifest passes structural and component compatibility validation and
+remains `planned`. It retains its original pins and `ready_at` timestamp. The
+ambiguous `GC-PASS-0015.00` citation is preserved
 in `historical_gate_review`; protected history associates it with two different
 events, so it is not asserted as verified release-review authority.
 
-Release verification continues to fail because Dossier v1.1.0 differs from
-Matrix v1.4.0's declared v1.0.2 alignment and those holds remain unresolved.
-A newer Dossier version alone does not prove compatibility. Establish consumer
-compatibility evidence and resolve review provenance before restoring readiness.
+Agent Matrix commit `296c587da1488c95e17f9627c343f0d67e72211a`
+establishes bounded compatibility between Dossier v1.1.0 and Matrix v1.4.0. Its
+machine-readable evidence pins both release commits and artifact digests and tests
+the `dossier-envelope-projection-v1` integration profile. The claim is specification
+integration, not schema identity or runtime interoperability. Dossier's divergent
+internal version labels are disclosed in that evidence rather than normalized away.
+
+Compatibility validation passing does not restore release readiness. Resolve the
+ambiguous historical review provenance before changing the manifest to `ready`.
 The schema rejects readiness with unresolved review provenance, missing pins,
 non-ok component compatibility, or open holds. The historical APO entry is ignored
 by the specification-compatibility check; future releases reject runtime/tooling

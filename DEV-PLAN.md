@@ -892,3 +892,20 @@ compatibility evidence and resolved review provenance. The schema enforces exact
 pins, ok component compatibility, empty holds, and resolved historical provenance
 for ready manifests. Release verification deliberately remains non-passing until
 the underlying evidence exists. RFC-0001 remains accepted and inactive.
+
+## 2026-10-07 — Dossier v1.1.0 / Matrix v1.4.0 compatibility closure
+
+Consumer compatibility is established at immutable Agent Matrix commit
+`296c587da1488c95e17f9627c343f0d67e72211a`. Its machine-readable evidence pins Dossier
+tag `v1.1.0` at `f935146ea2762e3fcb2387a704313d2467233872` and Matrix tag `v1.4.0` at
+`1812bed7f1d195a6de7fb31e9382c079d4ca1b4e`, records artifact SHA-256 digests, and tests
+retained agent classes, event types, log levels, escalation names, and a Dossier-valid handoff
+projection. Matrix-only `task_id` and `reason` remain routing context; Dossier `type`,
+`emitted_at`, lifecycle, and expiry rules remain mandatory.
+
+The v1.2.0 manifest now marks Dossier and Matrix compatibility `ok`, with no compatibility
+holds, and validates against the immutable Matrix evidence source. This is bounded
+specification-integration evidence, not schema identity, runtime interoperability, independent
+adoption, or production-operation evidence. Dossier's divergent internal version labels remain
+disclosed and unresolved. The manifest remains `planned`; the ambiguous historical
+`GC-PASS-0015.00` review citation still blocks readiness. RFC-0001 remains accepted and inactive.
