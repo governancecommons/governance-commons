@@ -843,3 +843,17 @@ not published; npm 0.1.1 remains latest despite the Trusted Publishing/OIDC work
 The v1.2.0 manifest also fails its current JSON Schema because `ready_at` is not declared and its
 legacy `gc_pass_id` value does not match the schema pattern; reconcile that identifier contract
 without erasing release history before treating manifest validation as clean.
+
+## 2026-10-07 — RFC-0001 A-1 implementation
+
+A-1 is locally implemented in Agent Project Orchestrator. APO's two vendored Agent Dossier
+schemas are byte-identical to the released files in tag `v1.0.2` at immutable commit
+`054e9cdf0be5dc8f94a16c908cd2b4d0440bb2ec`. APO now records the release tag, commit SHA,
+released source path, SHA-256 digest, and embedded `$id` for each vendored schema. Its CLI,
+regression suite, and GitHub Actions workflow fail on content or identifier drift. The release
+artifacts' existing v1.0.0 `$id` values are preserved and disclosed rather than rewritten.
+
+This evidence satisfies A-1's offline-vendoring conditions and supports APO's
+**reference-runtime candidate** classification. It does not classify APO as a specification,
+certify runtime behavior, resolve APO's separate packaging/runtime-data limits, or activate
+RFC-0001. A-2 remains partial, and G-1 through G-5 remain the activation gate.
