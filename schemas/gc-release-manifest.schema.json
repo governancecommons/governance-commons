@@ -50,10 +50,32 @@
       "examples": ["jj-ervin"]
     },
 
+    "ready_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "description": "Timestamp of the recorded readiness declaration. Retained as historical provenance if readiness is later withdrawn; current status and holds determine present readiness."
+    },
+
+    "historical_gate_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["citation", "resolution", "source_refs", "note"],
+      "description": "Preserves an unresolved historical gate citation without claiming it is a verified current review authority.",
+      "properties": {
+        "citation": { "type": "string", "minLength": 1 },
+        "resolution": { "const": "ambiguous" },
+        "source_refs": {
+          "type": "array", "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+
     "status": {
       "type": "string",
       "enum": ["planned", "ready", "deprecated"],
-      "description": "planned: specs identified, not all versions published yet. ready: all spec versions published, compat matrix clean, no compat-hold items — adopters may pin to this release. deprecated: superseded by a newer release. When status is 'ready', every spec entry MUST have pinned_version set and compat_hold_items MUST be empty."
+      "description": "planned: release requirements remain unresolved, including publication, compatibility, or review provenance. Pins may be retained when previous readiness is withdrawn. ready: all spec versions published, compat matrix clean, no compat-hold items — adopters may pin to this release. deprecated: superseded by a newer release. When status is 'ready', every spec entry MUST have pinned_version set and compat_hold_items MUST be empty."
     },
 
     "milestone": {
@@ -92,7 +114,7 @@
           "pinned_version": {
             "type": "string",
             "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-            "description": "Exact published version included in the release. MUST be set when manifest status is 'ready'. Omit when status is 'planned'.",
+            "description": "Exact published version selected for the release. MUST be set when manifest status is 'ready'. May be retained while a planned release is on hold.",
             "examples": ["1.1.0"]
           },
           "compat_status": {
@@ -143,12 +165,20 @@
         "required": ["status"]
       },
       "then": {
+        "required": ["compat_hold_items"],
+        "not": { "required": ["historical_gate_review"] },
         "properties": {
+          "specs": {
+            "items": {
+              "required": ["pinned_version"],
+              "properties": { "compat_status": { "const": "ok" } }
+            }
+          },
           "compat_hold_items": {
             "maxItems": 0
           }
         },
-        "description": "When status is 'ready', compat_hold_items MUST be empty."
+        "description": "Ready releases require exact pins, ok compatibility, an explicit empty hold list, and resolved gate-review provenance."
       }
     }
   ]

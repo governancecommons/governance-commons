@@ -8,8 +8,9 @@ import tempfile
 import unittest
 
 import yaml
+from jsonschema import Draft202012Validator
 
-from scripts.validate_release import check_compatibility, validate_release
+from scripts.validate_release import ROOT, check_compatibility, validate_release
 
 
 class ReleaseCompatibilityTests(unittest.TestCase):
@@ -90,6 +91,63 @@ class ReleaseCompatibilityTests(unittest.TestCase):
     def test_unpinned_manifest_cannot_claim_verified_compatibility(self):
         del self.manifest["specs"][0]["pinned_version"]
         self.assertTrue(check_compatibility(self.manifest, self.matrix))
+
+
+class ManifestReadinessTests(unittest.TestCase):
+    def setUp(self):
+        schema_path = ROOT / "schemas/gc-release-manifest.schema.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        self.validator = Draft202012Validator(schema)
+        self.manifest = yaml.safe_load(
+            (ROOT / "releases/gc-v1.2.0.yaml").read_text(encoding="utf-8")
+        )
+
+    def ready_candidate(self):
+        candidate = deepcopy(self.manifest)
+        candidate["status"] = "ready"
+        candidate["compat_hold_items"] = []
+        candidate.pop("historical_gate_review")
+        for pin in candidate["specs"]:
+            pin["compat_status"] = "ok"
+        return candidate
+
+    def test_held_manifest_is_structurally_valid(self):
+        self.assertEqual(list(self.validator.iter_errors(self.manifest)), [])
+        self.assertEqual(self.manifest["status"], "planned")
+        self.assertTrue(self.manifest["compat_hold_items"])
+        self.assertEqual(self.manifest["ready_at"], "2026-06-17T00:00:00Z")
+        self.assertNotIn("gc_pass_id", self.manifest)
+        self.assertEqual(
+            self.manifest["historical_gate_review"]["citation"], "GC-PASS-0015.00"
+        )
+
+    def test_changing_status_alone_cannot_restore_readiness(self):
+        self.manifest["status"] = "ready"
+        self.assertTrue(list(self.validator.iter_errors(self.manifest)))
+
+    def test_ready_requires_resolved_review_provenance(self):
+        candidate = self.ready_candidate()
+        candidate["historical_gate_review"] = self.manifest["historical_gate_review"]
+        self.assertTrue(list(self.validator.iter_errors(candidate)))
+
+    def test_ready_requires_pinned_versions(self):
+        candidate = self.ready_candidate()
+        del candidate["specs"][0]["pinned_version"]
+        self.assertTrue(list(self.validator.iter_errors(candidate)))
+
+    def test_ready_requires_ok_component_compatibility(self):
+        candidate = self.ready_candidate()
+        candidate["specs"][0]["compat_status"] = "compat-hold"
+        self.assertTrue(list(self.validator.iter_errors(candidate)))
+
+    def test_ready_requires_explicit_empty_hold_list(self):
+        candidate = self.ready_candidate()
+        del candidate["compat_hold_items"]
+        self.assertTrue(list(self.validator.iter_errors(candidate)))
+
+    def test_resolved_candidate_meets_only_structural_requirements(self):
+        self.assertEqual(list(self.validator.iter_errors(self.ready_candidate())), [])
 
 
 class GitEvidenceTests(unittest.TestCase):

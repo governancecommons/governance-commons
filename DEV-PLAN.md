@@ -23,7 +23,7 @@ Sub-repo planning files (e.g., `agent-dossier/ROADMAP.md`) are AL:1 and do not s
 
 **Current state (reconciled 2026-09-30):** PASS-5's original release/site checklist is substantially superseded by the live v1.2.0 baseline and the RFC-0001 public-boundary transition. A7 and Phase B cross-spec reconciliation are CLOSED.
 **Active governance decision:** RFC-0001 — Governance Commons Public Boundary Model (**accepted 2026-10-01** by Jesse Ervin, documented maintainer).
-**GC v1.2.0:** release-train manifest is READY (not formally FINAL/activated); all four pinned components report compat_status: ok and compat_hold_items: []. The v1.2.0 website baseline/freeze notice is published. Python package publication is complete; npm publication remains a separately verified release gate.
+**GC v1.2.0:** release-train manifest is PLANNED with explicit Dossier/Matrix compatibility and historical review-provenance holds (readiness withdrawn 2026-10-07). Original pins and readiness timestamp are retained. Python package publication is complete; npm publication remains a separately verified release gate.
 **Next execution objective:** implement A-1–A-5 → verify G-1–G-5 → activate the public boundary. RFC-0001 acceptance is CLOSED. Do not reopen A7/Phase B unless a concrete defect is found.
 **Strategic checkpoint:** Before opening a new broad GC capability track, validate whether GC should remain a standalone agent-governance standards umbrella versus narrowing to a differentiated interoperability/evidence layer or contributing mature artifacts to an existing ecosystem.
 **OSS baseline:** FROZEN. New category-defining capability is not automatically authorized merely because PASS-6 exists.
@@ -874,3 +874,21 @@ v1.0.2 alignment. Resolve the schema/identifier contract and establish coordinat
 compatibility evidence before declaring that manifest verified. G-5's current
 Matrix row referencing unreleased Dossier v1.4.0 remains open. RFC-0001 remains
 accepted and inactive. Website work remains parked.
+
+## 2026-10-07 — Release-contract reconciliation
+
+The v1.2.0 manifest now satisfies its structural schema. `ready_at` is explicitly
+supported as historical provenance, and the ambiguous `GC-PASS-0015.00` citation
+is retained in `historical_gate_review` rather than asserted as current review
+authority. Protected DEV-PATH associates that citation with the June 8 PASS-4
+gate; passchangelog associates it with the June 30 Change Playbook. Both source
+records remain unchanged. No substitute PASS identity has been invented.
+
+Readiness is withdrawn: the manifest is `planned`, Dossier and Matrix carry
+`compat-hold`, and the hold list records their alignment disagreement plus the
+unresolved historical review citation. Original version pins, tags, and the
+June 17 readiness timestamp are preserved. Restoring readiness requires consumer
+compatibility evidence and resolved review provenance. The schema enforces exact
+pins, ok component compatibility, empty holds, and resolved historical provenance
+for ready manifests. Release verification deliberately remains non-passing until
+the underlying evidence exists. RFC-0001 remains accepted and inactive.
