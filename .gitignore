@@ -16,3 +16,6 @@ governance-commons-vscode/
 # OS
 .DS_Store
 Thumbs.db
+
+# Python verification cache
+__pycache__/

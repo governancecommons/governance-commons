@@ -857,3 +857,20 @@ This evidence satisfies A-1's offline-vendoring conditions and supports APO's
 **reference-runtime candidate** classification. It does not classify APO as a specification,
 certify runtime behavior, resolve APO's separate packaging/runtime-data limits, or activate
 RFC-0001. A-2 remains partial, and G-1 through G-5 remain the activation gate.
+
+## 2026-10-07 — RFC-0001 A-2 release validation implementation
+
+A-2's release-validation mechanism is implemented in `scripts/validate_release.py`.
+It validates the manifest schema and derives compatibility checks from Agent Matrix's
+normative rows at an immutable commit, verifies specification release tags, checks
+exact Dossier alignment and minimum schema identity, and records source commits in
+a JSON evidence report. Runtime observations do not affect specification compatibility.
+Regression tests and CI enforce rejection of mismatched, held, duplicate, unpinned,
+deprecated, or nonexistent compatibility selections. No release pins or tags changed.
+
+The historical v1.2.0 manifest remains blocked: `ready_at` and legacy `gc_pass_id`
+fail its schema, and its Dossier v1.1.0 pin differs from the Matrix v1.4.0 row's
+v1.0.2 alignment. Resolve the schema/identifier contract and establish coordinated
+compatibility evidence before declaring that manifest verified. G-5's current
+Matrix row referencing unreleased Dossier v1.4.0 remains open. RFC-0001 remains
+accepted and inactive. Website work remains parked.
