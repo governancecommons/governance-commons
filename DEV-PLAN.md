@@ -817,7 +817,15 @@ also remains open; the historical v1.2.0 manifest is not silently rewritten.
 
 Activation gate state after the local batch:
 
-- G-1 open: canonical Agent Dossier schema URLs return 404.
+- G-1 open: the five Agent Dossier schemas are present and return 200 from the
+  repository's default GitHub Pages address, and the website build now verifies
+  their paths and canonical `$id` values before upload. The Pages API reports no
+  configured custom domain, so the same canonical `governancecommons.org` URLs
+  return 404. The published files match the Agent Dossier v1.0.3 tag while their
+  canonical path remains v1.0.2; v1.1.0 changes three schemas without changing
+  those `$id` values. Do not complete G-1 or silently overwrite the published
+  path until the external Pages/DNS configuration and release identity are
+  reconciled and verified.
 - G-2 locally satisfied candidate: Agent Matrix has an MIT license file consistent with its
   README and package metadata; remote/public verification waits on commit and publication.
 - G-3 locally satisfied candidate: ONS README, canonical YAML, schema IDs, and latest release tag
