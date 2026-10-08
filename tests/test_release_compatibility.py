@@ -126,15 +126,23 @@ class ManifestReadinessTests(unittest.TestCase):
         self.assertEqual(
             self.manifest["historical_gate_review"]["citation"], "GC-PASS-0015.00"
         )
+        self.assertEqual(
+            self.manifest["historical_gate_review"]["resolution"], "clarified"
+        )
 
     def test_changing_status_alone_cannot_restore_readiness(self):
         self.manifest["status"] = "ready"
         self.assertTrue(list(self.validator.iter_errors(self.manifest)))
 
-    def test_ready_requires_resolved_review_provenance(self):
+    def test_ready_requires_current_release_review_not_historical_gate(self):
         candidate = self.ready_candidate()
         candidate["historical_gate_review"] = self.manifest["historical_gate_review"]
         self.assertTrue(list(self.validator.iter_errors(candidate)))
+
+    def test_ambiguous_historical_citation_remains_legacy_valid(self):
+        candidate = deepcopy(self.manifest)
+        candidate["historical_gate_review"]["resolution"] = "ambiguous"
+        self.assertEqual(list(self.validator.iter_errors(candidate)), [])
 
     def test_ready_requires_pinned_versions(self):
         candidate = self.ready_candidate()

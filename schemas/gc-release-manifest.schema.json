@@ -60,10 +60,14 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["citation", "resolution", "source_refs", "note"],
-      "description": "Preserves an unresolved historical gate citation without claiming it is a verified current review authority.",
+      "description": "Preserves a historical gate citation and its resolution without claiming it is current release-review authority.",
       "properties": {
         "citation": { "type": "string", "minLength": 1 },
-        "resolution": { "const": "ambiguous" },
+        "resolution": {
+          "type": "string",
+          "enum": ["ambiguous", "clarified"],
+          "description": "ambiguous: identity is unresolved. clarified: identity is settled but the historical gate is not current release-review authority."
+        },
         "source_refs": {
           "type": "array", "minItems": 1,
           "items": { "type": "string", "minLength": 1 }

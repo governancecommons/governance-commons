@@ -909,3 +909,17 @@ specification-integration evidence, not schema identity, runtime interoperabilit
 adoption, or production-operation evidence. Dossier's divergent internal version labels remain
 disclosed and unresolved. The manifest remains `planned`; the ambiguous historical
 `GC-PASS-0015.00` review citation still blocks readiness. RFC-0001 remains accepted and inactive.
+
+## 2026-10-07 — Founder ruling on duplicate GC-PASS-0015.00 citation
+
+Founder, creator, and maintainer Jesse Ervin resolved the historical identity collision:
+`GC-PASS-0015.00` authoritatively identifies the 2026-06-08 PASS-4 gate review recorded in
+DEV-PATH. Its 2026-06-30 reuse in passchangelog for Change Playbook work was a clerical
+duplicate and carries no separate release-review authority. Both historical source records
+remain unchanged; this ruling clarifies their authority without rewriting history or inventing
+a substitute PASS identity.
+
+The manifest records the citation as `clarified`, not `ambiguous`. The June 8 PASS-4 gate
+review is not a current GC v1.2.0 release review. GC v1.2.0 therefore remains `planned` pending
+a current release review and its other open admission gates. Compatibility evidence, release
+pins, tags, and RFC-0001 activation status are unchanged by this ruling.

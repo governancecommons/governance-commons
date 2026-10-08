@@ -8,15 +8,15 @@ ready_at: "2026-06-17T00:00:00Z"
 milestone: M2
 historical_gate_review:
   citation: GC-PASS-0015.00
-  resolution: ambiguous
+  resolution: clarified
   source_refs:
     - DEV-PATH.md
     - passchangelog.md
   note: >
-    DEV-PATH records this citation for the 2026-06-08 PASS-4 gate review;
-    passchangelog records the same citation for the 2026-06-30 Change Playbook.
-    The original citation is retained as unresolved provenance, not substituted
-    with another PASS or treated as verified release-review authority.
+    Founder ruling on 2026-10-07: GC-PASS-0015.00 authoritatively identifies
+    the 2026-06-08 PASS-4 gate review. Its 2026-06-30 reuse in passchangelog was
+    a clerical duplicate and has no separate release-review authority. The
+    PASS-4 gate review is not substituted for a current GC v1.2.0 release review.
 release_notes_ref: releases/gc-v1.2.0-notes.md
 
 specs:
@@ -57,9 +57,9 @@ compat_hold_items: []
 notes: >
   GC v1.2.0 retains the historically selected release-train pins. Readiness
   was withdrawn on 2026-10-07 pending compatibility and review-provenance
-  reconciliation; Dossier/Matrix compatibility is now verified, while the
-  historical review remains unresolved. ready_at retains the original readiness
-  declaration timestamp.
+  reconciliation; Dossier/Matrix compatibility is now verified and the historical
+  citation is clarified, while a current release review and other gates remain
+  open. ready_at retains the original readiness declaration timestamp.
   GitHub Releases exist for all four pinned components. The Python reference package has published successfully;
   npm 0.2.0 publication is pending via Trusted Publishing/OIDC. The website publishes the
   v1.2.0 baseline and freeze notice. agent-team-protocol is not included in

@@ -95,7 +95,7 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 - [ ] governancecommons.org live with install instructions
 - [x] Release-train notes are drafted in `releases/gc-v1.2.0-notes.md` and the four pinned spec releases are recorded in DEV-PLAN — verified 2026-10-06
 - [ ] Versioning question resolved (v1.2.0 vs v1.0.0 public label)
-- [ ] `releases/gc-v1.2.0.yaml` status: `ready`; all four spec pins populated and compatibility holds empty — Dossier v1.1.0 / Matrix v1.4.0 compatibility verified 2026-10-07 at Matrix commit `296c587`; readiness remains withdrawn pending historical review-provenance reconciliation
+- [ ] `releases/gc-v1.2.0.yaml` status: `ready`; all four spec pins populated and compatibility holds empty — Dossier v1.1.0 / Matrix v1.4.0 compatibility verified 2026-10-07 at Matrix commit `296c587`; founder clarified `GC-PASS-0015.00` as PASS-4-only history, so readiness remains withdrawn pending a current release review and the other open gates
 
 ### Downstream unlocks (what this release enables)
 
