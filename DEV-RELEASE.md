@@ -13,7 +13,7 @@ Relationship to DEV-PLAN: `DEV-PLAN.md` owns execution (tasks, PASSes, gap closu
 **Active PASS:** PASS-5 (Public Release Train) — opened 2026-06-08  
 **OSS baseline:** FROZEN as of PASS-5 Batch 2. No new baseline scope until public release is declared.  
 **PASS-6 scope:** Optional category-defining profiles (constitutional governance, federated trust, temporal authority). May begin from frozen baseline in parallel with release mechanics.  
-**Planned public release:** GC v1.2.0 (open question: rename to v1.0.0 for public clarity — maintainer decision required before Batch 4)
+**Planned public release:** GC v1.2.0 (label retained by founder/maintainer decision on 2026-10-07)
 
 ### What Is Already Spec-Complete (not open gaps)
 
@@ -58,7 +58,7 @@ All of the following are complete at spec/schema/test-vector level. The gap is p
 
 **Status:** In progress — PASS-5 Batch 3/4 remaining  
 **PASS:** PASS-5 (Public Release Train)  
-**Open question:** Rename to v1.0.0 for public clarity? Maintainer decision required before Batch 4.  
+**Version label:** GC v1.2.0 retained by founder/maintainer decision on 2026-10-07; no public reset to v1.0.0.
 **Blocker:** none structural — Osprey Strategic Holdings LLC has been live since 2026-06-15; the LLC-filing gate below is resolved.
 **Current publication state (2026-10-06):** Public Python `governance-commons` is 0.2.0; public npm `governance-commons` is 0.1.1. Current SDK source is coordinated 0.2.0 and contains newer functionality than the published Python wheel. npm publication history has matching provenance attestations; the current workflow uses Trusted Publishing, so the old NPM_TOKEN setup note is superseded. Current publisher-account configuration is not independently asserted. A coordinated source release and clean published-artifact proof remain separate work.
 
@@ -87,15 +87,15 @@ GC v1.2.0 = agent-dossier >=1.1.0 + agent-matrix >=1.3.0 + ONS >=1.2.0 + APO >=1
 ### Admission criteria (all must be true before v1.2.0 ships)
 
 - [x] LLC filing complete (unblocks GitHub Releases and PyPI/npm) — Osprey Strategic Holdings LLC live since 2026-06-15
-- [ ] `gc-validate --spec ons` passes cleanly in CI on a fresh clone
-- [ ] `gc-validate --spec dossier` passes cleanly in CI on a fresh clone
+- [x] `gc-validate --spec ons` passes cleanly in CI on a fresh clone — Registry commit `5987cd9`, 27-job cross-platform run `37711763406`, 2026-10-07
+- [x] `gc-validate --spec dossier` passes cleanly in CI on a fresh clone — the installed candidate wheel accepts a valid fixture and rejects an invalid fixture across the 3-OS × 3-Python matrix at Registry commit `5987cd9`, run `37711763406`, 2026-10-07
 - [x] Python package `governance-commons` has published successfully via Trusted Publishing — public PyPI 0.2.0 and upload provenance verified 2026-10-06; this does not publish newer source changes
 - [x] npm package `governance-commons` has a public published artifact with registry attestations — public version 0.1.1 verified 2026-10-06; coordinated SDK 0.2.0 publication remains open
-- [ ] PyPI and npm packages install and run `gc-validate` on a clean machine (stranger test)
-- [ ] governancecommons.org live with install instructions
+- [x] PyPI and npm packages install and run `gc-validate` on a clean machine (stranger test) — isolated installs of Python 0.2.0 and npm 0.1.1 both passed ONS validation on 2026-10-07; published Python 0.2.0 does not support Dossier and is not used as Dossier evidence
+- [ ] governancecommons.org live with install instructions — candidate instructions published at site commit `cd6c6b1`; GitHub rejects the custom-domain binding until `governancecommons.org` is verified for the organization, and canonical HTTPS remains unavailable
 - [x] Release-train notes are drafted in `releases/gc-v1.2.0-notes.md` and the four pinned spec releases are recorded in DEV-PLAN — verified 2026-10-06
-- [ ] Versioning question resolved (v1.2.0 vs v1.0.0 public label)
-- [ ] `releases/gc-v1.2.0.yaml` status: `ready`; all four spec pins populated and compatibility holds empty — Dossier v1.1.0 / Matrix v1.4.0 compatibility verified 2026-10-07 at Matrix commit `296c587`; founder clarified `GC-PASS-0015.00` as PASS-4-only history, so readiness remains withdrawn pending a current release review and the other open gates
+- [x] Versioning question resolved — founder/maintainer retained v1.2.0 on 2026-10-07; the established release-train identity will not be reset to v1.0.0
+- [ ] `releases/gc-v1.2.0.yaml` status: `ready`; all four spec pins populated and compatibility holds empty — the current release review on 2026-10-07 retained `planned` because canonical website delivery is still blocked and the newer source-only Dossier validator has not shipped in a coordinated SDK package release
 
 ### Downstream unlocks (what this release enables)
 
@@ -223,3 +223,9 @@ The four checkboxes above are repaired historical completion records, not a decl
 Remaining release work: verify the exact release candidate in fresh-clone CI, test the actually published artifacts from a clean environment, restore/verify the website over valid HTTPS, resolve the ecosystem public version-label decision, and authorize an appropriately versioned coordinated SDK release. The current successful SDK cross-platform workflow is source/build proof, not evidence that current source was published. No release, version bump, tag, deployment or publication was performed by this reconciliation.
 
 Website HTTPS verification failed in this environment. Earlier site-launch records are retained; current public availability/install instructions remain unverified, so that gate stays open.
+
+## Release advancement review — 2026-10-07
+
+Founder/maintainer direction to advance resolves the umbrella public label in favor of the already-declared `v1.2.0`; no version reset is required. Fresh-clone candidate CI now proves ONS and Dossier through Registry commit `5987cd9` and GitHub Actions run `37711763406`. Independent clean installs prove that public Python 0.2.0 and npm 0.1.1 install and execute the ONS validator. Those published artifacts remain older than current source: Python 0.2.0 does not expose Dossier, and npm 0.2.0 is unpublished.
+
+The site candidate at `cd6c6b1` contains pinned install commands and corrects the prior false statement that Python 0.2.0 included Dossier validation. GitHub Pages rejected the custom-domain binding because `governancecommons.org` is not verified for the `governancecommons` organization. The current review therefore keeps the manifest `planned`. Advancing it to `ready` requires canonical HTTPS deployment plus an explicit coordinated SDK package-version/publication decision; neither is inferred from source CI.

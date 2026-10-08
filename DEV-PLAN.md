@@ -923,3 +923,18 @@ The manifest records the citation as `clarified`, not `ambiguous`. The June 8 PA
 review is not a current GC v1.2.0 release review. GC v1.2.0 therefore remains `planned` pending
 a current release review and its other open admission gates. Compatibility evidence, release
 pins, tags, and RFC-0001 activation status are unchanged by this ruling.
+
+## 2026-10-07 — GC v1.2.0 release advancement review
+
+Founder/maintainer direction retains the established GC v1.2.0 public label rather than resetting
+the umbrella release to v1.0.0. Registry commit `5987cd9` and GitHub Actions run `37711763406`
+establish fresh-clone, clean-candidate-wheel CI for ONS and Dossier across the 3-OS × 3-Python
+matrix; the parallel Node matrix validates the ONS-focused npm surface. Isolated registry installs
+of Python 0.2.0 and npm 0.1.1 both installed and ran ONS validation successfully.
+
+The public package boundary remains explicit: Python 0.2.0 does not expose Dossier validation,
+and npm 0.2.0 is not published. Website commit `cd6c6b1` adds pinned install instructions and
+corrects the prior attribution of source-only Dossier support to Python 0.2.0. Canonical HTTPS is
+still blocked because GitHub will not bind `governancecommons.org` until the domain is verified for
+the organization. The current release review therefore leaves the manifest `planned`; website
+delivery and a coordinated SDK package-version/publication decision remain open.

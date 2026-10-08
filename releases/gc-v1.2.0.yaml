@@ -58,8 +58,9 @@ notes: >
   GC v1.2.0 retains the historically selected release-train pins. Readiness
   was withdrawn on 2026-10-07 pending compatibility and review-provenance
   reconciliation; Dossier/Matrix compatibility is now verified and the historical
-  citation is clarified, while a current release review and other gates remain
-  open. ready_at retains the original readiness declaration timestamp.
+  citation is clarified. A current release review on 2026-10-07 retained planned
+  status because canonical website delivery and a coordinated SDK package release
+  decision remain open. ready_at retains the original readiness declaration timestamp.
   GitHub Releases exist for all four pinned components. The Python reference package has published successfully;
   npm 0.2.0 publication is pending via Trusted Publishing/OIDC. The website publishes the
   v1.2.0 baseline and freeze notice. agent-team-protocol is not included in
