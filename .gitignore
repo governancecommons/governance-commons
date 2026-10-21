@@ -9,6 +9,8 @@ governance-commons-www/
 governance-commons-sdk/
 agent-dossier-www/
 governance-commons-vscode/
+governance-commons-app/
+governance-commons-portal/
 
 # Editor
 .vscode/
