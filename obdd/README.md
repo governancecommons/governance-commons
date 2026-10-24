@@ -11,7 +11,7 @@ accepted conformance and assurance annex.
 
 ## Current artifact
 
-- [`OBDD-CA-01.md`](OBDD-CA-01.md) — proposed Conformance and Assurance Annex.
+- [`OBDD-CA-01.md`](OBDD-CA-01.md) — accepted Conformance and Assurance Annex.
 - [`assurance-record.template.yaml`](assurance-record.template.yaml) — an
   intentionally incomplete adopter template.
 - [`../schemas/obdd-assurance-record.schema.json`](../schemas/obdd-assurance-record.schema.json)
