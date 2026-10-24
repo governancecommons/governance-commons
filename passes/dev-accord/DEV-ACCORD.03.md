@@ -114,6 +114,12 @@ GC-conformant agents and adapters must read before acting.
 
 ---
 
+## Outcome-bound development
+
+For development tasks, follow [GC-DD-01](GC-DD-01.md): advance the approved deliverable and its acceptance criteria; preserve scope; classify additional tasks BLOCKER, REQUIRED, or DEFERRED with evidence; distinguish production security from development-environment work; and recommend delivery or closure when acceptance criteria are met. "Go" and "continue" do not authorize new scope. Existing mandatory security, approval, and release controls remain in force.
+
+---
+
 ## Portfolio rules
 
 **Do not rewrite.** Append to planning docs. Do not restructure them.
