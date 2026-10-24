@@ -1,13 +1,13 @@
 # Outcome-Bound Development and Delivery (OBDD)
 
-This directory contains the proposed OBDD v1.1 conformance and assurance
-surface. It does not establish universal legal applicability, external
-certification, or formal approval.
+This directory contains the accepted OBDD v1.1 conformance and assurance
+surface. Acceptance does not establish universal legal applicability or
+external certification.
 
 The current base directive is
-[`GC-DD-01`](../passes/dev-accord/GC-DD-01.md), version 1.0.0, itself proposed
-and subject to owner acceptance. OBDD-CA-01 is a candidate v1.1 annex; it does
-not silently activate, amend, or approve the base directive.
+[`GC-DD-01`](../passes/dev-accord/GC-DD-01.md), version 1.1.0, accepted by
+Jesse Ervin as owner and authorized approver on 2026-10-24. OBDD-CA-01 is its
+accepted conformance and assurance annex.
 
 ## Current artifact
 

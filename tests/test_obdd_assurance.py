@@ -17,7 +17,7 @@ class OBDDAssuranceTests(unittest.TestCase):
         self.record = {
             "record_version": "1.0.0",
             "record_id": "example-001",
-            "obdd_version": "1.1.0-candidate",
+            "obdd_version": "1.1.0",
             "annex": "OBDD-CA-01",
             "status": "implemented",
             "objective": {

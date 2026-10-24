@@ -1,8 +1,9 @@
 # GC-DD-01 — Outcome-Bound Development Directive
 
-**Version:** 1.0.0  
-**Status:** PROPOSED — owner acceptance required  
-**Authority:** Project owner; established GC governance and mandatory security controls retain precedence  
+**Version:** 1.1.0<br>
+**Status:** ACCEPTED<br>
+**Authority:** Jesse Ervin, owner and authorized approver; established GC governance and mandatory security controls retain precedence<br>
+**Approved:** 2026-10-24<br>
 **time.loc:** 2026-10-24T00:54:00Z
 
 ## Principle

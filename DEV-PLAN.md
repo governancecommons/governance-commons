@@ -952,3 +952,15 @@ This work does not formally approve OBDD v1.1, determine an adopter's laws or
 legal role, verify the truth of supplied evidence, conduct an independent
 assessment, or confer external certification. Those determinations remain with
 the named accountable and competent authorities for each implementation.
+
+## 2026-10-24 — OBDD v1.1 formally approved
+
+Jesse Ervin identified himself as the sole current owner and authorized
+approver for the `C:\dev` portfolio and `jj-ervin` GitHub work, then explicitly
+stated: “I formally approve GC-DD-01 and OBDD-CA-01 for OBDD v1.1.”
+
+GC-DD-01 and OBDD-CA-01 are therefore `accepted` for OBDD v1.1. The assurance
+record contract, fail-closed validator, tests, and CI gates are accepted as the
+annex's implementation surface. Acceptance does not determine adopter-specific
+legal applicability, authenticate future evidence, constitute an independent
+assessment, or confer certification under an external standard.

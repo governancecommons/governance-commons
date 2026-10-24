@@ -1,13 +1,14 @@
 # OBDD-CA-01 — Conformance and Assurance Annex
 
-**Status:** Proposed<br>
-**Applies to:** OBDD v1.1 candidate<br>
-**Authority:** Governance Commons, subject to formal approval
+**Status:** Accepted<br>
+**Applies to:** OBDD v1.1<br>
+**Authority:** Jesse Ervin, owner and authorized approver<br>
+**Approved:** 2026-10-24
 
 In this annex, **OBDD** means Outcome-Bound Development and Delivery. The base
-directive is [`GC-DD-01`](../passes/dev-accord/GC-DD-01.md), version 1.0.0,
-status Proposed. This candidate annex does not activate or formally approve
-that directive.
+directive is [`GC-DD-01`](../passes/dev-accord/GC-DD-01.md), version 1.1.0,
+status Accepted. Owner approval establishes the directive and this annex as the
+OBDD v1.1 normative surface; it does not imply external certification.
 
 ## CA-01 — Applicable requirements
 

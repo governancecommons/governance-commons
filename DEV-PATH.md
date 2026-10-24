@@ -828,3 +828,16 @@ The draft registry allocations are GC:2025 through GC:2028. Status remains
 record completeness and consistency only; it does not establish legal
 applicability, evidence authenticity, independent assessment, certification, or
 release readiness.
+
+## 2026-10-24 — Owner approval of OBDD v1.1
+
+Jesse Ervin, acting as owner and authorized approver, formally approved
+GC-DD-01 and OBDD-CA-01 for OBDD v1.1. GC-DD-01 is registered as
+GC-DD.01.00 / GC:2029. OBDD-CA.01.00 through OBDD-CA.01.03 / GC:2025 through
+GC:2028 are promoted from `draft` to `accepted`, with the annex linked to the
+base directive.
+
+This is first-party owner approval of the Governance Commons standard surface.
+It is not an independent assessment, legal determination, or external
+certification. Those claims remain prohibited without their own evidence and
+authorized process.
