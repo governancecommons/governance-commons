@@ -811,3 +811,20 @@ Reconciliation validation receipt (2026-10-05): SDK 219 Python tests and Node ch
 ## 2026-10-06 — Release authority and commit-readiness review
 
 Kinjuu header format repaired under Jesse's explicit narrow exception; historical body unchanged. GC release ownership is `governance-commons/DEV-RELEASE.md`; the retained dev-docs copy is historical. Four historical completion checkboxes are reconciled against published registries, existing notes and ready manifest. Public Python 0.2.0 and npm 0.1.1 remain divergent from coordinated current SDK source. Website HTTPS proof remains open. SDK/Matrix/ONS working-tree changes are reviewed for commit readiness, not automatically committed or published.
+
+## 2026-10-24 — OBDD-CA.01.00 proposed conformance and assurance surface
+
+Founder/maintainer Jesse Ervin supplied OBDD-CA-01 and confirmed the compound
+PASS brief for implementation in `C:\dev\governance-commons` and publication to
+the Governance Commons GitHub repository. The proposed annex is implemented with
+a versioned assurance-record schema, fail-closed adopter template, semantic
+validator, negative and positive regression cases, and a dedicated CI gate.
+The upstream `GC-DD-01` Outcome-Bound Development Directive landed before this
+work was published and is the proposed base directive for the v1.1 candidate
+annex.
+
+The draft registry allocations are GC:2025 through GC:2028. Status remains
+`draft` / **Proposed** pending formal approval. Validator success establishes
+record completeness and consistency only; it does not establish legal
+applicability, evidence authenticity, independent assessment, certification, or
+release readiness.

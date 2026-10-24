@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/obdd-assurance-record/v1.json",
+  "title": "OBDD Conformance and Assurance Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_version",
+    "record_id",
+    "obdd_version",
+    "annex",
+    "status",
+    "objective",
+    "regulatory_context",
+    "requirements",
+    "mappings",
+    "evidence",
+    "security",
+    "human_oversight",
+    "assurance_claims",
+    "exceptions",
+    "measurements",
+    "maintenance"
+  ],
+  "properties": {
+    "record_version": { "const": "1.0.0" },
+    "record_id": { "$ref": "#/$defs/nonempty" },
+    "obdd_version": { "const": "1.1.0-candidate" },
+    "annex": { "const": "OBDD-CA-01" },
+    "status": { "enum": ["draft", "implemented", "verified", "independently_assessed"] },
+    "objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "owner", "description", "risk"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "title": { "$ref": "#/$defs/nonempty" },
+        "owner": { "$ref": "#/$defs/nonempty" },
+        "description": { "$ref": "#/$defs/nonempty" },
+        "risk": { "$ref": "#/$defs/risk" }
+      }
+    },
+    "regulatory_context": { "$ref": "#/$defs/regulatory_context" },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "mappings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mapping" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "security": { "$ref": "#/$defs/security" },
+    "human_oversight": { "$ref": "#/$defs/human_oversight" },
+    "assurance_claims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assurance_claim" }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/exception" }
+    },
+    "measurements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/measurement" }
+    },
+    "maintenance": { "$ref": "#/$defs/maintenance" }
+  },
+  "$defs": {
+    "nonempty": { "type": "string", "minLength": 1 },
+    "string_list": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/nonempty" },
+      "uniqueItems": true
+    },
+    "date_or_null": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier", "rationale", "factors", "required_controls", "legal_classification"],
+      "properties": {
+        "tier": { "enum": ["unclassified", "low", "moderate", "high", "critical"] },
+        "rationale": { "$ref": "#/$defs/nonempty" },
+        "factors": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["autonomy", "possible_harm", "security_exposure", "privacy_implications", "external_effects", "reversibility"],
+          "properties": {
+            "autonomy": { "$ref": "#/$defs/nonempty" },
+            "possible_harm": { "$ref": "#/$defs/nonempty" },
+            "security_exposure": { "$ref": "#/$defs/nonempty" },
+            "privacy_implications": { "$ref": "#/$defs/nonempty" },
+            "external_effects": { "$ref": "#/$defs/nonempty" },
+            "reversibility": { "$ref": "#/$defs/nonempty" }
+          }
+        },
+        "required_controls": { "$ref": "#/$defs/string_list" },
+        "legal_classification": { "type": ["string", "null"] }
+      }
+    },
+    "regulatory_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ai_specific_regulation_applicable", "legal_role", "jurisdictions", "system_classification", "effective_dates"],
+      "properties": {
+        "ai_specific_regulation_applicable": { "enum": ["yes", "no", "unknown"] },
+        "legal_role": { "type": ["string", "null"] },
+        "jurisdictions": { "$ref": "#/$defs/string_list" },
+        "system_classification": { "type": ["string", "null"] },
+        "effective_dates": { "$ref": "#/$defs/string_list" }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "edition", "requirement_id", "category", "applicability", "basis", "responsible_reviewer", "review_status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "source": { "$ref": "#/$defs/nonempty" },
+        "edition": { "$ref": "#/$defs/nonempty" },
+        "requirement_id": { "$ref": "#/$defs/nonempty" },
+        "category": { "enum": ["law", "standard", "organizational_policy", "security_requirement", "external_obligation"] },
+        "applicability": { "enum": ["applicable", "not_applicable", "undetermined"] },
+        "basis": { "$ref": "#/$defs/nonempty" },
+        "responsible_reviewer": { "$ref": "#/$defs/nonempty" },
+        "review_status": { "enum": ["not_assessed", "assessed", "approved"] }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement_ref", "obdd_provision", "mapping_type", "outside_obligations", "evidence_refs", "assessment_status", "responsible_reviewer", "acceptance_criteria"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "requirement_ref": { "$ref": "#/$defs/nonempty" },
+        "obdd_provision": { "type": "string", "pattern": "^OBDD(?:-CA)?-[A-Z0-9.-]+$" },
+        "mapping_type": { "enum": ["direct", "partial", "supporting", "not_applicable"] },
+        "outside_obligations": { "$ref": "#/$defs/string_list" },
+        "evidence_refs": { "$ref": "#/$defs/string_list" },
+        "assessment_status": { "enum": ["not_assessed", "designed", "implemented", "verified", "independently_assessed"] },
+        "responsible_reviewer": { "$ref": "#/$defs/nonempty" },
+        "acceptance_criteria": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "status", "location", "sha256", "produced_at", "reviewed_by", "independent_review", "retention", "access_control"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "source": { "$ref": "#/$defs/nonempty" },
+        "status": { "enum": ["generated", "collected", "reviewed", "accepted", "rejected"] },
+        "location": { "$ref": "#/$defs/nonempty" },
+        "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "produced_at": { "type": "string", "format": "date-time" },
+        "reviewed_by": { "type": ["string", "null"] },
+        "independent_review": { "type": "boolean" },
+        "retention": { "$ref": "#/$defs/nonempty" },
+        "access_control": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorization_boundary", "least_privilege", "delegation_boundary", "input_trust_boundary", "output_verification", "tool_use_boundary", "high_impact_action", "explicit_authorization_evidence", "open_findings"],
+      "properties": {
+        "authorization_boundary": { "$ref": "#/$defs/nonempty" },
+        "least_privilege": { "$ref": "#/$defs/nonempty" },
+        "delegation_boundary": { "$ref": "#/$defs/nonempty" },
+        "input_trust_boundary": { "$ref": "#/$defs/nonempty" },
+        "output_verification": { "$ref": "#/$defs/nonempty" },
+        "tool_use_boundary": { "$ref": "#/$defs/nonempty" },
+        "high_impact_action": { "type": "boolean" },
+        "explicit_authorization_evidence": { "$ref": "#/$defs/string_list" },
+        "open_findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "severity", "disposition", "prevents_safe_acceptance"],
+            "properties": {
+              "id": { "$ref": "#/$defs/nonempty" },
+              "severity": { "enum": ["low", "moderate", "high", "critical"] },
+              "disposition": { "enum": ["open", "accepted", "mitigated", "deferred", "rejected"] },
+              "prevents_safe_acceptance": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "human_oversight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accountable_authorities", "required_approvals", "approvals"],
+      "properties": {
+        "accountable_authorities": { "$ref": "#/$defs/string_list" },
+        "required_approvals": { "$ref": "#/$defs/string_list" },
+        "approvals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "authority", "decision", "decided_at", "evidence_ref"],
+            "properties": {
+              "id": { "$ref": "#/$defs/nonempty" },
+              "authority": { "$ref": "#/$defs/nonempty" },
+              "decision": { "enum": ["approved", "rejected", "conditional"] },
+              "decided_at": { "type": "string", "format": "date-time" },
+              "evidence_ref": { "$ref": "#/$defs/nonempty" }
+            }
+          }
+        }
+      }
+    },
+    "assurance_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "level", "basis", "evidence_refs", "assessor", "assessor_independent", "external_certification_claimed"],
+      "properties": {
+        "scope": { "$ref": "#/$defs/nonempty" },
+        "level": { "enum": ["designed", "implemented", "verified", "independently_assessed"] },
+        "basis": { "$ref": "#/$defs/nonempty" },
+        "evidence_refs": { "$ref": "#/$defs/string_list" },
+        "assessor": { "$ref": "#/$defs/nonempty" },
+        "assessor_independent": { "type": "boolean" },
+        "external_certification_claimed": { "const": false }
+      }
+    },
+    "exception": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement_ref", "rationale", "risk", "authority", "review_condition", "compensating_controls", "non_waivable"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "requirement_ref": { "$ref": "#/$defs/nonempty" },
+        "rationale": { "$ref": "#/$defs/nonempty" },
+        "risk": { "$ref": "#/$defs/nonempty" },
+        "authority": { "$ref": "#/$defs/nonempty" },
+        "expires_at": { "$ref": "#/$defs/date_or_null" },
+        "review_condition": { "$ref": "#/$defs/nonempty" },
+        "compensating_controls": { "$ref": "#/$defs/string_list" },
+        "non_waivable": { "const": false }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "definition", "unit_of_analysis", "source", "replaces_acceptance_evidence"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonempty" },
+        "definition": { "$ref": "#/$defs/nonempty" },
+        "unit_of_analysis": { "$ref": "#/$defs/nonempty" },
+        "source": { "$ref": "#/$defs/nonempty" },
+        "replaces_acceptance_evidence": { "const": false }
+      }
+    },
+    "maintenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["crosswalk_owner", "last_reviewed_at", "next_review_due", "source_update_reviews"],
+      "properties": {
+        "crosswalk_owner": { "$ref": "#/$defs/nonempty" },
+        "last_reviewed_at": { "$ref": "#/$defs/date_or_null" },
+        "next_review_due": { "$ref": "#/$defs/date_or_null" },
+        "source_update_reviews": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "old_edition", "new_edition", "applicability_reviewed", "impact_reviewed", "reviewed_at"],
+            "properties": {
+              "source": { "$ref": "#/$defs/nonempty" },
+              "old_edition": { "$ref": "#/$defs/nonempty" },
+              "new_edition": { "$ref": "#/$defs/nonempty" },
+              "applicability_reviewed": { "type": "boolean" },
+              "impact_reviewed": { "type": "boolean" },
+              "reviewed_at": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

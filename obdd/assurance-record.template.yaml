@@ -1,0 +1,53 @@
+record_version: 1.0.0
+record_id: replace-with-stable-record-id
+obdd_version: 1.1.0-candidate
+annex: OBDD-CA-01
+status: draft
+objective:
+  id: replace-with-objective-id
+  title: Replace with the execution objective
+  owner: replace-with-accountable-owner
+  description: Replace with a bounded description of the development activity.
+  risk:
+    tier: unclassified
+    rationale: Replace with a proportionate risk rationale.
+    factors:
+      autonomy: unassessed
+      possible_harm: unassessed
+      security_exposure: unassessed
+      privacy_implications: unassessed
+      external_effects: unassessed
+      reversibility: unassessed
+    required_controls: []
+    legal_classification: null
+regulatory_context:
+  ai_specific_regulation_applicable: unknown
+  legal_role: null
+  jurisdictions: []
+  system_classification: null
+  effective_dates: []
+requirements: []
+mappings: []
+evidence: []
+security:
+  authorization_boundary: Replace with the authority boundary.
+  least_privilege: Replace with the least-privilege controls.
+  delegation_boundary: Replace with delegation constraints.
+  input_trust_boundary: Untrusted content does not grant authority.
+  output_verification: Replace with output-verification controls.
+  tool_use_boundary: Replace with tool-use constraints.
+  high_impact_action: false
+  explicit_authorization_evidence: []
+  open_findings: []
+human_oversight:
+  accountable_authorities: []
+  required_approvals: []
+  approvals: []
+assurance_claims: []
+exceptions: []
+measurements: []
+maintenance:
+  crosswalk_owner: replace-with-owner
+  last_reviewed_at: null
+  next_review_due: null
+  source_update_reviews: []

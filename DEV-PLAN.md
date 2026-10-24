@@ -938,3 +938,17 @@ corrects the prior attribution of source-only Dossier support to Python 0.2.0. C
 still blocked because GitHub will not bind `governancecommons.org` until the domain is verified for
 the organization. The current release review therefore leaves the manifest `planned`; website
 delivery and a coordinated SDK package-version/publication decision remain open.
+
+## 2026-10-24 — OBDD-CA-01 proposed assurance implementation
+
+OBDD-CA.01.00 is implemented as a **draft/proposed** standards candidate. The
+human-supplied OBDD v1.1 Conformance and Assurance Annex is preserved as the
+normative proposal for the newly merged, proposed GC-DD-01 Outcome-Bound
+Development Directive. A machine-readable assurance record, deliberately incomplete
+adopter template, fail-closed validator, regression suite, and CI gate implement
+the annex's traceability and evidence boundaries.
+
+This work does not formally approve OBDD v1.1, determine an adopter's laws or
+legal role, verify the truth of supplied evidence, conduct an independent
+assessment, or confer external certification. Those determinations remain with
+the named accountable and competent authorities for each implementation.
