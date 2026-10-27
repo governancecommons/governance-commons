@@ -21,3 +21,42 @@ This milestone does not register `gc-audit.zta`, mutate ZT1–ZT8, or change rel
 `python -m unittest discover -s gc-audit/tests/zta -p 'test_*.py' -v`
 
 Positive and negative cases include missing requirements, spoofed independent checker outputs, wrong checker digest, untrusted identity labels, revision/control mismatch, missing evidence, inconclusive and failed checks, duplicate claims, and unexpected fields. CI must pass before this increment is accepted.
+
+## ZTA-08.02 evaluator integration (2026-10-27)
+
+`zta_evaluator.evaluate(..., artifact_assessment=..., as_of=...)` accepts a
+bounded in-memory proof for ZTA-08.02. The caller supplies a signed
+`gc-audit.zta.artifact-control-policy.v1` payload and trusted approver, builder,
+executor, and installation observer public keys from outside the target. The
+policy pins target and revision, source and builder specification digests,
+build ID, artifact digest, authorized signer IDs, every distribution/install
+scope, and a timezone-bound validity interval. `required_scopes` is a separate
+caller-owned inventory; it must match the signed policy exactly. `as_of` is an
+explicit assessment input and must fall within that interval.
+
+The proof supplies exact source, builder specification, build, distribution,
+and installed bytes; signed source-to-build, corroborated build-execution, and
+signed installation observations; and the fixed control-specific requirement
+set. Every declared scope is checked. The result carries deterministic policy
+and proof references in `evidence_ids`; their contents are bound through the
+assessment input digest. The auditor does not build, install, fetch, execute,
+or modify the target.
+
+| Condition | ZTA-08.02 outcome |
+| --- | --- |
+| Approved current policy, complete matching scopes and bytes, authenticated and corroborated chain | PASS |
+| Verified negative observation, including when favorable proof exists | FAIL |
+| Missing, unsigned, untrusted, expired, stale-revision, tampered, partial, or conflicting positive proof | UNVERIFIED |
+| Malformed assessment input contract | EVALUATION_ERROR |
+
+This is a control-level PASS for the exact supplied revision and scopes, not
+release eligibility. Other controls remain UNVERIFIED without their own proof;
+the assessment remains release BLOCKED. A locally generated fixture proves
+logic behavior only. A real assessment requires independently governed trust
+roots, required-scope inventory, current observations, and owner review. The
+signature verifies approver attribution, not that the approver is independent
+in an organizational sense. The current signed installation statement has no
+observation timestamp; the approved policy's expiry and explicit `as_of` bound
+policy freshness, while the evidence producer and owner remain responsible for
+the observation's actual collection time and completeness. Unknown distribution
+routes or undeclared deployment scopes remain outside this bounded proof.

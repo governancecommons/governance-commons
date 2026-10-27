@@ -964,3 +964,15 @@ record contract, fail-closed validator, tests, and CI gates are accepted as the
 annex's implementation surface. Acceptance does not determine adopter-specific
 legal applicability, authenticate future evidence, constitute an independent
 assessment, or confer certification under an external standard.
+
+## 2026-10-27 — ZTA-08.02 draft control acceptance integration
+
+**PROPOSED — requires AL:2 sign-off.** On `gc-audit-zta-001-draft`, the main
+ZTA evaluator now has a bounded ZTA-08.02 whole-chain proof route for a signed,
+current, revision-bound control policy and authenticated build, distribution,
+and installation evidence covering an independently supplied scope inventory.
+Verified negative evidence retains FAIL precedence. The draft implementation
+and synthetic fixtures do not establish independent assurance, actual deployment
+coverage, overall assessment eligibility, implementation closure, or release.
+Owner review of the PR and hosted CI remain separate gates. Historical PLAY
+records are unchanged.

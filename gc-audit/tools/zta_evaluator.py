@@ -1,8 +1,7 @@
 """GC-AUDIT-ZTA-001C: conservative, read-only assessment evaluator.
 
-No execution of target code; no network or filesystem writes. This module only
-evaluates supplied, schema-valid JSON records. A machine-readable PASS requires
-separately specified proof semantics: this baseline deliberately cannot emit PASS.
+No execution of target code; no network or filesystem writes. ZTA-08.02 can
+PASS only through the bounded, authenticated whole-chain verifier.
 """
 from __future__ import annotations
 import hashlib
@@ -16,6 +15,7 @@ from zta_proof_packages import ProofPackageError
 from zta_applicability import screen_applicability
 from zta_scope_approvals import verify_scope_approval
 from zta_decision_gate import classify_control, DecisionGateError
+from zta_artifact_control import verify_artifact_control
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -27,6 +27,16 @@ def canonical(value):
 
 def digest(value):
     return "sha256:" + hashlib.sha256(canonical(value)).hexdigest()
+
+def fingerprintable(value):
+    """Bind supplied binary proof and trust inputs into a logical digest."""
+    if isinstance(value, bytes):
+        return "sha256:" + hashlib.sha256(value).hexdigest()
+    if isinstance(value, dict):
+        return {str(k): fingerprintable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [fingerprintable(v) for v in value]
+    return value
 
 def validate(kind, value):
     if kind not in KINDS:
@@ -106,7 +116,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              negative_observations=(), trusted_observation_keys=None,
              authenticated_packages=(), proof_policy=None,
              applicability_observations=None, applicability_policy=None,
-             scope_approvals=()):
+             scope_approvals=(), artifact_assessment=None):
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
@@ -155,7 +165,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             raise AssessmentInputError("evidence references unknown control")
         # SHA-256 strings alone do not prove source contents, identity or behavior.
         # The assessor must never promote such declarations to verified evidence.
-    if as_of is not None:
+    if as_of is not None and artifact_assessment is None:
         raise AssessmentInputError("freshness policy not implemented: cannot accept as_of")
     evidence_by_control = {cid: [] for cid in known}
     for e in evidence_records:
@@ -270,6 +280,20 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
                     verified_observation_ids={item["id"] for item in applicability_observations[cid]})
             except (ValueError, TypeError, KeyError) as exc:
                 raise AssessmentInputError("scope approval not verified: " + str(exc)) from exc
+    artifact_verification = None
+    artifact_rejection = None
+    if artifact_assessment is not None:
+        if not isinstance(artifact_assessment, dict) or set(artifact_assessment) != {
+                "policy_envelope", "proof", "trusted_approvers", "trusted_builders",
+                "trusted_executors", "trusted_observers", "corroborated_executions",
+                "required_scopes"}:
+            raise AssessmentInputError("invalid artifact assessment input contract")
+        try:
+            artifact_verification = verify_artifact_control(
+                target_id=target["target_id"], revision=target["revision"], as_of=as_of,
+                **artifact_assessment)
+        except (ValueError, TypeError, KeyError, AttributeError) as exc:
+            artifact_rejection = str(exc)
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
@@ -280,15 +304,27 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
                 negative_evidence_ids=failures.get(cid, set()),
                 proof_coverage=package_coverage.get(cid),
                 applicability=applicability_screen.get(cid),
-                scope_review=signed_scope_reviews.get(cid))
+                scope_review=signed_scope_reviews.get(cid),
+                artifact_verification=artifact_verification if cid == "ZTA-08.02" else None)
         except DecisionGateError as exc:
             raise AssessmentInputError("control decision conflict: " + str(exc)) from exc
         if decision["status"] == "FAIL":
             entries.append({"control_id":cid,"status":"FAIL",
                 "reason":decision["reason"],"evidence_ids":evidence_ids})
             continue
+        if decision["status"] == "PASS":
+            policy_ref = "artifact-policy:" + hashlib.sha256(
+                canonical(artifact_assessment["policy_envelope"])).hexdigest()
+            proof_ref = "artifact-proof:" + hashlib.sha256(
+                canonical(fingerprintable(artifact_assessment["proof"]))).hexdigest()
+            entries.append({"control_id":cid,"status":"PASS",
+                "reason":decision["reason"],
+                "evidence_ids":sorted(set(evidence_ids + [policy_ref, proof_ref]))})
+            continue
         reason = decision["reason"]
-        if cid in mandatory and cid not in package_coverage:
+        if cid == "ZTA-08.02" and artifact_rejection:
+            reason = "whole-chain proof unverified: " + artifact_rejection
+        elif cid in mandatory and cid not in package_coverage:
             reason = "mandatory control: no independently complete verified proof"
         elif cid in applicability_screen and applicability_screen[cid]["status"] == "APPLICABLE":
             reason = "verified capability present; full positive control assurance required"
@@ -315,6 +351,8 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         "authenticated_packages": sorted(authenticated_packages, key=lambda x: canonical(x).decode("utf-8")),
         "applicability_observations": applicability_observations,
         "scope_approvals": sorted(scope_approvals, key=lambda x: canonical(x).decode("utf-8")),
+        "artifact_assessment": fingerprintable(artifact_assessment),
+        "as_of": as_of,
     })
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
             "id":f"assessment-{target['id']}","target_id":target["target_id"],

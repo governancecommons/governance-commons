@@ -1,7 +1,7 @@
 """Control decision-gate v1: deterministic, fail-closed candidate classification.
 
-This module does not award PASS or NOT_APPLICABLE. A signed package or scope
-review alone never establishes verified control behavior or full deployment scope.
+Only the bounded ZTA-08.02 whole-chain verifier may supply a PASS candidate.
+A signed package or scope review alone never establishes full control behavior.
 """
 from __future__ import annotations
 
@@ -9,7 +9,8 @@ class DecisionGateError(ValueError):
     pass
 
 def classify_control(*, control_id, mandatory, negative_evidence_ids=(),
-                     proof_coverage=None, applicability=None, scope_review=None):
+                     proof_coverage=None, applicability=None, scope_review=None,
+                     artifact_verification=None):
     if not isinstance(control_id, str) or not control_id:
         raise DecisionGateError("invalid control identifier")
     if type(mandatory) is not bool:
@@ -41,6 +42,16 @@ def classify_control(*, control_id, mandatory, negative_evidence_ids=(),
     if review_status:
         return {"control_id":control_id, "status":"UNVERIFIED",
                 "reason":"signed N/A candidate requires approved full-scope exclusion policy"}
+    if artifact_verification is not None:
+        if control_id != "ZTA-08.02" or artifact_verification.get("status") != "WHOLE_CHAIN_VERIFIED":
+            raise DecisionGateError("invalid whole-chain verification")
+        if applicability_status == "ABSENCE_CANDIDATE":
+            raise DecisionGateError("whole-chain proof conflicts with absence evidence")
+        if proof_coverage is not None:
+            return {"control_id":control_id, "status":"UNVERIFIED",
+                    "reason":"separate proof package requires reconciliation with whole-chain proof"}
+        return {"control_id":control_id, "status":"PASS",
+                "reason":"approved policy and authenticated whole-chain artifact proof verified"}
     if proof_status == "PROOF_PACKAGE_COMPLETE":
         return {"control_id":control_id, "status":"UNVERIFIED",
                 "reason":"positive proof candidate requires control-specific execution assurance"}
