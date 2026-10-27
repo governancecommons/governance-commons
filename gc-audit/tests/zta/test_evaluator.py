@@ -3,10 +3,15 @@ import copy
 import importlib.util
 import json
 import unittest
+import sys
+import base64
+import hashlib
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MODULE = HERE.parents[1] / "tools" / "zta_evaluator.py"
+sys.path.insert(0, str(MODULE.parent))
 spec = importlib.util.spec_from_file_location("zta_evaluator", MODULE)
 zta = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(zta)
@@ -132,6 +137,34 @@ class EvaluatorTests(unittest.TestCase):
         t["capabilities"]=[]
         result=zta.evaluate(c,p,t)
         self.assertTrue(all(r["status"]!="NOT_APPLICABLE" for r in result["control_results"]))
+    def test_signed_negative_observation_fails_one_control(self):
+        c,p,t=records()
+        e=copy.deepcopy(FIXTURE['evidence'])
+        signer=Ed25519PrivateKey.generate()
+        from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+        pub=signer.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
+        payload={'domain':'gc-audit.zta.negative-observation.v1','target_id':t['target_id'],
+                 'revision':t['revision'],'control_id':'ZTA-01.01','evidence_id':'ev1',
+                 'test_id':'denial-test-1','observation':'VIOLATION','producer_key_id':'ci-trusted'}
+        data=zta.canonical(payload)
+        envelope={'payload':payload,'signature':base64.b64encode(signer.sign(data)).decode()}
+        e['source_digest']='sha256:'+hashlib.sha256(data).hexdigest()
+        e['producer']={'identity':'ci-trusted','identity_status':'VERIFIED'}
+        a=zta.evaluate(c,p,t,[e],evidence_sources={'fixtures/sample':data},
+                       negative_observations=[envelope],trusted_observation_keys={'ci-trusted':pub})
+        values={r['control_id']:r for r in a['control_results']}
+        self.assertEqual(values['ZTA-01.01']['status'],'FAIL')
+        self.assertEqual(values['ZTA-01.02']['status'],'UNVERIFIED')
+        self.assertEqual(a['release_eligibility'],'BLOCKED')
+        self.assertEqual(a['findings'][0]['control_id'],'ZTA-01.01')
+        envelope['payload']['revision']='different'
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,[e],evidence_sources={'fixtures/sample':data},
+                         negative_observations=[envelope],trusted_observation_keys={'ci-trusted':pub})
+    def test_unsigned_or_untrusted_negative_rejected(self):
+        c,p,t=records()
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,negative_observations=[{'payload':{},'signature':'bad'}])
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
