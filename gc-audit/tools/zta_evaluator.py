@@ -1,0 +1,372 @@
+"""GC-AUDIT-ZTA-001C: conservative, read-only assessment evaluator.
+
+No execution of target code; no network or filesystem writes. ZTA-08.02 can
+PASS only through the bounded, authenticated whole-chain verifier.
+"""
+from __future__ import annotations
+import hashlib
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator, FormatChecker
+from zta_observations import verify_negative_observation
+from zta_proof_policy import assess_admissibility
+from zta_authenticated_packages import authenticate_proof_package
+from zta_proof_packages import ProofPackageError
+from zta_applicability import screen_applicability
+from zta_scope_approvals import verify_scope_approval
+from zta_decision_gate import classify_control, DecisionGateError
+from zta_artifact_control import verify_artifact_control
+from zta_catalog_authority import authorize_catalog, CatalogAuthorityError
+
+SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
+KINDS = ("controls", "profile", "target", "evidence", "result")
+class AssessmentInputError(ValueError):
+    """Invalid assessment data, not a security finding."""
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+
+def digest(value):
+    return "sha256:" + hashlib.sha256(canonical(value)).hexdigest()
+
+def fingerprintable(value):
+    """Bind supplied binary proof and trust inputs into a logical digest."""
+    if isinstance(value, bytes):
+        return "sha256:" + hashlib.sha256(value).hexdigest()
+    if isinstance(value, dict):
+        return {str(k): fingerprintable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [fingerprintable(v) for v in value]
+    return value
+
+def validate(kind, value):
+    if kind not in KINDS:
+        raise AssessmentInputError("unsupported record kind")
+    schema = json.loads((SCHEMA_DIR / f"gc-audit.zta-{kind}.v1.schema.json").read_text(encoding="utf-8"))
+    error = next(iter(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value)), None)
+    if error:
+        raise AssessmentInputError(f"invalid {kind}: {error.message}")
+
+def require_unique(values, key, description):
+    ids = [v[key] for v in values]
+    if len(set(ids)) != len(ids):
+        raise AssessmentInputError(f"duplicate {description}")
+
+def verify_evidence_bytes(evidence, source_bytes):
+    """Verify exact content bytes, not identity or control sufficiency.
+
+    One declared source reference per record is supported in this increment.
+    Absent bytes or ambiguous/multiple references are rejected, never assumed valid.
+    """
+    validate("evidence", evidence)
+    references = evidence["source_refs"]
+    if len(references) != 1:
+        raise AssessmentInputError("evidence must reference exactly one source for byte verification")
+    reference = references[0]
+    if reference not in source_bytes:
+        raise AssessmentInputError("evidence source bytes not supplied")
+    payload = source_bytes[reference]
+    if not isinstance(payload, bytes):
+        raise AssessmentInputError("evidence source payload must be bytes")
+    measured = "sha256:" + hashlib.sha256(payload).hexdigest()
+    if measured != evidence["source_digest"]:
+        raise AssessmentInputError("evidence source digest mismatch")
+    return {"evidence_id": evidence["evidence_id"], "source_ref": reference,
+            "digest": measured, "integrity": "VERIFIED",
+            "producer_identity": "UNVERIFIED", "control_sufficiency": "UNVERIFIED"}
+
+def resolve_profile(profile, known_profiles):
+    """Validate the entire inheritance DAG without silently dropping overrides."""
+    supplied = list(known_profiles)
+    require_unique(supplied, "profile_id", "inherited profile IDs")
+    if any(p["profile_id"] == profile["profile_id"] for p in supplied):
+        raise AssessmentInputError("root profile duplicated in inherited profiles")
+    profiles = {p["profile_id"]: p for p in supplied}
+    profiles[profile["profile_id"]] = profile
+    for p in profiles.values():
+        validate("profile", p)
+    ordered, visiting, visited = [], set(), set()
+    def visit(pid):
+        if pid in visiting:
+            raise AssessmentInputError("profile inheritance cycle")
+        if pid in visited:
+            return
+        if pid not in profiles:
+            raise AssessmentInputError("missing inherited profile")
+        visiting.add(pid)
+        parent = profiles[pid]
+        if parent["catalog_digest"] != profile["catalog_digest"]:
+            raise AssessmentInputError("profile catalog mismatch")
+        if parent["policy_version"] != profile["policy_version"]:
+            raise AssessmentInputError("profile policy mismatch")
+        for ancestor in parent["inherits"]:
+            visit(ancestor)
+        visiting.remove(pid)
+        visited.add(pid)
+        ordered.append(parent)
+    visit(profile["profile_id"])
+    mandatory = set()
+    for p in ordered:
+        mandatory.update(p["mandatory_control_ids"])
+    return {"lineage": [p["profile_id"] for p in ordered],
+            "mandatory_control_ids": sorted(mandatory),
+            "profiles": ordered}
+
+def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
+             evidence_sources=None, inherited_profiles=(),
+             negative_observations=(), trusted_observation_keys=None,
+             authenticated_packages=(), proof_policy=None,
+             applicability_observations=None, applicability_policy=None,
+             scope_approvals=(), artifact_assessment=None):
+    for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
+        validate(kind, record)
+    for evidence in evidence_records:
+        validate("evidence", evidence)
+    controls = catalog["controls"]
+    require_unique(controls, "control_id", "control IDs")
+    expected = {f"ZTA-{domain:02d}.0{number}" for domain in range(1, 13) for number in (1, 2)}
+    if {c["control_id"] for c in controls} != expected:
+        raise AssessmentInputError("catalog must contain exactly 24 approved controls")
+    if profile["catalog_digest"] != digest(catalog):
+        raise AssessmentInputError("profile catalog digest mismatch")
+    if target["profile_id"] != profile["profile_id"]:
+        raise AssessmentInputError("target/profile mismatch")
+    resolved = resolve_profile(profile, inherited_profiles)
+    known = {c["control_id"] for c in controls}
+    for control_id in resolved["mandatory_control_ids"]:
+        if control_id not in known:
+            raise AssessmentInputError("unknown mandatory control")
+    for inherited in resolved["profiles"]:
+        for r in inherited["conditional_rules"] + inherited["exclusion_rules"]:
+            if r["control_id"] not in known:
+                raise AssessmentInputError("unknown profile control")
+        if inherited["conditional_rules"] or inherited["exclusion_rules"]:
+            raise AssessmentInputError("conditional or exclusion rules need structured proof semantics; cannot safely evaluate")
+    require_unique(target["resources"], "id", "resource IDs")
+    require_unique(target["actors"], "id", "actor IDs")
+    require_unique(target["components"], "id", "component IDs")
+    require_unique(target["trust_boundaries"], "id", "trust boundary IDs")
+    comp = {c["id"] for c in target["components"]}
+    resource = {r["id"] for r in target["resources"]}
+    for b in target["trust_boundaries"]:
+        if b["source_component"] not in comp or b["destination_component"] not in comp or not set(b["resource_ids"]) <= resource:
+            raise AssessmentInputError("invalid trust boundary reference")
+    require_unique(target["control_responsibilities"], "control_id", "control responsibility IDs")
+    for r in target["control_responsibilities"]:
+        if r["control_id"] not in known or r["component_id"] not in comp:
+            raise AssessmentInputError("invalid control responsibility reference")
+    require_unique(evidence_records, "evidence_id", "evidence IDs")
+    verified_evidence = []
+    for e in evidence_records:
+        if evidence_sources is not None:
+            verified_evidence.append(verify_evidence_bytes(e, evidence_sources))
+        if e["target_id"] != target["target_id"] or e["revision"] != target["revision"]:
+            raise AssessmentInputError("cross-target or stale-revision evidence")
+        if not set(e["control_ids"]) <= known:
+            raise AssessmentInputError("evidence references unknown control")
+        # SHA-256 strings alone do not prove source contents, identity or behavior.
+        # The assessor must never promote such declarations to verified evidence.
+    if as_of is not None and artifact_assessment is None:
+        raise AssessmentInputError("freshness policy not implemented: cannot accept as_of")
+    evidence_by_control = {cid: [] for cid in known}
+    for e in evidence_records:
+        for cid in e["control_ids"]:
+            evidence_by_control[cid].append(e["evidence_id"])
+    failures = {}
+    by_id = {e['evidence_id']: e for e in evidence_records}
+    if negative_observations and (evidence_sources is None or not trusted_observation_keys):
+        raise AssessmentInputError('signed observations need source bytes and external trust roots')
+    for envelope in negative_observations:
+        try:
+            observation = verify_negative_observation(envelope, trusted_observation_keys or {}, canonical)
+        except ValueError as exc:
+            raise AssessmentInputError(str(exc)) from exc
+        cid, eid = observation['control_id'], observation['evidence_id']
+        if observation['target_id'] != target['target_id'] or observation['revision'] != target['revision']:
+            raise AssessmentInputError('signed observation target/revision mismatch')
+        if cid not in known or eid not in by_id:
+            raise AssessmentInputError('signed observation missing evidence/control')
+        record = by_id[eid]
+        if cid not in record['control_ids'] or record['method'] not in ('AUTOMATED_TEST','CI_ATTESTATION'):
+            raise AssessmentInputError('signed observation requires test evidence')
+        if record['producer']['identity_status'] != 'VERIFIED' or record['producer']['identity'] != observation['producer_key_id']:
+            raise AssessmentInputError('producer identity/key mismatch')
+        if len(record['source_refs']) != 1 or evidence_sources[record['source_refs'][0]] != canonical(observation):
+            raise AssessmentInputError('signed observation bytes mismatch')
+        failures.setdefault(cid, set()).add(eid)
+    integrity_verified = {item["evidence_id"] for item in verified_evidence}
+    admissibility = {cid: assess_admissibility(cid, evidence_records, integrity_verified)
+                     for cid in known}
+    # Signed packages prove authentication and corroborated coverage, not
+    # independent execution quality or full security-control satisfaction.
+    package_coverage = {}
+    if authenticated_packages and not isinstance(proof_policy, dict):
+        raise AssessmentInputError("authenticated proof packages require external proof policy")
+    if authenticated_packages:
+        required_policy_keys = {"trusted_public_keys", "trusted_requirements",
+                                "approved_checkers", "independently_verified_results"}
+        if not required_policy_keys <= set(proof_policy):
+            raise AssessmentInputError("incomplete external proof policy")
+        for envelope in authenticated_packages:
+            if not isinstance(envelope, dict) or not isinstance(envelope.get("package"), dict):
+                raise AssessmentInputError("invalid proof package envelope")
+            pkg = envelope["package"]
+            cid = pkg.get("control_id")
+            if cid not in known:
+                raise AssessmentInputError("proof package unknown control")
+            try:
+                checked = authenticate_proof_package(
+                    envelope, trusted_public_keys=proof_policy["trusted_public_keys"],
+                    target_id=target["target_id"], revision=target["revision"],
+                    expected_control=cid,
+                    trusted_requirements=proof_policy["trusted_requirements"],
+                    approved_checkers=proof_policy["approved_checkers"],
+                    verified_evidence_ids=integrity_verified,
+                    independently_verified_results=proof_policy["independently_verified_results"])
+            except (ProofPackageError, ValueError, TypeError) as exc:
+                raise AssessmentInputError("untrusted proof package: " + str(exc)) from exc
+            if cid in package_coverage:
+                raise AssessmentInputError("duplicate proof package for control")
+            package_coverage[cid] = checked
+    # Conservative applicability: target-declared absence never proves N/A.
+    # A control with negative evidence must stay FAIL even if favorable package
+    # coverage is supplied for the very same revision/control.
+    for cid in failures:
+        if cid in package_coverage and package_coverage[cid]["status"] == "PROOF_PACKAGE_COMPLETE":
+            # Retain both sources in the report: a favorable package cannot
+            # suppress an observed counterexample.
+            evidence_by_control[cid].extend(package_coverage[cid].get("proof_ids", []))
+    applicability_screen = {}
+    if applicability_observations is not None:
+        if not isinstance(applicability_observations, dict) or not isinstance(applicability_policy, dict):
+            raise AssessmentInputError("applicability observations require an independent policy")
+        required_keys = {"capabilities", "verified_observations", "required_scopes"}
+        if not required_keys <= set(applicability_policy):
+            raise AssessmentInputError("incomplete independent applicability policy")
+        for cid, records in applicability_observations.items():
+            if (cid not in known or cid not in applicability_policy["capabilities"]
+                    or cid not in applicability_policy["required_scopes"]):
+                raise AssessmentInputError("unknown applicability control or missing policy")
+            try:
+                applicability_screen[cid] = screen_applicability(
+                    control_id=cid, target_id=target["target_id"],
+                    revision=target["revision"],
+                    capability=applicability_policy["capabilities"][cid],
+                    trusted_capability_policy=applicability_policy["capabilities"],
+                    observations=records,
+                    independently_verified_observations=applicability_policy["verified_observations"],
+                    required_scopes=applicability_policy["required_scopes"].get(cid))
+            except (ValueError, TypeError, KeyError) as exc:
+                raise AssessmentInputError("invalid applicability evidence: " + str(exc)) from exc
+    signed_scope_reviews = {}
+    if scope_approvals:
+        if applicability_observations is None or not isinstance(applicability_policy, dict):
+            raise AssessmentInputError("signed scope reviews require applicability policy")
+        trusted_reviewers = applicability_policy.get("authorized_approvers")
+        if not isinstance(trusted_reviewers, dict):
+            raise AssessmentInputError("independent reviewer keys required")
+        for envelope in scope_approvals:
+            if not isinstance(envelope, dict) or not isinstance(envelope.get("payload"), dict):
+                raise AssessmentInputError("invalid scope approval")
+            cid = envelope["payload"].get("control_id")
+            if cid not in applicability_screen or cid in signed_scope_reviews:
+                raise AssessmentInputError("unknown or duplicate scope review")
+            try:
+                signed_scope_reviews[cid] = verify_scope_approval(
+                    envelope, target_id=target["target_id"], revision=target["revision"],
+                    control_id=cid, capability=applicability_policy["capabilities"][cid],
+                    required_scopes=applicability_policy["required_scopes"][cid],
+                    verified_screen=applicability_screen[cid],
+                    authorized_approvers=trusted_reviewers,
+                    verified_observation_ids={item["id"] for item in applicability_observations[cid]})
+            except (ValueError, TypeError, KeyError) as exc:
+                raise AssessmentInputError("scope approval not verified: " + str(exc)) from exc
+    artifact_verification = None
+    artifact_rejection = None
+    if artifact_assessment is not None:
+        if not isinstance(artifact_assessment, dict) or set(artifact_assessment) != {
+                "policy_envelope", "proof", "trusted_approvers", "trusted_builders",
+                "trusted_executors", "trusted_observers", "corroborated_executions",
+                "required_scopes", "catalog_authority"}:
+            raise AssessmentInputError("invalid artifact assessment input contract")
+        try:
+            authority = artifact_assessment["catalog_authority"]
+            if not isinstance(authority, dict) or set(authority) != {"approved_catalog_digest", "expected_objectives"}:
+                raise ValueError("independent catalog authority required")
+            authorize_catalog(catalog, **authority)
+            proof_inputs = {k: v for k, v in artifact_assessment.items() if k != "catalog_authority"}
+            artifact_verification = verify_artifact_control(
+                target_id=target["target_id"], revision=target["revision"], as_of=as_of,
+                **proof_inputs)
+        except (ValueError, TypeError, KeyError, AttributeError) as exc:
+            artifact_rejection = str(exc)
+    mandatory = set(resolved["mandatory_control_ids"])
+    entries = []
+    for cid in sorted(known):
+        evidence_ids = sorted(set(evidence_by_control[cid]))
+        try:
+            decision = classify_control(
+                control_id=cid, mandatory=cid in mandatory,
+                negative_evidence_ids=failures.get(cid, set()),
+                proof_coverage=package_coverage.get(cid),
+                applicability=applicability_screen.get(cid),
+                scope_review=signed_scope_reviews.get(cid),
+                artifact_verification=artifact_verification if cid == "ZTA-08.02" else None)
+        except DecisionGateError as exc:
+            raise AssessmentInputError("control decision conflict: " + str(exc)) from exc
+        if decision["status"] == "FAIL":
+            entries.append({"control_id":cid,"status":"FAIL",
+                "reason":decision["reason"],"evidence_ids":evidence_ids})
+            continue
+        if decision["status"] == "PASS":
+            policy_ref = "artifact-policy:" + hashlib.sha256(
+                canonical(artifact_assessment["policy_envelope"])).hexdigest()
+            proof_ref = "artifact-proof:" + hashlib.sha256(
+                canonical(fingerprintable(artifact_assessment["proof"]))).hexdigest()
+            entries.append({"control_id":cid,"status":"PASS",
+                "reason":decision["reason"],
+                "evidence_ids":sorted(set(evidence_ids + [policy_ref, proof_ref]))})
+            continue
+        reason = decision["reason"]
+        if cid == "ZTA-08.02" and artifact_rejection:
+            reason = "whole-chain proof unverified: " + artifact_rejection
+        elif cid in mandatory and cid not in package_coverage:
+            reason = "mandatory control: no independently complete verified proof"
+        elif cid in applicability_screen and applicability_screen[cid]["status"] == "APPLICABLE":
+            reason = "verified capability present; full positive control assurance required"
+        elif cid in applicability_screen and applicability_screen[cid]["status"] == "ABSENCE_CANDIDATE" and cid not in signed_scope_reviews:
+            reason = "scoped absence candidate still requires signed approval and full-scope proof"
+        entries.append({"control_id":cid,"status":"UNVERIFIED",
+                        "reason":reason,"evidence_ids":evidence_ids})
+    findings = [{'id':'failure-'+cid, 'control_id':cid,
+                 'severity':next(c['severity'] for c in controls if c['control_id']==cid),
+                 'description':'Trusted producer signed a negative test observation',
+                 'evidence_ids':sorted(eids)} for cid,eids in sorted(failures.items())]
+    # Bind the logical report to the supplied revision-specific evidence and
+    # assessment inputs; timestamps already present in evidence are source data,
+    # not a volatile evaluator execution clock.
+    input_fingerprint = digest({
+        "target": target, "profile": profile,
+        "inherited_profiles": sorted(inherited_profiles, key=lambda p: p["profile_id"]),
+        "catalog_digest": digest(catalog),
+        "evidence": sorted(evidence_records, key=lambda e: e["evidence_id"]),
+        "supplied_source_hashes": sorted(
+            [{"ref": ref, "sha256": "sha256:" + hashlib.sha256(payload).hexdigest()}
+             for ref, payload in (evidence_sources or {}).items()], key=lambda x: x["ref"]),
+        "negative_observations": sorted(negative_observations, key=lambda x: canonical(x).decode("utf-8")),
+        "authenticated_packages": sorted(authenticated_packages, key=lambda x: canonical(x).decode("utf-8")),
+        "applicability_observations": applicability_observations,
+        "scope_approvals": sorted(scope_approvals, key=lambda x: canonical(x).decode("utf-8")),
+        "artifact_assessment": fingerprintable(artifact_assessment),
+        "as_of": as_of,
+    })
+    core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
+            "id":f"assessment-{target['id']}","target_id":target["target_id"],
+            "revision":target["revision"],"profile_id":target["profile_id"],
+            "catalog_digest":digest(catalog),"policy_version":profile["policy_version"],
+            "control_results":entries,"findings":findings,"assessment_state":"VALID",
+            "release_eligibility":"BLOCKED",
+            "extensions":{"gc.zta":{"input_digest": input_fingerprint}}}
+    core["normalized_digest"] = digest(core)
+    validate("result", core)
+    return core
