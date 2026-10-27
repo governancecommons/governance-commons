@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-hci-evidence.v0.1.schema.json",
+  "title": "HCI task or inspection evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "profile_ref",
+    "criterion_ref",
+    "task_ref",
+    "target_version",
+    "method",
+    "observation",
+    "recorded_at",
+    "artifact_refs",
+    "limitations",
+    "integrity"
+  ],
+  "properties": {
+    "schema": {
+      "const": "gc-hci-evidence.v0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criterion_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method": {
+      "enum": [
+        "AUTOMATED_INSPECTION",
+        "EXPERT_REVIEW",
+        "PARTICIPANT_TASK"
+      ]
+    },
+    "observation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interpretation": {
+      "type": "string"
+    },
+    "hypothesis": {
+      "type": "string"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "UNSIGNED",
+            "HASHED",
+            "SIGNATURE_VERIFIED"
+          ]
+        },
+        "algorithm": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        },
+        "verification_ref": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "SIGNATURE_VERIFIED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "algorithm",
+              "digest",
+              "verification_ref"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
