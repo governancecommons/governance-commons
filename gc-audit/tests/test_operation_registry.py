@@ -108,6 +108,16 @@ class RegistryTests(unittest.TestCase):
         p.write_text("param([switch] $DryRun)", encoding="utf-8")
         with self.assertRaises(mod.RegistryError): self.check()
 
+    def test_direct_shell_spawn_rejected(self):
+        p = self.portfolio / "governance-commons" / "gc-audit" / "tools" / "validate-check.ps1"
+        p.write_text("Start-Process pwsh -ArgumentList '-c echo bad'", encoding="utf-8")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_expression_evaluation_rejected(self):
+        p = self.portfolio / "governance-commons" / "gc-audit" / "tools" / "validate-check.ps1"
+        p.write_text("Invoke-Expression $command", encoding="utf-8")
+        with self.assertRaises(mod.RegistryError): self.check()
+
     def test_planned_operation_executable(self):
         self.text = self.text.replace(
             "status: planned\n    mutates: false\n    steps: []",
