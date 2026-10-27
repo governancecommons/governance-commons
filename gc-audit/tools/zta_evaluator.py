@@ -222,7 +222,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         if cid in mandatory:
             reason = "mandatory control: " + (
                 "authenticated proof package requires independent control assurance"
-                if cid in package_coverage else "no verified behavioral/control proof") "mandatory control: no verified behavioral/control proof"
+                if cid in package_coverage else "no verified behavioral/control proof")
         elif cid in package_coverage:
             reason = "authenticated proof package: " + package_coverage[cid]["status"] + "; independent control PASS not established"
         elif evidence_ids:
