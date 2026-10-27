@@ -238,12 +238,27 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
                  'severity':next(c['severity'] for c in controls if c['control_id']==cid),
                  'description':'Trusted producer signed a negative test observation',
                  'evidence_ids':sorted(eids)} for cid,eids in sorted(failures.items())]
+    # Bind the logical report to the supplied revision-specific evidence and
+    # assessment inputs; timestamps already present in evidence are source data,
+    # not a volatile evaluator execution clock.
+    input_fingerprint = digest({
+        "target": target, "profile": profile,
+        "inherited_profiles": sorted(inherited_profiles, key=lambda p: p["profile_id"]),
+        "catalog_digest": digest(catalog),
+        "evidence": sorted(evidence_records, key=lambda e: e["evidence_id"]),
+        "supplied_source_hashes": sorted(
+            [{"ref": ref, "sha256": "sha256:" + hashlib.sha256(payload).hexdigest()}
+             for ref, payload in (evidence_sources or {}).items()], key=lambda x: x["ref"]),
+        "negative_observations": sorted(negative_observations, key=lambda x: canonical(x).decode("utf-8")),
+        "authenticated_packages": sorted(authenticated_packages, key=lambda x: canonical(x).decode("utf-8")),
+    })
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
             "id":f"assessment-{target['id']}","target_id":target["target_id"],
             "revision":target["revision"],"profile_id":target["profile_id"],
             "catalog_digest":digest(catalog),"policy_version":profile["policy_version"],
             "control_results":entries,"findings":findings,"assessment_state":"VALID",
-            "release_eligibility":"BLOCKED"}
+            "release_eligibility":"BLOCKED",
+            "extensions":{"gc.zta":{"input_digest": input_fingerprint}}}
     core["normalized_digest"] = digest(core)
     validate("result", core)
     return core
