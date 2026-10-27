@@ -27,7 +27,7 @@ $broken = @()
 $ok = @()
 # Extract all path-like values under planning: blocks
 # Matches lines like:  canonical: some/path.md
-$fileKeys = 'canonical|path|tracks|roadmap|implementation_plan|domain_plan|project|changelog|alternate_status|review_grammar'
+$fileKeys = 'canonical|path|tracks|track|roadmap|implementation_plan|domain_plan|project|changelog|alternate_status|review_grammar|plan|release|authority|spec|api_e_authority|api_e_spec|docs|source_spec|standard|redirect|market|dist|vision'
 $matches = [regex]::Matches($yaml, "(?m)^\s+($fileKeys):\s+(.+)$")
 
 foreach ($m in $matches) {

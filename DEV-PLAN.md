@@ -976,3 +976,14 @@ and synthetic fixtures do not establish independent assurance, actual deployment
 coverage, overall assessment eligibility, implementation closure, or release.
 Owner review of the PR and hosted CI remain separate gates. Historical PLAY
 records are unchanged.
+
+## 2026-10-27 — GC-AUDIT sibling planning-owner validation
+
+The planning validator accepts an optional outer portfolio boundary for a
+registry in a separate control-plane checkout. Its default boundary remains
+the target root. In the local `C:\dev` layout, the control-plane validation
+checks 90 registered planning documents with zero errors and 12 existing
+warnings. The pointer validator covers 160 registry path fields, including
+planning keys previously omitted from its check. This is a tooling
+compatibility change; it does not amend a GC
+standard or close project, publication, or release gates.

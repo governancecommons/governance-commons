@@ -27,6 +27,11 @@
 .PARAMETER TargetPath
     Portfolio or repository root to scan (default current directory).
 
+.PARAMETER PortfolioBoundary
+    Optional outer workspace boundary for registered planning owners when
+    projects.yaml lives in a separate control-plane repository. Defaults to
+    TargetPath, preserving the existing containment rule.
+
 .PARAMETER Help
     Show help and exit.
 
@@ -43,6 +48,7 @@ param(
     [switch] $Strict,
     [string] $Project = "",
     [string] $TargetPath = ".",
+    [string] $PortfolioBoundary = "",
     [switch] $Help
 )
 
@@ -52,6 +58,9 @@ if ($Help) {
 }
 
 $Root    = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetPath)
+$BoundaryRoot = if ($PortfolioBoundary) {
+    $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($PortfolioBoundary)
+} else { $Root }
 $EmDash  = [char]0x2014   # — U+2014
 $EnDash  = [char]0x2013   # – U+2013
 $ValidTypes = @("DEV-PATH", "DEV-PLAN", "DEV-RELEASE", "DEV-TRACKS")
@@ -293,7 +302,7 @@ if (-not $Project -and (Test-Path -LiteralPath $registryPath)) {
             $pointer = if ($explicit) { $entry.Docs[$fileName] } else { Join-Path $entry.Path $fileName }
             $owner = [IO.Path]::GetFullPath((Join-Path $Root $pointer))
             if ($owner -match '(?i)([\\/]\.eco[\\/]|archive|state-snapshot)') { continue }
-            $boundary = $Root.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+            $boundary = $BoundaryRoot.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
             if (-not $owner.StartsWith($boundary, [StringComparison]::OrdinalIgnoreCase)) {
                 Write-Host "[ERROR] Planning pointer escapes portfolio: $pointer" -ForegroundColor Red; $Errors++; continue
             }
