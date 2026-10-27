@@ -41,6 +41,20 @@ class ApplicabilityTests(unittest.TestCase):
         unknown=dict(self.absent,id="obs2",outcome="UNKNOWN")
         trust=dict(self.trust,obs2=("target","rev1","remote_access","UNKNOWN","deployment",True))
         self.assertEqual(self.screen([self.absent,unknown],trust)["status"],"UNVERIFIED")
+    def test_required_scope_missing_is_unverified(self):
+        result=screen_applicability(**self.base, observations=[self.absent],
+            independently_verified_observations=self.trust,
+            required_scopes=["deployment","external-integration"])
+        self.assertEqual(result["status"],"UNVERIFIED")
+    def test_required_scope_complete_is_only_candidate(self):
+        result=screen_applicability(**self.base, observations=[self.absent],
+            independently_verified_observations=self.trust,required_scopes=["deployment"])
+        self.assertEqual(result["status"],"ABSENCE_CANDIDATE")
+    def test_bad_independent_scope_policy_rejected(self):
+        with self.assertRaises(ValueError):
+            screen_applicability(**self.base, observations=[self.absent],
+                independently_verified_observations=self.trust,
+                required_scopes=["deployment","deployment"])
     def test_duplicate_observation_rejected(self):
         with self.assertRaises(ValueError):
             self.screen([self.absent,self.absent])
