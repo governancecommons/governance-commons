@@ -1,7 +1,7 @@
 # GC-AUDIT-ZTA-001E — Final remediation acceptance evidence
 
 Status: OWNER REVIEW CANDIDATE; acceptance and activation blocked.
-Scope: Governance Commons `gc-audit.zta` evaluator and operation-registry security boundary. Baseline: `d570609f767c00465efcc39080f433757d830e5f` on `main`, 2026-10-27. This report describes local verification of the feature branch; hosted CI and owner review are separate evidence.
+Scope: Governance Commons `gc-audit.zta` evaluator and operation-registry security boundary. Baseline: `d570609f767c00465efcc39080f433757d830e5f` on `main`, 2026-10-27. The implementation commit is `9effdd70ee89e9cab78e0523ad901f3c1fb8fc0a` in [PR #9](https://github.com/governancecommons/governance-commons/pull/9); owner review is separate evidence.
 
 ## Finding disposition
 
@@ -13,7 +13,7 @@ Scope: Governance Commons `gc-audit.zta` evaluator and operation-registry securi
 | AR-04/05 mutation defaults | Historically resolved | Existing normalizers require `-Apply`; `-FixNotes` is absent. Existing ZT1–ZT8 audit reports no errors; black-box mutation tests remain open. |
 | AR-06 registry self-audit | Remediated as static contract validation | YAML parser rejects duplicate keys, malformed/unknown authority, IDs, fields, aliases, inconsistent mutation/authorization metadata, unsafe paths, redirected self-audit steps, and missing self-audit operations. Its registry policy is repository-owned and still needs independent review/pinning for production use. |
 | AR-07 shell delegation | Open for runtime proof | Static scan flags indirect calls in `validate-recent-work.ps1` and `validate-registry.ps1`. It is not an execution sandbox. Existing ZT4 warning for `validate-portfolio-health.ps1` remains. |
-| AR-08 malicious paths/OS parity | Local fixtures added; hosted pending | Windows absolute/UNC, URI, traversal, prefix collision, symlink, malformed metadata and alias cases exercise the parser. The Windows symlink fixture skips if link creation is unavailable. Hosted Windows/Linux/macOS matrix must be checked at the PR head. |
+| AR-08 malicious paths/OS parity | Local fixtures added; hosted matrix passed at implementation commit | Windows absolute/UNC, URI, traversal, prefix collision, symlink, malformed metadata and alias cases exercise the parser. The Windows symlink fixture skips if link creation is unavailable. The hosted Windows/Linux/macOS registry matrix passed; this is fixture parity, not target-platform assurance. |
 | AR-09 static-only evidence | Open outside ZTA-08.02 | No new favorable control route. Synthetic ZTA-08.02 chain tests do not prove an actual target. |
 | AR-10 reassessment/independent review | Deferred to pilot/release decision | No operational activation or independent review claimed. |
 
@@ -35,10 +35,23 @@ At the feature branch working revision, isolated Python 3.13 environments produc
 
 The Level 1 diagnostic failed its review-grammar check because this independent checkout lacks the file at the validator's expected in-repo path; the canonical file is `C:\dev\portfolio-control\docs\REVIEW-GRAMMAR.md`. This known topology mismatch is not waived as green. The first-response preflight stamp was omitted in this session, so preflight conformance is blocked.
 
+## Hosted CI at implementation commit
+
+The following PR runs all report success for `9effdd70ee89e9cab78e0523ad901f3c1fb8fc0a`:
+
+| Check | Run |
+| --- | --- |
+| Registry contract, 3 OS × 2 Python | [40587191981](https://github.com/governancecommons/governance-commons/actions/runs/40587191981) |
+| ZTA evaluator, 3 OS × 2 Python | [40587191917](https://github.com/governancecommons/governance-commons/actions/runs/40587191917) |
+| ZTA schema fixtures | [40587192104](https://github.com/governancecommons/governance-commons/actions/runs/40587192104) |
+| OBDD assurance | [40587191918](https://github.com/governancecommons/governance-commons/actions/runs/40587191918) |
+| Release compatibility | [40587191964](https://github.com/governancecommons/governance-commons/actions/runs/40587191964) |
+| Markdown lint | [40587192137](https://github.com/governancecommons/governance-commons/actions/runs/40587192137) |
+
 ## Readiness and owner decision
 
 **Evaluator readiness:** bounded ZTA-08.02 control verification is locally tested. Other controls default to UNVERIFIED absent independent proof. The evaluator has no registered `gc-audit.zta` operation or general consumer invocation contract yet, so implementation acceptance is blocked.
 
 **Operational readiness:** blocked. No actual target assessment, production trust-root ownership, delegated-host assurance, independently verified installation scope, independent security review, or release artifact proof was supplied. Green fixtures and CI cannot substitute for these.
 
-**Recommended owner decision: BLOCK final acceptance and activation.** Review the focused remediation PR; require exact-head hosted CI and independent review before considering the implementation gate. Separately decide the safe operation registration/invocation contract and a real pilot with owner-controlled authority. No merge, tag, publication, activation, certification, or risk acceptance is implied by this document.
+**Recommended owner decision: BLOCK final acceptance and activation.** Review the focused remediation PR and obtain independent review before considering the implementation gate. Separately decide the safe operation registration/invocation contract and a real pilot with owner-controlled authority. No merge, tag, publication, activation, certification, or risk acceptance is implied by this document.
