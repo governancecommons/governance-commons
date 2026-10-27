@@ -55,6 +55,52 @@ class EvaluatorTests(unittest.TestCase):
         e=copy.deepcopy(FIXTURE["evidence"])
         a=zta.evaluate(c,p,t,[e])
         self.assertFalse(any(x["status"]=="PASS" for x in a["control_results"]))
+    def test_supplied_bytes_integrity_cannot_create_pass(self):
+        import hashlib
+        c,p,t=records()
+        e=copy.deepcopy(FIXTURE["evidence"])
+        payload=b"bounded fixture from separately approved tests"
+        e["source_digest"]="sha256:"+hashlib.sha256(payload).hexdigest()
+        evidence=zta.verify_evidence_bytes(e, {"fixtures/sample":payload})
+        self.assertEqual(evidence["integrity"],"VERIFIED")
+        self.assertEqual(evidence["producer_identity"],"UNVERIFIED")
+        assessed=zta.evaluate(c,p,t,[e],evidence_sources={"fixtures/sample":payload})
+        self.assertEqual(assessed["release_eligibility"],"BLOCKED")
+        self.assertTrue(all(x["status"]=="UNVERIFIED" for x in assessed["control_results"]))
+    def test_tampered_evidence_rejected(self):
+        import hashlib
+        c,p,t=records()
+        e=copy.deepcopy(FIXTURE["evidence"])
+        e["source_digest"]="sha256:"+hashlib.sha256(b"legit").hexdigest()
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,[e],evidence_sources={"fixtures/sample":b"tampered"})
+    def test_missing_evidence_bytes_rejected(self):
+        c,p,t=records()
+        e=copy.deepcopy(FIXTURE["evidence"])
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,[e],evidence_sources={})
+    def test_profile_inheritance_resolution(self):
+        c,p,t=records()
+        parent=copy.deepcopy(p)
+        parent["profile_id"]="zta.library.v1"
+        parent["mandatory_control_ids"]=["ZTA-01.01"]
+        child=copy.deepcopy(p)
+        child["profile_id"]="zta.cli-hosted.v1"
+        child["inherits"]=["zta.library.v1"]
+        child["mandatory_control_ids"]=["ZTA-02.01"]
+        t["profile_id"]="zta.cli-hosted.v1"
+        resolved=zta.resolve_profile(child,[parent])
+        self.assertEqual(resolved["mandatory_control_ids"],["ZTA-01.01","ZTA-02.01"])
+        assessment=zta.evaluate(c,child,t,inherited_profiles=[parent])
+        self.assertEqual(assessment["release_eligibility"],"BLOCKED")
+    def test_profile_cycle_rejected(self):
+        c,p,t=records()
+        p["inherits"]=["zta.cli-hosted.v1"]
+        other=copy.deepcopy(p)
+        other["profile_id"]="zta.cli-hosted.v1"
+        other["inherits"]=["zta.library.v1"]
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,inherited_profiles=[other])
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
