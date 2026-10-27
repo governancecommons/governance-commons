@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-hci-criterion.v0.1.schema.json",
+  "title": "HCI evaluation criterion",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "question",
+    "applicable_modalities",
+    "sources",
+    "procedure",
+    "decision_rule",
+    "review_required",
+    "state"
+  ],
+  "properties": {
+    "schema": {
+      "const": "gc-hci-criterion.v0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "applicable_modalities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "web",
+          "desktop",
+          "cli",
+          "conversational",
+          "other"
+        ]
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "locator",
+          "evidence_class",
+          "claim"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_class": {
+            "enum": [
+              "NORMATIVE",
+              "EMPIRICAL",
+              "SYNTHESIS",
+              "PRACTITIONER"
+            ]
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limitations": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "procedure": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "decision_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_required": {
+      "type": "boolean"
+    },
+    "state": {
+      "enum": [
+        "CANDIDATE",
+        "PILOT",
+        "APPROVED",
+        "RETIRED"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}
