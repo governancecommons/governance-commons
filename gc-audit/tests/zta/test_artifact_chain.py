@@ -10,6 +10,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"tools"))
 from zta_artifact_chain import verify_release_artifact_chain
 from zta_installation_attestation import DOMAIN,canonical
 from zta_build_provenance import DOMAIN as BUILD_DOMAIN,canonical as build_canonical
+from zta_build_execution import DOMAIN as EXEC_DOMAIN,canonical as exec_canonical
 
 class ArtifactChainTests(unittest.TestCase):
     def setUp(self):
@@ -30,6 +31,18 @@ class ArtifactChainTests(unittest.TestCase):
                        "builder_spec_digest":self.builder["builder_spec_digest"]}
         self.build_signed={"payload":build_payload,"signature":base64.b64encode(
             build_signer.sign(build_canonical(build_payload))).decode()}
+        executor=Ed25519PrivateKey.generate()
+        self.executor_keys={"executor":executor.public_key().public_bytes(Encoding.Raw,PublicFormat.Raw)}
+        self.executor_policy={"executor_key_id":"executor","builder_spec_digest":self.builder["builder_spec_digest"]}
+        exec_payload={"domain":EXEC_DOMAIN,"target_id":"app","revision":"commit-a",
+                      "source_digest":self.source["source_digest"],"build_id":"build-42",
+                      "builder_spec_digest":self.builder["builder_spec_digest"],
+                      "artifact_sha256":self.policy["sha256"],"execution_id":"job-run-42",
+                      "execution_outcome":"SUCCESS","executor_key_id":"executor"}
+        self.signed_execution={"payload":exec_payload,"signature":base64.b64encode(
+            executor.sign(exec_canonical(exec_payload))).decode()}
+        self.executions={"job-run-42":("app","commit-a",self.source["source_digest"],
+            "build-42",self.builder["builder_spec_digest"],self.policy["sha256"],"SUCCESS","executor")}
     def check(self,build=None,installed=None,policy=None,observed=None):
         return verify_release_artifact_chain(target_id="app",revision="commit-a",
             trusted_release=self.policy if policy is None else policy,
@@ -38,7 +51,9 @@ class ArtifactChainTests(unittest.TestCase):
             observed_install=self.observation if observed is None else observed,
             signed_installation=self.signed,trusted_observers=self.trust,
             signed_build=self.build_signed,trusted_builders=self.builder_keys,
-            approved_source=self.source,approved_builder=self.builder)
+            approved_source=self.source,approved_builder=self.builder,
+            signed_execution=self.signed_execution,trusted_executors=self.executor_keys,
+            corroborated_executions=self.executions,approved_executor=self.executor_policy)
     def test_matching_artifacts_only_candidate(self):
         r=self.check()
         self.assertEqual(r["status"],"ARTIFACT_CHAIN_CANDIDATE")
@@ -55,6 +70,11 @@ class ArtifactChainTests(unittest.TestCase):
                 trusted_release=self.policy,build_bytes=self.data,installed_bytes=self.data,
                 observed_install=self.observation,signed_installation=self.signed,
                 trusted_observers=self.trust)
+    def test_uncorroborated_execution_rejected(self):
+        saved=self.executions
+        self.executions={}
+        with self.assertRaises(ValueError):self.check()
+        self.executions=saved
     def test_installed_tampering(self):
         with self.assertRaises(ValueError):self.check(installed=self.data+b"x")
     def test_build_tampering(self):
