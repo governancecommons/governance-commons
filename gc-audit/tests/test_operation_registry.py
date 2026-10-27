@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-MODULE = Path(__file__).resolve().parents[2] / "tools" / "validate_operation_registry.py"
+MODULE = Path(__file__).resolve().parents[1] / "tools" / "validate_operation_registry.py"
 spec = importlib.util.spec_from_file_location("gc_registry_validator", MODULE)
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
