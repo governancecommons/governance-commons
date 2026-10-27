@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/schemas/gc-hci-finding.v0.1.schema.json",
+  "title": "HCI criterion determination",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "profile_ref",
+    "criterion_ref",
+    "evidence_refs",
+    "outcome",
+    "rationale",
+    "review_state"
+  ],
+  "properties": {
+    "schema": {
+      "const": "gc-hci-finding.v0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criterion_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "outcome": {
+      "enum": [
+        "SATISFIED",
+        "NOT_SATISFIED",
+        "INCONCLUSIVE",
+        "REVIEW_REQUIRED",
+        "NOT_APPLICABLE",
+        "NOT_EVALUATED"
+      ]
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_state": {
+      "enum": [
+        "PENDING",
+        "REVIEWED",
+        "NOT_REQUIRED"
+      ]
+    },
+    "reviewer_id": {
+      "type": "string"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "supersedes": {
+      "type": "string"
+    },
+    "disposition": {
+      "enum": [
+        "OPEN",
+        "CONFIRMED",
+        "DISPUTED",
+        "ACCEPTED_RISK",
+        "REMEDIATED",
+        "SUPERSEDED",
+        "WITHDRAWN"
+      ]
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "outcome": {
+              "const": "REVIEW_REQUIRED"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "review_state": {
+              "const": "PENDING"
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "review_state": {
+              "const": "REVIEWED"
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "reviewer_id"
+          ]
+        }
+      }
+    ]
+  }
+}
