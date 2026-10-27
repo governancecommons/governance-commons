@@ -13,6 +13,7 @@ from zta_observations import verify_negative_observation
 from zta_proof_policy import assess_admissibility
 from zta_authenticated_packages import authenticate_proof_package
 from zta_proof_packages import ProofPackageError
+from zta_applicability import screen_applicability
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -101,7 +102,8 @@ def resolve_profile(profile, known_profiles):
 def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              evidence_sources=None, inherited_profiles=(),
              negative_observations=(), trusted_observation_keys=None,
-             authenticated_packages=(), proof_policy=None):
+             authenticated_packages=(), proof_policy=None,
+             applicability_observations=None, applicability_policy=None):
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
@@ -220,6 +222,26 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             # Retain both sources in the report: a favorable package cannot
             # suppress an observed counterexample.
             evidence_by_control[cid].extend(package_coverage[cid].get("proof_ids", []))
+    applicability_screen = {}
+    if applicability_observations is not None:
+        if not isinstance(applicability_observations, dict) or not isinstance(applicability_policy, dict):
+            raise AssessmentInputError("applicability observations require an independent policy")
+        required_keys = {"capabilities", "verified_observations"}
+        if not required_keys <= set(applicability_policy):
+            raise AssessmentInputError("incomplete independent applicability policy")
+        for cid, records in applicability_observations.items():
+            if cid not in known or cid not in applicability_policy["capabilities"]:
+                raise AssessmentInputError("unknown applicability control or missing policy")
+            try:
+                applicability_screen[cid] = screen_applicability(
+                    control_id=cid, target_id=target["target_id"],
+                    revision=target["revision"],
+                    capability=applicability_policy["capabilities"][cid],
+                    trusted_capability_policy=applicability_policy["capabilities"],
+                    observations=records,
+                    independently_verified_observations=applicability_policy["verified_observations"])
+            except (ValueError, TypeError, KeyError) as exc:
+                raise AssessmentInputError("invalid applicability evidence: " + str(exc)) from exc
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
@@ -231,6 +253,10 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             reason = "mandatory control: " + (
                 "authenticated proof package requires independent control assurance"
                 if cid in package_coverage else "no verified behavioral/control proof")
+        elif cid in applicability_screen and applicability_screen[cid]["status"] == "APPLICABLE":
+            reason = "verified capability present; positive control verification still required"
+        elif cid in applicability_screen and applicability_screen[cid]["status"] == "ABSENCE_CANDIDATE":
+            reason = "scoped absence candidate; independent full-scope N/A approval not established"
         elif cid in package_coverage:
             reason = "authenticated proof package: " + package_coverage[cid]["status"] + "; independent control PASS not established"
         elif evidence_ids:
@@ -259,6 +285,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              for ref, payload in (evidence_sources or {}).items()], key=lambda x: x["ref"]),
         "negative_observations": sorted(negative_observations, key=lambda x: canonical(x).decode("utf-8")),
         "authenticated_packages": sorted(authenticated_packages, key=lambda x: canonical(x).decode("utf-8")),
+        "applicability_observations": applicability_observations,
     })
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
             "id":f"assessment-{target['id']}","target_id":target["target_id"],
