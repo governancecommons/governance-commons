@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 from zta_observations import verify_negative_observation
+from zta_proof_policy import assess_admissibility
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -174,6 +175,9 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         if len(record['source_refs']) != 1 or evidence_sources[record['source_refs'][0]] != canonical(observation):
             raise AssessmentInputError('signed observation bytes mismatch')
         failures.setdefault(cid, set()).add(eid)
+    integrity_verified = {item["evidence_id"] for item in verified_evidence}
+    admissibility = {cid: assess_admissibility(cid, evidence_records, integrity_verified)
+                     for cid in known}
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
@@ -184,7 +188,10 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         if cid in mandatory:
             reason = "mandatory control: no verified behavioral/control proof"
         elif evidence_ids:
-            reason = "submitted evidence is not authoritative proof of applicability or control outcome"
+            if admissibility[cid]["admissible_ids"]:
+                reason = "candidate evidence requires further control-specific verification"
+            else:
+                reason = "submitted evidence lacks admissible proof of control outcome"
         else:
             reason = "applicability and absence of capability have not been independently established"
         entries.append({"control_id":cid, "status":"UNVERIFIED",
