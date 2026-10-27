@@ -287,6 +287,34 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(r["status"],"FAIL")
         self.assertEqual(r["evidence_ids"],["ev-negative","ev-positive"])
         self.assertEqual(result["release_eligibility"],"BLOCKED")
+    def test_applicability_screen_integrated_but_never_na(self):
+        c,p,t=records()
+        obs={"id":"absence1","target_id":t["target_id"],"revision":t["revision"],
+             "capability":"remote_access","outcome":"ABSENT","scope":"deployment",
+             "inventory_complete":True}
+        policy={"capabilities":{"ZTA-06.02":"remote_access"},
+                "verified_observations":{"absence1":(
+                    t["target_id"],t["revision"],"remote_access","ABSENT","deployment",True)}}
+        result=zta.evaluate(c,p,t,applicability_observations={"ZTA-06.02":[obs]},
+                            applicability_policy=policy)
+        control=next(x for x in result["control_results"] if x["control_id"]=="ZTA-06.02")
+        self.assertEqual(control["status"],"UNVERIFIED")
+        self.assertIn("absence candidate",control["reason"])
+        self.assertEqual(result["release_eligibility"],"BLOCKED")
+        policy["verified_observations"]={}
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,applicability_observations={"ZTA-06.02":[obs]},
+                         applicability_policy=policy)
+    def test_applicability_change_changes_report_digest(self):
+        c,p,t=records()
+        a=zta.evaluate(c,p,t)
+        b=zta.evaluate(c,p,t,applicability_observations={},
+                        applicability_policy={"capabilities":{},"verified_observations":{}})
+        self.assertNotEqual(a["normalized_digest"],b["normalized_digest"])
+    def test_untrusted_applicability_policy_rejected(self):
+        c,p,t=records()
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,applicability_observations={"ZTA-06.02":[]})
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
