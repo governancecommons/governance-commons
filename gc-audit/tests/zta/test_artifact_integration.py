@@ -44,7 +44,8 @@ class ArtifactIntegrationTests(unittest.TestCase):
                   "builder_key_id": "builder", "executor_key_id": "executor",
                   "observer_key_ids": {s: "observer" for s in scopes},
                   "scopes": list(scopes), "approver_key_id": "owner",
-                  "issued_at": "2026-10-01T00:00:00Z", "expires_at": "2026-11-01T00:00:00Z"}
+                  "issued_at": "2026-10-01T00:00:00Z", "expires_at": "2026-11-01T00:00:00Z",
+                  "max_observation_age_seconds": 172800}
         envelope = {"payload": policy, "signature": base64.b64encode(
             self.approver.sign(canonical_bytes(policy))).decode()}
         observations = {}
@@ -162,6 +163,11 @@ class ArtifactIntegrationTests(unittest.TestCase):
         for altered in cases:
             with self.subTest(altered=altered):
                 self.assertEqual(self.control(self.assess(altered))["status"], "UNVERIFIED")
+
+    def test_stale_installation_observation_unverified(self):
+        bad=copy.deepcopy(self.assessment)
+        bad["proof"]["scopes"]["linux-x64/production"]["signed_installation"]["payload"]["observed_at"]="2026-10-01T00:00:00Z"
+        self.assertEqual(self.control(self.assess(bad))["status"],"UNVERIFIED")
 
     def test_catalog_authority_is_required_for_pass(self):
         bad=copy.deepcopy(self.assessment)
