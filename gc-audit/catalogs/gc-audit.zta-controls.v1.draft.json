@@ -1,0 +1,535 @@
+{
+  "schema": "gc-audit.zta-controls.v1",
+  "version": "1.0.0",
+  "id": "gc-audit-zta-001-normative-catalog-draft",
+  "controls": [
+    {
+      "control_id": "ZTA-01.01",
+      "objective": "Actor attribution: All protected requests have actor kind and traceable asserted identity; verified identity is separately marked",
+      "threats": [
+        "Reject claims of verified identity from untrusted input"
+      ],
+      "applicability": {
+        "capability": "protected operation exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "request/host actor mapping plus spoof test"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Reject claims of verified identity from untrusted input",
+      "severity": "HIGH",
+      "remediation_role": "application or host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-01.02",
+      "objective": "Identity verification: A component claiming authentication verifies a principal before protected access",
+      "threats": [
+        "Unverified identity accepted as authenticated"
+      ],
+      "applicability": {
+        "capability": "authentication is performed",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "credential verifier tests and hostile identity fixtures"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unverified identity accepted as authenticated",
+      "severity": "HIGH",
+      "remediation_role": "authenticating component",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-02.01",
+      "objective": "Authorization enforcement: Policy decision precedes every privileged action at an enforceable boundary",
+      "threats": [
+        "Execution permitted after deny or without decision"
+      ],
+      "applicability": {
+        "capability": "privileged action exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "denial-path behavioral tests linked to revision"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Execution permitted after deny or without decision",
+      "severity": "CRITICAL",
+      "remediation_role": "trusted enforcement host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-02.02",
+      "objective": "Replay prevention: Reuse of expired, consumed, mismatched authorization cannot trigger new privileged action",
+      "threats": [
+        "Replayed decision executes without fresh authorization"
+      ],
+      "applicability": {
+        "capability": "authorizations/tokens are reusable inputs",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "replay and cross-operation negative tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Replayed decision executes without fresh authorization",
+      "severity": "HIGH",
+      "remediation_role": "policy enforcement host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-03.01",
+      "objective": "Capability allowlisting: Effective callable operations are explicit and bounded; unlisted operations fail closed",
+      "threats": [
+        "Unlisted capability executes"
+      ],
+      "applicability": {
+        "capability": "dispatch/execution exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "allowlist diff and unknown-command tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unlisted capability executes",
+      "severity": "HIGH",
+      "remediation_role": "dispatcher or host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-03.02",
+      "objective": "Runtime privilege: Process and resource grants are limited to required operations",
+      "threats": [
+        "Unnecessary high-impact permissions are required or exploited"
+      ],
+      "applicability": {
+        "capability": "privileged OS/resource access exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "effective permissions and denial test"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unnecessary high-impact permissions are required or exploited",
+      "severity": "HIGH",
+      "remediation_role": "execution host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-04.01",
+      "objective": "Provider registration: Providers have unique declared identity and cannot be silently replaced",
+      "threats": [
+        "Undeclared or substituted provider resolves"
+      ],
+      "applicability": {
+        "capability": "plugin/provider registry exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "registration rules, duplicate and substitution tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Undeclared or substituted provider resolves",
+      "severity": "HIGH",
+      "remediation_role": "provider registry",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-04.02",
+      "objective": "Provider origin: Executable providers are bound to verified origin or approved provenance",
+      "threats": [
+        "Untrusted changed provider loads as approved"
+      ],
+      "applicability": {
+        "capability": "external or separately packaged provider loads",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "integrity checks and tampered-provider tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Untrusted changed provider loads as approved",
+      "severity": "HIGH",
+      "remediation_role": "provider loader",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-05.01",
+      "objective": "Input validation: Untrusted names, parameters and serialized inputs are validated before action",
+      "threats": [
+        "Undeclared or malformed input reaches action"
+      ],
+      "applicability": {
+        "capability": "untrusted inputs exist",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "negative schema/fuzz boundary cases"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Undeclared or malformed input reaches action",
+      "severity": "HIGH",
+      "remediation_role": "input boundary owner",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-05.02",
+      "objective": "Injection isolation: Untrusted content cannot alter command/program structure",
+      "threats": [
+        "Untrusted input changes executable structure"
+      ],
+      "applicability": {
+        "capability": "commands/queries/scripts are constructed",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "metacharacter and argument-boundary tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Untrusted input changes executable structure",
+      "severity": "CRITICAL",
+      "remediation_role": "command builder or host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-06.01",
+      "objective": "Enforcement non-bypass: Untrusted clients cannot reach protected execution around the designated enforcement point",
+      "threats": [
+        "Direct untrusted bypass reaches privileged action"
+      ],
+      "applicability": {
+        "capability": "client/host trust crossing exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "call graph and bypass negative tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Direct untrusted bypass reaches privileged action",
+      "severity": "CRITICAL",
+      "remediation_role": "trusted host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-06.02",
+      "objective": "Delegation proof: Delegated enforcement guarantees have a named component, contract and observed proof",
+      "threats": [
+        "Delegation claimed as PASS without host proof"
+      ],
+      "applicability": {
+        "capability": "security requirement delegated",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "host contract plus bound host test evidence"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Delegation claimed as PASS without host proof",
+      "severity": "HIGH",
+      "remediation_role": "delegating integrator and host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-07.01",
+      "objective": "Secret exposure: Credentials are not exposed through untrusted results, diagnostics or logs",
+      "threats": [
+        "Secret material disclosed to unauthorized actor"
+      ],
+      "applicability": {
+        "capability": "secrets may be processed",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "redacted fixture/secret scan output samples"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Secret material disclosed to unauthorized actor",
+      "severity": "HIGH",
+      "remediation_role": "secret-handling component",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-07.02",
+      "objective": "Secret lifecycle: Stored/transmitted secrets use appropriate access controls and are retired safely",
+      "threats": [
+        "Unauthorized access or plaintext disclosure at trust crossing"
+      ],
+      "applicability": {
+        "capability": "target stores/transmits/manages secrets",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "storage access and lifecycle verification"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unauthorized access or plaintext disclosure at trust crossing",
+      "severity": "HIGH",
+      "remediation_role": "secret store or host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-08.01",
+      "objective": "Component provenance: Distributed components and dependencies are inventoried and revision-linked",
+      "threats": [
+        "Unknown/unverifiable executable component represented as verified"
+      ],
+      "applicability": {
+        "capability": "packaged/distributed artifact exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "lockfile/SBOM or equivalent package inventory and hashes"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unknown/unverifiable executable component represented as verified",
+      "severity": "MEDIUM",
+      "remediation_role": "build/release owner",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-08.02",
+      "objective": "Artifact integrity: Released artifact is consistently bound to intended source/build inputs",
+      "threats": [
+        "Artifact substitution or mismatch accepted"
+      ],
+      "applicability": {
+        "capability": "build or distribution exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "build outputs digest and installed-artifact checks"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Artifact substitution or mismatch accepted",
+      "severity": "HIGH",
+      "remediation_role": "build/release owner",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-09.01",
+      "objective": "Evidence attribution: Security decisions/claims are linked to producer, revision, integrity and limitations",
+      "threats": [
+        "Unattributed/tampered evidence produces PASS"
+      ],
+      "applicability": {
+        "capability": "audit evidence is produced",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "evidence fixture and tampering tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unattributed/tampered evidence produces PASS",
+      "severity": "HIGH",
+      "remediation_role": "evidence producer and assessor",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-09.02",
+      "objective": "History integrity: Original assessments/records remain immutable; revalidation and corrections are separate linked events",
+      "threats": [
+        "Historical record silently rewritten"
+      ],
+      "applicability": {
+        "capability": "governance records exist",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "append-only mutation tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Historical record silently rewritten",
+      "severity": "HIGH",
+      "remediation_role": "governance record keeper",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-10.01",
+      "objective": "Fail closed: Missing, errored or denied authorization cannot turn into permitted privileged action",
+      "threats": [
+        "Execution succeeds on uncertain/denied policy"
+      ],
+      "applicability": {
+        "capability": "protected authorization is required",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "exception and absent-policy negative tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Execution succeeds on uncertain/denied policy",
+      "severity": "CRITICAL",
+      "remediation_role": "execution enforcement owner",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-10.02",
+      "objective": "Failure bounds: Time, output, resource and interruption behavior is defined and tested",
+      "threats": [
+        "Unbounded exposure or falsely reported rollback/success"
+      ],
+      "applicability": {
+        "capability": "long-running/external operation exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "timeout/overflow/cancellation tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Unbounded exposure or falsely reported rollback/success",
+      "severity": "MEDIUM",
+      "remediation_role": "operation executor",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-11.01",
+      "objective": "Trust-crossing inventory: Relevant network and IPC interfaces and trust assumptions are declared",
+      "threats": [
+        "Material external crossing omitted to excuse control"
+      ],
+      "applicability": {
+        "capability": "network/IPC or external boundary exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "interface map plus discovery cross-check"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Material external crossing omitted to excuse control",
+      "severity": "HIGH",
+      "remediation_role": "system integrator",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-11.02",
+      "objective": "Transport protection: Cross-boundary messages authenticate peers and protect integrity/confidentiality as needed",
+      "threats": [
+        "Untrusted peer can issue privileged calls or intercept secrets"
+      ],
+      "applicability": {
+        "capability": "sensitive or privileged network/IPC transport exists",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "peer spoof/tamper tests and transport settings"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Untrusted peer can issue privileged calls or intercept secrets",
+      "severity": "HIGH",
+      "remediation_role": "transport owner",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-12.01",
+      "objective": "Platform parity: Declared support platforms preserve security-denial and authorization invariants",
+      "threats": [
+        "Supported OS permits unauthorized operation"
+      ],
+      "applicability": {
+        "capability": "multiple supported platforms declared",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "OS-specific equivalent negative tests"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Supported OS permits unauthorized operation",
+      "severity": "HIGH",
+      "remediation_role": "application and host",
+      "standard_mappings": []
+    },
+    {
+      "control_id": "ZTA-12.02",
+      "objective": "Platform-specific hazards: Path/shell/process/encoding mechanics are validated per supported platform",
+      "threats": [
+        "Platform quirk bypasses required invariant"
+      ],
+      "applicability": {
+        "capability": "platform-dependent mechanisms exist",
+        "predicate": "requires independently evaluated applicability trigger; text is not executable"
+      },
+      "required_evidence": [
+        "symlink/case/path/process negative fixtures"
+      ],
+      "verification": {
+        "method": "MIXED",
+        "sufficiency": "control-specific proof procedure not yet approved; manual and behavioral assurance gates apply"
+      },
+      "fail_predicate": "Platform quirk bypasses required invariant",
+      "severity": "HIGH",
+      "remediation_role": "platform adapter",
+      "standard_mappings": []
+    }
+  ]
+}
