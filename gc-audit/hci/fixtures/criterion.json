@@ -1,0 +1,27 @@
+{
+  "schema": "gc-hci-criterion.v0.1",
+  "id": "HCI-DISC-001@0.1",
+  "question": "Can a user discover an action relevant to the declared task?",
+  "applicable_modalities": [
+    "web",
+    "cli"
+  ],
+  "sources": [
+    {
+      "source_id": "S01",
+      "locator": "The Design of Everyday Things, chapter 4",
+      "evidence_class": "SYNTHESIS",
+      "claim": "Signifiers and feedback inform discoverability"
+    }
+  ],
+  "procedure": [
+    "Describe a representative task without pointing to a specific action",
+    "Observe attempted actions and record the outcome"
+  ],
+  "decision_rule": "Document only observed task outcomes; human interpretation requires review",
+  "review_required": true,
+  "state": "CANDIDATE",
+  "limitations": [
+    "No population inference from one task"
+  ]
+}
