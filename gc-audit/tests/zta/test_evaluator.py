@@ -293,6 +293,7 @@ class EvaluatorTests(unittest.TestCase):
              "capability":"remote_access","outcome":"ABSENT","scope":"deployment",
              "inventory_complete":True}
         policy={"capabilities":{"ZTA-06.02":"remote_access"},
+                "required_scopes":{"ZTA-06.02":["deployment"]},
                 "verified_observations":{"absence1":(
                     t["target_id"],t["revision"],"remote_access","ABSENT","deployment",True)}}
         result=zta.evaluate(c,p,t,applicability_observations={"ZTA-06.02":[obs]},
@@ -309,7 +310,7 @@ class EvaluatorTests(unittest.TestCase):
         c,p,t=records()
         a=zta.evaluate(c,p,t)
         b=zta.evaluate(c,p,t,applicability_observations={},
-                        applicability_policy={"capabilities":{},"verified_observations":{}})
+                        applicability_policy={"capabilities":{},"verified_observations":{},"required_scopes":{}})
         self.assertNotEqual(a["normalized_digest"],b["normalized_digest"])
     def test_untrusted_applicability_policy_rejected(self):
         c,p,t=records()
