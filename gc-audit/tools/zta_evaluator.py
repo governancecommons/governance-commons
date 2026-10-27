@@ -14,6 +14,7 @@ from zta_proof_policy import assess_admissibility
 from zta_authenticated_packages import authenticate_proof_package
 from zta_proof_packages import ProofPackageError
 from zta_applicability import screen_applicability
+from zta_scope_approvals import verify_scope_approval
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -103,7 +104,8 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              evidence_sources=None, inherited_profiles=(),
              negative_observations=(), trusted_observation_keys=None,
              authenticated_packages=(), proof_policy=None,
-             applicability_observations=None, applicability_policy=None):
+             applicability_observations=None, applicability_policy=None,
+             scope_approvals=():
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
@@ -244,6 +246,29 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
                     required_scopes=applicability_policy["required_scopes"].get(cid))
             except (ValueError, TypeError, KeyError) as exc:
                 raise AssessmentInputError("invalid applicability evidence: " + str(exc)) from exc
+    signed_scope_reviews = {}
+    if scope_approvals:
+        if applicability_observations is None or not isinstance(applicability_policy, dict):
+            raise AssessmentInputError("signed scope reviews require applicability policy")
+        trusted_reviewers = applicability_policy.get("authorized_approvers")
+        if not isinstance(trusted_reviewers, dict):
+            raise AssessmentInputError("independent reviewer keys required")
+        for envelope in scope_approvals:
+            if not isinstance(envelope, dict) or not isinstance(envelope.get("payload"), dict):
+                raise AssessmentInputError("invalid scope approval")
+            cid = envelope["payload"].get("control_id")
+            if cid not in applicability_screen or cid in signed_scope_reviews:
+                raise AssessmentInputError("unknown or duplicate scope review")
+            try:
+                signed_scope_reviews[cid] = verify_scope_approval(
+                    envelope, target_id=target["target_id"], revision=target["revision"],
+                    control_id=cid, capability=applicability_policy["capabilities"][cid],
+                    required_scopes=applicability_policy["required_scopes"][cid],
+                    verified_screen=applicability_screen[cid],
+                    authorized_approvers=trusted_reviewers,
+                    verified_observation_ids={item["id"] for item in applicability_observations[cid]})
+            except (ValueError, TypeError, KeyError) as exc:
+                raise AssessmentInputError("scope approval not verified: " + str(exc)) from exc
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
@@ -257,6 +282,8 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
                 if cid in package_coverage else "no verified behavioral/control proof")
         elif cid in applicability_screen and applicability_screen[cid]["status"] == "APPLICABLE":
             reason = "verified capability present; positive control verification still required"
+        elif cid in signed_scope_reviews:
+            reason = "signed scope review verified; final non-applicability not established"
         elif cid in applicability_screen and applicability_screen[cid]["status"] == "ABSENCE_CANDIDATE":
             reason = "scoped absence candidate; independent full-scope N/A approval not established"
         elif cid in package_coverage:
@@ -288,6 +315,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         "negative_observations": sorted(negative_observations, key=lambda x: canonical(x).decode("utf-8")),
         "authenticated_packages": sorted(authenticated_packages, key=lambda x: canonical(x).decode("utf-8")),
         "applicability_observations": applicability_observations,
+        "scope_approvals": sorted(scope_approvals, key=lambda x: canonical(x).decode("utf-8")),
     })
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
             "id":f"assessment-{target['id']}","target_id":target["target_id"],
