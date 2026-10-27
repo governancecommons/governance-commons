@@ -15,6 +15,7 @@ from zta_authenticated_packages import authenticate_proof_package
 from zta_proof_packages import ProofPackageError
 from zta_applicability import screen_applicability
 from zta_scope_approvals import verify_scope_approval
+from zta_decision_gate import classify_control, DecisionGateError
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -273,30 +274,26 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
     entries = []
     for cid in sorted(known):
         evidence_ids = sorted(set(evidence_by_control[cid]))
-        if cid in failures:
-            entries.append({'control_id':cid, 'status':'FAIL', 'reason':'verified negative observation takes precedence over favorable proof', 'evidence_ids':evidence_ids})
+        try:
+            decision = classify_control(
+                control_id=cid, mandatory=cid in mandatory,
+                negative_evidence_ids=failures.get(cid, set()),
+                proof_coverage=package_coverage.get(cid),
+                applicability=applicability_screen.get(cid),
+                scope_review=signed_scope_reviews.get(cid))
+        except DecisionGateError as exc:
+            raise AssessmentInputError("control decision conflict: " + str(exc)) from exc
+        if decision["status"] == "FAIL":
+            entries.append({"control_id":cid,"status":"FAIL",
+                "reason":decision["reason"],"evidence_ids":evidence_ids})
             continue
-        if cid in mandatory:
-            reason = "mandatory control: " + (
-                "authenticated proof package requires independent control assurance"
-                if cid in package_coverage else "no verified behavioral/control proof")
+        reason = decision["reason"]
+        if cid in mandatory and cid not in package_coverage:
+            reason = "mandatory control: no independently complete verified proof"
         elif cid in applicability_screen and applicability_screen[cid]["status"] == "APPLICABLE":
-            reason = "verified capability present; positive control verification still required"
-        elif cid in signed_scope_reviews:
-            reason = "signed scope review verified; final non-applicability not established"
-        elif cid in applicability_screen and applicability_screen[cid]["status"] == "ABSENCE_CANDIDATE":
-            reason = "scoped absence candidate; independent full-scope N/A approval not established"
-        elif cid in package_coverage:
-            reason = "authenticated proof package: " + package_coverage[cid]["status"] + "; independent control PASS not established"
-        elif evidence_ids:
-            if admissibility[cid]["admissible_ids"]:
-                reason = "candidate evidence requires further control-specific verification"
-            else:
-                reason = "submitted evidence lacks admissible proof of control outcome"
-        else:
-            reason = "applicability and absence of capability have not been independently established"
-        entries.append({"control_id":cid, "status":"UNVERIFIED",
-                        "reason":reason, "evidence_ids":evidence_ids})
+            reason = "verified capability present; full positive control assurance required"
+        entries.append({"control_id":cid,"status":"UNVERIFIED",
+                        "reason":reason,"evidence_ids":evidence_ids})
     findings = [{'id':'failure-'+cid, 'control_id':cid,
                  'severity':next(c['severity'] for c in controls if c['control_id']==cid),
                  'description':'Trusted producer signed a negative test observation',
