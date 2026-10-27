@@ -165,6 +165,54 @@ class EvaluatorTests(unittest.TestCase):
         c,p,t=records()
         with self.assertRaises(zta.AssessmentInputError):
             zta.evaluate(c,p,t,negative_observations=[{'payload':{},'signature':'bad'}])
+    def test_unsigned_package_policy_rejected(self):
+        c,p,t=records()
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,authenticated_packages=[{"package":{"control_id":"ZTA-08.02"}}])
+    def test_package_with_fake_signer_does_not_pass(self):
+        c,p,t=records()
+        policy={"trusted_public_keys":{},"trusted_requirements":{"ZTA-08.02":["build"]},
+                "approved_checkers":{},"independently_verified_results":{}}
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,authenticated_packages=[{
+                "domain":"gc-audit.zta.proof-package-envelope.v1",
+                "package":{"control_id":"ZTA-08.02","authority":{"key_id":"forged"}},
+                "signature":"AA=="}],proof_policy=policy)
+    def test_signed_complete_package_cannot_become_pass(self):
+        from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+        from zta_authenticated_packages import DOMAIN, canonical_bytes
+        c,p,t=records()
+        signer=Ed25519PrivateKey.generate()
+        pub=signer.public_key().public_bytes(Encoding.Raw,PublicFormat.Raw)
+        payload=b"externally supplied bytes"
+        e=copy.deepcopy(FIXTURE["evidence"])
+        e["control_ids"]=["ZTA-08.02"]
+        e["source_digest"]="sha256:"+hashlib.sha256(payload).hexdigest()
+        d="sha256:"+"a"*64
+        pkg={"schema":"gc-audit.zta-proof-package.v1","version":"1.0.0","id":"pkg1",
+             "target_id":t["target_id"],"revision":t["revision"],"control_id":"ZTA-08.02",
+             "authority":{"key_id":"release-owner","role":"RELEASE_AUTHORITY","trust_reference":"owner-pin"},
+             "checker":{"id":"artifact","version":"1.0.0","spec_digest":d},
+             "requirements":["match-build"],
+             "proofs":[{"requirement_id":"match-build","evidence_id":"ev1",
+                        "checker_result":"VERIFIED","digest":d}],
+             "artifact_origin":{"repository":"org/repo","source_revision":t["revision"],
+                                "build_reference":"ci1"},"limitations":[]}
+        signed={"domain":DOMAIN,"package":pkg}
+        signed["signature"]=base64.b64encode(signer.sign(canonical_bytes(signed))).decode()
+        policy={"trusted_public_keys":{"release-owner":pub},
+                "trusted_requirements":{"ZTA-08.02":["match-build"]},
+                "approved_checkers":{"artifact":("1.0.0",d)},
+                "independently_verified_results":{("artifact","ev1","match-build"):("VERIFIED",d)}}
+        assessed=zta.evaluate(c,p,t,[e],evidence_sources={"fixtures/sample":payload},
+                    authenticated_packages=[signed],proof_policy=policy)
+        control=next(r for r in assessed["control_results"] if r["control_id"]=="ZTA-08.02")
+        self.assertEqual(control["status"],"UNVERIFIED")
+        self.assertEqual(assessed["release_eligibility"],"BLOCKED")
+        policy["independently_verified_results"]={}
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,[e],evidence_sources={"fixtures/sample":payload},
+                         authenticated_packages=[signed],proof_policy=policy)
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
