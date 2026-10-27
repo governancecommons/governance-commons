@@ -55,8 +55,12 @@ the assessment remains release BLOCKED. A locally generated fixture proves
 logic behavior only. A real assessment requires independently governed trust
 roots, required-scope inventory, current observations, and owner review. The
 signature verifies approver attribution, not that the approver is independent
-in an organizational sense. The current signed installation statement has no
-observation timestamp; the approved policy's expiry and explicit `as_of` bound
-policy freshness, while the evidence producer and owner remain responsible for
-the observation's actual collection time and completeness. Unknown distribution
+in an organizational sense. Installation observations now carry a signed `observed_at` timestamp. The signed
+control policy pins `max_observation_age_seconds` (strictly positive, at most 30 days);
+the evaluator checks `observed_at <= as_of <= observed_at + maximum age` and rejects
+missing, future-dated or stale observations. The policy expiry remains a separate
+check. A valid timestamp is not independent proof that the observation occurred.
+The evaluator also requires an externally pinned full-catalog digest and all
+24 independently approved objectives before the control may PASS. A target
+self-assertion or a synthetic fixture cannot establish production authority. Unknown distribution
 routes or undeclared deployment scopes remain outside this bounded proof.
