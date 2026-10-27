@@ -80,6 +80,29 @@ Quality attributes: security (independent roots, fail-closed), usability (guided
 
 One user must be able to install, assess, locate evidence, distinguish unknown from PASS, understand a recommendation, and export/reopen the report without maintainer intervention. No stage auto-authorizes the next.
 
+## Multi-domain preservation and internal governed-repository use
+
+**Normative architecture decision:** GC-AUDIT remains a first-class, reusable Governance Commons capability for governed-repository development, including planning, implementation guidance, code/configuration inspection, authorized verification, evidence recording, and approval workflows. Portable distribution is an **additional consumer** of the same authoritative audit capabilities, not a replacement, fork, or extraction that disables the internal functions.
+
+The shared framework must be multi-domain: an audit registry, common evidence/provenance and reporting contracts, versioned profile discovery, applicability decisions, results, human review and AI-advisory interfaces. **Each domain** must independently specify its catalog, target boundaries, applicability, methods, evidence strength, statuses and limitations; a general shared framework does **not** imply that all methods or PASS criteria are interchangeable.
+
+Audit families and boundaries (registration/implementation is not asserted for proposed names):
+
+| Family | Role | Status/assurance boundary |
+| --- | --- | --- |
+| Existing GC audit operations, including registry and workflow/governance checks | Preserve current internal validation and guided coding workflows | Inventory and actual registration must be verified in repository before expanding or renaming operations. |
+| `gc-audit.zerotrust` | Existing ZT1–ZT8 audit of GC tooling/registry posture | Not comprehensive application-level Zero Trust verification. |
+| `gc-audit.zta` | Application-level Zero Trust architecture assessment | Separately developed under GC-AUDIT-ZTA-001, gated on independently trusted evidence; current implementation/activation gaps remain. |
+| `gc-audit.a11y` (proposed) | Accessibility tests and review, with WCAG applicability | Automated test results do not establish full accessibility conformance; human evaluation is required where relevant. |
+| `gc-audit.hci` (proposed) | Interaction quality, usability, information architecture and human-centered evaluation | Heuristic expert findings are distinct from observed user behavior; claims about user outcomes require appropriate empirical evidence. |
+| Additional versioned domains | Security, software quality, agent governance and future profiles | Require separate acceptance and authoritative methods before advertised as supported. |
+
+Internal governed development may select applicable guidance and checks by objective, change set, risks and governing policy across **all** supported audit families: plan → develop → inspect → explain/recommend → independently verify → record. AI advisers may propose checks, improvements and bounded automation but cannot convert recommendations into verified results or approve their own changes. Self-audit remains conditional on the assurance claim and host policy, not compulsory for every advisory code review.
+
+**Same-engine contract:** internal GC operations, the native portable CLI, optional Cockpit adapters, and eventual apps consume the same versioned implementations and domain-specific control semantics. No duplicated internal/external engine, silent change in evaluation criteria, or weakening of existing GC functionality for commercialization. Backward compatibility and migration rules must be documented.
+
+**Release sequencing:** ZTA remains the **first external pilot**, not the sole or permanent product domain. A11Y and HCI progress as independent audit development tracks with their own review and evidence gates; they are **not** made required implementations for the GC-AUDIT v0.1 ZTA pilot. Domain architecture and preservation are required now; broad feature completion is explicitly DEFERRED. This amendment does not authorize new operations, code changes, deployments, PR merges or activation.
+
 ## Future compatibility without current scope expansion
 
 Later: explicit patch proposal and sandboxed test automation; human-approved PR drafting; governed multi-agent workflows with role/capability grants, independent retest and revocation; multiple domain profiles (agent security, HCI, accessibility), optional hosted services and enterprise integrations. All require separate demand/evidence and owner authorization.
