@@ -226,11 +226,12 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
     if applicability_observations is not None:
         if not isinstance(applicability_observations, dict) or not isinstance(applicability_policy, dict):
             raise AssessmentInputError("applicability observations require an independent policy")
-        required_keys = {"capabilities", "verified_observations"}
+        required_keys = {"capabilities", "verified_observations", "required_scopes"}
         if not required_keys <= set(applicability_policy):
             raise AssessmentInputError("incomplete independent applicability policy")
         for cid, records in applicability_observations.items():
-            if cid not in known or cid not in applicability_policy["capabilities"]:
+            if (cid not in known or cid not in applicability_policy["capabilities"]
+                    or cid not in applicability_policy["required_scopes"]):
                 raise AssessmentInputError("unknown applicability control or missing policy")
             try:
                 applicability_screen[cid] = screen_applicability(
@@ -239,7 +240,8 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
                     capability=applicability_policy["capabilities"][cid],
                     trusted_capability_policy=applicability_policy["capabilities"],
                     observations=records,
-                    independently_verified_observations=applicability_policy["verified_observations"])
+                    independently_verified_observations=applicability_policy["verified_observations"],
+                    required_scopes=applicability_policy["required_scopes"].get(cid))
             except (ValueError, TypeError, KeyError) as exc:
                 raise AssessmentInputError("invalid applicability evidence: " + str(exc)) from exc
     mandatory = set(resolved["mandatory_control_ids"])
