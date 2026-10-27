@@ -7,19 +7,20 @@ or full-control PASS. Trust roots must originate outside target inputs.
 import base64
 import hashlib
 import json
+from datetime import datetime, timedelta
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
 DOMAIN = "gc-audit.zta.installation-observation.v1"
 FIELDS = {"domain", "target_id", "revision", "build_id", "install_scope",
-          "artifact_sha256", "observer_key_id"}
+          "artifact_sha256", "observer_key_id", "observed_at"}
 
 def canonical(record):
     return json.dumps(record, sort_keys=True, ensure_ascii=False,
                       separators=(",", ":")).encode("utf-8")
 
 def verify_signed_installation(*, envelope, trusted_observers, release,
-                               installed_bytes):
+                               installed_bytes, as_of=None, max_age_seconds=None):
     if not isinstance(envelope, dict) or set(envelope) != {"payload", "signature"}:
         raise ValueError("invalid observation envelope")
     payload = envelope["payload"]
@@ -31,6 +32,15 @@ def verify_signed_installation(*, envelope, trusted_observers, release,
     for key in ("target_id", "revision", "build_id", "install_scope"):
         if not isinstance(release[key], str) or not release[key] or payload[key] != release[key]:
             raise ValueError("observation/release identity mismatch")
+    try:
+        observed = datetime.fromisoformat(payload["observed_at"].replace("Z", "+00:00"))
+        assessed = datetime.fromisoformat(as_of.replace("Z", "+00:00"))
+        if (observed.tzinfo is None or assessed.tzinfo is None
+                or type(max_age_seconds) is not int or not 0 < max_age_seconds <= 2592000
+                or not observed <= assessed <= observed + timedelta(seconds=max_age_seconds)):
+            raise ValueError("installation observation stale or future dated")
+    except (TypeError, ValueError, AttributeError, OverflowError) as exc:
+        raise ValueError("signed installation observation requires valid freshness") from exc
     if payload["artifact_sha256"] != release["sha256"]:
         raise ValueError("observed digest differs from release pin")
     if not isinstance(installed_bytes, bytes) or not installed_bytes:
@@ -53,4 +63,5 @@ def verify_signed_installation(*, envelope, trusted_observers, release,
             "observer_key_id": key_id, "target_id": release["target_id"],
             "revision": release["revision"], "build_id": release["build_id"],
             "install_scope": release["install_scope"], "artifact_digest": calculated,
+            "observed_at": payload["observed_at"],
             "release_decision": "UNVERIFIED"}
