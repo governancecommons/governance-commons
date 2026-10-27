@@ -1,0 +1,21 @@
+{
+  "schema": "gc-hci-report.v0.1",
+  "id": "REPORT-SYN-001",
+  "profile_ref": "HCI-WEB-001@0.1",
+  "target_version": "pilot-fixture-only",
+  "finding_refs": [
+    "FIND-SYN-001"
+  ],
+  "counts": {
+    "SATISFIED": 0,
+    "NOT_SATISFIED": 0,
+    "INCONCLUSIVE": 1,
+    "REVIEW_REQUIRED": 0,
+    "NOT_APPLICABLE": 0,
+    "NOT_EVALUATED": 0
+  },
+  "readiness": "UNDETERMINED",
+  "limitations": [
+    "Synthetic fixture; no readiness conclusion"
+  ]
+}
