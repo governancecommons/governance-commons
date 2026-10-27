@@ -19,7 +19,7 @@ def verify_release_artifact_chain(*, target_id, revision, trusted_release,
                                   approved_source=None, approved_builder=None,
                                   signed_execution=None, trusted_executors=None,
                                   corroborated_executions=None,
-                                  approved_executor=None):
+                                  approved_executor=None, as_of=None, max_observation_age_seconds=None):
     if not isinstance(trusted_release,dict) or set(trusted_release)!={"target_id","revision","sha256","build_id","install_scope"}:
         raise ValueError("independent release policy incomplete")
     if not isinstance(observed_install,dict) or set(observed_install)!={"target_id","revision","build_id","install_scope"}:
@@ -33,7 +33,8 @@ def verify_release_artifact_chain(*, target_id, revision, trusted_release,
         raise ValueError("authenticated installation evidence and external trust roots required")
     attested=verify_signed_installation(
         envelope=signed_installation, trusted_observers=trusted_observers,
-        release=trusted_release, installed_bytes=installed_bytes)
+        release=trusted_release, installed_bytes=installed_bytes,
+        as_of=as_of, max_age_seconds=max_observation_age_seconds)
     if attested["status"]!="SIGNED_INSTALLATION_OBSERVATION":
         raise ValueError("installation observation not authenticated")
     if signed_build is None or not isinstance(trusted_builders,dict) or not trusted_builders:
