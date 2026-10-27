@@ -35,7 +35,7 @@ SAFE_SCRIPT = re.compile(r"^governance-commons/gc-audit/tools/[A-Za-z0-9_-]+[.]p
 DIRECT_SHELL = re.compile(
     r'(?im)^\s*(?:Invoke-Expression\b|iex\b|Start-Process\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b|&\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b)'
 )
-INDIRECT_PROCESS = re.compile(r"(?im)^\\s*(?:return\\s+)?&\\s+\\$[A-Za-z_][A-Za-z0-9_]*\\s+@?[A-Za-z_\\$]")
+INDIRECT_PROCESS = re.compile(r"(?im)^\s*(?:return\s+)?&\s+\$[A-Za-z_][A-Za-z0-9_]*\s+@?[A-Za-z_\$]")
 WRITE_SWITCH = re.compile(r"\[switch\]\s*\$(?:Fix\w*|Apply\w*|Write\w*|Repair\w*)\b", re.I)
 
 def contained_script(path, portfolio_root):
