@@ -11,6 +11,8 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 from zta_observations import verify_negative_observation
 from zta_proof_policy import assess_admissibility
+from zta_authenticated_packages import authenticate_proof_package
+from zta_proof_packages import ProofPackageError
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -98,7 +100,8 @@ def resolve_profile(profile, known_profiles):
 
 def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              evidence_sources=None, inherited_profiles=(),
-             negative_observations=(), trusted_observation_keys=None):
+             negative_observations=(), trusted_observation_keys=None,
+             authenticated_packages=(), proof_policy=None):
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
@@ -178,6 +181,37 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
     integrity_verified = {item["evidence_id"] for item in verified_evidence}
     admissibility = {cid: assess_admissibility(cid, evidence_records, integrity_verified)
                      for cid in known}
+    # Signed packages prove authentication and corroborated coverage, not
+    # independent execution quality or full security-control satisfaction.
+    package_coverage = {}
+    if authenticated_packages and not isinstance(proof_policy, dict):
+        raise AssessmentInputError("authenticated proof packages require external proof policy")
+    if authenticated_packages:
+        required_policy_keys = {"trusted_public_keys", "trusted_requirements",
+                                "approved_checkers", "independently_verified_results"}
+        if not required_policy_keys <= set(proof_policy):
+            raise AssessmentInputError("incomplete external proof policy")
+        for envelope in authenticated_packages:
+            if not isinstance(envelope, dict) or not isinstance(envelope.get("package"), dict):
+                raise AssessmentInputError("invalid proof package envelope")
+            pkg = envelope["package"]
+            cid = pkg.get("control_id")
+            if cid not in known:
+                raise AssessmentInputError("proof package unknown control")
+            try:
+                checked = authenticate_proof_package(
+                    envelope, trusted_public_keys=proof_policy["trusted_public_keys"],
+                    target_id=target["target_id"], revision=target["revision"],
+                    expected_control=cid,
+                    trusted_requirements=proof_policy["trusted_requirements"],
+                    approved_checkers=proof_policy["approved_checkers"],
+                    verified_evidence_ids=integrity_verified,
+                    independently_verified_results=proof_policy["independently_verified_results"])
+            except (ProofPackageError, ValueError, TypeError) as exc:
+                raise AssessmentInputError("untrusted proof package: " + str(exc)) from exc
+            if cid in package_coverage:
+                raise AssessmentInputError("duplicate proof package for control")
+            package_coverage[cid] = checked
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
@@ -186,7 +220,11 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             entries.append({'control_id':cid, 'status':'FAIL', 'reason':'signed negative test observation', 'evidence_ids':sorted(failures[cid])})
             continue
         if cid in mandatory:
-            reason = "mandatory control: no verified behavioral/control proof"
+            reason = "mandatory control: " + (
+                "authenticated proof package requires independent control assurance"
+                if cid in package_coverage else "no verified behavioral/control proof") "mandatory control: no verified behavioral/control proof"
+        elif cid in package_coverage:
+            reason = "authenticated proof package: " + package_coverage[cid]["status"] + "; independent control PASS not established"
         elif evidence_ids:
             if admissibility[cid]["admissible_ids"]:
                 reason = "candidate evidence requires further control-specific verification"
