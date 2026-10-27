@@ -292,6 +292,8 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             reason = "mandatory control: no independently complete verified proof"
         elif cid in applicability_screen and applicability_screen[cid]["status"] == "APPLICABLE":
             reason = "verified capability present; full positive control assurance required"
+        elif cid in applicability_screen and applicability_screen[cid]["status"] == "ABSENCE_CANDIDATE" and cid not in signed_scope_reviews:
+            reason = "scoped absence candidate still requires signed approval and full-scope proof"
         entries.append({"control_id":cid,"status":"UNVERIFIED",
                         "reason":reason,"evidence_ids":evidence_ids})
     findings = [{'id':'failure-'+cid, 'control_id':cid,
