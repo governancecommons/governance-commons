@@ -1,0 +1,18 @@
+{
+  "schema": "gc-hci-evidence.v0.1",
+  "id": "EVID-SYN-001",
+  "profile_ref": "HCI-WEB-001@0.1",
+  "criterion_ref": "HCI-DISC-001@0.1",
+  "task_ref": "TASK-NEWS-001",
+  "target_version": "pilot-fixture-only",
+  "method": "EXPERT_REVIEW",
+  "observation": "Synthetic example observation; no real interface or participant was evaluated",
+  "recorded_at": "2026-10-27T00:00:00Z",
+  "artifact_refs": [],
+  "limitations": [
+    "Fixture only"
+  ],
+  "integrity": {
+    "state": "UNSIGNED"
+  }
+}
