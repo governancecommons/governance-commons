@@ -104,9 +104,12 @@ class ArtifactIntegrationTests(unittest.TestCase):
                     "expected_objectives": {c["control_id"]: c["objective"] for c in self.catalog["controls"]}}}
 
     def assess(self, assessment=None, **kwargs):
+        supplied = self.assessment if assessment is None else assessment
+        untrusted = {k: supplied[k] for k in ("policy_envelope", "proof")}
+        authority = {k: supplied[k] for k in supplied if k not in untrusted}
         return zta.evaluate(self.catalog, self.profile, self.target,
                             as_of="2026-10-27T00:00:00Z",
-                            artifact_assessment=self.assessment if assessment is None else assessment,
+                            artifact_assessment=untrusted, artifact_authority=authority,
                             **kwargs)
 
     def control(self, result):
@@ -173,16 +176,29 @@ class ArtifactIntegrationTests(unittest.TestCase):
         bad=copy.deepcopy(self.assessment)
         bad["catalog_authority"]["approved_catalog_digest"]="sha256:"+"0"*64
         self.assertEqual(self.control(self.assess(bad))["status"],"UNVERIFIED")
+
+    def test_assessment_cannot_supply_its_own_authority(self):
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(self.catalog, self.profile, self.target,
+                as_of="2026-10-27T00:00:00Z", artifact_assessment=self.assessment)
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(self.catalog, self.profile, self.target,
+                as_of="2026-10-27T00:00:00Z",
+                artifact_assessment={k:self.assessment[k] for k in ("policy_envelope", "proof")},
+                artifact_authority={})
         bad=copy.deepcopy(self.assessment)
         bad["catalog_authority"]["expected_objectives"]["ZTA-08.02"]="changed"
         self.assertEqual(self.control(self.assess(bad))["status"],"UNVERIFIED")
 
     def test_expired_or_missing_as_of_cannot_pass(self):
         expired = zta.evaluate(self.catalog, self.profile, self.target,
-            as_of="2026-11-01T00:00:00Z", artifact_assessment=self.assessment)
+            as_of="2026-11-01T00:00:00Z",
+            artifact_assessment={k:self.assessment[k] for k in ("policy_envelope", "proof")},
+            artifact_authority={k:v for k,v in self.assessment.items() if k not in ("policy_envelope", "proof")})
         self.assertEqual(self.control(expired)["status"], "UNVERIFIED")
         missing = zta.evaluate(self.catalog, self.profile, self.target,
-            artifact_assessment=self.assessment)
+            artifact_assessment={k:self.assessment[k] for k in ("policy_envelope", "proof")},
+            artifact_authority={k:v for k,v in self.assessment.items() if k not in ("policy_envelope", "proof")})
         self.assertEqual(self.control(missing)["status"], "UNVERIFIED")
 
     def test_evaluation_is_read_only(self):

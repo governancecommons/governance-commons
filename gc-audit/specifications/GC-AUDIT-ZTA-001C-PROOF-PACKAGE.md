@@ -24,7 +24,7 @@ Positive and negative cases include missing requirements, spoofed independent ch
 
 ## ZTA-08.02 evaluator integration (2026-10-27)
 
-`zta_evaluator.evaluate(..., artifact_assessment=..., as_of=...)` accepts a
+`zta_evaluator.evaluate(..., artifact_assessment=..., artifact_authority=..., as_of=...)` accepts a
 bounded in-memory proof for ZTA-08.02. The caller supplies a signed
 `gc-audit.zta.artifact-control-policy.v1` payload and trusted approver, builder,
 executor, and installation observer public keys from outside the target. The
@@ -64,3 +64,11 @@ The evaluator also requires an externally pinned full-catalog digest and all
 24 independently approved objectives before the control may PASS. A target
 self-assertion or a synthetic fixture cannot establish production authority. Unknown distribution
 routes or undeclared deployment scopes remain outside this bounded proof.
+
+The assessment argument now contains only `policy_envelope` and `proof`.
+The separate `artifact_authority` argument supplies the catalog pin, trusted
+keys, required scopes, and corroborated execution records. Supplying authority
+fields inside assessor-controlled assessment data is an input-contract error.
+The calling host must authenticate, pin, and protect `artifact_authority`
+outside the target's control; the Python argument boundary alone cannot prove
+its organizational independence.
