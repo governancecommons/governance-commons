@@ -19,7 +19,7 @@ class ArtifactChainTests(unittest.TestCase):
         self.observation={k:self.policy[k] for k in ("target_id","revision","build_id","install_scope")}
         signer=Ed25519PrivateKey.generate()
         self.trust={"observer":signer.public_key().public_bytes(Encoding.Raw,PublicFormat.Raw)}
-        payload={"domain":DOMAIN,**self.observation,"artifact_sha256":self.policy["sha256"],"observer_key_id":"observer"}
+        payload={"domain":DOMAIN,**self.observation,"artifact_sha256":self.policy["sha256"],"observer_key_id":"observer","observed_at":"2026-10-27T00:00:00Z"}
         self.signed={"payload":payload,"signature":base64.b64encode(signer.sign(canonical(payload))).decode()}
         self.source={"revision":"commit-a","source_digest":"sha256:"+"a"*64}
         self.builder={"builder_key_id":"builder","builder_spec_digest":"sha256:"+"b"*64}
@@ -53,7 +53,8 @@ class ArtifactChainTests(unittest.TestCase):
             signed_build=self.build_signed,trusted_builders=self.builder_keys,
             approved_source=self.source,approved_builder=self.builder,
             signed_execution=self.signed_execution,trusted_executors=self.executor_keys,
-            corroborated_executions=self.executions,approved_executor=self.executor_policy)
+            corroborated_executions=self.executions,approved_executor=self.executor_policy,
+            as_of="2026-10-27T01:00:00Z",max_observation_age_seconds=7200)
     def test_matching_artifacts_only_candidate(self):
         r=self.check()
         self.assertEqual(r["status"],"ARTIFACT_CHAIN_CANDIDATE")
