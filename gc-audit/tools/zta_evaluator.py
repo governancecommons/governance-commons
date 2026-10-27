@@ -212,12 +212,20 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             if cid in package_coverage:
                 raise AssessmentInputError("duplicate proof package for control")
             package_coverage[cid] = checked
+    # Conservative applicability: target-declared absence never proves N/A.
+    # A control with negative evidence must stay FAIL even if favorable package
+    # coverage is supplied for the very same revision/control.
+    for cid in failures:
+        if cid in package_coverage and package_coverage[cid]["status"] == "PROOF_PACKAGE_COMPLETE":
+            # Retain both sources in the report: a favorable package cannot
+            # suppress an observed counterexample.
+            evidence_by_control[cid].extend(package_coverage[cid].get("proof_ids", []))
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
-        evidence_ids = sorted(evidence_by_control[cid])
+        evidence_ids = sorted(set(evidence_by_control[cid]))
         if cid in failures:
-            entries.append({'control_id':cid, 'status':'FAIL', 'reason':'signed negative test observation', 'evidence_ids':sorted(failures[cid])})
+            entries.append({'control_id':cid, 'status':'FAIL', 'reason':'verified negative observation takes precedence over favorable proof', 'evidence_ids':evidence_ids})
             continue
         if cid in mandatory:
             reason = "mandatory control: " + (
