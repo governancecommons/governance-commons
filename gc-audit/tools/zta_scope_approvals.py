@@ -18,7 +18,7 @@ def canonical(value):
 
 def verify_scope_approval(envelope, *, target_id, revision, control_id,
                           capability, required_scopes, verified_screen,
-                          authorized_approvers):
+                          authorized_approvers, verified_observation_ids):
     if not isinstance(envelope,dict) or set(envelope)!={"payload","signature"}:
         raise ValueError("invalid scope approval envelope")
     p=envelope["payload"]
@@ -39,6 +39,9 @@ def verify_scope_approval(envelope, *, target_id, revision, control_id,
             len(p["observation_ids"])!=len(set(p["observation_ids"])) or
             any(not isinstance(x,str) or not x for x in p["observation_ids"])):
         raise ValueError("invalid approved observation identifiers")
+    if (not isinstance(verified_observation_ids,(list,tuple,set)) or
+            set(p["observation_ids"]) != set(verified_observation_ids)):
+        raise ValueError("approved observations do not match independent verification")
     if verified_screen.get("status")!="ABSENCE_CANDIDATE":
         raise ValueError("independently verified absence candidate required")
     if not set(required_scopes)<=set(verified_screen.get("verified_scopes",[])):
