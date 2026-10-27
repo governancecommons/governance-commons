@@ -213,6 +213,30 @@ class EvaluatorTests(unittest.TestCase):
         with self.assertRaises(zta.AssessmentInputError):
             zta.evaluate(c,p,t,[e],evidence_sources={"fixtures/sample":payload},
                          authenticated_packages=[signed],proof_policy=policy)
+    def test_assessment_digest_changes_with_evidence_input(self):
+        c,p,t=records()
+        e=copy.deepcopy(FIXTURE["evidence"])
+        first=zta.evaluate(c,p,t,[e])
+        e["limitations"]=["restricted observation scope"]
+        second=zta.evaluate(c,p,t,[e])
+        self.assertNotEqual(first["normalized_digest"],second["normalized_digest"])
+        self.assertNotEqual(first["extensions"]["gc.zta"]["input_digest"],
+                            second["extensions"]["gc.zta"]["input_digest"])
+    def test_evidence_order_does_not_change_logical_digest(self):
+        c,p,t=records()
+        first=copy.deepcopy(FIXTURE["evidence"])
+        second=copy.deepcopy(first)
+        second["evidence_id"]="ev2"
+        second["source_refs"]=["fixtures/second"]
+        a=zta.evaluate(c,p,t,[first,second])
+        b=zta.evaluate(c,p,t,[second,first])
+        self.assertEqual(a,b)
+    def test_target_revision_changes_assessment_digest(self):
+        c,p,t=records()
+        a=zta.evaluate(c,p,t)
+        t["revision"]="next-revision"
+        b=zta.evaluate(c,p,t)
+        self.assertNotEqual(a["normalized_digest"],b["normalized_digest"])
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
