@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
+from zta_observations import verify_negative_observation
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -95,7 +96,8 @@ def resolve_profile(profile, known_profiles):
             "profiles": ordered}
 
 def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
-             evidence_sources=None, inherited_profiles=()):
+             evidence_sources=None, inherited_profiles=(),
+             negative_observations=(), trusted_observation_keys=None):
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
@@ -150,10 +152,35 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
     for e in evidence_records:
         for cid in e["control_ids"]:
             evidence_by_control[cid].append(e["evidence_id"])
+    failures = {}
+    by_id = {e['evidence_id']: e for e in evidence_records}
+    if negative_observations and (evidence_sources is None or not trusted_observation_keys):
+        raise AssessmentInputError('signed observations need source bytes and external trust roots')
+    for envelope in negative_observations:
+        try:
+            observation = verify_negative_observation(envelope, trusted_observation_keys or {}, canonical)
+        except ValueError as exc:
+            raise AssessmentInputError(str(exc)) from exc
+        cid, eid = observation['control_id'], observation['evidence_id']
+        if observation['target_id'] != target['target_id'] or observation['revision'] != target['revision']:
+            raise AssessmentInputError('signed observation target/revision mismatch')
+        if cid not in known or eid not in by_id:
+            raise AssessmentInputError('signed observation missing evidence/control')
+        record = by_id[eid]
+        if cid not in record['control_ids'] or record['method'] not in ('AUTOMATED_TEST','CI_ATTESTATION'):
+            raise AssessmentInputError('signed observation requires test evidence')
+        if record['producer']['identity_status'] != 'VERIFIED' or record['producer']['identity'] != observation['producer_key_id']:
+            raise AssessmentInputError('producer identity/key mismatch')
+        if len(record['source_refs']) != 1 or evidence_sources[record['source_refs'][0]] != canonical(observation):
+            raise AssessmentInputError('signed observation bytes mismatch')
+        failures.setdefault(cid, set()).add(eid)
     mandatory = set(resolved["mandatory_control_ids"])
     entries = []
     for cid in sorted(known):
         evidence_ids = sorted(evidence_by_control[cid])
+        if cid in failures:
+            entries.append({'control_id':cid, 'status':'FAIL', 'reason':'signed negative test observation', 'evidence_ids':sorted(failures[cid])})
+            continue
         if cid in mandatory:
             reason = "mandatory control: no verified behavioral/control proof"
         elif evidence_ids:
@@ -162,11 +189,15 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
             reason = "applicability and absence of capability have not been independently established"
         entries.append({"control_id":cid, "status":"UNVERIFIED",
                         "reason":reason, "evidence_ids":evidence_ids})
+    findings = [{'id':'failure-'+cid, 'control_id':cid,
+                 'severity':next(c['severity'] for c in controls if c['control_id']==cid),
+                 'description':'Trusted producer signed a negative test observation',
+                 'evidence_ids':sorted(eids)} for cid,eids in sorted(failures.items())]
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
             "id":f"assessment-{target['id']}","target_id":target["target_id"],
             "revision":target["revision"],"profile_id":target["profile_id"],
             "catalog_digest":digest(catalog),"policy_version":profile["policy_version"],
-            "control_results":entries,"findings":[],"assessment_state":"VALID",
+            "control_results":entries,"findings":findings,"assessment_state":"VALID",
             "release_eligibility":"BLOCKED"}
     core["normalized_digest"] = digest(core)
     validate("result", core)
