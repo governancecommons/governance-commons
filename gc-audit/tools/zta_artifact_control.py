@@ -21,7 +21,7 @@ DOMAIN = "gc-audit.zta.artifact-control-policy.v1"
 POLICY_FIELDS = {"domain", "target_id", "revision", "build_id", "sha256",
                  "source_digest", "builder_spec_digest", "builder_key_id",
                  "executor_key_id", "observer_key_ids", "scopes", "approver_key_id",
-                 "issued_at", "expires_at"}
+                 "issued_at", "expires_at", "max_observation_age_seconds"}
 REQUIRED_PROOFS = frozenset({"source", "builder", "build-execution", "build-bytes",
                              "distribution", "installation"})
 
@@ -52,6 +52,9 @@ def verify_artifact_control(*, target_id, revision, policy_envelope, proof,
         raise ValueError("explicit timezone-bound policy freshness required") from exc
     if any(t.tzinfo is None for t in (issued, expires, assessed)) or not issued <= assessed < expires:
         raise ValueError("artifact control policy not current at as-of time")
+    age = policy["max_observation_age_seconds"]
+    if type(age) is not int or not 0 < age <= 2592000:
+        raise ValueError("invalid signed observation freshness policy")
     key_id = policy["approver_key_id"]
     key = trusted_approvers.get(key_id) if isinstance(trusted_approvers, dict) else None
     if not isinstance(key, bytes) or len(key) != 32:
@@ -112,7 +115,8 @@ def verify_artifact_control(*, target_id, revision, policy_envelope, proof,
             trusted_builders=trusted_builders, approved_source=source,
             approved_builder=builder, signed_execution=proof["signed_execution"],
             trusted_executors=trusted_executors,
-            corroborated_executions=corroborated_executions, approved_executor=executor)
+            corroborated_executions=corroborated_executions, approved_executor=executor,
+            as_of=as_of, max_observation_age_seconds=age)
         provenance = verify_signed_build_provenance(
             envelope=proof["signed_build"], trusted_builders=trusted_builders,
             approved_source=source, approved_builder=builder, release=release)
@@ -122,7 +126,8 @@ def verify_artifact_control(*, target_id, revision, policy_envelope, proof,
             approved_source=source, approved_builder=executor, release=release)
         installation = verify_signed_installation(
             envelope=observed["signed_installation"], trusted_observers=trusted_observers,
-            release=release, installed_bytes=observed["installed_bytes"])
+            release=release, installed_bytes=observed["installed_bytes"],
+            as_of=as_of, max_age_seconds=age)
         if installation["observer_key_id"] != observers[scope]:
             raise ValueError("unapproved scope observer")
         screen_artifact_acceptance(
