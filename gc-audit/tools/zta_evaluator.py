@@ -59,7 +59,11 @@ def verify_evidence_bytes(evidence, source_bytes):
 
 def resolve_profile(profile, known_profiles):
     """Validate the entire inheritance DAG without silently dropping overrides."""
-    profiles = {p["profile_id"]: p for p in known_profiles}
+    supplied = list(known_profiles)
+    require_unique(supplied, "profile_id", "inherited profile IDs")
+    if any(p["profile_id"] == profile["profile_id"] for p in supplied):
+        raise AssessmentInputError("root profile duplicated in inherited profiles")
+    profiles = {p["profile_id"]: p for p in supplied}
     profiles[profile["profile_id"]] = profile
     for p in profiles.values():
         validate("profile", p)
@@ -87,7 +91,8 @@ def resolve_profile(profile, known_profiles):
     for p in ordered:
         mandatory.update(p["mandatory_control_ids"])
     return {"lineage": [p["profile_id"] for p in ordered],
-            "mandatory_control_ids": sorted(mandatory)}
+            "mandatory_control_ids": sorted(mandatory),
+            "profiles": ordered}
 
 def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              evidence_sources=None, inherited_profiles=()):
@@ -109,11 +114,12 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
     for control_id in resolved["mandatory_control_ids"]:
         if control_id not in known:
             raise AssessmentInputError("unknown mandatory control")
-    for r in profile["conditional_rules"] + profile["exclusion_rules"]:
-        if r["control_id"] not in known:
-            raise AssessmentInputError("unknown profile control")
-    if profile["conditional_rules"] or profile["exclusion_rules"]:
-        raise AssessmentInputError("conditional rules not yet executable; cannot safely evaluate")
+    for inherited in resolved["profiles"]:
+        for r in inherited["conditional_rules"] + inherited["exclusion_rules"]:
+            if r["control_id"] not in known:
+                raise AssessmentInputError("unknown profile control")
+        if inherited["conditional_rules"] or inherited["exclusion_rules"]:
+            raise AssessmentInputError("conditional or exclusion rules need structured proof semantics; cannot safely evaluate")
     require_unique(target["resources"], "id", "resource IDs")
     require_unique(target["actors"], "id", "actor IDs")
     require_unique(target["components"], "id", "component IDs")
@@ -140,9 +146,22 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         # The assessor must never promote such declarations to verified evidence.
     if as_of is not None:
         raise AssessmentInputError("freshness policy not implemented: cannot accept as_of")
-    entries = [{"control_id":cid, "status":"UNVERIFIED",
-                "reason":"proof sufficiency, applicability and evidence integrity not independently established",
-                "evidence_ids":[]} for cid in sorted(known)]
+    evidence_by_control = {cid: [] for cid in known}
+    for e in evidence_records:
+        for cid in e["control_ids"]:
+            evidence_by_control[cid].append(e["evidence_id"])
+    mandatory = set(resolved["mandatory_control_ids"])
+    entries = []
+    for cid in sorted(known):
+        evidence_ids = sorted(evidence_by_control[cid])
+        if cid in mandatory:
+            reason = "mandatory control: no verified behavioral/control proof"
+        elif evidence_ids:
+            reason = "submitted evidence is not authoritative proof of applicability or control outcome"
+        else:
+            reason = "applicability and absence of capability have not been independently established"
+        entries.append({"control_id":cid, "status":"UNVERIFIED",
+                        "reason":reason, "evidence_ids":evidence_ids})
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",
             "id":f"assessment-{target['id']}","target_id":target["target_id"],
             "revision":target["revision"],"profile_id":target["profile_id"],
