@@ -1,0 +1,16 @@
+{
+  "schema": "gc-hci-finding.v0.1",
+  "id": "FIND-SYN-001",
+  "profile_ref": "HCI-WEB-001@0.1",
+  "criterion_ref": "HCI-DISC-001@0.1",
+  "evidence_refs": [
+    "EVID-SYN-001"
+  ],
+  "outcome": "INCONCLUSIVE",
+  "rationale": "Synthetic example cannot support a usability determination",
+  "review_state": "PENDING",
+  "limitations": [
+    "No participant test performed"
+  ],
+  "disposition": "OPEN"
+}
