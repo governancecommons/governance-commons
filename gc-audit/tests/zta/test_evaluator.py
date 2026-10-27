@@ -237,6 +237,56 @@ class EvaluatorTests(unittest.TestCase):
         t["revision"]="next-revision"
         b=zta.evaluate(c,p,t)
         self.assertNotEqual(a["normalized_digest"],b["normalized_digest"])
+    def test_signed_negative_precedence_and_trace(self):
+        from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+        from zta_authenticated_packages import DOMAIN, canonical_bytes
+        c,p,t=records()
+        signer=Ed25519PrivateKey.generate()
+        pub=signer.public_key().public_bytes(Encoding.Raw,PublicFormat.Raw)
+        d="sha256:"+"a"*64
+        negative={"domain":"gc-audit.zta.negative-observation.v1",
+                  "target_id":t["target_id"],"revision":t["revision"],
+                  "control_id":"ZTA-08.02","evidence_id":"ev-negative",
+                  "test_id":"tamper-test","observation":"VIOLATION","producer_key_id":"trusted"}
+        neg_bytes=zta.canonical(negative)
+        neg={"payload":negative,
+             "signature":base64.b64encode(signer.sign(neg_bytes)).decode()}
+        adverse=copy.deepcopy(FIXTURE["evidence"])
+        adverse["evidence_id"]="ev-negative"
+        adverse["control_ids"]=["ZTA-08.02"]
+        adverse["producer"]={"identity":"trusted","identity_status":"VERIFIED"}
+        adverse["source_digest"]="sha256:"+hashlib.sha256(neg_bytes).hexdigest()
+        favorable=copy.deepcopy(adverse)
+        favorable["evidence_id"]="ev-positive"
+        favorable["source_refs"]=["fixtures/positive"]
+        positive_bytes=b"independent test input"
+        favorable["source_digest"]="sha256:"+hashlib.sha256(positive_bytes).hexdigest()
+        pkg={"schema":"gc-audit.zta-proof-package.v1","version":"1.0.0",
+             "id":"p1","target_id":t["target_id"],"revision":t["revision"],
+             "control_id":"ZTA-08.02",
+             "authority":{"key_id":"trusted","role":"RELEASE_AUTHORITY",
+                          "trust_reference":"approval"},
+             "checker":{"id":"artifact","version":"1.0.0","spec_digest":d},
+             "requirements":["artifact-bytes"],
+             "proofs":[{"requirement_id":"artifact-bytes","evidence_id":"ev-positive",
+                        "checker_result":"VERIFIED","digest":d}],
+             "artifact_origin":{"repository":"org/repo","source_revision":t["revision"],
+                                "build_reference":"ci"},"limitations":[]}
+        envelope={"domain":DOMAIN,"package":pkg}
+        envelope["signature"]=base64.b64encode(signer.sign(canonical_bytes(envelope))).decode()
+        policy={"trusted_public_keys":{"trusted":pub},
+                "trusted_requirements":{"ZTA-08.02":["artifact-bytes"]},
+                "approved_checkers":{"artifact":("1.0.0",d)},
+                "independently_verified_results":{
+                    ("artifact","ev-positive","artifact-bytes"):("VERIFIED",d)}}
+        result=zta.evaluate(c,p,t,[adverse,favorable],
+            evidence_sources={"fixtures/sample":neg_bytes,"fixtures/positive":positive_bytes},
+            negative_observations=[neg],trusted_observation_keys={"trusted":pub},
+            authenticated_packages=[envelope],proof_policy=policy)
+        r=next(r for r in result["control_results"] if r["control_id"]=="ZTA-08.02")
+        self.assertEqual(r["status"],"FAIL")
+        self.assertEqual(r["evidence_ids"],["ev-negative","ev-positive"])
+        self.assertEqual(result["release_eligibility"],"BLOCKED")
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
