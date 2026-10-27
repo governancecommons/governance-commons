@@ -33,7 +33,7 @@ SAFE_SCRIPT = re.compile(r"^governance-commons/gc-audit/tools/[A-Za-z0-9_-]+[.]p
 # Conservatively reject direct shell spawning/evaluation in registered scripts.
 # This is a source-level alarm, not proof of runtime confinement.
 DIRECT_SHELL = re.compile(
-    r"(?im)^\\s*(?:Invoke-Expression\\b|iex\\b|Start-Process\\s+['\\\"]?(?:pwsh|powershell|cmd|bash|sh)\\b|&\\s+['\\\"]?(?:pwsh|powershell|cmd|bash|sh)\\b)"
+    r'(?im)^\s*(?:Invoke-Expression\b|iex\b|Start-Process\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b|&\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b)'
 )
 WRITE_SWITCH = re.compile(r"\[switch\]\s*\$(?:Fix\w*|Apply\w*|Write\w*|Repair\w*)\b", re.I)
 
