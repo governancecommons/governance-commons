@@ -22,7 +22,8 @@ class InstallationAttestationTests(unittest.TestCase):
         self.payload = {"domain": DOMAIN, "target_id": "app", "revision": "rev-A",
                         "build_id": "build-1", "install_scope": "linux-prod",
                         "artifact_sha256": self.release["sha256"],
-                        "observer_key_id": "deployment-observer"}
+                        "observer_key_id": "deployment-observer",
+                        "observed_at": "2026-10-27T00:00:00Z"}
     def envelope(self):
         return {"payload": self.payload.copy(),
                 "signature": base64.b64encode(self.signer.sign(canonical(self.payload))).decode()}
@@ -31,7 +32,8 @@ class InstallationAttestationTests(unittest.TestCase):
             envelope=self.envelope() if envelope is None else envelope,
             trusted_observers=self.trust if trust is None else trust,
             release=self.release if release is None else release,
-            installed_bytes=self.blob if blob is None else blob)
+            installed_bytes=self.blob if blob is None else blob,
+            as_of="2026-10-27T01:00:00Z", max_age_seconds=7200)
     def test_verified_is_not_pass(self):
         result = self.verify()
         self.assertEqual(result["status"], "SIGNED_INSTALLATION_OBSERVATION")
@@ -48,6 +50,12 @@ class InstallationAttestationTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.verify(trust={})
     def test_installed_substitution(self):
         with self.assertRaises(ValueError): self.verify(blob=b"modified")
+    def test_stale_timestamp(self):
+        self.payload["observed_at"]="2026-10-20T00:00:00Z"
+        with self.assertRaises(ValueError): self.verify()
+    def test_future_timestamp(self):
+        self.payload["observed_at"]="2026-10-29T00:00:00Z"
+        with self.assertRaises(ValueError): self.verify()
     def test_wrong_revision(self):
         with self.assertRaises(ValueError): self.verify(release=dict(self.release, revision="rev-B"))
     def test_wrong_build(self):
