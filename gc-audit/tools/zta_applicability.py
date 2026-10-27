@@ -8,7 +8,8 @@ from __future__ import annotations
 
 def screen_applicability(*, control_id, target_id, revision, capability,
                          trusted_capability_policy, observations,
-                         independently_verified_observations):
+                         independently_verified_observations,
+                         required_scopes=None):
     """Check an externally supplied set of observation records.
 
     Independent verification is a caller-owned mapping of observation ID to its
@@ -55,9 +56,16 @@ def screen_applicability(*, control_id, target_id, revision, capability,
             absent_scopes.add(item["scope"])
         else:
             incomplete=True
+    if required_scopes is not None:
+        if (not isinstance(required_scopes, (list, tuple)) or not required_scopes
+                or any(not isinstance(scope, str) or not scope for scope in required_scopes)
+                or len(set(required_scopes)) != len(required_scopes)):
+            raise ValueError("invalid independent required scope policy")
     if conflicts:
         return {"status":"APPLICABLE","reason":"verified capability presence",
                 "conflicting_ids":sorted(conflicts)}
+    if required_scopes is not None and not set(required_scopes) <= absent_scopes:
+        return {"status":"UNVERIFIED", "reason":"independent required inventory scope not covered"}
     if incomplete or not absent_scopes:
         return {"status":"UNVERIFIED","reason":"absence or inventory coverage insufficient"}
     return {"status":"ABSENCE_CANDIDATE","reason":
