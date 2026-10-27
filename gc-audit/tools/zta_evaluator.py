@@ -105,7 +105,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              negative_observations=(), trusted_observation_keys=None,
              authenticated_packages=(), proof_policy=None,
              applicability_observations=None, applicability_policy=None,
-             scope_approvals=():
+             scope_approvals=()):
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
