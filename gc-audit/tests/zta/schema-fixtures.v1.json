@@ -1,0 +1,3282 @@
+{
+  "valid": {
+    "controls": {
+      "schema": "gc-audit.zta-controls.v1",
+      "version": "1.0.0",
+      "id": "fixture-controls",
+      "controls": [
+        {
+          "control_id": "ZTA-01.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-01.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-02.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-02.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-03.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-03.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-04.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-04.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-05.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-05.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-06.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-06.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-07.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-07.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-08.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-08.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-09.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-09.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-10.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-10.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-11.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-11.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-12.01",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        },
+        {
+          "control_id": "ZTA-12.02",
+          "objective": "Attribution",
+          "threats": [
+            "Spoof"
+          ],
+          "applicability": {
+            "capability": "protected",
+            "predicate": "exists"
+          },
+          "required_evidence": [
+            "test"
+          ],
+          "verification": {
+            "method": "AUTOMATED",
+            "sufficiency": "denial test"
+          },
+          "fail_predicate": "spoof passes",
+          "severity": "HIGH",
+          "remediation_role": "host",
+          "standard_mappings": []
+        }
+      ]
+    },
+    "profile": {
+      "schema": "gc-audit.zta-profile.v1",
+      "version": "1.0.0",
+      "id": "fixture-profile",
+      "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "profile_id": "zta.library.v1",
+      "inherits": [],
+      "mandatory_control_ids": [
+        "ZTA-01.01"
+      ],
+      "conditional_rules": [],
+      "exclusion_rules": [],
+      "policy_version": "1.0.0"
+    },
+    "target": {
+      "schema": "gc-audit.zta-target.v1",
+      "version": "1.0.0",
+      "id": "fixture-target",
+      "target_id": "sample",
+      "revision": "abc123",
+      "profile_id": "zta.library.v1",
+      "resources": [
+        {
+          "id": "r1",
+          "description": "sample"
+        }
+      ],
+      "actors": [
+        {
+          "id": "a1",
+          "kind": "HUMAN",
+          "identity_status": "ASSERTED"
+        }
+      ],
+      "trust_boundaries": [],
+      "components": [
+        {
+          "id": "c1",
+          "owner": "sample"
+        }
+      ],
+      "capabilities": [
+        "protected"
+      ],
+      "control_responsibilities": [
+        {
+          "control_id": "ZTA-01.01",
+          "mode": "LOCAL",
+          "component_id": "c1"
+        }
+      ],
+      "evidence_manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "evidence": {
+      "schema": "gc-audit.zta-evidence.v1",
+      "version": "1.0.0",
+      "id": "fixture-evidence",
+      "evidence_id": "ev1",
+      "target_id": "sample",
+      "revision": "abc123",
+      "control_ids": [
+        "ZTA-01.01"
+      ],
+      "producer": {
+        "identity": "tester",
+        "identity_status": "ASSERTED"
+      },
+      "source_refs": [
+        "fixtures/sample"
+      ],
+      "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "method": "AUTOMATED_TEST",
+      "collected_at": "2026-10-27T00:00:00Z",
+      "environment": {
+        "description": "fixture"
+      },
+      "limitations": []
+    },
+    "result": {
+      "schema": "gc-audit.zta-result.v1",
+      "version": "1.0.0",
+      "id": "fixture-result",
+      "target_id": "sample",
+      "revision": "abc123",
+      "profile_id": "zta.library.v1",
+      "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "policy_version": "1.0.0",
+      "control_results": [
+        {
+          "control_id": "ZTA-01.01",
+          "status": "UNVERIFIED",
+          "reason": "missing verified identity",
+          "evidence_ids": [
+            "ev1"
+          ]
+        }
+      ],
+      "findings": [],
+      "normalized_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "assessment_state": "VALID",
+      "release_eligibility": "BLOCKED"
+    },
+    "risk-decision": {
+      "schema": "gc-audit.zta-risk-decision.v1",
+      "version": "1.0.0",
+      "id": "fixture-risk-decision",
+      "decision_id": "rd1",
+      "assessment_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "authority": {
+        "identity": "owner",
+        "authorization_reference": "approval1"
+      },
+      "scope": "fixture",
+      "findings": [
+        "f1"
+      ],
+      "rationale": "test",
+      "residual_risk": "test",
+      "review_trigger": "change",
+      "expires_at": "2026-10-27T00:00:00Z",
+      "decision": "REJECT"
+    }
+  },
+  "invalid": {
+    "controls-missing-schema": {
+      "schema": "controls",
+      "record": {
+        "version": "1.0.0",
+        "id": "fixture-controls",
+        "controls": [
+          {
+            "control_id": "ZTA-01.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-01.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          }
+        ]
+      }
+    },
+    "controls-bad-major": {
+      "schema": "controls",
+      "record": {
+        "schema": "gc-audit.zta-controls.v1",
+        "version": "2.0.0",
+        "id": "fixture-controls",
+        "controls": [
+          {
+            "control_id": "ZTA-01.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-01.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          }
+        ]
+      }
+    },
+    "controls-extra-field": {
+      "schema": "controls",
+      "record": {
+        "schema": "gc-audit.zta-controls.v1",
+        "version": "1.0.0",
+        "id": "fixture-controls",
+        "controls": [
+          {
+            "control_id": "ZTA-01.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-01.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          }
+        ],
+        "unknown_top_level": true
+      }
+    },
+    "profile-missing-schema": {
+      "schema": "profile",
+      "record": {
+        "version": "1.0.0",
+        "id": "fixture-profile",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "profile_id": "zta.library.v1",
+        "inherits": [],
+        "mandatory_control_ids": [
+          "ZTA-01.01"
+        ],
+        "conditional_rules": [],
+        "exclusion_rules": [],
+        "policy_version": "1.0.0"
+      }
+    },
+    "profile-bad-major": {
+      "schema": "profile",
+      "record": {
+        "schema": "gc-audit.zta-profile.v1",
+        "version": "2.0.0",
+        "id": "fixture-profile",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "profile_id": "zta.library.v1",
+        "inherits": [],
+        "mandatory_control_ids": [
+          "ZTA-01.01"
+        ],
+        "conditional_rules": [],
+        "exclusion_rules": [],
+        "policy_version": "1.0.0"
+      }
+    },
+    "profile-extra-field": {
+      "schema": "profile",
+      "record": {
+        "schema": "gc-audit.zta-profile.v1",
+        "version": "1.0.0",
+        "id": "fixture-profile",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "profile_id": "zta.library.v1",
+        "inherits": [],
+        "mandatory_control_ids": [
+          "ZTA-01.01"
+        ],
+        "conditional_rules": [],
+        "exclusion_rules": [],
+        "policy_version": "1.0.0",
+        "unknown_top_level": true
+      }
+    },
+    "target-missing-schema": {
+      "schema": "target",
+      "record": {
+        "version": "1.0.0",
+        "id": "fixture-target",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "resources": [
+          {
+            "id": "r1",
+            "description": "sample"
+          }
+        ],
+        "actors": [
+          {
+            "id": "a1",
+            "kind": "HUMAN",
+            "identity_status": "ASSERTED"
+          }
+        ],
+        "trust_boundaries": [],
+        "components": [
+          {
+            "id": "c1",
+            "owner": "sample"
+          }
+        ],
+        "capabilities": [
+          "protected"
+        ],
+        "control_responsibilities": [
+          {
+            "control_id": "ZTA-01.01",
+            "mode": "LOCAL",
+            "component_id": "c1"
+          }
+        ],
+        "evidence_manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "target-bad-major": {
+      "schema": "target",
+      "record": {
+        "schema": "gc-audit.zta-target.v1",
+        "version": "2.0.0",
+        "id": "fixture-target",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "resources": [
+          {
+            "id": "r1",
+            "description": "sample"
+          }
+        ],
+        "actors": [
+          {
+            "id": "a1",
+            "kind": "HUMAN",
+            "identity_status": "ASSERTED"
+          }
+        ],
+        "trust_boundaries": [],
+        "components": [
+          {
+            "id": "c1",
+            "owner": "sample"
+          }
+        ],
+        "capabilities": [
+          "protected"
+        ],
+        "control_responsibilities": [
+          {
+            "control_id": "ZTA-01.01",
+            "mode": "LOCAL",
+            "component_id": "c1"
+          }
+        ],
+        "evidence_manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "target-extra-field": {
+      "schema": "target",
+      "record": {
+        "schema": "gc-audit.zta-target.v1",
+        "version": "1.0.0",
+        "id": "fixture-target",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "resources": [
+          {
+            "id": "r1",
+            "description": "sample"
+          }
+        ],
+        "actors": [
+          {
+            "id": "a1",
+            "kind": "HUMAN",
+            "identity_status": "ASSERTED"
+          }
+        ],
+        "trust_boundaries": [],
+        "components": [
+          {
+            "id": "c1",
+            "owner": "sample"
+          }
+        ],
+        "capabilities": [
+          "protected"
+        ],
+        "control_responsibilities": [
+          {
+            "control_id": "ZTA-01.01",
+            "mode": "LOCAL",
+            "component_id": "c1"
+          }
+        ],
+        "evidence_manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "unknown_top_level": true
+      }
+    },
+    "evidence-missing-schema": {
+      "schema": "evidence",
+      "record": {
+        "version": "1.0.0",
+        "id": "fixture-evidence",
+        "evidence_id": "ev1",
+        "target_id": "sample",
+        "revision": "abc123",
+        "control_ids": [
+          "ZTA-01.01"
+        ],
+        "producer": {
+          "identity": "tester",
+          "identity_status": "ASSERTED"
+        },
+        "source_refs": [
+          "fixtures/sample"
+        ],
+        "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "method": "AUTOMATED_TEST",
+        "collected_at": "2026-10-27T00:00:00Z",
+        "environment": {
+          "description": "fixture"
+        },
+        "limitations": []
+      }
+    },
+    "evidence-bad-major": {
+      "schema": "evidence",
+      "record": {
+        "schema": "gc-audit.zta-evidence.v1",
+        "version": "2.0.0",
+        "id": "fixture-evidence",
+        "evidence_id": "ev1",
+        "target_id": "sample",
+        "revision": "abc123",
+        "control_ids": [
+          "ZTA-01.01"
+        ],
+        "producer": {
+          "identity": "tester",
+          "identity_status": "ASSERTED"
+        },
+        "source_refs": [
+          "fixtures/sample"
+        ],
+        "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "method": "AUTOMATED_TEST",
+        "collected_at": "2026-10-27T00:00:00Z",
+        "environment": {
+          "description": "fixture"
+        },
+        "limitations": []
+      }
+    },
+    "evidence-extra-field": {
+      "schema": "evidence",
+      "record": {
+        "schema": "gc-audit.zta-evidence.v1",
+        "version": "1.0.0",
+        "id": "fixture-evidence",
+        "evidence_id": "ev1",
+        "target_id": "sample",
+        "revision": "abc123",
+        "control_ids": [
+          "ZTA-01.01"
+        ],
+        "producer": {
+          "identity": "tester",
+          "identity_status": "ASSERTED"
+        },
+        "source_refs": [
+          "fixtures/sample"
+        ],
+        "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "method": "AUTOMATED_TEST",
+        "collected_at": "2026-10-27T00:00:00Z",
+        "environment": {
+          "description": "fixture"
+        },
+        "limitations": [],
+        "unknown_top_level": true
+      }
+    },
+    "result-missing-schema": {
+      "schema": "result",
+      "record": {
+        "version": "1.0.0",
+        "id": "fixture-result",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy_version": "1.0.0",
+        "control_results": [
+          {
+            "control_id": "ZTA-01.01",
+            "status": "UNVERIFIED",
+            "reason": "missing verified identity",
+            "evidence_ids": [
+              "ev1"
+            ]
+          }
+        ],
+        "findings": [],
+        "normalized_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "assessment_state": "VALID",
+        "release_eligibility": "BLOCKED"
+      }
+    },
+    "result-bad-major": {
+      "schema": "result",
+      "record": {
+        "schema": "gc-audit.zta-result.v1",
+        "version": "2.0.0",
+        "id": "fixture-result",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy_version": "1.0.0",
+        "control_results": [
+          {
+            "control_id": "ZTA-01.01",
+            "status": "UNVERIFIED",
+            "reason": "missing verified identity",
+            "evidence_ids": [
+              "ev1"
+            ]
+          }
+        ],
+        "findings": [],
+        "normalized_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "assessment_state": "VALID",
+        "release_eligibility": "BLOCKED"
+      }
+    },
+    "result-extra-field": {
+      "schema": "result",
+      "record": {
+        "schema": "gc-audit.zta-result.v1",
+        "version": "1.0.0",
+        "id": "fixture-result",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy_version": "1.0.0",
+        "control_results": [
+          {
+            "control_id": "ZTA-01.01",
+            "status": "UNVERIFIED",
+            "reason": "missing verified identity",
+            "evidence_ids": [
+              "ev1"
+            ]
+          }
+        ],
+        "findings": [],
+        "normalized_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "assessment_state": "VALID",
+        "release_eligibility": "BLOCKED",
+        "unknown_top_level": true
+      }
+    },
+    "risk-decision-missing-schema": {
+      "schema": "risk-decision",
+      "record": {
+        "version": "1.0.0",
+        "id": "fixture-risk-decision",
+        "decision_id": "rd1",
+        "assessment_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authority": {
+          "identity": "owner",
+          "authorization_reference": "approval1"
+        },
+        "scope": "fixture",
+        "findings": [
+          "f1"
+        ],
+        "rationale": "test",
+        "residual_risk": "test",
+        "review_trigger": "change",
+        "expires_at": "2026-10-27T00:00:00Z",
+        "decision": "REJECT"
+      }
+    },
+    "risk-decision-bad-major": {
+      "schema": "risk-decision",
+      "record": {
+        "schema": "gc-audit.zta-risk-decision.v1",
+        "version": "2.0.0",
+        "id": "fixture-risk-decision",
+        "decision_id": "rd1",
+        "assessment_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authority": {
+          "identity": "owner",
+          "authorization_reference": "approval1"
+        },
+        "scope": "fixture",
+        "findings": [
+          "f1"
+        ],
+        "rationale": "test",
+        "residual_risk": "test",
+        "review_trigger": "change",
+        "expires_at": "2026-10-27T00:00:00Z",
+        "decision": "REJECT"
+      }
+    },
+    "risk-decision-extra-field": {
+      "schema": "risk-decision",
+      "record": {
+        "schema": "gc-audit.zta-risk-decision.v1",
+        "version": "1.0.0",
+        "id": "fixture-risk-decision",
+        "decision_id": "rd1",
+        "assessment_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authority": {
+          "identity": "owner",
+          "authorization_reference": "approval1"
+        },
+        "scope": "fixture",
+        "findings": [
+          "f1"
+        ],
+        "rationale": "test",
+        "residual_risk": "test",
+        "review_trigger": "change",
+        "expires_at": "2026-10-27T00:00:00Z",
+        "decision": "REJECT",
+        "unknown_top_level": true
+      }
+    },
+    "controls-invalid-control-id": {
+      "schema": "controls",
+      "record": {
+        "schema": "gc-audit.zta-controls.v1",
+        "version": "1.0.0",
+        "id": "fixture-controls",
+        "controls": [
+          {
+            "control_id": "BAD",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-01.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-02.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-03.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-04.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-05.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-06.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-07.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-08.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-09.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-10.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-11.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.01",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          },
+          {
+            "control_id": "ZTA-12.02",
+            "objective": "Attribution",
+            "threats": [
+              "Spoof"
+            ],
+            "applicability": {
+              "capability": "protected",
+              "predicate": "exists"
+            },
+            "required_evidence": [
+              "test"
+            ],
+            "verification": {
+              "method": "AUTOMATED",
+              "sufficiency": "denial test"
+            },
+            "fail_predicate": "spoof passes",
+            "severity": "HIGH",
+            "remediation_role": "host",
+            "standard_mappings": []
+          }
+        ]
+      }
+    },
+    "result-invalid-status": {
+      "schema": "result",
+      "record": {
+        "schema": "gc-audit.zta-result.v1",
+        "version": "1.0.0",
+        "id": "fixture-result",
+        "target_id": "sample",
+        "revision": "abc123",
+        "profile_id": "zta.library.v1",
+        "catalog_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy_version": "1.0.0",
+        "control_results": [
+          {
+            "control_id": "ZTA-01.01",
+            "status": "MAYBE",
+            "reason": "missing verified identity",
+            "evidence_ids": [
+              "ev1"
+            ]
+          }
+        ],
+        "findings": [],
+        "normalized_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "assessment_state": "VALID",
+        "release_eligibility": "BLOCKED"
+      }
+    },
+    "evidence-invalid-digest": {
+      "schema": "evidence",
+      "record": {
+        "schema": "gc-audit.zta-evidence.v1",
+        "version": "1.0.0",
+        "id": "fixture-evidence",
+        "evidence_id": "ev1",
+        "target_id": "sample",
+        "revision": "abc123",
+        "control_ids": [
+          "ZTA-01.01"
+        ],
+        "producer": {
+          "identity": "tester",
+          "identity_status": "ASSERTED"
+        },
+        "source_refs": [
+          "fixtures/sample"
+        ],
+        "source_digest": "sha256:bad",
+        "method": "AUTOMATED_TEST",
+        "collected_at": "2026-10-27T00:00:00Z",
+        "environment": {
+          "description": "fixture"
+        },
+        "limitations": []
+      }
+    }
+  },
+  "notes": "Negative fixture keys are expected to fail structural JSON Schema validation; cross-record semantic negatives belong to future evaluator acceptance."
+}
