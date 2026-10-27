@@ -98,7 +98,9 @@ class ArtifactIntegrationTests(unittest.TestCase):
                 "trusted_approvers": {"owner": self.approver.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)},
                 "trusted_builders": c.builder_keys, "trusted_executors": c.executor_keys,
                 "trusted_observers": c.trust, "corroborated_executions": c.executions,
-                "required_scopes": list(scopes)}
+                "required_scopes": list(scopes),
+                "catalog_authority": {"approved_catalog_digest": zta.digest(self.catalog),
+                    "expected_objectives": {c["control_id"]: c["objective"] for c in self.catalog["controls"]}}}
 
     def assess(self, assessment=None, **kwargs):
         return zta.evaluate(self.catalog, self.profile, self.target,
@@ -160,6 +162,14 @@ class ArtifactIntegrationTests(unittest.TestCase):
         for altered in cases:
             with self.subTest(altered=altered):
                 self.assertEqual(self.control(self.assess(altered))["status"], "UNVERIFIED")
+
+    def test_catalog_authority_is_required_for_pass(self):
+        bad=copy.deepcopy(self.assessment)
+        bad["catalog_authority"]["approved_catalog_digest"]="sha256:"+"0"*64
+        self.assertEqual(self.control(self.assess(bad))["status"],"UNVERIFIED")
+        bad=copy.deepcopy(self.assessment)
+        bad["catalog_authority"]["expected_objectives"]["ZTA-08.02"]="changed"
+        self.assertEqual(self.control(self.assess(bad))["status"],"UNVERIFIED")
 
     def test_expired_or_missing_as_of_cannot_pass(self):
         expired = zta.evaluate(self.catalog, self.profile, self.target,
