@@ -101,6 +101,37 @@ class EvaluatorTests(unittest.TestCase):
         other["inherits"]=["zta.library.v1"]
         with self.assertRaises(zta.AssessmentInputError):
             zta.evaluate(c,p,t,inherited_profiles=[other])
+    def test_control_evidence_trace_does_not_promise_pass(self):
+        c,p,t=records()
+        e=copy.deepcopy(FIXTURE["evidence"])
+        e["control_ids"]=["ZTA-01.01","ZTA-05.01"]
+        result=zta.evaluate(c,p,t,[e])
+        values={r["control_id"]:r for r in result["control_results"]}
+        self.assertEqual(values["ZTA-01.01"]["evidence_ids"],["ev1"])
+        self.assertEqual(values["ZTA-05.01"]["evidence_ids"],["ev1"])
+        self.assertEqual(values["ZTA-01.01"]["status"],"UNVERIFIED")
+        self.assertEqual(values["ZTA-05.01"]["status"],"UNVERIFIED")
+        self.assertEqual(result["release_eligibility"],"BLOCKED")
+        self.assertEqual(result,zta.evaluate(c,p,t,[e]))
+    def test_inherited_conditional_cannot_silently_be_ignored(self):
+        c,p,t=records()
+        parent=copy.deepcopy(p)
+        parent["conditional_rules"]=[{"control_id":"ZTA-02.01","when":"privileged dispatch"}]
+        child=copy.deepcopy(p)
+        child["profile_id"]="zta.cli-hosted.v1"
+        child["inherits"]=["zta.library.v1"]
+        t["profile_id"]="zta.cli-hosted.v1"
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,child,t,inherited_profiles=[parent])
+    def test_duplicate_parent_profile_rejected(self):
+        c,p,t=records()
+        with self.assertRaises(zta.AssessmentInputError):
+            zta.evaluate(c,p,t,inherited_profiles=[copy.deepcopy(p)])
+    def test_target_declared_absence_is_not_n_a(self):
+        c,p,t=records()
+        t["capabilities"]=[]
+        result=zta.evaluate(c,p,t)
+        self.assertTrue(all(r["status"]!="NOT_APPLICABLE" for r in result["control_results"]))
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
