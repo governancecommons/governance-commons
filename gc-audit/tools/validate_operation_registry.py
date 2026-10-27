@@ -41,7 +41,7 @@ def contained_script(path, portfolio_root):
     candidate = root.joinpath(*path.split("/"))
     try:
         physical = candidate.resolve(strict=True)
-        physical.relative_to(root)
+        physical.relative_to((root / ROOT_NAME / 'gc-audit' / 'tools').resolve(strict=True))
     except (ValueError, OSError) as exc:
         raise RegistryError("script unavailable or escapes containment root") from exc
     if not physical.is_file():
