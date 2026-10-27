@@ -316,6 +316,21 @@ class EvaluatorTests(unittest.TestCase):
         c,p,t=records()
         with self.assertRaises(zta.AssessmentInputError):
             zta.evaluate(c,p,t,applicability_observations={"ZTA-06.02":[]})
+    def test_decision_gate_rejects_conflicting_scope_review(self):
+        from unittest.mock import patch
+        c,p,t=records()
+        with patch.object(zta, "classify_control", side_effect=zta.DecisionGateError("conflict")):
+            with self.assertRaises(zta.AssessmentInputError):
+                zta.evaluate(c,p,t)
+    def test_decision_gate_invoked_for_full_catalog(self):
+        from unittest.mock import patch
+        c,p,t=records()
+        with patch.object(zta, "classify_control", wraps=zta.classify_control) as gate:
+            result=zta.evaluate(c,p,t)
+        self.assertEqual(gate.call_count,24)
+        self.assertTrue(all(x["status"]=="UNVERIFIED" for x in result["control_results"]))
+        self.assertEqual(result["release_eligibility"],"BLOCKED")
+
     def test_bad_reference_rejected(self):
         c,p,t=records()
         t["control_responsibilities"][0]["component_id"]="nonexistent"
