@@ -16,6 +16,7 @@ from zta_applicability import screen_applicability
 from zta_scope_approvals import verify_scope_approval
 from zta_decision_gate import classify_control, DecisionGateError
 from zta_artifact_control import verify_artifact_control
+from zta_catalog_authority import authorize_catalog, CatalogAuthorityError
 
 SCHEMA_DIR = Path(__file__).resolve().parents[1] / "schemas" / "zta"
 KINDS = ("controls", "profile", "target", "evidence", "result")
@@ -286,12 +287,17 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         if not isinstance(artifact_assessment, dict) or set(artifact_assessment) != {
                 "policy_envelope", "proof", "trusted_approvers", "trusted_builders",
                 "trusted_executors", "trusted_observers", "corroborated_executions",
-                "required_scopes"}:
+                "required_scopes", "catalog_authority"}:
             raise AssessmentInputError("invalid artifact assessment input contract")
         try:
+            authority = artifact_assessment["catalog_authority"]
+            if not isinstance(authority, dict) or set(authority) != {"approved_catalog_digest", "expected_objectives"}:
+                raise ValueError("independent catalog authority required")
+            authorize_catalog(catalog, **authority)
+            proof_inputs = {k: v for k, v in artifact_assessment.items() if k != "catalog_authority"}
             artifact_verification = verify_artifact_control(
                 target_id=target["target_id"], revision=target["revision"], as_of=as_of,
-                **artifact_assessment)
+                **proof_inputs)
         except (ValueError, TypeError, KeyError, AttributeError) as exc:
             artifact_rejection = str(exc)
     mandatory = set(resolved["mandatory_control_ids"])
