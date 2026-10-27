@@ -30,6 +30,12 @@ def unique_mapping(loader, node):
 UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, unique_mapping)
 ROOT_NAME = "governance-commons"
 SAFE_SCRIPT = re.compile(r"^governance-commons/gc-audit/tools/[A-Za-z0-9_-]+[.]ps1$")
+# Conservatively reject direct shell spawning/evaluation in registered scripts.
+# This is a source-level alarm, not proof of runtime confinement.
+DIRECT_SHELL = re.compile(
+    r'(?im)^\s*(?:Invoke-Expression\b|iex\b|Start-Process\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b|&\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b)'
+)
+INDIRECT_PROCESS = re.compile(r"(?im)^\s*(?:return\s+)?&\s+\$[A-Za-z_][A-Za-z0-9_]*\s+@?[A-Za-z_\$]")
 WRITE_SWITCH = re.compile(r"\[switch\]\s*\$(?:Fix\w*|Apply\w*|Write\w*|Repair\w*)\b", re.I)
 
 def contained_script(path, portfolio_root):
@@ -61,6 +67,7 @@ def validate_registry(registry_text, portfolio_root):
     if not isinstance(registry.get("tools"), list):
         raise RegistryError("missing operation allowlist")
     ids, scripts, internal = set(), set(), set()
+    delegation_findings = []
     for item in sec.get("internalScripts", []):
         if not isinstance(item, dict) or item.get("internal") is not True:
             raise RegistryError("invalid internal script exemption")
@@ -95,13 +102,19 @@ def validate_registry(registry_text, portfolio_root):
                 raise RegistryError("internal helper exposed as operation")
             scripts.add(physical)
             code = physical.read_text(encoding="utf-8-sig")
+            if INDIRECT_PROCESS.search(code):
+                delegation_findings.append(physical.name)
+            if DIRECT_SHELL.search(code):
+                raise RegistryError("direct shell spawning or expression evaluation requires explicit review")
             if not mutable and WRITE_SWITCH.search(code):
                 raise RegistryError("read-only operation exposes mutating switch")
             if mutable and not re.search(r"\[switch\]\s*\$Apply\b", code, re.I):
                 raise RegistryError("mutating operation has no explicit -Apply")
     if not ids or not scripts:
         raise RegistryError("empty operation allowlist")
-    return {"status":"REGISTRY_CONTRACT_VALID","operations":len(ids),"scripts":len(scripts)}
+    return {"status":"REGISTRY_CONTRACT_VALID", "delegation_review":"REQUIRED" if delegation_findings else "NOT_DETECTED",
+            "indirect_delegation_scripts":sorted(set(delegation_findings)),
+            "operations":len(ids),"scripts":len(scripts)}
 
 def main():
     p=argparse.ArgumentParser()
