@@ -117,7 +117,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
              negative_observations=(), trusted_observation_keys=None,
              authenticated_packages=(), proof_policy=None,
              applicability_observations=None, applicability_policy=None,
-             scope_approvals=(), artifact_assessment=None):
+             scope_approvals=(), artifact_assessment=None, artifact_authority=None):
     for kind, record in (("controls", catalog), ("profile", profile), ("target", target)):
         validate(kind, record)
     for evidence in evidence_records:
@@ -285,19 +285,22 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
     artifact_rejection = None
     if artifact_assessment is not None:
         if not isinstance(artifact_assessment, dict) or set(artifact_assessment) != {
-                "policy_envelope", "proof", "trusted_approvers", "trusted_builders",
-                "trusted_executors", "trusted_observers", "corroborated_executions",
-                "required_scopes", "catalog_authority"}:
+                "policy_envelope", "proof"}:
             raise AssessmentInputError("invalid artifact assessment input contract")
+        if not isinstance(artifact_authority, dict) or set(artifact_authority) != {
+                "trusted_approvers", "trusted_builders", "trusted_executors",
+                "trusted_observers", "corroborated_executions", "required_scopes",
+                "catalog_authority"}:
+            raise AssessmentInputError("independent artifact authority required")
         try:
-            authority = artifact_assessment["catalog_authority"]
+            authority = artifact_authority["catalog_authority"]
             if not isinstance(authority, dict) or set(authority) != {"approved_catalog_digest", "expected_objectives"}:
                 raise ValueError("independent catalog authority required")
             authorize_catalog(catalog, **authority)
-            proof_inputs = {k: v for k, v in artifact_assessment.items() if k != "catalog_authority"}
             artifact_verification = verify_artifact_control(
                 target_id=target["target_id"], revision=target["revision"], as_of=as_of,
-                **proof_inputs)
+                **artifact_assessment,
+                **{k: v for k, v in artifact_authority.items() if k != "catalog_authority"})
         except (ValueError, TypeError, KeyError, AttributeError) as exc:
             artifact_rejection = str(exc)
     mandatory = set(resolved["mandatory_control_ids"])
@@ -358,6 +361,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         "applicability_observations": applicability_observations,
         "scope_approvals": sorted(scope_approvals, key=lambda x: canonical(x).decode("utf-8")),
         "artifact_assessment": fingerprintable(artifact_assessment),
+        "artifact_authority": fingerprintable(artifact_authority),
         "as_of": as_of,
     })
     core = {"schema":"gc-audit.zta-result.v1","version":"1.0.0",

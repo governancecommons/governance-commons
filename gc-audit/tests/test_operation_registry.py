@@ -10,26 +10,66 @@ mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
 BASE = """schema: gc-audit.registry.v1
+authority: DEV-ACCORD.05
+updated: '2026-07-01'
+description: test
 security:
   execution_model: allowlist
   shell: forbidden
+  path_policy: scripts must resolve under the portfolio root
+  mutation_policy: test
+  owner: GC-AUDIT
+  evidenceBundles: {}
+  contracts: {}
+  playValidationProfiles: {}
   internalScripts: []
+categories:
+  repo-health: {label: Health, description: test}
+  repo-repair: {label: Repair, description: test}
 tools:
   - id: gc-audit.validate
+    verb: validate
+    category: repo-health
     status: active
     mutates: false
     steps:
       - script: governance-commons/gc-audit/tools/validate-check.ps1
   - id: gc-audit.normalize
+    verb: normalize
+    category: repo-repair
     status: active
     mutates: true
     requiresExplicitApply: true
     steps:
       - script: governance-commons/gc-audit/tools/normalize-check.ps1
   - id: gc-audit.future
+    verb: future
+    category: repo-health
     status: planned
     mutates: false
     steps: []
+  - id: gc-audit.registry
+    verb: registry
+    category: repo-health
+    status: active
+    mutates: false
+    zeroTrust:
+      failClosed: true
+      networkRegistryFetch: forbidden
+      pathContainment: portfolio-root-for-registry-paths
+      schemaInference: forbidden
+      explicitAuthorizationRequired: [normalization-apply, schema-authority-change, git-branch-or-remote-split]
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-registry.ps1
+  - id: gc-audit.zerotrust
+    verb: zerotrust
+    category: repo-health
+    status: active
+    mutates: false
+    zeroTrust: {selfApplying: true}
+    steps:
+      - script: governance-commons/gc-audit/tools/validate-zero-trust.ps1
+docs: {}
 """
 
 class RegistryTests(unittest.TestCase):
@@ -43,6 +83,8 @@ class RegistryTests(unittest.TestCase):
         (tools / "normalize-check.ps1").write_text(
             "param([switch] $Apply, [switch] $DryRun)\nif ($Apply) { 'change' }",
             encoding="utf-8")
+        (tools / "validate-registry.ps1").write_text("param()", encoding="utf-8")
+        (tools / "validate-zero-trust.ps1").write_text("param()", encoding="utf-8")
         self.text = BASE
 
     def check(self):
@@ -53,6 +95,50 @@ class RegistryTests(unittest.TestCase):
 
     def test_duplicate_yaml_key(self):
         self.text += "\nschema: gc-audit.registry.v1\n"
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_malformed_yaml(self):
+        self.text += "\n  bad: [\n"
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_missing_authority(self):
+        self.text = self.text.replace("authority: DEV-ACCORD.05", "authority: attacker")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_unknown_operation_field_or_alias(self):
+        self.text = self.text.replace("id: gc-audit.validate", "id: gc-audit.validate\n    aliases: [gc-audit.normalize]", 1)
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_unknown_step_metadata(self):
+        self.text = self.text.replace("validate-check.ps1", "validate-check.ps1\n        command: pwsh -File evil.ps1", 1)
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_unknown_category(self):
+        self.text = self.text.replace("status: active", "category: attacker\n    status: active", 1)
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_malformed_operation_id(self):
+        self.text = self.text.replace("gc-audit.validate", "gc-audit.validate/../evil", 1)
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_inconsistent_apply_metadata(self):
+        self.text = self.text.replace("mutates: false", "mutates: false\n    requiresExplicitApply: true", 1)
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_missing_self_audit_operation(self):
+        self.text = self.text.replace("id: gc-audit.zerotrust", "id: gc-audit.other")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_missing_authorization_claim(self):
+        self.text = self.text.replace("schema-authority-change, ", "")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_redirected_self_audit(self):
+        self.text = self.text.replace("validate-zero-trust.ps1", "validate-check.ps1")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_unsafe_argument_mapping(self):
+        self.text = self.text.replace("validate-check.ps1", "validate-check.ps1\n        targetArg: '-Command evil'", 1)
         with self.assertRaises(mod.RegistryError): self.check()
 
     def test_duplicate_operation(self):
@@ -77,6 +163,14 @@ class RegistryTests(unittest.TestCase):
     def test_network_url(self):
         self.text = self.text.replace(
             "governance-commons/gc-audit/tools/validate-check.ps1", "https://bad.example/x.ps1")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_unc_windows_path(self):
+        self.text = self.text.replace("governance-commons/gc-audit/tools/validate-check.ps1", r"\\server\share\evil.ps1")
+        with self.assertRaises(mod.RegistryError): self.check()
+
+    def test_file_uri(self):
+        self.text = self.text.replace("governance-commons/gc-audit/tools/validate-check.ps1", "file:///tmp/evil.ps1")
         with self.assertRaises(mod.RegistryError): self.check()
 
     def test_prefix_collision(self):

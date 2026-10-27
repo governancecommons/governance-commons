@@ -40,5 +40,14 @@ class DecisionGateTests(unittest.TestCase):
     def test_unsupported_result_rejected(self):
         with self.assertRaises(DecisionGateError):
             self.assess(proof_coverage={"status":"PASS"})
+    def test_delegated_host_claim_cannot_pass(self):
+        result = classify_control(control_id="ZTA-06.02", mandatory=True,
+            proof_coverage={"status":"PROOF_PACKAGE_COMPLETE"})
+        self.assertEqual(result["status"], "UNVERIFIED")
+    def test_verified_host_failure_overrides_positive_claim(self):
+        result = classify_control(control_id="ZTA-06.02", mandatory=True,
+            negative_evidence_ids=["host-bypass"],
+            proof_coverage={"status":"PROOF_PACKAGE_COMPLETE"})
+        self.assertEqual(result["status"], "FAIL")
 if __name__=="__main__":
     unittest.main()

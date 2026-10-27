@@ -987,3 +987,7 @@ warnings. The pointer validator covers 160 registry path fields, including
 planning keys previously omitted from its check. This is a tooling
 compatibility change; it does not amend a GC
 standard or close project, publication, or release gates.
+
+## 2026-10-27 — GC-AUDIT-ZTA-001E final remediation candidate
+
+**OWNER REVIEW CANDIDATE; final acceptance blocked.** The focused feature branch hardens the parser-backed GC-AUDIT operation-registry self-audit, adds adversarial registry and delegated-host fixtures, and separates ZTA-08.02 assessor data from caller-supplied trust authority. Local ZTA, schema, registry, OBDD, planning, PLAY, release-compatibility, and legacy ZT1–ZT8 checks are recorded in `gc-audit/specifications/GC-AUDIT-ZTA-001E-ACCEPTANCE-EVIDENCE.md`. Exact-head hosted CI, an independent review, a registered `gc-audit.zta` invocation, and actual target/host authority evidence remain open. No release, operational activation, certification, or PASS closure is claimed. `AGENTS.md` was checked and its bootstrap pointer remains current.
