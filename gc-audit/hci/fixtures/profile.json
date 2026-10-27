@@ -1,0 +1,30 @@
+{
+  "schema": "gc-hci-profile.v0.1",
+  "id": "HCI-WEB-001@0.1",
+  "target": {
+    "repository_or_url": "https://governancecommons.org",
+    "version": "pilot-fixture-only"
+  },
+  "modality": "web",
+  "user_population": {
+    "description": "First-time public visitors",
+    "expertise": "novice"
+  },
+  "tasks": [
+    {
+      "id": "TASK-NEWS-001",
+      "goal": "Find the most recent news item",
+      "starting_state": "Public homepage"
+    }
+  ],
+  "criterion_refs": [
+    "HCI-DISC-001@0.1"
+  ],
+  "environment": {
+    "description": "Browser test fixture; not an executed study"
+  },
+  "limitations": [
+    "Synthetic data; not observed user behavior"
+  ],
+  "approved_by": "fixture-only"
+}
