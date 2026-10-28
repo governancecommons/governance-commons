@@ -98,3 +98,15 @@ cannot establish the provenance of the host process or its root configuration.
 The evaluator retains authority over control decisions. The synthetic example
 and reproducibility command are documented in
 `specifications/GC-AUDIT-EVIDENCE-001.md`.
+
+## Local host adapter v1
+
+`schemas/evidence/gc-audit.local-host-config.v1.schema.json` defines the
+host-owned public roots, policy/catalog pins, exact target context and
+revocations. `gc-audit.local-host-receipt.v1.schema.json` defines the
+digest-checked result and provenance. The adapter accepts only an
+envelopes-only package from the collector. Deployment supplies the host
+directory and an independent configuration digest pin; the package cannot
+replace either. The adapter checks local filesystem permissions and a
+persistent SQLite ledger before invoking the original verifier. See
+`specifications/GC-AUDIT-EVIDENCE-002.md` for the role and deployment limits.

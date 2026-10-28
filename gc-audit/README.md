@@ -32,6 +32,22 @@ The adapter requires the same Python dependencies as the repository pilot. Its e
 python gc-audit/tools/verify_evidence_demo.py --verify gc-audit/reports/evidence-001-verification.json
 ```
 
+## Local host integration pilot
+
+`tools/local_evidence_host.py` loads a host-owned configuration, signed policy
+and persistent replay ledger outside the target, checks owner/permissions and
+path boundaries, then calls the existing evidence verifier. It requires a
+deployment-supplied configuration digest pin. The [threat model and assessment](specifications/GC-AUDIT-EVIDENCE-002.md)
+document the exact roles, filesystem checks, synthetic demonstration and
+remaining same-principal limit. Reopen the [machine report](reports/evidence-002-local-host.json) with:
+
+```text
+python gc-audit/tools/verify_local_host_demo.py --verify gc-audit/reports/evidence-002-local-host.json
+```
+
+The demo is not an operational host command. It retains `CONFIGURED_ROOT_ONLY`
+and `UNVERIFIED` rather than claiming independent authority or ZTA control PASS.
+
 **Status:** active
 **Authority:** DEV-ACCORD.05
 
