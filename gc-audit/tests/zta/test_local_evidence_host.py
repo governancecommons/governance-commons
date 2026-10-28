@@ -86,11 +86,14 @@ class LocalHostTests(unittest.TestCase):
         if os.name == "nt":
             subprocess.run(["icacls", str(path), "/inheritance:r"], check=True, capture_output=True)
             subprocess.run(["icacls", str(path), "/grant:r", f"*{host_principal()}:(OI)(CI)F"], check=True, capture_output=True)
+            subprocess.run(["icacls", str(path), "/setowner", f"*{host_principal()}"], check=True, capture_output=True)
         else:
             path.chmod(0o700)
 
     def private_file(self, path):
-        if os.name != "nt":
+        if os.name == "nt":
+            subprocess.run(["icacls", str(path), "/setowner", f"*{host_principal()}"], check=True, capture_output=True)
+        else:
             path.chmod(0o600)
 
     def write_private(self, name, value):

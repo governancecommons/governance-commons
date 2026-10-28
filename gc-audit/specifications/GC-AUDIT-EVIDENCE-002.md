@@ -35,6 +35,12 @@ config and ledger are disposable and created outside `C:\dev`. An actual
 deployment must provision its pin independently of the target and protect the
 host directory against the target's OS identity.
 
+On hosted Windows runners, newly created directories may belong to a runner
+administrative SID rather than the executing process SID. The disposable test
+provisioner explicitly assigns the process SID as owner; the verifier continues
+to reject a mismatched owner. This tests the ACL contract, not distinct-principal
+separation.
+
 ## Demonstration and inspection
 
 The [machine report](../reports/evidence-002-local-host.json) records the host
