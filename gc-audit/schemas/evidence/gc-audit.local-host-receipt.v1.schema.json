@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "gc-audit.local-host-receipt.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "status", "reason", "host_authority", "control_status", "host_principal", "host_id", "config_digest", "authority_digest", "package_digest", "catalog_digest", "verifier_result", "limitations", "receipt_digest"],
+  "properties": {
+    "schema": {"const": "gc-audit.local-host-receipt.v1"},
+    "status": {"enum": ["AUTHENTICATED", "REJECTED"]},
+    "reason": {"type": "string", "minLength": 1},
+    "host_authority": {"const": "CONFIGURED_ROOT_ONLY"},
+    "control_status": {"const": "UNVERIFIED"},
+    "host_principal": {"type": "string", "minLength": 1},
+    "host_id": {"type": ["string", "null"]},
+    "config_digest": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "authority_digest": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "package_digest": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "catalog_digest": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "verifier_result": {"type": ["object", "null"]},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "receipt_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}

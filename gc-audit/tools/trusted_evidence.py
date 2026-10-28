@@ -58,7 +58,11 @@ class ReplayLedger:
 
     def __init__(self, path: str | Path):
         self.db = sqlite3.connect(str(path), timeout=10, isolation_level=None)
-        self.db.execute("CREATE TABLE IF NOT EXISTS receipts (evidence_id TEXT PRIMARY KEY, nonce TEXT UNIQUE NOT NULL, envelope_digest TEXT NOT NULL)")
+        try:
+            self.db.execute("CREATE TABLE IF NOT EXISTS receipts (evidence_id TEXT PRIMARY KEY, nonce TEXT UNIQUE NOT NULL, envelope_digest TEXT NOT NULL)")
+        except sqlite3.Error:
+            self.db.close()
+            raise
 
     def accept(self, receipts: list[tuple[str, str, str]]) -> None:
         try:

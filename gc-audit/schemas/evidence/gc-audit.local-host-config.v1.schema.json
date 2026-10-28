@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "gc-audit.local-host-config.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "host_id", "host_principal", "target_root", "target_id", "revision", "environment", "control_ids", "catalog_digest", "policy_digest", "root_keys", "revoked_root_ids", "revoked_policy_ids", "revoked_producer_key_ids"],
+  "properties": {
+    "schema": {"const": "gc-audit.local-host-config.v1"},
+    "host_id": {"type": "string", "minLength": 1},
+    "host_principal": {"type": "string", "minLength": 1},
+    "target_root": {"type": "string", "minLength": 1},
+    "target_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "string", "minLength": 1},
+    "environment": {"type": "string", "minLength": 1},
+    "control_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "catalog_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "policy_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "root_keys": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["key_id", "public_key_b64"], "properties": {"key_id": {"type": "string", "minLength": 1}, "public_key_b64": {"type": "string", "minLength": 1}}}},
+    "revoked_root_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "revoked_policy_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "revoked_producer_key_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+  }
+}
