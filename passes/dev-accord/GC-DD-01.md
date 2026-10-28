@@ -43,3 +43,36 @@ If acceptance is unmet, report the precise gap and the smallest corrective actio
 ## Adoption boundary
 
 This directive applies where expressly adopted. It does not automatically modify other repositories, runtime configurations, CI workflows, or release criteria.
+
+## Amendment GC-DD-01-RP-002 — Resource protection and delegation control (2026-10-28)
+
+**Owner-directed corrective amendment.** Applies to agents preparing delegation instructions as well as agents executing them. It preserves the directive's existing approval, security, and adoption boundaries.
+
+### Least-cost delegation gate
+
+Before transferring any work to Codex, Work, another agent, or a metered execution environment, the delegating agent MUST:
+
+1. Identify the exact approved deliverable, acceptance criteria, and the operations requiring the destination environment.
+2. Perform feasible research, standards review, specification, acceptance planning, and prompt preparation in the already available lower-cost environment.
+3. Remove completed, exploratory, duplicated, speculative, and unrelated tasks from the delegated assignment.
+4. Delegate the smallest independently verifiable execution change. A comprehensive prompt is not evidence of necessary scope.
+
+If the work can reasonably be completed without metered delegation, the agent MUST NOT delegate it merely for convenience or completeness. The delegating agent is accountable for unnecessary work included in its instructions, even if the executor follows them exactly.
+
+### Owner-authorized resource envelope
+
+Every metered delegation MUST have an explicit owner-authorized resource envelope: allowed objective and tools, limits on time/credits/tokens/cost where supported, retry and subagent limits, and stop conditions. Unspecified limits do not constitute unlimited authority. The agent MUST disclose any limit that the platform cannot reliably measure or enforce; prompt-only instructions MUST NOT be presented as hard enforcement.
+
+"Go," "continue," "proceed," and "finish" authorize only work within the existing approved scope and envelope. Only the owner can expand either. Classification as BLOCKER or REQUIRED does not grant additional spending authority.
+
+### Execution and stop discipline
+
+Agents MUST NOT autonomously expand milestones, launch recursive investigations, add optional refactoring or hardening, or continue improving an accepted deliverable. Verification MUST be the minimum sufficient for the approved acceptance criteria and mandatory security controls, without omitting required checks.
+
+The executor MUST stop at the earliest of: accepted deliverable complete; resource envelope exhausted; next action outside authorized scope or authority; unresolved blocker within remaining limits; or no remaining justified acceptance work. On stop, preserve inspectable partial results and report completed work, remaining acceptance gaps, usage if observable, evidence, and deferred work. Reverification must not erase historical evidence.
+
+### Delegation-design incident handling
+
+If a handoff unnecessarily consumes scarce execution resources, record it as a **delegation-design failure**, not solely an executor failure. Preserve useful outputs and identify the smallest correction. A corrective proposal does not authorize another execution run or receive an automatic resource budget.
+
+This amendment does not establish a new runtime, audit engine, monitoring service, or external platform-level budget enforcement. Existing mandatory security controls, owner acceptance, repository adoption, and release approvals remain authoritative.
