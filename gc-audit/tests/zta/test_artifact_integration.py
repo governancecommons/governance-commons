@@ -115,11 +115,11 @@ class ArtifactIntegrationTests(unittest.TestCase):
     def control(self, result):
         return next(c for c in result["control_results"] if c["control_id"] == "ZTA-08.02")
 
-    def test_complete_chain_passes_only_artifact_control_and_is_deterministic(self):
+    def test_complete_chain_without_independent_host_authority_is_unverified(self):
         first = self.assess()
         self.assertEqual(first, self.assess())
-        self.assertEqual(self.control(first)["status"], "PASS")
-        self.assertEqual(len(self.control(first)["evidence_ids"]), 2)
+        self.assertEqual(self.control(first)["status"], "UNVERIFIED")
+        self.assertIn("independent host authority", self.control(first)["reason"])
         self.assertEqual(first["release_eligibility"], "BLOCKED")
         self.assertTrue(all(c["status"] == "UNVERIFIED" for c in first["control_results"]
                             if c["control_id"] != "ZTA-08.02"))
@@ -127,7 +127,7 @@ class ArtifactIntegrationTests(unittest.TestCase):
 
     def test_declared_platform_scopes_all_required(self):
         assessment = self.make_assessment(("linux", "windows", "macos"))
-        self.assertEqual(self.control(self.assess(assessment))["status"], "PASS")
+        self.assertEqual(self.control(self.assess(assessment))["status"], "UNVERIFIED")
         del assessment["proof"]["scopes"]["windows"]
         self.assertEqual(self.control(self.assess(assessment))["status"], "UNVERIFIED")
 
@@ -206,7 +206,25 @@ class ArtifactIntegrationTests(unittest.TestCase):
              patch("pathlib.Path.write_text", side_effect=AssertionError("write")), \
              patch("subprocess.Popen", side_effect=AssertionError("process")), \
              patch("socket.socket", side_effect=AssertionError("network")):
-            self.assertEqual(self.control(self.assess())["status"], "PASS")
+            self.assertEqual(self.control(self.assess())["status"], "UNVERIFIED")
+
+    def test_self_selected_catalog_and_trust_root_cannot_pass(self):
+        alternate = copy.deepcopy(self.assessment)
+        alternate_catalog = copy.deepcopy(self.catalog)
+        for control in alternate_catalog["controls"]:
+            if control["control_id"] == "ZTA-08.02":
+                control["objective"] = "caller-chosen objective"
+        alternate["catalog_authority"]["approved_catalog_digest"] = zta.digest(alternate_catalog)
+        alternate["catalog_authority"]["expected_objectives"] = {
+            c["control_id"]: c["objective"] for c in alternate_catalog["controls"]}
+        profile = copy.deepcopy(self.profile)
+        profile["catalog_digest"] = zta.digest(alternate_catalog)
+        untrusted = {k: alternate[k] for k in ("policy_envelope", "proof")}
+        authority = {k: alternate[k] for k in alternate if k not in untrusted}
+        result = zta.evaluate(alternate_catalog, profile, self.target,
+            as_of="2026-10-27T00:00:00Z", artifact_assessment=untrusted,
+            artifact_authority=authority)
+        self.assertEqual(self.control(result)["status"], "UNVERIFIED")
 
     def test_separate_incomplete_or_contradictory_package_cannot_pass(self):
         from zta_decision_gate import classify_control

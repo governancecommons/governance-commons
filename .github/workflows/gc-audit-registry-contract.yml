@@ -3,13 +3,15 @@ on:
   push:
     paths:
       - 'gc-audit/GC-AUDIT-REGISTRY.yaml'
-      - 'gc-audit/tools/validate_operation_registry.py'
+      - 'gc-audit/tools/**'
+      - 'gc-audit/specifications/**'
       - 'gc-audit/tests/test_operation_registry.py'
       - '.github/workflows/gc-audit-registry-contract.yml'
   pull_request:
     paths:
       - 'gc-audit/GC-AUDIT-REGISTRY.yaml'
-      - 'gc-audit/tools/validate_operation_registry.py'
+      - 'gc-audit/tools/**'
+      - 'gc-audit/specifications/**'
       - 'gc-audit/tests/test_operation_registry.py'
       - '.github/workflows/gc-audit-registry-contract.yml'
 permissions:
@@ -31,4 +33,4 @@ jobs:
       - name: Run registry adversarial tests
         run: python -m unittest discover -s gc-audit/tests -p 'test_operation_registry.py' -v
       - name: Self-audit operation registry
-        run: python gc-audit/tools/validate_operation_registry.py --registry gc-audit/GC-AUDIT-REGISTRY.yaml --portfolio-root ..
+        run: python gc-audit/tools/validate_operation_registry.py --registry gc-audit/GC-AUDIT-REGISTRY.yaml --portfolio-root .. --require-self-audit

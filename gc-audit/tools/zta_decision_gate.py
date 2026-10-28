@@ -1,7 +1,7 @@
 """Control decision-gate v1: deterministic, fail-closed candidate classification.
 
-Only the bounded ZTA-08.02 whole-chain verifier may supply a PASS candidate.
-A signed package or scope review alone never establishes full control behavior.
+The bounded whole-chain verifier checks consistency, but caller-supplied trust
+anchors cannot establish independent authority or operational assurance.
 """
 from __future__ import annotations
 
@@ -50,8 +50,8 @@ def classify_control(*, control_id, mandatory, negative_evidence_ids=(),
         if proof_coverage is not None:
             return {"control_id":control_id, "status":"UNVERIFIED",
                     "reason":"separate proof package requires reconciliation with whole-chain proof"}
-        return {"control_id":control_id, "status":"PASS",
-                "reason":"approved policy and authenticated whole-chain artifact proof verified"}
+        return {"control_id":control_id, "status":"UNVERIFIED",
+                "reason":"whole-chain cryptographic consistency verified; independent host authority and operational assurance unverified"}
     if proof_status == "PROOF_PACKAGE_COMPLETE":
         return {"control_id":control_id, "status":"UNVERIFIED",
                 "reason":"positive proof candidate requires control-specific execution assurance"}

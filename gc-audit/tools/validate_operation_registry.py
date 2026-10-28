@@ -28,7 +28,6 @@ def unique_mapping(loader, node):
     return result
 
 UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, unique_mapping)
-ROOT_NAME = "governance-commons"
 SAFE_SCRIPT = re.compile(r"^governance-commons/gc-audit/tools/[A-Za-z0-9_-]+[.]ps1$")
 SAFE_ID = re.compile(r"^gc-audit\.[a-z][a-z0-9-]*$")
 ROOT_FIELDS = {"schema", "authority", "updated", "description", "security", "categories", "tools", "docs"}
@@ -51,25 +50,33 @@ DIRECT_SHELL = re.compile(
     r'(?im)^\s*(?:Invoke-Expression\b|iex\b|Start-Process\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b|&\s+[\x27"]?(?:pwsh|powershell|cmd|bash|sh)\b)'
 )
 INDIRECT_PROCESS = re.compile(r"(?im)^\s*(?:return\s+)?&\s+\$[A-Za-z_][A-Za-z0-9_]*\s+@?[A-Za-z_\$]")
+COMPUTED_PROCESS = re.compile(r"(?im)^\s*(?:return\s+)?&\s*\(")
+WRITE_COMMAND = re.compile(r"(?im)(?<![\w-])(?:Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Copy-Item|Move-Item|Rename-Item)\b")
 WRITE_SWITCH = re.compile(r"\[switch\]\s*\$(?:Fix\w*|Apply\w*|Write\w*|Repair\w*)\b", re.I)
 
-def contained_script(path, portfolio_root):
+def contained_script(path, portfolio_root, repo_root):
     if not isinstance(path, str) or not SAFE_SCRIPT.fullmatch(path):
         raise RegistryError("nonallowlisted script path")
     if "\\" in path or ":" in path or PureWindowsPath(path).is_absolute():
         raise RegistryError("platform-specific script path escape")
     root = portfolio_root.resolve(strict=True)
-    candidate = root.joinpath(*path.split("/"))
     try:
+        repository = repo_root.resolve(strict=True)
+        repository.relative_to(root)
+        tools_root = repository / 'gc-audit' / 'tools'
+        physical_tools = tools_root.resolve(strict=True)
+        physical_tools.relative_to(repository)
+        candidate = repository.joinpath(*path.split("/")[1:])
         physical = candidate.resolve(strict=True)
-        physical.relative_to((root / ROOT_NAME / 'gc-audit' / 'tools').resolve(strict=True))
+        physical.relative_to(physical_tools)
     except (ValueError, OSError) as exc:
         raise RegistryError("script unavailable or escapes containment root") from exc
     if not physical.is_file():
         raise RegistryError("script is not a file")
     return physical
 
-def validate_registry(registry_text, portfolio_root):
+def validate_registry(registry_text, portfolio_root, repo_root, *, require_self_audit=False,
+                      require_runtime_assurance=False):
     try:
         registry = yaml.load(registry_text, Loader=UniqueLoader)
     except (yaml.YAMLError, RegistryError) as exc:
@@ -95,12 +102,13 @@ def validate_registry(registry_text, portfolio_root):
             set(value) != {"label", "description"} for name, value in categories.items()):
         raise RegistryError("missing category definitions")
     ids, scripts, internal = set(), set(), set()
-    delegation_findings = []
+    delegation_findings, write_findings = [], []
+    self_audit_ready = set()
     for item in sec.get("internalScripts", []):
         if not isinstance(item, dict) or set(item) != {"script", "internal", "reason"} or item.get("internal") is not True or not isinstance(item.get("reason"), str) or not item["reason"].strip():
             raise RegistryError("invalid internal script exemption")
         path = item.get("script")
-        physical = contained_script(path, portfolio_root)
+        physical = contained_script(path, portfolio_root, repo_root)
         if physical in internal:
             raise RegistryError("duplicate internal exemption")
         internal.add(physical)
@@ -117,6 +125,8 @@ def validate_registry(registry_text, portfolio_root):
         if op.get("status") == "planned":
             if steps or type(op.get("mutates")) is not bool:
                 raise RegistryError("planned operation is executable")
+            if op["id"] in {"gc-audit.registry", "gc-audit.zerotrust"} and op.get("zeroTrust") is not None:
+                raise RegistryError("planned self-audit claims active zero-trust assurance")
             continue
         if op.get("status") != "active" or not steps:
             raise RegistryError("unknown status or empty active operation")
@@ -128,6 +138,8 @@ def validate_registry(registry_text, portfolio_root):
         if not mutable and op.get("requiresExplicitApply") is True:
             raise RegistryError("read-only operation declares apply")
         zt = op.get("zeroTrust")
+        if op["id"] in {"gc-audit.registry", "gc-audit.zerotrust"} and zt is None:
+            raise RegistryError("active self-audit lacks zero-trust declaration")
         if zt is not None:
             if not isinstance(zt, dict) or op["id"] not in {"gc-audit.registry", "gc-audit.zerotrust"}:
                 raise RegistryError("unauthorized zero-trust declaration")
@@ -161,18 +173,22 @@ def validate_registry(registry_text, portfolio_root):
                     len(step["fixedArgs"]) % 2 or
                     any(not isinstance(arg, str) or not re.fullmatch(r"(?:-[A-Za-z][A-Za-z0-9]*|[0-9]+)", arg) for arg in step["fixedArgs"])):
                 raise RegistryError("unsafe fixed arguments")
-            physical = contained_script(step.get("script"), portfolio_root)
+            physical = contained_script(step.get("script"), portfolio_root, repo_root)
             expected_self_audit = {"gc-audit.registry": "validate-registry.ps1",
                                    "gc-audit.zerotrust": "validate-zero-trust.ps1"}
             if op["id"] in expected_self_audit and (
                     len(steps) != 1 or physical.name != expected_self_audit[op["id"]]):
                 raise RegistryError("self-audit operation redirected")
+            if op["id"] in expected_self_audit:
+                self_audit_ready.add(op["id"])
             if physical in internal:
                 raise RegistryError("internal helper exposed as operation")
             scripts.add(physical)
             code = physical.read_text(encoding="utf-8-sig")
-            if INDIRECT_PROCESS.search(code):
+            if INDIRECT_PROCESS.search(code) or COMPUTED_PROCESS.search(code):
                 delegation_findings.append(physical.name)
+            if not mutable and WRITE_COMMAND.search(code):
+                write_findings.append(physical.name)
             if DIRECT_SHELL.search(code):
                 raise RegistryError("direct shell spawning or expression evaluation requires explicit review")
             if not mutable and WRITE_SWITCH.search(code):
@@ -181,19 +197,31 @@ def validate_registry(registry_text, portfolio_root):
                 raise RegistryError("mutating operation has no explicit -Apply")
     if not ids or not scripts:
         raise RegistryError("empty operation allowlist")
-    if not {"gc-audit.registry", "gc-audit.zerotrust"} <= ids:
-        raise RegistryError("required self-audit operation missing")
+    readiness = "READY" if {"gc-audit.registry", "gc-audit.zerotrust"} <= self_audit_ready else "UNAVAILABLE"
+    if require_self_audit and readiness != "READY":
+        raise RegistryError("required self-audit assurance unavailable")
+    if require_runtime_assurance:
+        raise RegistryError("runtime confinement requires independently verified trusted-host enforcement")
     return {"status":"REGISTRY_CONTRACT_VALID", "delegation_review":"REQUIRED" if delegation_findings else "NOT_DETECTED",
             "indirect_delegation_scripts":sorted(set(delegation_findings)),
+            "read_only_write_scripts":sorted(set(write_findings)),
+            "self_audit_readiness":readiness,
+            "runtime_security_assurance":"UNVERIFIED",
             "operations":len(ids),"scripts":len(scripts)}
 
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--registry",type=Path,required=True)
     p.add_argument("--portfolio-root",type=Path,required=True)
+    p.add_argument("--repo-root",type=Path)
+    p.add_argument("--require-self-audit",action="store_true")
+    p.add_argument("--require-runtime-assurance",action="store_true")
     args=p.parse_args()
     try:
-        outcome=validate_registry(args.registry.read_text(encoding="utf-8-sig"), args.portfolio_root)
+        outcome=validate_registry(args.registry.read_text(encoding="utf-8-sig"), args.portfolio_root,
+            args.repo_root or args.registry.resolve(strict=True).parent.parent,
+            require_self_audit=args.require_self_audit,
+            require_runtime_assurance=args.require_runtime_assurance)
     except (RegistryError, OSError, UnicodeError) as exc:
         print(json.dumps({"status":"FAIL","reason":str(exc)}))
         return 1

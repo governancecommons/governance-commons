@@ -3,6 +3,8 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+import os
+import subprocess
 
 MODULE = Path(__file__).resolve().parents[1] / "tools" / "validate_operation_registry.py"
 spec = importlib.util.spec_from_file_location("gc_registry_validator", MODULE)
@@ -88,10 +90,13 @@ class RegistryTests(unittest.TestCase):
         self.text = BASE
 
     def check(self):
-        return mod.validate_registry(self.text, self.portfolio)
+        return mod.validate_registry(self.text, self.portfolio,
+            self.portfolio / "governance-commons")
 
     def test_valid(self):
         self.assertEqual(self.check()["status"], "REGISTRY_CONTRACT_VALID")
+        self.assertEqual(self.check()["self_audit_readiness"], "READY")
+        self.assertEqual(self.check()["runtime_security_assurance"], "UNVERIFIED")
 
     def test_duplicate_yaml_key(self):
         self.text += "\nschema: gc-audit.registry.v1\n"
@@ -114,8 +119,10 @@ class RegistryTests(unittest.TestCase):
         with self.assertRaises(mod.RegistryError): self.check()
 
     def test_unknown_category(self):
-        self.text = self.text.replace("status: active", "category: attacker\n    status: active", 1)
-        with self.assertRaises(mod.RegistryError): self.check()
+        self.text = self.text.replace("category: repo-health\n    status: active",
+                                      "category: attacker\n    status: active", 1)
+        with self.assertRaisesRegex(mod.RegistryError, "unknown operation verb/category"):
+            self.check()
 
     def test_malformed_operation_id(self):
         self.text = self.text.replace("gc-audit.validate", "gc-audit.validate/../evil", 1)
@@ -126,8 +133,23 @@ class RegistryTests(unittest.TestCase):
         with self.assertRaises(mod.RegistryError): self.check()
 
     def test_missing_self_audit_operation(self):
-        self.text = self.text.replace("id: gc-audit.zerotrust", "id: gc-audit.other")
-        with self.assertRaises(mod.RegistryError): self.check()
+        self.text = self.text[:self.text.index("  - id: gc-audit.zerotrust")] + "docs: {}\n"
+        self.assertEqual(self.check()["self_audit_readiness"], "UNAVAILABLE")
+        with self.assertRaisesRegex(mod.RegistryError, "required self-audit assurance unavailable"):
+            mod.validate_registry(self.text, self.portfolio,
+                self.portfolio / "governance-commons", require_self_audit=True)
+
+    def test_advisory_operation_without_self_audit_is_structurally_valid(self):
+        self.text = self.text[:self.text.index("  - id: gc-audit.registry")] + "docs: {}\n"
+        result = self.check()
+        self.assertEqual(result["status"], "REGISTRY_CONTRACT_VALID")
+        self.assertEqual(result["self_audit_readiness"], "UNAVAILABLE")
+
+    def test_planned_self_audit_cannot_claim_active_assurance(self):
+        self.text = self.text.replace("status: active\n    mutates: false\n    zeroTrust: {selfApplying: true}\n    steps:\n      - script: governance-commons/gc-audit/tools/validate-zero-trust.ps1",
+            "status: planned\n    mutates: false\n    zeroTrust: {selfApplying: true}\n    steps: []")
+        with self.assertRaisesRegex(mod.RegistryError, "planned self-audit claims"):
+            self.check()
 
     def test_missing_authorization_claim(self):
         self.text = self.text.replace("schema-authority-change, ", "")
@@ -142,14 +164,17 @@ class RegistryTests(unittest.TestCase):
         with self.assertRaises(mod.RegistryError): self.check()
 
     def test_duplicate_operation(self):
-        self.text += """
+        self.text = self.text.replace("docs: {}", """
   - id: gc-audit.validate
+    verb: validate
+    category: repo-health
     status: active
     mutates: false
     steps:
       - script: governance-commons/gc-audit/tools/validate-check.ps1
-"""
-        with self.assertRaises(mod.RegistryError): self.check()
+docs: {}""")
+        with self.assertRaisesRegex(mod.RegistryError, "duplicate or malformed operation ID"):
+            self.check()
 
     def test_traversal(self):
         self.text = self.text.replace("validate-check.ps1", "../../evil.ps1")
@@ -228,8 +253,84 @@ class RegistryTests(unittest.TestCase):
     def test_unregistered_internal_exemption(self):
         self.text = self.text.replace("internalScripts: []", """internalScripts:
     - script: governance-commons/gc-audit/tools/validate-check.ps1
-      internal: true""")
-        with self.assertRaises(mod.RegistryError): self.check()
+      internal: true
+      reason: internal fixture""")
+        with self.assertRaisesRegex(mod.RegistryError, "internal helper exposed as operation"):
+            self.check()
+
+    def test_planned_self_audit_is_structural_only(self):
+        self.text = self.text.replace("status: active\n    mutates: false\n    zeroTrust: {selfApplying: true}\n    steps:\n      - script: governance-commons/gc-audit/tools/validate-zero-trust.ps1",
+            "status: planned\n    mutates: false\n    steps: []")
+        self.assertEqual(self.check()["self_audit_readiness"], "UNAVAILABLE")
+        with self.assertRaisesRegex(mod.RegistryError, "required self-audit assurance unavailable"):
+            mod.validate_registry(self.text, self.portfolio,
+                self.portfolio / "governance-commons", require_self_audit=True)
+
+    def test_active_self_audit_requires_zero_trust(self):
+        self.text = self.text.replace("    zeroTrust: {selfApplying: true}\n", "")
+        with self.assertRaisesRegex(mod.RegistryError, "active self-audit lacks zero-trust"):
+            self.check()
+
+    def test_empty_active_self_audit_rejected(self):
+        self.text = self.text.replace(
+            "steps:\n      - script: governance-commons/gc-audit/tools/validate-zero-trust.ps1",
+            "steps: []")
+        with self.assertRaisesRegex(mod.RegistryError, "empty active operation"):
+            self.check()
+
+    def test_runtime_assurance_requires_trusted_host(self):
+        with self.assertRaisesRegex(mod.RegistryError, "trusted-host enforcement"):
+            mod.validate_registry(self.text, self.portfolio,
+                self.portfolio / "governance-commons", require_runtime_assurance=True)
+
+    def test_read_only_write_command_is_flagged(self):
+        p = self.portfolio / "governance-commons/gc-audit/tools/validate-check.ps1"
+        p.write_text("'bad' | Set-Content -LiteralPath out.txt", encoding="utf-8")
+        self.assertIn("validate-check.ps1", self.check()["read_only_write_scripts"])
+
+    def test_computed_shell_invocation_is_flagged(self):
+        p = self.portfolio / "governance-commons/gc-audit/tools/validate-check.ps1"
+        p.write_text("& (Get-Command pwsh) -Command 'echo bad'", encoding="utf-8")
+        self.assertIn("validate-check.ps1", self.check()["indirect_delegation_scripts"])
+
+    def test_repository_ancestor_symlink_escape(self):
+        outside = Path(self.temp.name).parent / (Path(self.temp.name).name + "-outside")
+        outside.mkdir()
+        self.addCleanup(lambda: outside.rmdir())
+        repo = self.portfolio / "governance-commons"
+        tools = repo / "gc-audit/tools"
+        for item in tools.iterdir():
+            item.unlink()
+        tools.rmdir()
+        (repo / "gc-audit").rmdir()
+        repo.rmdir()
+        try:
+            repo.symlink_to(outside, target_is_directory=True)
+        except (NotImplementedError, OSError):
+            self.skipTest("directory symlink unavailable")
+        with self.assertRaisesRegex(mod.RegistryError, "escapes containment root"):
+            self.check()
+
+    @unittest.skipUnless(os.name == "nt", "Windows junction fixture only")
+    def test_repository_ancestor_junction_escape(self):
+        outside = Path(self.temp.name).parent / (Path(self.temp.name).name + "-junction-outside")
+        outside.mkdir()
+        self.addCleanup(lambda: outside.rmdir())
+        repo = self.portfolio / "governance-commons"
+        tools = repo / "gc-audit/tools"
+        for item in tools.iterdir():
+            item.unlink()
+        tools.rmdir()
+        (repo / "gc-audit").rmdir()
+        repo.rmdir()
+        env = dict(os.environ, GC_TEST_LINK=str(repo), GC_TEST_TARGET=str(outside))
+        result = subprocess.run(["powershell", "-NoProfile", "-Command",
+            "New-Item -ItemType Junction -Path $env:GC_TEST_LINK -Target $env:GC_TEST_TARGET | Out-Null"],
+            capture_output=True, text=True, env=env)
+        if result.returncode:
+            self.skipTest("Windows junction unavailable: " + result.stderr.strip())
+        with self.assertRaisesRegex(mod.RegistryError, "escapes containment root"):
+            self.check()
 
 if __name__ == "__main__":
     unittest.main()

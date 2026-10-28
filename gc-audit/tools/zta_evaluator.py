@@ -1,7 +1,7 @@
 """GC-AUDIT-ZTA-001C: conservative, read-only assessment evaluator.
 
-No execution of target code; no network or filesystem writes. ZTA-08.02 can
-PASS only through the bounded, authenticated whole-chain verifier.
+No execution of target code; no network or filesystem writes. Whole-chain
+consistency is a candidate, not independently authenticated authority.
 """
 from __future__ import annotations
 import hashlib
@@ -295,7 +295,7 @@ def evaluate(catalog, profile, target, evidence_records=(), *, as_of=None,
         try:
             authority = artifact_authority["catalog_authority"]
             if not isinstance(authority, dict) or set(authority) != {"approved_catalog_digest", "expected_objectives"}:
-                raise ValueError("independent catalog authority required")
+                raise ValueError("catalog authority input required for consistency check")
             authorize_catalog(catalog, **authority)
             artifact_verification = verify_artifact_control(
                 target_id=target["target_id"], revision=target["revision"], as_of=as_of,

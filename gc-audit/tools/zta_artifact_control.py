@@ -1,6 +1,7 @@
 """Bounded, read-only ZTA-08.02 whole-chain verification.
 
 Trust roots and execution corroboration are caller supplied, outside target data.
+This verifies consistency against those inputs, not their independent provenance.
 The signed policy names every distribution and installation scope being assessed.
 """
 import base64
@@ -36,7 +37,7 @@ def verify_artifact_control(*, target_id, revision, policy_envelope, proof,
                             trusted_approvers, trusted_builders,
                             trusted_executors, trusted_observers,
                             corroborated_executions, required_scopes, as_of):
-    """Return a PASS candidate only for a fully authenticated declared scope."""
+    """Verify a declared scope against supplied roots; caller provenance is separate."""
     if not isinstance(policy_envelope, dict) or set(policy_envelope) != {"payload", "signature"}:
         raise ValueError("signed independent control policy required")
     policy = policy_envelope["payload"]
