@@ -24,6 +24,14 @@ python gc-audit/tools/portal_behavioral_assessment.py verify --report <path-outs
 
 The adapter requires the same Python dependencies as the repository pilot. Its evidence is `LOCAL_ASSERTION_ONLY`; it does not authenticate a host or convert HTTP statuses into ZTA control PASS. The [pilot assessment](reports/portal-application-zta-pilot.md) records the actual target revision, methods, observations, limits and reproducibility steps.
 
+## Signed evidence verification pilot
+
+`tools/trusted_evidence.py` provides versioned, Ed25519 signed host-policy and producer-evidence verification with freshness, revocation, scope, exact-target and persistent replay checks. A valid package authenticates a producer **relative to a host-configured root** and leaves every ZTA control `UNVERIFIED`. See [the contract](CONTRACTS.md#trusted-evidence-authentication-v1) and [the synthetic proof](specifications/GC-AUDIT-EVIDENCE-001.md). Reproduce its accepted and rejected packages with:
+
+```text
+python gc-audit/tools/verify_evidence_demo.py --verify gc-audit/reports/evidence-001-verification.json
+```
+
 **Status:** active
 **Authority:** DEV-ACCORD.05
 

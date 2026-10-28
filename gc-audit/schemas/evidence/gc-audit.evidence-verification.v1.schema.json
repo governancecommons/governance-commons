@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "gc-audit.evidence-verification.v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "status", "reason", "target_id", "revision", "environment", "control_ids", "assessed_at", "evidence_ids", "policy_digest", "envelope_digest", "producer_authentication", "host_authority", "control_status"],
+  "properties": {
+    "schema": {"const": "gc-audit.evidence-verification.v1"},
+    "status": {"enum": ["AUTHENTICATED", "REJECTED"]},
+    "reason": {"type": "string", "minLength": 1},
+    "target_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "string", "minLength": 1},
+    "environment": {"type": "string", "minLength": 1},
+    "control_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "assessed_at": {"type": "string", "format": "date-time"},
+    "evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "policy_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "envelope_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "producer_authentication": {"enum": ["SIGNATURE_VERIFIED", "UNVERIFIED"]},
+    "host_authority": {"const": "CONFIGURED_ROOT_ONLY"},
+    "control_status": {"const": "UNVERIFIED"}
+  }
+}

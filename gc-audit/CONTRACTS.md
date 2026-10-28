@@ -81,3 +81,20 @@ Bundle schema: `schemas/gc-compliance-evidence.schema.json`
 When enabled, the configured `principalStore` must be a contained relative path
 and contain at least one principal JSON record. Private keys must remain outside
 the repository in an OS keystore, HSM, secure enclave, or external KMS.
+
+## Trusted evidence authentication v1
+
+The versioned host-authority, evidence-envelope, and verification-result schemas
+are in `schemas/evidence/`. `tools/trusted_evidence.py` verifies Ed25519 signatures
+using host-configured public roots and reuses the ZTA canonical JSON encoding.
+The host supplies the expected target, revision, environment, catalog, objective,
+controls, scopes, time, and a durable replay ledger outside the target repository.
+Neither the target nor the signed package may select the host's trust roots.
+
+`AUTHENTICATED` means that the package matched the configured root and delegated
+producer, scope, freshness, and replay checks. The result expressly reports
+`CONFIGURED_ROOT_ONLY` and leaves the ZTA control `UNVERIFIED`: the verifier
+cannot establish the provenance of the host process or its root configuration.
+The evaluator retains authority over control decisions. The synthetic example
+and reproducibility command are documented in
+`specifications/GC-AUDIT-EVIDENCE-001.md`.
