@@ -7,7 +7,7 @@ import unittest
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "tools"))
-from portal_behavioral_assessment import verify_pilot
+from portal_behavioral_assessment import verify_pilot, sha256
 from zta_evaluator import AssessmentInputError, digest
 
 REPORT = HERE.parents[1] / "reports" / "portal-application-zta-pilot.json"
@@ -35,6 +35,9 @@ class PortalBehavioralReportTests(unittest.TestCase):
         changed["report_digest"] = digest({k: v for k, v in changed.items() if k != "report_digest"})
         with self.assertRaises(AssessmentInputError):
             verify_pilot(changed)
+
+    def test_probe_text_digest_is_line_ending_stable(self):
+        self.assertEqual(sha256(b"first\nsecond\n"), sha256(b"first\r\nsecond\r\n"))
 
 
 if __name__ == "__main__":

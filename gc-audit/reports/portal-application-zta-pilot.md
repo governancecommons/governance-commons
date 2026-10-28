@@ -29,7 +29,7 @@ These 11 assertions verify only the listed local behaviors. The ZTA catalog's co
 - Report digest: `sha256:5407e1f09a368a5d31043422c7b343d88e20b14e27b128bfd2be96f1a648313c`.
 - Catalog digest: `sha256:d76f4de7a0221d58b3a79e5541840b44767c68d79971615b2bf920cd0a63756e`.
 - Target manifest digest: `sha256:25ecaf2b02cd9acd53f19c649eeed2dd66af450accbc624c79cb9993383ddd9e`.
-- The JSON names the exact Portal source blob IDs and hashes the fixed probe source and observation set. `verify` reopens the export, recomputes report, manifest, catalog and evaluator digests, checks the local probe source, and optionally checks the exact target revision and tracked Git tree. Digests are integrity metadata, not signatures or authenticated producer authority.
+- The JSON names the exact Portal source blob IDs and hashes the fixed probe source (with CRLF normalized to LF) and observation set. `verify` reopens the export, recomputes report, manifest, catalog and evaluator digests, checks the local probe source, and optionally checks the exact target revision and tracked Git tree. Digests are integrity metadata, not signatures or authenticated producer authority.
 
 With Node.js 22+ and the Python dependencies in `gc-audit/README.md`, run from the Governance Commons checkout:
 

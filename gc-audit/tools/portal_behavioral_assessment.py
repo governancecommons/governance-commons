@@ -24,7 +24,8 @@ EXPECTED_IDS = {"http.anonymous.dashboard", "http.anonymous.import", "http.owner
 
 
 def sha256(payload: bytes) -> str:
-    return "sha256:" + hashlib.sha256(payload).hexdigest()
+    # Git may materialize this text probe with CRLF on Windows runners.
+    return "sha256:" + hashlib.sha256(payload.replace(b"\r\n", b"\n")).hexdigest()
 
 
 def assess(root: Path) -> dict:
