@@ -1005,3 +1005,7 @@ contract limitations are in `gc-audit/specifications/GC-AUDIT-ZTA-001F-SECURITY-
 The historical PLAY records and unrelated legacy ZT1–ZT8 behavior are
 unchanged. No operational assurance, release, activation, or acceptance is
 claimed. Exact-head hosted CI and owner review remain separate gates.
+
+## 2026-10-28 — GC-AUDIT-PRODUCT-001 Gate 1 review candidate
+
+**PROPOSED — requires AL:2 sign-off.** The dedicated Gate 1 branch adds a native, read-only `zta.library.v1` repository CLI and a digest-checked external `portal-kit` report at revision `a61f1ee5ab58f92cebe93e4da0e2d9ae4905afcb`. The evaluator returned 24 UNVERIFIED controls and BLOCKED release eligibility. The report, acceptance matrix, limitations, and reproduction steps are in `gc-audit/reports/portal-kit-gate1.md`. Local ZTA tests and schema fixtures pass; exact-head hosted CI and independent owner review remain required. The preflight stamp was late, and Level 1 validation retains the known REVIEW-GRAMMAR topology failure. No PASS closure, release, activation, or operational assurance is claimed. `AGENTS.md` was checked and its onboarding pointer remains current.
