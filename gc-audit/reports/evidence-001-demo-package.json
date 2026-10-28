@@ -1,0 +1,78 @@
+{
+  "authority": {
+    "payload": {
+      "catalog_digest": "sha256:d76f4de7a0221d58b3a79e5541840b44767c68d79971615b2bf920cd0a63756e",
+      "controls": [
+        {
+          "control_id": "ZTA-02.01",
+          "methods": [
+            "AUTOMATED_TEST"
+          ],
+          "objective_digest": "sha256:54cdcf133d85b6a29fb9b5be8518adbbd5788a8a4e962821df1dd7a10eaf9d39",
+          "scopes": [
+            "local-fixture"
+          ]
+        }
+      ],
+      "domain": "gc-audit.host-authority.v1",
+      "environment": "synthetic-test",
+      "expires_at": "2026-10-28T13:00:00Z",
+      "issued_at": "2026-10-28T11:00:00Z",
+      "max_evidence_age_seconds": 3600,
+      "policy_id": "synthetic-demo",
+      "producers": [
+        {
+          "key_id": "demo-producer",
+          "public_key_b64": "rqw6LRGr6lDppoZY7MOk9QkGo8F8HXLD/hLnYFoJNEw=",
+          "valid_from": "2026-10-28T11:00:00Z",
+          "valid_until": "2026-10-28T13:00:00Z"
+        }
+      ],
+      "revision": "dddddddddddddddddddddddddddddddddddddddd",
+      "revoked_evidence_ids": [],
+      "root_key_id": "demo-root",
+      "target_id": "demo-app"
+    },
+    "signature": "9Wa3xMUFBILsDAekSKsZgkyw+IqHJb6pZbhPkawoVeGOcKFL/wNl5bLjPflr+N7yh21Yynv/9CnpqAofFs4ZBw=="
+  },
+  "envelopes": [
+    {
+      "payload": {
+        "collected_at": "2026-10-28T11:30:00Z",
+        "control_id": "ZTA-02.01",
+        "domain": "gc-audit.evidence-envelope.v1",
+        "environment": "synthetic-test",
+        "evidence_id": "demo-evidence-1",
+        "expires_at": "2026-10-28T12:30:00Z",
+        "limitations": [
+          "synthetic signed fixture; no live application behavior"
+        ],
+        "method": "AUTOMATED_TEST",
+        "nonce": "demo-unique-nonce-001",
+        "objective_digest": "sha256:54cdcf133d85b6a29fb9b5be8518adbbd5788a8a4e962821df1dd7a10eaf9d39",
+        "observation": {
+          "case": "synthetic-authz-denial",
+          "observed": "DENIED",
+          "source": "test fixture only"
+        },
+        "observation_digest": "sha256:7ecc010d7a2a151fee721e7963092e8bfc2515f5ca8a4da6639bcfc464461561",
+        "policy_id": "synthetic-demo",
+        "producer_key_id": "demo-producer",
+        "revision": "dddddddddddddddddddddddddddddddddddddddd",
+        "scope": "local-fixture",
+        "target_id": "demo-app"
+      },
+      "signature": "bN1uqn0Soi86tfrJq3R10Scyi+aW1BWAPa/NWXt54DzdYE6xmDTyIqFq+764WmRyIUY+T2xrcL0tM5R9GiG/Dg=="
+    }
+  ],
+  "expected": {
+    "as_of": "2026-10-28T12:00:00Z",
+    "control_ids": [
+      "ZTA-02.01"
+    ],
+    "environment": "synthetic-test",
+    "revision": "dddddddddddddddddddddddddddddddddddddddd",
+    "target_id": "demo-app"
+  },
+  "schema": "gc-audit.evidence-demo.v1"
+}

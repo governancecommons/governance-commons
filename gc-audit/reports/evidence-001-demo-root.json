@@ -1,0 +1,6 @@
+{
+  "key_id": "demo-root",
+  "provenance": "SYNTHETIC_TEST_ONLY_NOT_INDEPENDENT_AUTHORITY",
+  "public_key_b64": "9PpvY8549l3RKxb3A5uReOslqxxo5+Tp/m74m2SPNbY=",
+  "schema": "gc-audit.demo-host-root.v1"
+}
