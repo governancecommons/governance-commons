@@ -40,11 +40,11 @@ For a portable reopen, omit `--target` from `verify`. Supplying the local target
 | GC-P08 | PASS | CLI accepts no caller trust roots or roles; forged PASS with recomputed outer digest is rejected. |
 | GC-P09 | PASS | Local run needs neither Cockpit nor an AI service; install dependencies before offline operation. |
 | GC-P10 | DEFERRED | Optional AI integration belongs to a later gate. |
-| GC-P11 | NOT TESTED | Hosted Windows/Linux/macOS results pending PR CI. |
+| GC-P11 | PASS | PR #12 code commit `1a447c6d3a97315f7a07f49412f4f7d9ec542e56` passed the hosted Windows/Linux/macOS evaluator and registry matrices on Python 3.11/3.12; all 30 reported checks succeeded. |
 | GC-P12 | PASS | Actual external portal-kit revision assessed and exported; no control assurance claimed. |
 | GC-P13 | DEFERRED | UI and accessibility work belong to a later gate. |
 | GC-P14 | DEFERRED | Consequential actions and agent approval flows are outside this read-only CLI. |
 
 ## OBDD classification
 
-**BLOCKER:** independent host-owned authority and control-specific runtime proof for any trusted ZTA PASS or operational assurance claim. **REQUIRED:** exact-head hosted compatibility CI and owner review of this Gate 1 PR. **DEFERRED:** GUI, AI adviser, Cockpit adapter, scanner integration, deployment, release, and broader assurance work. This report records a product pilot, not closure of the parent charter or approval of a release.
+**BLOCKER:** independent host-owned authority and control-specific runtime proof for any trusted ZTA PASS or operational assurance claim. **REQUIRED:** owner review of PR #12 and AL:2 sign-off on the proposed planning note. **DEFERRED:** GUI, AI adviser, Cockpit adapter, scanner integration, deployment, release, and broader assurance work. This report records a product pilot, not closure of the parent charter or approval of a release.
