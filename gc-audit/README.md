@@ -13,6 +13,17 @@ python gc-audit/tools/zta_cli.py verify --report <path-outside-target>/report.js
 
 The supported `zta.library.v1` pilot uses the existing deterministic evaluator. Its 24 control results remain `UNVERIFIED` without independently authenticated, revision-bound proof. The Git inventory verifies repository facts, not runtime Zero Trust behavior. The report's SHA-256 digest detects accidental or hostile edits to an existing report but is not a signature or an authority grant. See [the real portal-kit pilot](reports/portal-kit-gate1.md) for findings, limits, and acceptance status.
 
+## Portal application behavioral pilot
+
+With Node.js 22+ installed, the [Portal pilot adapter](tools/portal_behavioral_assessment.py) starts the actual local Portal HTTP server using a disposable data directory and synthetic memberships, then exercises selected request and editorial-store boundaries. It accepts only a clean, explicitly authorized local Portal checkout. Example:
+
+```text
+python gc-audit/tools/portal_behavioral_assessment.py assess --target <absolute-Portal-root> --authorize-local-test --output <path-outside-Portal>/portal-application-zta-pilot.json
+python gc-audit/tools/portal_behavioral_assessment.py verify --report <path-outside-Portal>/portal-application-zta-pilot.json --target <absolute-Portal-root>
+```
+
+The adapter requires the same Python dependencies as the repository pilot. Its evidence is `LOCAL_ASSERTION_ONLY`; it does not authenticate a host or convert HTTP statuses into ZTA control PASS. The [pilot assessment](reports/portal-application-zta-pilot.md) records the actual target revision, methods, observations, limits and reproducibility steps.
+
 **Status:** active
 **Authority:** DEV-ACCORD.05
 
