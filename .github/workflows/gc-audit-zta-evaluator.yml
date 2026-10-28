@@ -2,21 +2,17 @@ name: GC-AUDIT ZTA Evaluator Core
 on:
   push:
     paths:
-      - 'gc-audit/tools/zta_evaluator.py'
-      - 'gc-audit/tools/zta_artifact_control.py'
-      - 'gc-audit/tools/zta_artifact_chain.py'
-      - 'gc-audit/tools/zta_artifact_acceptance.py'
-      - 'gc-audit/tools/zta_decision_gate.py'
+      - 'gc-audit/tools/**'
+      - 'gc-audit/catalogs/**'
+      - 'gc-audit/specifications/**'
       - 'gc-audit/schemas/zta/**'
       - 'gc-audit/tests/zta/**'
       - '.github/workflows/gc-audit-zta-evaluator.yml'
   pull_request:
     paths:
-      - 'gc-audit/tools/zta_evaluator.py'
-      - 'gc-audit/tools/zta_artifact_control.py'
-      - 'gc-audit/tools/zta_artifact_chain.py'
-      - 'gc-audit/tools/zta_artifact_acceptance.py'
-      - 'gc-audit/tools/zta_decision_gate.py'
+      - 'gc-audit/tools/**'
+      - 'gc-audit/catalogs/**'
+      - 'gc-audit/specifications/**'
       - 'gc-audit/schemas/zta/**'
       - 'gc-audit/tests/zta/**'
       - '.github/workflows/gc-audit-zta-evaluator.yml'

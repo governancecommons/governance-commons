@@ -987,3 +987,21 @@ warnings. The pointer validator covers 160 registry path fields, including
 planning keys previously omitted from its check. This is a tooling
 compatibility change; it does not amend a GC
 standard or close project, publication, or release gates.
+
+## 2026-10-27 — GC-AUDIT-ZTA-001E final remediation candidate
+
+**OWNER REVIEW CANDIDATE; final acceptance blocked.** The focused feature branch hardens the parser-backed GC-AUDIT operation-registry self-audit, adds adversarial registry and delegated-host fixtures, and separates ZTA-08.02 assessor data from caller-supplied trust authority. Local ZTA, schema, registry, OBDD, planning, PLAY, release-compatibility, and legacy ZT1–ZT8 checks are recorded in `gc-audit/specifications/GC-AUDIT-ZTA-001E-ACCEPTANCE-EVIDENCE.md`. Exact-head hosted CI, an independent review, a registered `gc-audit.zta` invocation, and actual target/host authority evidence remain open. No release, operational activation, certification, or PASS closure is claimed. `AGENTS.md` was checked and its bootstrap pointer remains current.
+
+Hosted PR #9 checks subsequently passed at implementation commit `9effdd70ee89e9cab78e0523ad901f3c1fb8fc0a` across the registry and evaluator 3-OS × 2-Python matrices, schemas, OBDD, release compatibility, and lint. This supersedes only the pending-CI statement above; independent review, registration, real-target proof, and owner acceptance remain open.
+
+## 2026-10-28 — GC-AUDIT-ZTA-001F security remediation candidate
+
+**PROPOSED; owner review required.** A dedicated branch based on current `main`
+and the audited PR #9 implementation fixes the conditional self-audit gate,
+surfaces demonstrated static-source bypasses, blocks caller-selected authority
+from producing ZTA-08.02 PASS, repairs adversarial fixtures, widens CI path
+coverage, and tests resolved path containment. The new evidence and host
+contract limitations are in `gc-audit/specifications/GC-AUDIT-ZTA-001F-SECURITY-REMEDIATION.md`.
+The historical PLAY records and unrelated legacy ZT1–ZT8 behavior are
+unchanged. No operational assurance, release, activation, or acceptance is
+claimed. Exact-head hosted CI and owner review remain separate gates.
