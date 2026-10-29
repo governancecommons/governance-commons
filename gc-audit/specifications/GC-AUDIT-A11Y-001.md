@@ -21,7 +21,7 @@ Do not create a competing audit engine, accessibility certification service, or 
 These identifiers represent ten assessment domains, **not individual WCAG success criteria**.
 
 | ID | Assessment domain | Representative WCAG 2.2 criteria | Method |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | A11Y-01 | Semantic HTML and document structure | 1.3.1, 1.3.2, 2.4.6, 4.1.2 | Automated and manual |
 | A11Y-02 | Keyboard access and focus management | 2.1.1, 2.1.2, 2.4.3, 2.4.7, 2.4.11 | Manual and automation |
 | A11Y-03 | Accessible names, roles and states | 2.4.4, 2.5.3, 4.1.2 | Automated and manual |
@@ -147,7 +147,7 @@ Do not modify the live website.
 ## 6. AC-01 through AC-12 — Acceptance Criteria
 
 | ID | Requirement |
-|---|---|
+| --- | --- |
 | AC-01 | Existing GC-AUDIT target, evidence, authorization and reporting contracts are reused. |
 | AC-02 | WCAG 2.2 A/AA criteria are mapped with valid normative references and applicability handling. |
 | AC-03 | Read-only external website assessment enforces authorization and navigation boundaries. |
