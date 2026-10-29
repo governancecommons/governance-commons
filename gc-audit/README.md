@@ -1,5 +1,9 @@
 # GC-AUDIT Registry
 
+## Portable accessibility assessment candidate
+
+[`gc-audit/a11y`](a11y/README.md) contains the independent `gc-audit.a11y` 0.1.0 browser CLI, WCAG 2.2 A/AA catalog, ten-domain mapping, manual review template and fixture tests. The [bounded public-site pilot](reports/a11y-001-pilot-assessment.md) and [acceptance matrix](reports/a11y-001-acceptance.md) distinguish automated failures, unresolved review and remaining contract/validation gates. This review candidate does not assert WCAG conformance or activate a release.
+
 ## Standalone ZTA repository pilot
 
 The native Gate 1 CLI runs with Python 3.11 or 3.12, Git, `jsonschema[format]>=4.18,<5`, and `cryptography>=42,<47`. From this repository root, after installing those Python dependencies, run:
