@@ -1,0 +1,37 @@
+name: GC-AUDIT A11Y
+on:
+  push:
+    paths:
+      - 'gc-audit/a11y/**'
+      - 'gc-audit/reports/a11y-001-*'
+      - '.github/workflows/gc-audit-a11y.yml'
+  pull_request:
+    paths:
+      - 'gc-audit/a11y/**'
+      - 'gc-audit/reports/a11y-001-*'
+      - '.github/workflows/gc-audit-a11y.yml'
+permissions:
+  contents: read
+jobs:
+  fixture-and-report:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: gc-audit/a11y
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: gc-audit/a11y/package-lock.json
+      - run: npm ci
+      - if: runner.os == 'Linux'
+        run: npx playwright install --with-deps chromium
+      - if: runner.os != 'Linux'
+        run: npx playwright install chromium
+      - run: npm test
+      - run: node src/cli.mjs verify --report ../reports/a11y-001-governancecommons-org.json
