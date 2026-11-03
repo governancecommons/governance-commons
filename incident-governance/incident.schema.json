@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "GC Incident Record",
+  "title": "GC-INCIDENT-001 AI Incident Governance Record",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -8,13 +8,21 @@
     "incident_id",
     "incident_type",
     "status",
+    "severity",
+    "severity_rationale",
     "detected_at",
-    "responsible_authority",
+    "occurred_at",
+    "reported_at",
     "affected_entities",
     "impact",
+    "responsible_authority",
     "evidence_refs",
+    "decisions",
     "response_actions",
-    "external_reports"
+    "external_reports",
+    "related_gc_artifacts",
+    "findings",
+    "closure"
   ],
   "properties": {
     "schema_version": {
@@ -46,47 +54,93 @@
       "format": "date-time"
     },
     "occurred_at": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "format": "date-time"
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "reported_at": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": "string",
       "format": "date-time"
     },
     "responsible_authority": {
-      "type": "string",
-      "minLength": 1
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "authority_id",
+            "kind"
+          ],
+          "properties": {
+            "authority_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "human",
+                "organization"
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "affected_entities": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entity_ref",
+          "entity_type"
+        ],
+        "properties": {
+          "entity_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "entity_type": {
+            "enum": [
+              "agent",
+              "model",
+              "tool",
+              "system",
+              "organization",
+              "person",
+              "other"
+            ]
+          }
+        }
       }
     },
     "impact": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "summary",
-        "severity"
+        "status"
       ],
-      "additionalProperties": false,
       "properties": {
         "summary": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
-        "severity": {
+        "status": {
           "enum": [
             "unknown",
-            "low",
-            "moderate",
-            "high",
-            "critical"
+            "potential",
+            "observed",
+            "confirmed"
           ]
         }
       }
@@ -95,21 +149,45 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "id",
-          "uri"
-        ],
         "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "uri",
+          "source",
+          "integrity_status",
+          "access_classification"
+        ],
         "properties": {
-          "id": {
-            "type": "string"
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
           },
           "uri": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "integrity_status": {
+            "enum": [
+              "unverified",
+              "verified",
+              "unavailable",
+              "not_applicable"
+            ]
           },
           "sha256": {
             "type": "string",
             "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "access_classification": {
+            "enum": [
+              "public",
+              "internal",
+              "restricted"
+            ]
           }
         }
       }
@@ -118,40 +196,56 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "id",
-          "action",
-          "authorization",
-          "execution_status"
-        ],
         "additionalProperties": false,
+        "required": [
+          "action_id",
+          "action_type",
+          "status",
+          "decision_ref"
+        ],
         "properties": {
-          "id": {
-            "type": "string"
+          "action_id": {
+            "type": "string",
+            "minLength": 1
           },
-          "action": {
-            "type": "string"
-          },
-          "authorization": {
+          "action_type": {
             "enum": [
-              "pending",
-              "approved",
-              "denied",
-              "not_required"
+              "containment",
+              "investigation",
+              "recovery",
+              "notification",
+              "other"
             ]
           },
-          "authorized_by": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "execution_status": {
+          "status": {
             "enum": [
               "proposed",
+              "authorized",
               "executed",
               "failed",
               "cancelled"
+            ]
+          },
+          "decision_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "execution_evidence_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
             ]
           }
         }
@@ -161,51 +255,225 @@
       "type": "array",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "profile",
+          "profile_version",
           "destination",
-          "status"
+          "status",
+          "disclosure_authority_ref"
         ],
         "properties": {
           "profile": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
+          },
+          "profile_version": {
+            "type": "string",
+            "minLength": 1
           },
           "destination": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "status": {
             "enum": [
               "planned",
-              "authorized",
               "submitted",
-              "rejected"
+              "acknowledged",
+              "rejected",
+              "not_required"
+            ]
+          },
+          "disclosure_authority_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
             ]
           }
         }
       }
     },
     "closure": {
-      "type": "object",
-      "required": [
-        "outcome",
-        "residual_risks",
-        "approved_by"
-      ],
-      "properties": {
-        "outcome": {
-          "type": "string"
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "residual_risks",
+            "lessons_learned",
+            "approval_decision_ref"
+          ],
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "minLength": 1
+            },
+            "residual_risks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "lessons_learned": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "approval_decision_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
         },
-        "residual_risks": {
-          "type": "string"
-        },
-        "approved_by": {
-          "type": "string",
-          "minLength": 1
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "severity": {
+      "enum": [
+        "unknown",
+        "low",
+        "moderate",
+        "high",
+        "critical"
+      ]
+    },
+    "severity_rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "decision_id",
+          "at",
+          "authority_id",
+          "kind",
+          "rationale"
+        ],
+        "properties": {
+          "decision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "authority_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "triage",
+              "authorize",
+              "state_change",
+              "dismiss",
+              "close",
+              "reopen",
+              "disclose",
+              "other"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from_status": {
+            "enum": [
+              "reported",
+              "triaged",
+              "active_response",
+              "recovery_monitoring",
+              "closed",
+              "dismissed"
+            ]
+          },
+          "to_status": {
+            "enum": [
+              "reported",
+              "triaged",
+              "active_response",
+              "recovery_monitoring",
+              "closed",
+              "dismissed"
+            ]
+          }
+        }
+      }
+    },
+    "related_gc_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim",
+          "confidence"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "enum": [
+              "alleged",
+              "hypothesis",
+              "unverified",
+              "confirmed"
+            ]
+          }
         }
       }
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "active_response",
+              "recovery_monitoring",
+              "closed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "responsible_authority": {
+            "type": "object"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -218,10 +486,13 @@
         ]
       },
       "then": {
-        "required": [
-          "closure"
-        ]
+        "properties": {
+          "closure": {
+            "type": "object"
+          }
+        }
       }
     }
-  ]
+  ],
+  "$id": "https://governancecommons.org/schemas/gc-incident/0.1.0"
 }
