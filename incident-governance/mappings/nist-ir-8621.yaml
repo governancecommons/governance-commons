@@ -1,0 +1,20 @@
+document: NIST IR 8621
+status: research_crosswalk_not_conformance
+reference: https://doi.org/10.6028/NIST.IR.8621
+mappings:
+  - topic: attacks_against_ai
+    gc_rules: [INC-001, INC-003]
+    coverage: partial
+    gap: detection and forensic telemetry not implemented
+  - topic: ai_caused_incidents
+    gc_rules: [INC-001, INC-010]
+    coverage: partial
+    gap: causal attribution requires human investigation
+  - topic: incident_authority_and_containment
+    gc_rules: [INC-002, INC-004]
+    coverage: partial
+    gap: no operational containment adapter
+  - topic: evidence_and_recovery
+    gc_rules: [INC-003, INC-008]
+    coverage: partial
+    gap: provenance verification and recovery tests pending
