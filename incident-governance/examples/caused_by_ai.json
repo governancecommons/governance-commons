@@ -1,30 +1,69 @@
 {
   "schema_version": "0.1.0",
-  "incident_id": "GC-EX-caused_by_ai",
+  "incident_id": "urn:gc:incident:demo:caused_by_ai",
   "incident_type": "caused_by_ai",
   "status": "triaged",
-  "detected_at": "2026-11-03T18:00:00Z",
-  "responsible_authority": "example-human-incident-owner",
+  "severity": "moderate",
+  "severity_rationale": "Potential exposure or unauthorized operation pending investigation.",
+  "detected_at": "2026-11-03T10:00:00Z",
+  "occurred_at": null,
+  "reported_at": "2026-11-03T10:05:00Z",
   "affected_entities": [
-    "example-agent"
+    {
+      "entity_ref": "urn:example:agent:alpha",
+      "entity_type": "agent"
+    }
   ],
   "impact": {
-    "summary": "Agent attempted an unauthorized outbound action",
-    "severity": "moderate"
+    "summary": "Potential impact under investigation.",
+    "status": "potential"
+  },
+  "responsible_authority": {
+    "authority_id": "urn:example:human:responder",
+    "kind": "human"
   },
   "evidence_refs": [
     {
-      "id": "trace-001",
-      "uri": "evidence://example/trace-001"
+      "evidence_id": "ev-1",
+      "uri": "urn:example:evidence:restricted:1",
+      "source": "agent-runtime",
+      "integrity_status": "unverified",
+      "access_classification": "restricted"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "d-1",
+      "at": "2026-11-03T10:10:00Z",
+      "authority_id": "urn:example:human:responder",
+      "kind": "triage",
+      "rationale": "Incident requires investigation.",
+      "from_status": "reported",
+      "to_status": "triaged"
     }
   ],
   "response_actions": [
     {
-      "id": "decision-001",
-      "action": "Suspend tool access pending review",
-      "authorization": "pending",
-      "execution_status": "proposed"
+      "action_id": "a-1",
+      "action_type": "investigation",
+      "status": "proposed",
+      "decision_ref": null,
+      "execution_evidence_ref": null
     }
   ],
-  "external_reports": []
+  "external_reports": [],
+  "related_gc_artifacts": [
+    "urn:gc:agent-dossier:example-alpha"
+  ],
+  "findings": [
+    {
+      "claim": "Cause is not yet established.",
+      "confidence": "unverified"
+    },
+    {
+      "claim": "Agent attempted an unauthorized outbound action.",
+      "confidence": "unverified"
+    }
+  ],
+  "closure": null
 }
