@@ -1,20 +1,21 @@
-document: NIST IR 8621
-status: research_crosswalk_not_conformance
-reference: https://doi.org/10.6028/NIST.IR.8621
-mappings:
+source: NIST IR 8621
+status: research_mapping_non_normative
+version: 0.1.0
+note: "Topic-level alignment only; workshop findings do not establish mandatory GC conformance requirements. Exact section/page mapping requires source-text verification."
+topics:
   - topic: attacks_against_ai
-    gc_rules: [INC-001, INC-003]
+    gc_fields: [incident_type, findings, evidence_refs]
     coverage: partial
-    gap: detection and forensic telemetry not implemented
-  - topic: ai_caused_incidents
-    gc_rules: [INC-001, INC-010]
+    gap: "No detection or forensics engine"
+  - topic: incidents_caused_by_ai
+    gc_fields: [incident_type, impact, affected_entities]
     coverage: partial
-    gap: causal attribution requires human investigation
-  - topic: incident_authority_and_containment
-    gc_rules: [INC-002, INC-004]
+    gap: "No causal inference or harm adjudication engine"
+  - topic: accountable_response
+    gc_fields: [responsible_authority, decisions, response_actions]
     coverage: partial
-    gap: no operational containment adapter
-  - topic: evidence_and_recovery
-    gc_rules: [INC-003, INC-008]
+    gap: "Runtime authorization and action execution external"
+  - topic: evidence_and_reporting
+    gc_fields: [evidence_refs, external_reports]
     coverage: partial
-    gap: provenance verification and recovery tests pending
+    gap: "Evidence verification and report transport external"
