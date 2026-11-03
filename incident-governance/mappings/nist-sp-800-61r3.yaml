@@ -1,16 +1,24 @@
-document: NIST SP 800-61 Rev. 3
-status: research_crosswalk_not_conformance
-reference: https://doi.org/10.6028/NIST.SP.800-61r3
-mappings:
-  - topic: preparation_and_governance
-    gc_rules: [INC-002, INC-009]
+source: NIST SP 800-61 Rev. 3
+status: research_mapping_non_normative
+version: 0.1.0
+note: "Function-level crosswalk to CSF 2.0-aligned incident response; not a claim of full implementation."
+functions:
+  - function: GOVERN
+    gc_fields: [responsible_authority, decisions]
     coverage: partial
-  - topic: detection_analysis_and_triage
-    gc_rules: [INC-001, INC-010]
+  - function: IDENTIFY
+    gc_fields: [affected_entities, impact]
     coverage: partial
-  - topic: incident_response_and_recovery
-    gc_rules: [INC-004, INC-005, INC-008]
+  - function: PROTECT
+    gc_fields: [response_actions]
+    coverage: reference_only
+  - function: DETECT
+    gc_fields: [detected_at, findings]
+    coverage: reference_only
+  - function: RESPOND
+    gc_fields: [status, decisions, response_actions, evidence_refs]
     coverage: partial
-  - topic: reporting_and_improvement
-    gc_rules: [INC-006, INC-008]
+  - function: RECOVER
+    gc_fields: [response_actions, closure]
     coverage: partial
+note_gaps: "No continuous monitoring, technical containment, operational restoration, or incident commander workflow is implemented."
