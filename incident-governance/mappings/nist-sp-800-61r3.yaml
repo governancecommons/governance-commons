@@ -1,0 +1,16 @@
+document: NIST SP 800-61 Rev. 3
+status: research_crosswalk_not_conformance
+reference: https://doi.org/10.6028/NIST.SP.800-61r3
+mappings:
+  - topic: preparation_and_governance
+    gc_rules: [INC-002, INC-009]
+    coverage: partial
+  - topic: detection_analysis_and_triage
+    gc_rules: [INC-001, INC-010]
+    coverage: partial
+  - topic: incident_response_and_recovery
+    gc_rules: [INC-004, INC-005, INC-008]
+    coverage: partial
+  - topic: reporting_and_improvement
+    gc_rules: [INC-006, INC-008]
+    coverage: partial
