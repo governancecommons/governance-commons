@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GC Incident Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "incident_id",
+    "incident_type",
+    "status",
+    "detected_at",
+    "responsible_authority",
+    "affected_entities",
+    "impact",
+    "evidence_refs",
+    "response_actions",
+    "external_reports"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "incident_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "incident_type": {
+      "enum": [
+        "against_ai",
+        "caused_by_ai",
+        "combined"
+      ]
+    },
+    "status": {
+      "enum": [
+        "reported",
+        "triaged",
+        "active_response",
+        "recovery_monitoring",
+        "closed",
+        "dismissed"
+      ]
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "occurred_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "reported_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "responsible_authority": {
+      "type": "string",
+      "minLength": 1
+    },
+    "affected_entities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "impact": {
+      "type": "object",
+      "required": [
+        "summary",
+        "severity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "unknown",
+            "low",
+            "moderate",
+            "high",
+            "critical"
+          ]
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "uri"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          }
+        }
+      }
+    },
+    "response_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "action",
+          "authorization",
+          "execution_status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "authorization": {
+            "enum": [
+              "pending",
+              "approved",
+              "denied",
+              "not_required"
+            ]
+          },
+          "authorized_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "execution_status": {
+            "enum": [
+              "proposed",
+              "executed",
+              "failed",
+              "cancelled"
+            ]
+          }
+        }
+      }
+    },
+    "external_reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "profile",
+          "destination",
+          "status"
+        ],
+        "properties": {
+          "profile": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "planned",
+              "authorized",
+              "submitted",
+              "rejected"
+            ]
+          }
+        }
+      }
+    },
+    "closure": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "residual_risks",
+        "approved_by"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string"
+        },
+        "residual_risks": {
+          "type": "string"
+        },
+        "approved_by": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "closed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "closure"
+        ]
+      }
+    }
+  ]
+}
