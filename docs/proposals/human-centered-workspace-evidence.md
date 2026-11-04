@@ -1,0 +1,25 @@
+# Human-centered workspace proposal — review evidence
+
+**Date:** 2026-11-04
+**Scope:** documentation proposal only; branch `proposal/hci-workspace-standard-20261104`.
+**Disposition:** proposed for maintainer review; no GC standard, HCI operation, accessibility conformance, or release acceptance claimed.
+
+## Source and authority checks
+
+- Read GC charter/planning authority, RFC process, `GC-AUDIT-A11Y-001`, `GC-A11Y-PROCEDURES-003`, HCI schema README, ONS boundary, and open HCI research PR #5.
+- Existing HCI schemas model profile, criterion, evidence, finding and report data, but do not operate an audit or prove participant behavior.
+- The proposal preserves the ten A11Y assessment domains and eighteen procedure IDs and leaves the identifier unassigned pending RFC review.
+
+## Validation record
+
+| Check | Result | Limit |
+| --- | --- | --- |
+| `validate-planning.ps1 -TargetPath .` | PASS, 27 planning docs | Planning shape only. |
+| `validate-playbook.ps1 -TargetPath .` | PASS, 0 warnings | PLAY schema only; preflight stamp was late. |
+| `validate-recent-work.ps1 -Level 1 -Summary` | FAIL | Inherited review-grammar topology failure; other eight reported health categories passed. |
+| `validate-recent-work.ps1 -Level 4 -Summary` | FAIL | Same review-grammar failure; two pre-existing unchecked `DEV-RELEASE.md` gates remain. |
+| `validate-zero-trust.ps1 -TargetPath . -PortfolioRoot C:\dev` | PASS, 0 errors and 2 warnings | Existing unregistered `validate-portfolio-health.ps1` and shell-delegation warning. |
+| `uv run --no-project --with jsonschema python -m unittest discover -s gc-audit/hci/tests -v` | FAIL, 3 errors in 4 tests | Existing finding schema puts `allOf` under `properties`, invalid under JSON Schema 2020-12. No schema was edited here. |
+| `git diff --check` | PASS | Whitespace only. |
+
+No screenshots, participant sessions, accessibility review, or production UI verification occurred. The HCI schema defect and GC-AUDIT topology failure need separately authorized remediation; this proposal does not narrow or override those failures. The review PR and exact commit identify the final Git artifact.
