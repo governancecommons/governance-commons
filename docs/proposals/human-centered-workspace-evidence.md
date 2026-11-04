@@ -23,3 +23,7 @@
 | `git diff --check` | PASS | Whitespace only. |
 
 No screenshots, participant sessions, accessibility review, or production UI verification occurred. The HCI schema defect and GC-AUDIT topology failure need separately authorized remediation; this proposal does not narrow or override those failures. The review PR and exact commit identify the final Git artifact.
+
+## 2026-11-04 architecture review addendum
+
+The charter review found that `GC-CHARTER-004` currently enumerates Agent Dossier, Agent Matrix, and ONS. The GC OSS baseline is frozen, and the existing HCI research and schema work is candidate GC-AUDIT infrastructure rather than normative HCI authority. The proposal now recommends a bounded human–AI interaction assurance scope while retaining the complete workspace design as non-normative product guidance. [Issue #22](https://github.com/governancecommons/governance-commons/issues/22) requests the maintainer's scope decision and RFC number. No AL:2 or AL:3 decision, RFC acceptance, charter amendment, or standard activation has occurred.
