@@ -2,17 +2,17 @@
 
 | Field | Value |
 | --- | --- |
-| RFC number | `RFC-0002` — allocated from founder authorization on 2026-11-04; [number request](https://github.com/governancecommons/governance-commons/issues/22) |
+| RFC number | `RFC-0002` — draft number used after founder authorization to prepare an RFC; [number request](https://github.com/governancecommons/governance-commons/issues/22) |
 | Title | Human–AI Interaction Assurance Boundary |
-| Status | `open-for-comment` — proposal only; no acceptance or activation |
+| Status | `draft` — owner review pending; no acceptance or activation |
 | Author | jj-ervin (founder direction; draft prepared by Codex) |
 | Created | 2026-11-04 |
 | Target spec | New, independently versioned Human–AI Interaction Assurance specification, if accepted |
 | Charter entry affected | `GC-CHARTER-004` (AL:3); separate founder approval required for amendment |
 | Breaking | No for current specifications; opt-in addition only |
-| Review mode | Public comment, selected from founder authorization; comments through 2026-11-18 23:59 America/Los_Angeles |
+| Review mode | Not selected. No comment process or deadline is authorized. |
 
-The comment window and this RFC do not schedule a GC release. RFC acceptance, specification implementation, charter amendment, and public activation are separate decisions.
+The founder authorized an RFC draft. Review mode, RFC acceptance, specification implementation, charter amendment, and public activation are separate decisions. No review deadline or GC release is scheduled.
 
 ## Problem statement
 
@@ -83,4 +83,4 @@ Activation would also require a named, versioned specification artifact, its own
 2. Define the independently versioned spec identity and applicability/conformance profiles. Reuse or reference existing GC A11Y procedures and HCI evidence shapes; fix schema defects under a separate authorized change.
 3. Pilot against real, declared tasks and participants. Preserve evaluator method, source commit, device, assistive technology, actual rendered states, privacy treatment, and evidence limitations. Synthetic fixtures remain test data.
 4. Keep `gc-audit.hci` inactive until a read-only, allowlisted implementation and registry change have independent approval and validation.
-5. Ask the founder to review the exact charter amendment, compatibility evidence, and release posture only after the specification is independently reviewable. No merge or release follows automatically from the public-comment window.
+5. Ask the founder to review the exact charter amendment, compatibility evidence, and release posture only after the specification is independently reviewable. No merge or release follows from this draft.

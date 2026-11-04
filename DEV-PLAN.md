@@ -1035,3 +1035,7 @@ PR #12 code commit `1a447c6d3a97315f7a07f49412f4f7d9ec542e56` subsequently passe
 ## 2026-11-04 — RFC-0002 bounded human–AI interaction assurance draft
 
 **OPEN-FOR-COMMENT PROPOSAL; not accepted or active.** The founder confirmed GC as the proposed owner of a bounded human–AI interaction assurance specification and authorized drafting RFC-0002. The RFC preserves predictable action semantics, accessible controls, AI transparency, human control, recovery, and evaluation while leaving exact workspace layout and visual identity to products. Issue #22 records the number request; PR #21 carries the draft. Public comment is selected for review. GC-CHARTER-004 remains unchanged, the OSS baseline stays frozen, and no specification identifier, conformance claim, audit operation, manifest entry, or release is activated. Founder review of the eventual AL:3 amendment and RFC acceptance remain separate gates. `AGENTS.md` was checked and its onboarding pointer remains current.
+
+## 2026-11-04 — RFC-0002 review-process correction
+
+The preceding RFC-0002 entry incorrectly states `OPEN-FOR-COMMENT` and says public comment was selected. The founder authorized drafting the bounded RFC, not a public comment process or deadline. Those process claims are withdrawn. RFC-0002 and PR #21 are drafts for owner review with no review mode or deadline. The erroneous November 18 date has no effect. No RFC acceptance, charter amendment, standard activation, or release was authorized. The prior entry is retained as history; this appended correction is the current status.
