@@ -49,3 +49,29 @@ action/resource binding, human-principal evidence, and denial behavior. If
 those are absent, propose a separately reviewed, narrow contract change under
 the existing GC decision process. Recheck the NIST source before relying on
 it for a later design decision; its project is evolving.
+
+## Follow-up: handoff contract and runtime trace (2026-11-05)
+
+This follow-up closes the inspection requested above. It reads the clean
+`agent-dossier` repository at `c87c8b72cadd244ce0b66e8b8de89c8887eb0d68`
+and the clean `agent-project-orchestrator` repository at
+`e14340200f22d0e7de72c5e1e6d965cf0de7eaf8`. Neither repository was edited.
+
+| Check | Evidence | Observed result |
+| --- | --- | --- |
+| Handoff contract | [Agent Dossier handoff specification](https://github.com/governancecommons/agent-dossier/blob/c87c8b72cadd244ce0b66e8b8de89c8887eb0d68/agent-dossier.yaml) `handoff_protocol`; [JSON Schema](https://github.com/governancecommons/agent-dossier/blob/c87c8b72cadd244ce0b66e8b8de89c8887eb0d68/schemas/handoff-envelope.schema.json) | The specification makes envelope signatures optional outside strict profile and requires verification when present. The schema requires agent IDs and task-continuity fields, but has `additionalProperties: false` and no dedicated human principal, action/resource grant, or delegation-proof property. |
+| Schema fixture | Validate the existing `examples/valid/handoff-envelope.yaml` with the pinned JSON Schema and a YAML loader that preserves timestamps as strings; then add either `human_principal: human-a` or `authorization_proof: unverified-string`. | Baseline **valid**; each added property **invalid** as an unexpected additional property. This is a shape check, not cryptographic signature verification. |
+| Runtime path | [Task model](https://github.com/governancecommons/agent-project-orchestrator/blob/e14340200f22d0e7de72c5e1e6d965cf0de7eaf8/models/task.py) → [Dispatcher.dispatch](https://github.com/governancecommons/agent-project-orchestrator/blob/e14340200f22d0e7de72c5e1e6d965cf0de7eaf8/orchestrator/dispatcher.py) → [BaseAgent.check_permission](https://github.com/governancecommons/agent-project-orchestrator/blob/e14340200f22d0e7de72c5e1e6d965cf0de7eaf8/agents/base.py); [handoff builder](https://github.com/governancecommons/agent-project-orchestrator/blob/e14340200f22d0e7de72c5e1e6d965cf0de7eaf8/orchestrator/escalation.py) and [model](https://github.com/governancecommons/agent-project-orchestrator/blob/e14340200f22d0e7de72c5e1e6d965cf0de7eaf8/models/handoff.py) | `Task` allows extra properties. Dispatch selects an agent and calls `execute`; the base tool check takes a tool name, not a human principal or proof. The handoff builder emits an unsigned envelope. No incoming envelope signature or human-delegation verifier was found in this inspected path. |
+| Temporary dispatch probe | Two in-memory tasks with the same assigned probe agent and `human_principal=human-a`: one with no proof, one with `authorization_proof=unverified-string`; a temporary audit log was used. | Both returned `DONE` and reached the probe agent. The probe did no real tool action and had no governance record attached. This establishes only that this dispatch path does not require or verify the supplied human authorization evidence. |
+
+**Refined finding:** The Agent Dossier contract describes agent signature
+verification, but its published envelope shape cannot carry those two proposed
+human-delegation fields directly. The selected orchestrator path does not
+implement the NIST question's action-specific human authorization check.
+This is a bounded contract/runtime seam, not evidence that every GC consumer
+lacks such a check or that a deployed system accepted an unauthorized action.
+
+**Next decision:** Identify the intended authority source and denial boundary
+for human-to-agent actions, then submit a narrowly scoped contract and verifier
+proposal for owner review. Preserve the current agent-to-agent handoff semantics
+until that proposal specifies compatibility and enforcement behavior.
