@@ -4,6 +4,8 @@
 **Authority:** Non-normative unless a document explicitly says otherwise
 **Last verified:** 2026-09-30
 
+Focused source review: [NIST and AAIF positioning, 2026-11-05](nist-aaif-positioning-review-2026-11-05.md).
+
 ## Purpose
 
 Governance Commons is intended to function as a **commons**, not as an authority over the ecosystem.
