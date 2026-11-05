@@ -6,6 +6,8 @@
 
 Focused source review: [NIST and AAIF positioning, 2026-11-05](nist-aaif-positioning-review-2026-11-05.md).
 
+Semantic seam test: [NIST agent identity × GC zero-trust, 2026-11-05](nist-agent-identity-zero-trust-seam-2026-11-05.md).
+
 ## Purpose
 
 Governance Commons is intended to function as a **commons**, not as an authority over the ecosystem.
