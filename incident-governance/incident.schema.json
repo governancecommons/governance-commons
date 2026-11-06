@@ -1,0 +1,498 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GC-INCIDENT-001 AI Incident Governance Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "incident_id",
+    "incident_type",
+    "status",
+    "severity",
+    "severity_rationale",
+    "detected_at",
+    "occurred_at",
+    "reported_at",
+    "affected_entities",
+    "impact",
+    "responsible_authority",
+    "evidence_refs",
+    "decisions",
+    "response_actions",
+    "external_reports",
+    "related_gc_artifacts",
+    "findings",
+    "closure"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "incident_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "incident_type": {
+      "enum": [
+        "against_ai",
+        "caused_by_ai",
+        "combined"
+      ]
+    },
+    "status": {
+      "enum": [
+        "reported",
+        "triaged",
+        "active_response",
+        "recovery_monitoring",
+        "closed",
+        "dismissed"
+      ]
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "occurred_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reported_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "responsible_authority": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "authority_id",
+            "kind"
+          ],
+          "properties": {
+            "authority_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "human",
+                "organization"
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "affected_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entity_ref",
+          "entity_type"
+        ],
+        "properties": {
+          "entity_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "entity_type": {
+            "enum": [
+              "agent",
+              "model",
+              "tool",
+              "system",
+              "organization",
+              "person",
+              "other"
+            ]
+          }
+        }
+      }
+    },
+    "impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "status"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "unknown",
+            "potential",
+            "observed",
+            "confirmed"
+          ]
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "uri",
+          "source",
+          "integrity_status",
+          "access_classification"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uri": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "integrity_status": {
+            "enum": [
+              "unverified",
+              "verified",
+              "unavailable",
+              "not_applicable"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "access_classification": {
+            "enum": [
+              "public",
+              "internal",
+              "restricted"
+            ]
+          }
+        }
+      }
+    },
+    "response_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action_id",
+          "action_type",
+          "status",
+          "decision_ref"
+        ],
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action_type": {
+            "enum": [
+              "containment",
+              "investigation",
+              "recovery",
+              "notification",
+              "other"
+            ]
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "authorized",
+              "executed",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "decision_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "execution_evidence_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "external_reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "profile_version",
+          "destination",
+          "status",
+          "disclosure_authority_ref"
+        ],
+        "properties": {
+          "profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profile_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "planned",
+              "submitted",
+              "acknowledged",
+              "rejected",
+              "not_required"
+            ]
+          },
+          "disclosure_authority_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "closure": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "residual_risks",
+            "lessons_learned",
+            "approval_decision_ref"
+          ],
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "minLength": 1
+            },
+            "residual_risks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "lessons_learned": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "approval_decision_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "severity": {
+      "enum": [
+        "unknown",
+        "low",
+        "moderate",
+        "high",
+        "critical"
+      ]
+    },
+    "severity_rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "decision_id",
+          "at",
+          "authority_id",
+          "kind",
+          "rationale"
+        ],
+        "properties": {
+          "decision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "authority_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "triage",
+              "authorize",
+              "state_change",
+              "dismiss",
+              "close",
+              "reopen",
+              "disclose",
+              "other"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from_status": {
+            "enum": [
+              "reported",
+              "triaged",
+              "active_response",
+              "recovery_monitoring",
+              "closed",
+              "dismissed"
+            ]
+          },
+          "to_status": {
+            "enum": [
+              "reported",
+              "triaged",
+              "active_response",
+              "recovery_monitoring",
+              "closed",
+              "dismissed"
+            ]
+          }
+        }
+      }
+    },
+    "related_gc_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim",
+          "confidence"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "enum": [
+              "alleged",
+              "hypothesis",
+              "unverified",
+              "confirmed"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "active_response",
+              "recovery_monitoring",
+              "closed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "responsible_authority": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "closed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "closure": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "$id": "https://governancecommons.org/schemas/gc-incident/0.1.0"
+}

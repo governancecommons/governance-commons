@@ -1,0 +1,21 @@
+source: NIST IR 8621
+status: research_mapping_non_normative
+version: 0.1.0
+note: "Topic-level alignment only; workshop findings do not establish mandatory GC conformance requirements. Exact section/page mapping requires source-text verification."
+topics:
+  - topic: attacks_against_ai
+    gc_fields: [incident_type, findings, evidence_refs]
+    coverage: partial
+    gap: "No detection or forensics engine"
+  - topic: incidents_caused_by_ai
+    gc_fields: [incident_type, impact, affected_entities]
+    coverage: partial
+    gap: "No causal inference or harm adjudication engine"
+  - topic: accountable_response
+    gc_fields: [responsible_authority, decisions, response_actions]
+    coverage: partial
+    gap: "Runtime authorization and action execution external"
+  - topic: evidence_and_reporting
+    gc_fields: [evidence_refs, external_reports]
+    coverage: partial
+    gap: "Evidence verification and report transport external"
