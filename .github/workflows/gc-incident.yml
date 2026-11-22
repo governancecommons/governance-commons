@@ -1,0 +1,26 @@
+name: GC Incident Contract
+on:
+  pull_request:
+    paths:
+      - 'incident-governance/**'
+      - '.github/workflows/gc-incident.yml'
+  push:
+    paths:
+      - 'incident-governance/**'
+      - '.github/workflows/gc-incident.yml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validator dependency
+        run: python -m pip install 'jsonschema>=4.20,<5'
+      - name: Run incident tests
+        working-directory: incident-governance
+        run: python -m unittest discover -s tests -v
+      - name: Validate scenario records
+        working-directory: incident-governance
+        run: python validate_incident.py examples/*.json
