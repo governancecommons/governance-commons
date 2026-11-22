@@ -122,6 +122,66 @@ $profileRows = [System.Collections.Generic.List[object]]::new()
 $playSummaries = [System.Collections.Generic.List[object]]::new()
 $seenIds  = [System.Collections.Generic.HashSet[string]]::new()
 $lineNo   = 0
+$correctionsByLine = @{}
+
+# Corrections are appended as ordinary PLAYs. Bind each correction to the exact
+# earlier line so that an edited or reordered history cannot silently inherit it.
+for ($index = 0; $index -lt $lines.Count; $index++) {
+    try { $candidate = $lines[$index] | ConvertFrom-Json -ErrorAction Stop } catch { continue }
+    if (-not $candidate.PSObject.Properties.Match('corrections').Count) { continue }
+    foreach ($correction in @($candidate.corrections)) {
+        $sourceLine = $index + 1
+        $targetLine = 0
+        try { $targetLine = [int]$correction.target_line } catch { }
+        if ($targetLine -lt 1 -or $targetLine -ge $sourceLine) {
+            $errors.Add("line ${sourceLine}: correction target_line must identify an earlier line")
+            continue
+        }
+        if ($correction.action -notin @('retract-incomplete-validation-profile', 'disambiguate-play-id') -or
+            -not $correction.reason -or $correction.sha256 -notmatch '^[0-9a-fA-F]{64}$') {
+            $errors.Add("line ${sourceLine}: correction action, reason or SHA-256 is invalid")
+            continue
+        }
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($lines[$targetLine - 1])
+        $actualHash = [Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes))
+        if ($actualHash -ne [string]$correction.sha256) {
+            $errors.Add("line ${sourceLine}: correction SHA-256 does not match line $targetLine")
+            continue
+        }
+        $key = "$targetLine|$($correction.action)"
+        if ($correctionsByLine.ContainsKey($key)) {
+            $errors.Add("line ${sourceLine}: duplicate correction for line $targetLine action $($correction.action)")
+            continue
+        }
+        if ($correction.action -eq 'disambiguate-play-id' -and -not $correction.replacement_play_id) {
+            $errors.Add("line ${sourceLine}: replacement_play_id required")
+            continue
+        }
+        try { $original = $lines[$targetLine - 1] | ConvertFrom-Json -ErrorAction Stop } catch {
+            $errors.Add("line ${sourceLine}: correction target is not a JSON PLAY")
+            continue
+        }
+        if ($correction.action -eq 'retract-incomplete-validation-profile') {
+            $required = @($requiredProfileChecks[[string]$original.level])
+            $present = @($original.validation_profile.checks)
+            if (-not $original.validation_profile -or @($required | Where-Object { $present -notcontains $_ }).Count -eq 0) {
+                $errors.Add("line ${sourceLine}: profile retraction is allowed only for a profile missing required checks")
+                continue
+            }
+        } else {
+            $earlierSameId = $false
+            for ($prior = 0; $prior -lt ($targetLine - 1); $prior++) {
+                try { $priorPlay = $lines[$prior] | ConvertFrom-Json -ErrorAction Stop } catch { continue }
+                if ($priorPlay.play_id -eq $original.play_id) { $earlierSameId = $true; break }
+            }
+            if (-not $earlierSameId -or $correction.replacement_play_id -eq $original.play_id) {
+                $errors.Add("line ${sourceLine}: ID correction requires a duplicate source ID and a distinct replacement")
+                continue
+            }
+        }
+        $correctionsByLine[$key] = $correction
+    }
+}
 
 function Get-IntValue($Value) {
     if ($null -eq $Value) { return 0 }
@@ -189,6 +249,22 @@ foreach ($line in $lines) {
     } catch {
         $errors.Add("$prefix invalid JSON - $($_.Exception.Message)")
         continue
+    }
+
+    $idKey = "$lineNo|disambiguate-play-id"
+    if ($correctionsByLine.ContainsKey($idKey)) {
+        $originalId = [string]$play.play_id
+        $play.play_id = [string]$correctionsByLine[$idKey].replacement_play_id
+        $warnings.Add("line ${lineNo}: play_id '$originalId' disambiguated as '$($play.play_id)' by an appended correction; source line preserved")
+    }
+    $profileKey = "$lineNo|retract-incomplete-validation-profile"
+    if ($correctionsByLine.ContainsKey($profileKey)) {
+        if (-not $play.PSObject.Properties.Match('validation_profile').Count) {
+            $errors.Add("line ${lineNo}: cannot retract absent validation_profile")
+        } else {
+            $play.PSObject.Properties.Remove('validation_profile')
+            $warnings.Add("line ${lineNo}: incomplete validation_profile retracted by an appended correction; historical checks remain unproved")
+        }
     }
 
     # play_id - required, unique
@@ -299,7 +375,9 @@ foreach ($line in $lines) {
     # field). When present, its internal shape and per-level minimum checks are still
     # enforced as hard errors.
     if (-not $play.validation_profile) {
-        $warnings.Add("$prefix ($id) missing validation_profile - legacy-tolerated only for records predating the validation_profile amendment")
+        if (-not $correctionsByLine.ContainsKey("$lineNo|retract-incomplete-validation-profile")) {
+            $warnings.Add("$prefix ($id) missing validation_profile - legacy-tolerated only for records predating the validation_profile amendment")
+        }
     } else {
         $profile = $play.validation_profile.profile
         if (-not $profile) {

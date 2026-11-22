@@ -70,7 +70,23 @@
       }
     },
     "commit_ref": { "type": "string" },
-    "preflight": { "type": "string", "enum": ["complete", "blocked", "not-yet-enforced"] }
+    "preflight": { "type": "string", "enum": ["complete", "blocked", "not-yet-enforced"] },
+    "corrections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["target_line", "sha256", "action", "reason"],
+        "properties": {
+          "target_line": { "type": "integer", "minimum": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" },
+          "action": { "enum": ["retract-incomplete-validation-profile", "disambiguate-play-id"] },
+          "replacement_play_id": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
   },
   "allOf": [
     {

@@ -862,3 +862,9 @@ blocking brief.
 - Single-lane RUN collapsed-timing option declared
 - Compound-PASS-brief size/scope floor declared, refining CI-38
 - 3 new cluster invariants: DEV-ACCORD-CI-47 through DEV-ACCORD-CI-49
+
+## Amendment — 2026-11-22 — append-only PLAY corrections
+
+An invalid historical `PLAY.jsonl` line must not be rewritten to make a validation gate green. A later, fully valid PLAY may carry a `corrections` array. Each correction binds an earlier line by its one-based `target_line` and SHA-256 of that line's UTF-8 bytes, and must give a nonempty reason. The original line remains visible and the validator emits a warning when applying a correction.
+
+Two narrow actions are permitted: `retract-incomplete-validation-profile` treats a historical, incomplete profile as absent for validation and explicitly leaves its missing checks unproved; `disambiguate-play-id` assigns an effective unique ID to a duplicate historical record without changing its source text. The correction PLAY itself still requires its normal level profile, timing, authorization, DEV-DOCS check, and commit reference. Corrections cannot assert that an unperformed historical check ran, cannot change execution authority, and cannot erase the validator warning. A mismatched hash, future target, duplicate correction, or invalid action is a hard error. This extension preserves the append-only and unique-effective-ID obligations of CI-30.
